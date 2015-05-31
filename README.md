@@ -29,4 +29,5 @@ git add -A cloudera-framework-repo/cloudera-framework-repo-external/src/main/rep
 git commit -m "Add binaries for cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE"
 git checkout master
 git push --all
+git branch --all
 ```
