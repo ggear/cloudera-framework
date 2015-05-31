@@ -1,6 +1,6 @@
 #Cloudera Framework
 
-Cloudera framework, providing unit-testing harness and client and runtime bill-of-materials.
+Cloudera framework, providing a unit-testing harness, client and runtime bill-of-materials.
 
 ##Install
 
