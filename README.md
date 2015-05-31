@@ -10,11 +10,7 @@ This module can be installed to a local repository:
 mvn clean install
 ```
 
-Alternatively, the module can be distributed as a binary by embedding the dependencies via the appropriate branch:
-
-```bash
-wget -r [https://github.com/ggear/cloudera-framework](https://github.com/ggear/cloudera-framework)
-```
+Alternatively, the module can be distributed as a binary by embedding (or manually installing) the dependencies via the appropriate branch repository (eg [cloudera-framework-0.0.1-cdhcdh5.4.0](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-0.0.1-cdhcdh5.4.0/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository))
 
 ##Release
 
@@ -27,4 +23,9 @@ export VERSION_HEAD=0.0.1
 export CDH_VERSION_HEAD=cdh5.4.1
 mvn release:prepare -B -DreleaseVersion=$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:clean
+git checkout -b cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE
+git add -A cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository
+git commit -m "Add binaries for cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE"
+git checkout master
+git push --all
 ```
