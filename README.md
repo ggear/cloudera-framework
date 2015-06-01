@@ -10,7 +10,13 @@ This module can be installed to a local repository:
 mvn clean install
 ```
 
-Alternatively, the module can be distributed as a binary by embedding (or manually installing) the dependencies via the appropriate branch repository (eg [cloudera-framework-0.0.1-cdhcdh5.4.0](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-0.0.1-cdhcdh5.4.0/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository))
+Alternatively, the module can be distributed as a binary by embedding (or manually installing) the dependencies via the appropriate branch repository (eg [cloudera-framework-0.0.1-cdhcdh5.4.0](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-0.0.1-cdhcdh5.4.0/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) as per [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire))
+
+##Usage
+
+Unit test examples are bundled with the module [here](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-main/cloudera-framework-main-test/src/test/java/com/cloudera/framework/main/test).
+
+The [client](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-client/pom.xml) and [runtime](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-runtime/pom.xml) bill-of-materials can be used as POM dependencies.
 
 ##Release
 
