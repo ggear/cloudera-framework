@@ -33,11 +33,16 @@ public class LocalClusterDFSMRTestTest extends LocalClusterDFSMRTest {
   }
 
   @Test
-  public void testFileSystem() throws IOException {
+  public void testFileSystemMkDir() throws IOException {
     String someDir = BaseTest.getPathHDFS("/some_dir");
     Assert.assertTrue(FileSystem.get(getFileSystem().getConf()).mkdirs(
         new Path(someDir)));
     Assert.assertTrue(new File(BaseTest.getPathLocal(someDir)).exists());
+  }
+
+  @Test
+  public void testFileSystemClean() throws IOException {
+    Assert.assertFalse(new File(BaseTest.getPathLocal("/some_dir")).exists());
   }
 
   @Test

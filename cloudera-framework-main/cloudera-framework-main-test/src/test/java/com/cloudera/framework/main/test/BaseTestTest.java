@@ -10,18 +10,18 @@ public class BaseTestTest {
 
   @Test
   public void testPathHDFS() {
-    Assert.assertEquals(BaseTest.PATH_HDFS, BaseTest.getPathHDFS(""));
-    Assert.assertEquals(BaseTest.PATH_HDFS, BaseTest.getPathHDFS("/"));
-    Assert.assertEquals(BaseTest.PATH_HDFS, BaseTest.getPathHDFS("//"));
-    Assert.assertEquals(BaseTest.PATH_HDFS + "/tmp",
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL, BaseTest.getPathHDFS(""));
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL, BaseTest.getPathHDFS("/"));
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL, BaseTest.getPathHDFS("//"));
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp",
         BaseTest.getPathHDFS("tmp"));
-    Assert.assertEquals(BaseTest.PATH_HDFS + "/tmp",
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp",
         BaseTest.getPathHDFS("/tmp"));
-    Assert.assertEquals(BaseTest.PATH_HDFS + "/tmp",
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp",
         BaseTest.getPathHDFS("//tmp"));
-    Assert.assertEquals(BaseTest.PATH_HDFS + "/tmp",
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp",
         BaseTest.getPathHDFS("///tmp"));
-    Assert.assertEquals(BaseTest.PATH_HDFS + "/tmp/tmp",
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp/tmp",
         BaseTest.getPathHDFS("///tmp//tmp"));
   }
 

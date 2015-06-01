@@ -14,16 +14,23 @@ import org.junit.BeforeClass;
 
 public abstract class BaseTest {
 
-  public static String PATH_HDFS = "target/test-hdfs";
-  public static String PATH_LOCAL = "target/test-local";
+  public static String DIR_WORKING = "target";
+  public static String DIR_FS_LOCAL = "test-fs-local";
+  public static String DIR_HDFS_LOCAL = "test-hdfs-local";
+  public static String DIR_HDFS_MINICLUSTER = "test-hdfs-minicluster";
+
+  public static String PATH_FS_LOCAL = DIR_WORKING + "/" + DIR_FS_LOCAL;
+  public static String PATH_HDFS_LOCAL = DIR_WORKING + "/" + DIR_HDFS_LOCAL;
+  public static String PATH_HDFS_MINICLUSTER = DIR_WORKING + "/"
+      + DIR_HDFS_MINICLUSTER;
 
   public static String PATH_LOCAL_WORKING_DIR = new File(".").getAbsolutePath();
   public static String PATH_LOCAL_WORKING_DIR_TARGET = PATH_LOCAL_WORKING_DIR
-      + "/target";
-  public static String PATH_LOCAL_WORKING_DIR_TARGET_DATA = PATH_LOCAL_WORKING_DIR_TARGET
-      + "/test-data";
-  public static String PATH_LOCAL_WORKING_DIR_TARGET_HDFS = PATH_LOCAL_WORKING_DIR_TARGET
-      + "/test-hdfs";
+      + "/" + DIR_WORKING;
+  public static String PATH_LOCAL_WORKING_DIR_TARGET_HDFS_LOCAL = PATH_LOCAL_WORKING_DIR_TARGET
+      + "/" + DIR_HDFS_LOCAL;
+  public static String PATH_LOCAL_WORKING_DIR_TARGET_HDFS_MINICLUSTER = PATH_LOCAL_WORKING_DIR_TARGET
+      + "/" + DIR_HDFS_MINICLUSTER;
 
   public abstract FileSystem getFileSystem() throws Exception;
 
@@ -35,8 +42,9 @@ public abstract class BaseTest {
     System.setProperty("dir.working", PATH_LOCAL_WORKING_DIR);
     System.setProperty("dir.working.target", PATH_LOCAL_WORKING_DIR_TARGET);
     System.setProperty("dir.working.target.hdfs",
-        PATH_LOCAL_WORKING_DIR_TARGET_HDFS);
-    System.setProperty("test.build.data", PATH_LOCAL_WORKING_DIR_TARGET_HDFS);
+        PATH_LOCAL_WORKING_DIR_TARGET_HDFS_LOCAL);
+    System.setProperty("test.build.data",
+        PATH_LOCAL_WORKING_DIR_TARGET_HDFS_MINICLUSTER);
     System.setProperty("dir.working.target.derby", PATH_LOCAL_WORKING_DIR
         + "/target/derby");
     System.setProperty("dir.working.target.derby.db",
@@ -84,9 +92,9 @@ public abstract class BaseTest {
 
   public static String getPathHDFS(String pathRelativeToHDFSRoot) {
     String pathRelativeToHDFSRootSansLeadingSlashes = stripLeadingSlashes(pathRelativeToHDFSRoot);
-    return pathRelativeToHDFSRootSansLeadingSlashes.equals("") ? PATH_HDFS
-        : new Path(PATH_HDFS, pathRelativeToHDFSRootSansLeadingSlashes).toUri()
-            .toString();
+    return pathRelativeToHDFSRootSansLeadingSlashes.equals("") ? PATH_HDFS_LOCAL
+        : new Path(PATH_HDFS_LOCAL, pathRelativeToHDFSRootSansLeadingSlashes)
+            .toUri().toString();
   }
 
   private static String stripLeadingSlashes(String string) {
