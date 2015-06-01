@@ -2,14 +2,12 @@ package com.cloudera.framework.main.test;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
@@ -27,20 +25,18 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 @Ignore
-public class LocalClusterDFSMRTestTest extends LocalClusterDFSMRTest {
+public class MiniClusterDFSMRTestTest extends MiniClusterDFSMRTest {
 
   @Test
   public void testFileSystemClean() throws IOException {
-    Assert.assertFalse(new File(BaseTest.getPathLocal("/some_dir")).exists());
+    Assert.assertFalse(getFileSystem().isDirectory(new Path("/some_dir")));
   }
 
   @Test
   public void testFileSystemMkDir() throws IOException {
-    Assert.assertFalse(new File(BaseTest.getPathLocal("/some_dir")).exists());
-    Assert.assertTrue(FileSystem.get(getFileSystem().getConf()).mkdirs(
-        new Path(BaseTest.getPathHDFS("/some_dir"))));
-    Assert.assertTrue(new File(BaseTest.getPathLocal(BaseTest
-        .getPathHDFS("/some_dir"))).exists());
+    Assert.assertFalse(getFileSystem().isDirectory(new Path("/some_dir")));
+    Assert.assertTrue(getFileSystem().mkdirs(new Path("/some_dir")));
+    Assert.assertTrue(getFileSystem().isDirectory(new Path("/some_dir")));
   }
 
   @Test

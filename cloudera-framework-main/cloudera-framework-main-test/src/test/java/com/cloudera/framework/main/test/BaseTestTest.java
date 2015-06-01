@@ -2,8 +2,7 @@ package com.cloudera.framework.main.test;
 
 import java.io.File;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 public class BaseTestTest {

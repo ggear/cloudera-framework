@@ -3,11 +3,25 @@ package com.cloudera.framework.main.test;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 
+import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class MiniClusterDFSMRHiveTestTest extends MiniClusterDFSMRHiveTest {
+
+  @Test
+  public void testFileSystemClean() throws IOException {
+    Assert.assertFalse(getFileSystem().isDirectory(new Path("/some_dir")));
+  }
+
+  @Test
+  public void testFileSystemMkDir() throws IOException {
+    Assert.assertFalse(getFileSystem().isDirectory(new Path("/some_dir")));
+    Assert.assertTrue(getFileSystem().mkdirs(new Path("/some_dir")));
+    Assert.assertTrue(getFileSystem().isDirectory(new Path("/some_dir")));
+  }
 
   @Test
   public void testHive() throws Exception {

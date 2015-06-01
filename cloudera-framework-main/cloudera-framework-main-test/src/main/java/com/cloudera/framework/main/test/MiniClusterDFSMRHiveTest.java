@@ -21,8 +21,8 @@ import org.apache.hadoop.hive.ql.processors.CommandProcessorFactory;
 import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.hadoop.mapreduce.MRConfig;
 import org.apache.hive.jdbc.miniHS2.MiniHS2;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,41 +33,46 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
   private static Logger LOG = LoggerFactory
       .getLogger(MiniClusterDFSMRHiveTest.class);
 
-  private MiniHS2 cluster;
-  private HiveConf clusterConfig;
+  private static HiveConf conf;
+  private static MiniHS2 miniHs2;
+
+  @Override
+  public Configuration getConf() throws Exception {
+    return conf;
+  }
 
   @Override
   public FileSystem getFileSystem() throws IOException {
-    return cluster.getLocalFS();
+    return miniHs2 == null ? null : miniHs2.getDfs().getFileSystem();
   }
 
-  @Before
-  @Override
-  public void setUp() throws Exception {
-    cluster = new MiniHS2(clusterConfig = new HiveConf(new Configuration(),
+  @BeforeClass
+  public static void setUpRuntime() throws Exception {
+    miniHs2 = new MiniHS2(conf = new HiveConf(new Configuration(),
         CopyTask.class), true);
     Map<String, String> config = new HashMap<String, String>();
     config.put(ConfVars.HIVE_SUPPORT_CONCURRENCY.varname, "false");
     config.put(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
-    cluster.start(config);
-    SessionState.start(new SessionState(clusterConfig));
+    miniHs2.start(config);
+    SessionState.start(new SessionState(conf));
     for (String table : processStatement("SHOW TABLES")) {
       processStatement("DROP TABLE " + table);
     }
   }
 
-  @After
-  @Override
-  public void tearDown() throws Exception {
-    cluster.stop();
+  @AfterClass
+  public static void tearDownRuntime() throws Exception {
+    if (miniHs2 != null) {
+      miniHs2.stop();
+    }
   }
 
-  public List<String> processStatement(String statement) throws SQLException,
-      CommandNeedRetryException, IOException {
+  public static List<String> processStatement(String statement)
+      throws SQLException, CommandNeedRetryException, IOException {
     List<String> results = new ArrayList<String>();
     CommandProcessor commandProcessor = CommandProcessorFactory
-        .getForHiveCommand(statement.trim().split("\\s+"), clusterConfig);
-    (commandProcessor = commandProcessor == null ? new Driver(clusterConfig)
+        .getForHiveCommand(statement.trim().split("\\s+"), conf);
+    (commandProcessor = commandProcessor == null ? new Driver(conf)
         : commandProcessor).run(statement);
     if (commandProcessor instanceof Driver) {
       ((Driver) commandProcessor).getResults(results);
@@ -75,7 +80,7 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
     return results;
   }
 
-  public List<String> processStatement(String directory, String file)
+  public static List<String> processStatement(String directory, String file)
       throws SQLException, CommandNeedRetryException, IOException {
     List<String> results = new ArrayList<String>();
     for (String statement : readFileToLines(directory, file, COMMAND_DELIMETER)) {
@@ -84,7 +89,7 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
     return results;
   }
 
-  private List<String> readFileToLines(String directory, String file,
+  private static List<String> readFileToLines(String directory, String file,
       String delimeter) throws IOException {
     List<String> lines = new ArrayList<String>();
     InputStream inputStream = MiniClusterDFSMRHiveTest.class

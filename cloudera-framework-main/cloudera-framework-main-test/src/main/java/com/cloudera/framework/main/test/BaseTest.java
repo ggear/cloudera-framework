@@ -4,15 +4,19 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BaseTest {
+
+  private static Logger LOG = LoggerFactory.getLogger(BaseTest.class);
 
   public static String DIR_WORKING = "target";
   public static String DIR_FS_LOCAL = "test-fs-local";
@@ -32,10 +36,12 @@ public abstract class BaseTest {
   public static String PATH_LOCAL_WORKING_DIR_TARGET_HDFS_MINICLUSTER = PATH_LOCAL_WORKING_DIR_TARGET
       + "/" + DIR_HDFS_MINICLUSTER;
 
+  public abstract Configuration getConf() throws Exception;
+
   public abstract FileSystem getFileSystem() throws Exception;
 
   @BeforeClass
-  public static void setUpClass() {
+  public static void setUpSystem() {
     System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
     System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
     System.setProperty("java.security.krb5.conf", "/dev/null");
@@ -60,7 +66,7 @@ public abstract class BaseTest {
   }
 
   @Before
-  public void setUp() throws Exception {
+  public void setUpFileSystem() throws Exception {
     FileSystem fileSystem = getFileSystem();
     if (fileSystem != null) {
       Path rootPath = new Path(BaseTest.getPathHDFS("/"));
@@ -75,11 +81,6 @@ public abstract class BaseTest {
       fileSystem.setPermission(userPath, new FsPermission(FsAction.ALL,
           FsAction.ALL, FsAction.ALL));
     }
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    getFileSystem().close();
   }
 
   public static String getPathLocal(String pathRelativeToModuleRoot) {
