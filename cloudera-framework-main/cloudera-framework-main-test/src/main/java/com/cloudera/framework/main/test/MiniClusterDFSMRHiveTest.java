@@ -35,6 +35,7 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
 
   private static HiveConf conf;
   private static MiniHS2 miniHs2;
+  private static FileSystem fileSystem;
 
   @Override
   public Configuration getConf() throws Exception {
@@ -43,27 +44,51 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
 
   @Override
   public FileSystem getFileSystem() throws IOException {
-    return miniHs2 == null ? null : miniHs2.getDfs().getFileSystem();
+    return fileSystem;
+  }
+
+  @Override
+  public String getPathLocal(String pathRelativeToModuleRoot) throws Exception {
+    throw new UnsupportedOperationException(
+        "Local paths are not accessible in mini-cluster mode");
+  }
+
+  @Override
+  public String getPathHDFS(String pathRelativeToHDFSRoot) throws Exception {
+    return pathRelativeToHDFSRoot;
   }
 
   @BeforeClass
   public static void setUpRuntime() throws Exception {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, enter [setUpRuntime]");
+    }
     miniHs2 = new MiniHS2(conf = new HiveConf(new Configuration(),
         CopyTask.class), true);
     Map<String, String> config = new HashMap<String, String>();
     config.put(ConfVars.HIVE_SUPPORT_CONCURRENCY.varname, "false");
     config.put(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
     miniHs2.start(config);
+    fileSystem = miniHs2.getDfs().getFileSystem();
     SessionState.start(new SessionState(conf));
     for (String table : processStatement("SHOW TABLES")) {
       processStatement("DROP TABLE " + table);
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, leave [setUpRuntime]");
     }
   }
 
   @AfterClass
   public static void tearDownRuntime() throws Exception {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, enter [tearDownRuntime]");
+    }
     if (miniHs2 != null) {
       miniHs2.stop();
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, leave [tearDownRuntime]");
     }
   }
 

@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsAction;
@@ -40,8 +41,17 @@ public abstract class BaseTest {
 
   public abstract FileSystem getFileSystem() throws Exception;
 
+  public abstract String getPathLocal(String pathRelativeToModuleRoot)
+      throws Exception;
+
+  public abstract String getPathHDFS(String pathRelativeToHDFSRoot)
+      throws Exception;
+
   @BeforeClass
   public static void setUpSystem() {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, enter [setUpSystem]");
+    }
     System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
     System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
     System.setProperty("java.security.krb5.conf", "/dev/null");
@@ -63,42 +73,74 @@ public abstract class BaseTest {
       derbyDir.mkdirs();
     } catch (IOException e) {
     }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, leave [setUpSystem]");
+    }
   }
 
   @Before
   public void setUpFileSystem() throws Exception {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, enter [setUpFileSystem]");
+    }
     FileSystem fileSystem = getFileSystem();
     if (fileSystem != null) {
-      Path rootPath = new Path(BaseTest.getPathHDFS("/"));
-      Path tmpPath = new Path(BaseTest.getPathHDFS("/tmp"));
-      Path userPath = new Path(BaseTest.getPathHDFS("/user"));
-      fileSystem.delete(rootPath, true);
-      fileSystem.mkdirs(rootPath);
-      fileSystem.mkdirs(tmpPath);
-      fileSystem.setPermission(tmpPath, new FsPermission(FsAction.ALL,
+      String rootDir = "/";
+      String tmpDir = "/tmp";
+      String userDir = "/user";
+      String userHiveDir = userDir + "/hive";
+      String userIdDir = userDir + "/" + System.getProperty("user.name");
+      String userIdWorkingDir = userIdDir + "/target";
+      String userIdWorkingDirPrefix = "MiniMRCluster_";
+      Path rootPath = new Path(getPathHDFS(rootDir));
+      Path tmpPath = new Path(getPathHDFS(tmpDir));
+      Path userPath = new Path(getPathHDFS(userDir));
+      Path userHivePath = new Path(getPathHDFS(userHiveDir));
+      Path userIdPath = new Path(getPathHDFS(userIdDir));
+      Path userIdWorkingPath = new Path(getPathHDFS(userIdWorkingDir));
+      if (fileSystem.exists(rootPath)) {
+        for (FileStatus fileStatus : fileSystem.listStatus(rootPath)) {
+          if (!fileStatus.getPath().getName().equals(userPath.getName())) {
+            fileSystem.delete(fileStatus.getPath(), true);
+          }
+        }
+      }
+      if (fileSystem.exists(userPath)) {
+        for (FileStatus fileStatus : fileSystem.listStatus(userPath)) {
+          if (!fileStatus.getPath().getName().equals(userIdPath.getName())) {
+            fileSystem.delete(fileStatus.getPath(), true);
+          }
+        }
+      }
+      if (fileSystem.exists(userIdPath)) {
+        for (FileStatus fileStatus : fileSystem.listStatus(userIdPath)) {
+          if (!fileStatus.getPath().getName()
+              .equals(userIdWorkingPath.getName())) {
+            fileSystem.delete(fileStatus.getPath(), true);
+          }
+        }
+      }
+      if (fileSystem.exists(userIdWorkingPath)) {
+        for (FileStatus fileStatus : fileSystem.listStatus(userIdWorkingPath)) {
+          if (!fileStatus.getPath().getName()
+              .startsWith(userIdWorkingDirPrefix)) {
+            fileSystem.delete(fileStatus.getPath(), true);
+          }
+        }
+      }
+      fileSystem.mkdirs(tmpPath, new FsPermission(FsAction.ALL, FsAction.ALL,
+          FsAction.ALL));
+      fileSystem.mkdirs(userHivePath, new FsPermission(FsAction.ALL,
           FsAction.ALL, FsAction.ALL));
-      fileSystem.mkdirs(userPath);
-      fileSystem.setPermission(userPath, new FsPermission(FsAction.ALL,
+      fileSystem.mkdirs(userIdPath, new FsPermission(FsAction.ALL,
           FsAction.ALL, FsAction.ALL));
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, leave [setUpFileSystem]");
     }
   }
 
-  public static String getPathLocal(String pathRelativeToModuleRoot) {
-    String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(pathRelativeToModuleRoot);
-    return pathRelativeToModuleRootSansLeadingSlashes.equals("") ? PATH_LOCAL_WORKING_DIR
-        .length() < 2 ? "/" : PATH_LOCAL_WORKING_DIR.substring(0,
-        PATH_LOCAL_WORKING_DIR.length() - 2) : new Path(PATH_LOCAL_WORKING_DIR,
-        pathRelativeToModuleRootSansLeadingSlashes).toUri().toString();
-  }
-
-  public static String getPathHDFS(String pathRelativeToHDFSRoot) {
-    String pathRelativeToHDFSRootSansLeadingSlashes = stripLeadingSlashes(pathRelativeToHDFSRoot);
-    return pathRelativeToHDFSRootSansLeadingSlashes.equals("") ? PATH_HDFS_LOCAL
-        : new Path(PATH_HDFS_LOCAL, pathRelativeToHDFSRootSansLeadingSlashes)
-            .toUri().toString();
-  }
-
-  private static String stripLeadingSlashes(String string) {
+  protected static String stripLeadingSlashes(String string) {
     int indexAfterLeadingSlash = 0;
     while (indexAfterLeadingSlash < string.length()
         && string.charAt(indexAfterLeadingSlash) == '/')

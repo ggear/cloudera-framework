@@ -3,7 +3,6 @@ package com.cloudera.framework.main.test;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
@@ -12,15 +11,34 @@ import org.junit.Test;
 public class MiniClusterDFSMRHiveTestTest extends MiniClusterDFSMRHiveTest {
 
   @Test
-  public void testFileSystemClean() throws IOException {
-    Assert.assertFalse(getFileSystem().isDirectory(new Path("/some_dir")));
+  public void testPathHDFS() throws Exception {
+    Assert.assertEquals("", getPathHDFS(""));
+    Assert.assertEquals("/", getPathHDFS("/"));
+    Assert.assertEquals("//", getPathHDFS("//"));
+    Assert.assertEquals("tmp", getPathHDFS("tmp"));
+    Assert.assertEquals("/tmp", getPathHDFS("/tmp"));
+    Assert.assertEquals("//tmp", getPathHDFS("//tmp"));
+    Assert.assertEquals("///tmp", getPathHDFS("///tmp"));
+    Assert.assertEquals("///tmp//tmp", getPathHDFS("///tmp//tmp"));
+  }
+
+  @Test(expected = Exception.class)
+  public void testPathLocal() throws Exception {
+    Assert.assertNull(getPathLocal(""));
   }
 
   @Test
-  public void testFileSystemMkDir() throws IOException {
-    Assert.assertFalse(getFileSystem().isDirectory(new Path("/some_dir")));
+  public void testFileSystemMkDir() throws Exception {
+    Assert.assertFalse(getFileSystem().exists(new Path("/some_dir/some_file")));
     Assert.assertTrue(getFileSystem().mkdirs(new Path("/some_dir")));
-    Assert.assertTrue(getFileSystem().isDirectory(new Path("/some_dir")));
+    Assert.assertTrue(getFileSystem().createNewFile(
+        new Path("/some_dir/some_file")));
+    Assert.assertTrue(getFileSystem().exists(new Path("/some_dir/some_file")));
+  }
+
+  @Test
+  public void testFileSystemClean() throws Exception {
+    Assert.assertFalse(getFileSystem().exists(new Path("/some_dir/some_file")));
   }
 
   @Test

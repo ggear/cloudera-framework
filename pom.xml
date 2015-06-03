@@ -41,6 +41,12 @@
 
 	<properties>
 
+		<maven.test.skip>false</maven.test.skip>
+		<maven.system-test.skip>true</maven.system-test.skip>
+		<maven.integration-test.skip>true</maven.integration-test.skip>
+		<maven.data-download.skip>true</maven.data-download.skip>
+		<maven.assembly.skip>false</maven.assembly.skip>
+
 		<hadoop-cdh.version>5</hadoop-cdh.version>
 		<hadoop.version>2.6.0-cdh5.4.0</hadoop.version>
 		<hadoop-hive.version>1.1.0-cdh5.4.0</hadoop-hive.version>
@@ -56,6 +62,49 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>CMP</id>
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+				<maven.system-test.skip>true</maven.system-test.skip>
+				<maven.integration-test.skip>true</maven.integration-test.skip>
+				<maven.data-download.skip>true</maven.data-download.skip>
+				<maven.assembly.skip>true</maven.assembly.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>BLD</id>
+			<properties>
+				<maven.test.skip>false</maven.test.skip>
+				<maven.system-test.skip>true</maven.system-test.skip>
+				<maven.integration-test.skip>true</maven.integration-test.skip>
+				<maven.data-download.skip>true</maven.data-download.skip>
+				<maven.assembly.skip>true</maven.assembly.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>PKG</id>
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+				<maven.system-test.skip>true</maven.system-test.skip>
+				<maven.integration-test.skip>true</maven.integration-test.skip>
+				<maven.data-download.skip>true</maven.data-download.skip>
+				<maven.assembly.skip>false</maven.assembly.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>ALL</id>
+			<properties>
+				<maven.test.skip>false</maven.test.skip>
+				<maven.system-test.skip>false</maven.system-test.skip>
+				<maven.integration-test.skip>false</maven.integration-test.skip>
+				<maven.data-download.skip>false</maven.data-download.skip>
+				<maven.assembly.skip>false</maven.assembly.skip>
+			</properties>
+		</profile>
+	</profiles>
 
 	<modules>
 		<module>cloudera-framework-repo</module>

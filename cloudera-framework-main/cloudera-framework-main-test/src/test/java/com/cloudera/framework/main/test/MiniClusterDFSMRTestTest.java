@@ -26,22 +26,40 @@ import org.junit.Test;
 public class MiniClusterDFSMRTestTest extends MiniClusterDFSMRTest {
 
   @Test
-  public void testFileSystemClean() throws IOException {
-    Assert.assertFalse(getFileSystem().isDirectory(new Path("/some_dir")));
+  public void testPathHDFS() throws Exception {
+    Assert.assertEquals("", getPathHDFS(""));
+    Assert.assertEquals("/", getPathHDFS("/"));
+    Assert.assertEquals("//", getPathHDFS("//"));
+    Assert.assertEquals("tmp", getPathHDFS("tmp"));
+    Assert.assertEquals("/tmp", getPathHDFS("/tmp"));
+    Assert.assertEquals("//tmp", getPathHDFS("//tmp"));
+    Assert.assertEquals("///tmp", getPathHDFS("///tmp"));
+    Assert.assertEquals("///tmp//tmp", getPathHDFS("///tmp//tmp"));
+  }
+
+  @Test(expected = Exception.class)
+  public void testPathLocal() throws Exception {
+    Assert.assertNull(getPathLocal(""));
   }
 
   @Test
-  public void testFileSystemMkDir() throws IOException {
-    Assert.assertFalse(getFileSystem().isDirectory(new Path("/some_dir")));
+  public void testFileSystemMkDir() throws Exception {
+    Assert.assertFalse(getFileSystem().exists(new Path("/some_dir/some_file")));
     Assert.assertTrue(getFileSystem().mkdirs(new Path("/some_dir")));
-    Assert.assertTrue(getFileSystem().isDirectory(new Path("/some_dir")));
+    Assert.assertTrue(getFileSystem().createNewFile(
+        new Path("/some_dir/some_file")));
+    Assert.assertTrue(getFileSystem().exists(new Path("/some_dir/some_file")));
   }
 
   @Test
-  public void testMapReduce() throws IOException, ClassNotFoundException,
-      InterruptedException {
-    Path dirInput = new Path(BaseTest.getPathHDFS("/tmp/wordcount/input"));
-    Path dirOutput = new Path(BaseTest.getPathHDFS("/tmp/wordcount/output"));
+  public void testFileSystemClean() throws Exception {
+    Assert.assertFalse(getFileSystem().exists(new Path("/some_dir/some_file")));
+  }
+
+  @Test
+  public void testMapReduce() throws Exception {
+    Path dirInput = new Path(getPathHDFS("/tmp/wordcount/input"));
+    Path dirOutput = new Path(getPathHDFS("/tmp/wordcount/output"));
     Path hdfsFile = new Path(dirInput, "file1.txt");
     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this
         .getFileSystem().create(hdfsFile)));

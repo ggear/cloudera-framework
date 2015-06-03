@@ -28,24 +28,53 @@ import org.junit.Test;
 public class LocalClusterDFSMRTestTest extends LocalClusterDFSMRTest {
 
   @Test
+  public void testPathHDFS() throws Exception {
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL, getPathHDFS(""));
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL, getPathHDFS("/"));
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL, getPathHDFS("//"));
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp", getPathHDFS("tmp"));
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp", getPathHDFS("/tmp"));
+    Assert
+        .assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp", getPathHDFS("//tmp"));
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp",
+        getPathHDFS("///tmp"));
+    Assert.assertEquals(BaseTest.PATH_HDFS_LOCAL + "/tmp/tmp",
+        getPathHDFS("///tmp//tmp"));
+  }
+
+  @Test
+  public void testPathLocal() throws Exception {
+    String localDir = new File(".").getAbsolutePath();
+    localDir = localDir.substring(0, localDir.length() - 2);
+    Assert.assertEquals(localDir, getPathLocal(""));
+    Assert.assertEquals(localDir, getPathLocal("/"));
+    Assert.assertEquals(localDir, getPathLocal("//"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("tmp"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("/tmp"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("//tmp"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("///tmp"));
+    Assert.assertEquals(localDir + "/tmp/tmp", getPathLocal("///tmp//tmp"));
+  }
+
+  @Test
   public void testFileSystemClean() throws IOException {
-    Assert.assertFalse(new File(BaseTest.getPathLocal("/some_dir")).exists());
+    Assert.assertFalse(new File(getPathLocal("/some_dir")).exists());
   }
 
   @Test
   public void testFileSystemMkDir() throws IOException {
-    Assert.assertFalse(new File(BaseTest.getPathLocal("/some_dir")).exists());
+    Assert.assertFalse(new File(getPathLocal("/some_dir")).exists());
     Assert.assertTrue(FileSystem.get(getFileSystem().getConf()).mkdirs(
-        new Path(BaseTest.getPathHDFS("/some_dir"))));
-    Assert.assertTrue(new File(BaseTest.getPathLocal(BaseTest
-        .getPathHDFS("/some_dir"))).exists());
+        new Path(getPathHDFS("/some_dir"))));
+    Assert
+        .assertTrue(new File(getPathLocal(getPathHDFS("/some_dir"))).exists());
   }
 
   @Test
   public void testMapReduce() throws IOException, ClassNotFoundException,
       InterruptedException {
-    Path dirInput = new Path(BaseTest.getPathHDFS("/tmp/wordcount/input"));
-    Path dirOutput = new Path(BaseTest.getPathHDFS("/tmp/wordcount/output"));
+    Path dirInput = new Path(getPathHDFS("/tmp/wordcount/input"));
+    Path dirOutput = new Path(getPathHDFS("/tmp/wordcount/output"));
     Path hdfsFile = new Path(dirInput, "file1.txt");
     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this
         .getFileSystem().create(hdfsFile)));

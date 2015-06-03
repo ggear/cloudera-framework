@@ -21,6 +21,7 @@ public abstract class MiniClusterDFSMRTest extends BaseTest {
   private static JobConf conf;
   private static MiniDFSShim miniDfs;
   private static MiniMrShim miniMr;
+  private static FileSystem fileSystem;
 
   @Override
   public Configuration getConf() throws Exception {
@@ -29,24 +30,48 @@ public abstract class MiniClusterDFSMRTest extends BaseTest {
 
   @Override
   public FileSystem getFileSystem() throws IOException {
-    return miniDfs == null ? null : miniDfs.getFileSystem();
+    return fileSystem;
+  }
+
+  @Override
+  public String getPathLocal(String pathRelativeToModuleRoot) throws Exception {
+    throw new UnsupportedOperationException(
+        "Local paths are not accessible in mini-cluster mode");
+  }
+
+  @Override
+  public String getPathHDFS(String pathRelativeToHDFSRoot) throws Exception {
+    return pathRelativeToHDFSRoot;
   }
 
   @BeforeClass
   public static void setUpRuntime() throws Exception {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, enter [setUpRuntime]");
+    }
     conf = new JobConf();
-    miniDfs = ShimLoader.getHadoopShims().getMiniDfs(conf, 1, true, null);
+    fileSystem = (miniDfs = ShimLoader.getHadoopShims().getMiniDfs(conf, 1,
+        true, null)).getFileSystem();
     miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(conf, 1,
-        miniDfs.getFileSystem().getUri().toString(), 1);
+        fileSystem.getUri().toString(), 1);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, leave [setUpRuntime]");
+    }
   }
 
   @AfterClass
   public static void tearDownRuntime() throws Exception {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, enter [tearDownRuntime]");
+    }
     if (miniMr != null) {
       miniMr.shutdown();
     }
     if (miniDfs != null) {
       miniDfs.shutdown();
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, leave [tearDownRuntime]");
     }
   }
 
