@@ -63,7 +63,7 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
   @BeforeClass
   public static void setUpRuntime() throws Exception {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [setUpRuntime]");
+      LOG.debug("Test harness [setUpRuntime] starting");
     }
     miniHs2 = new MiniHS2(conf = new HiveConf(new Configuration(),
         CopyTask.class), true);
@@ -77,40 +77,40 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
       processStatement("DROP TABLE " + table);
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [setUpRuntime]");
+      LOG.debug("Test harness [setUpRuntime] finished");
     }
   }
 
   @Before
   public void setUpSchema() throws Exception {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [setUpSchema]");
+      LOG.debug("Test harness [setUpSchema] starting");
     }
     for (String table : processStatement("SHOW TABLES")) {
       processStatement("DROP TABLE " + table);
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [setUpSchema]");
+      LOG.debug("Test harness [setUpSchema] finished");
     }
   }
 
   @AfterClass
   public static void tearDownRuntime() throws Exception {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [tearDownRuntime]");
+      LOG.debug("Test harness [tearDownRuntime] starting");
     }
     if (miniHs2 != null) {
       miniHs2.stop();
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [tearDownRuntime]");
+      LOG.debug("Test harness [tearDownRuntime] finished");
     }
   }
 
   public static List<String> processStatement(String statement)
       throws SQLException, CommandNeedRetryException, IOException {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [processStatement]\n" + statement);
+      LOG.debug("Test harness [processStatement] starting\n" + statement);
     }
     List<String> results = new ArrayList<String>();
     CommandProcessor commandProcessor = CommandProcessorFactory
@@ -121,7 +121,7 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
       ((Driver) commandProcessor).getResults(results);
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [processStatement]\n"
+      LOG.debug("Test harness [processStatement] finished\n"
           + StringUtils.join(results.toArray(), "\n"));
     }
     return results;

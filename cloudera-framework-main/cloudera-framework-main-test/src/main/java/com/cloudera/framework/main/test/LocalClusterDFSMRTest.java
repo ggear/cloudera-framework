@@ -49,24 +49,24 @@ public abstract class LocalClusterDFSMRTest extends BaseTest {
   @BeforeClass
   public static void setUpRuntime() throws Exception {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [setUpRuntime]");
+      LOG.debug("Test harness [setUpRuntime] starting");
     }
     fileSystem = FileSystem.getLocal(conf = new JobConf());
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [setUpRuntime]");
+      LOG.debug("Test harness [setUpRuntime] finished");
     }
   }
 
   @AfterClass
   public static void tearDownRuntime() throws Exception {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [tearDownRuntime]");
+      LOG.debug("Test harness [tearDownRuntime] starting");
     }
     if (fileSystem != null) {
       fileSystem.close();
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [tearDownRuntime]");
+      LOG.debug("Test harness [tearDownRuntime] finished");
     }
   }
 

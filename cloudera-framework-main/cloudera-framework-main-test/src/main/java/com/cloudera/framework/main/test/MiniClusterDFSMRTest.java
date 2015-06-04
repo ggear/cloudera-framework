@@ -47,7 +47,7 @@ public abstract class MiniClusterDFSMRTest extends BaseTest {
   @BeforeClass
   public static void setUpRuntime() throws Exception {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [setUpRuntime]");
+      LOG.debug("Test harness [setUpRuntime] starting");
     }
     conf = new JobConf();
     fileSystem = (miniDfs = ShimLoader.getHadoopShims().getMiniDfs(conf, 1,
@@ -55,14 +55,14 @@ public abstract class MiniClusterDFSMRTest extends BaseTest {
     miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(conf, 1,
         fileSystem.getUri().toString(), 1);
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [setUpRuntime]");
+      LOG.debug("Test harness [setUpRuntime] finished");
     }
   }
 
   @AfterClass
   public static void tearDownRuntime() throws Exception {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [tearDownRuntime]");
+      LOG.debug("Test harness [tearDownRuntime] starting");
     }
     if (miniMr != null) {
       miniMr.shutdown();
@@ -71,7 +71,7 @@ public abstract class MiniClusterDFSMRTest extends BaseTest {
       miniDfs.shutdown();
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [tearDownRuntime]");
+      LOG.debug("Test harness [tearDownRuntime] finished");
     }
   }
 

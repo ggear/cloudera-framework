@@ -16,6 +16,8 @@ Alternatively, the module can be distributed as a binary by embedding (or manual
 
 Unit test examples are bundled with the module [here](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-main/cloudera-framework-main-test/src/test/java/com/cloudera/framework/main/test). Note that the mini-cluster driven unit tests require significant heap (and perm-gen), the maven surefire plugin is setup with adequate settings but it may be necessary to bump up the default settings in your IDE as necessary.
 
+Unit test runtime logging verbosity can be controlled via log4j, as per the example [log4j.properties](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-test/src/test/resources/log4j.properties) and suppressing spurious logging via [logging.properties](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-test/src/test/resources/logging.properties). Note that there remains some System.out and System.err logs which cannot easily be suppressed.
+
 The [client](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-client/pom.xml) and [runtime](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-runtime/pom.xml) bill-of-materials can be used as POM dependencies.
 
 ##Release

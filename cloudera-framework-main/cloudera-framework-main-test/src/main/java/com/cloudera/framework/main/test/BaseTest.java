@@ -50,8 +50,10 @@ public abstract class BaseTest {
   @BeforeClass
   public static void setUpSystem() {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [setUpSystem]");
+      LOG.debug("Test harness [setUpSystem] starting");
     }
+    System.setProperty("java.util.logging.config.file", PATH_LOCAL_WORKING_DIR
+        + "/src/test/resources/logging.properties");
     System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
     System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
     System.setProperty("java.security.krb5.conf", "/dev/null");
@@ -74,14 +76,14 @@ public abstract class BaseTest {
     } catch (IOException e) {
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [setUpSystem]");
+      LOG.debug("Test harness [setUpSystem] finished");
     }
   }
 
   @Before
   public void setUpFileSystem() throws Exception {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, enter [setUpFileSystem]");
+      LOG.debug("Test harness [setUpFileSystem] starting");
     }
     FileSystem fileSystem = getFileSystem();
     if (fileSystem != null) {
@@ -136,7 +138,7 @@ public abstract class BaseTest {
           FsAction.ALL, FsAction.ALL));
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness, leave [setUpFileSystem]");
+      LOG.debug("Test harness [setUpFileSystem] finished");
     }
   }
 
