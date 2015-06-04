@@ -14,7 +14,7 @@ Alternatively, the module can be distributed as a binary by embedding (or manual
 
 ##Usage
 
-Unit test examples are bundled with the module [here](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-main/cloudera-framework-main-test/src/test/java/com/cloudera/framework/main/test).
+Unit test examples are bundled with the module [here](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-main/cloudera-framework-main-test/src/test/java/com/cloudera/framework/main/test). Note that the mini-cluster driven unit tests require significant heap (and perm-gen), the maven surefire plugin is setup with adequate settings but it may be necessary to bump up the default settings in your IDE as necessary.
 
 The [client](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-client/pom.xml) and [runtime](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-runtime/pom.xml) bill-of-materials can be used as POM dependencies.
 

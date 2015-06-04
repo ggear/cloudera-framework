@@ -42,7 +42,7 @@ public class MiniClusterDFSMRHiveTestTest extends MiniClusterDFSMRHiveTest {
   }
 
   @Test
-  public void testHive() throws Exception {
+  public void testHiveCreateSelect() throws Exception {
     new File(BaseTest.PATH_FS_LOCAL).mkdirs();
     File localDataFile = new File(BaseTest.PATH_FS_LOCAL + "/somedata.csv");
     BufferedWriter writer = new BufferedWriter(new FileWriter(localDataFile));
@@ -58,7 +58,11 @@ public class MiniClusterDFSMRHiveTestTest extends MiniClusterDFSMRHiveTest {
     Assert.assertEquals("2",
         processStatement("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
     Assert.assertEquals(1, processStatement("SHOW TABLES").size());
-    processStatement("DROP TABLE somedata");
+  }
+
+  @Test
+  public void testHiveClean() throws Exception {
+    Assert.assertEquals(0, processStatement("SHOW TABLES").size());
   }
 
 }

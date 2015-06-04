@@ -23,6 +23,7 @@ import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.hadoop.mapreduce.MRConfig;
 import org.apache.hive.jdbc.miniHS2.MiniHS2;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,19 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
     }
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test harness, leave [setUpRuntime]");
+    }
+  }
+
+  @Before
+  public void setUpSchema() throws Exception {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, enter [setUpSchema]");
+    }
+    for (String table : processStatement("SHOW TABLES")) {
+      processStatement("DROP TABLE " + table);
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, leave [setUpSchema]");
     }
   }
 
