@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hive.conf.HiveConf;
@@ -65,10 +66,10 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
     }
     miniHs2 = new MiniHS2(conf = new HiveConf(new Configuration(),
         CopyTask.class), true);
-    Map<String, String> config = new HashMap<String, String>();
-    config.put(ConfVars.HIVE_SUPPORT_CONCURRENCY.varname, "false");
-    config.put(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
-    miniHs2.start(config);
+    Map<String, String> hiveConf = new HashMap<String, String>();
+    hiveConf.put(ConfVars.HIVE_SUPPORT_CONCURRENCY.varname, "false");
+    hiveConf.put(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
+    miniHs2.start(hiveConf);
     fileSystem = miniHs2.getDfs().getFileSystem();
     SessionState.start(new SessionState(conf));
     for (String table : processStatement("SHOW TABLES")) {
@@ -94,6 +95,9 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
 
   public static List<String> processStatement(String statement)
       throws SQLException, CommandNeedRetryException, IOException {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, enter [processStatement]\n" + statement);
+    }
     List<String> results = new ArrayList<String>();
     CommandProcessor commandProcessor = CommandProcessorFactory
         .getForHiveCommand(statement.trim().split("\\s+"), conf);
@@ -101,6 +105,10 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
         : commandProcessor).run(statement);
     if (commandProcessor instanceof Driver) {
       ((Driver) commandProcessor).getResults(results);
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test harness, leave [processStatement]\n"
+          + StringUtils.join(results.toArray(), "\n"));
     }
     return results;
   }
