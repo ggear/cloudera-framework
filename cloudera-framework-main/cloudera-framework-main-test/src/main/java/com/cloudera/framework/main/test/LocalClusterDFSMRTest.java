@@ -6,6 +6,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapreduce.MRConfig;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public abstract class LocalClusterDFSMRTest extends BaseTest {
   private static FileSystem fileSystem;
 
   @Override
-  public Configuration getConf() throws Exception {
+  public Configuration getConf()  {
     return conf;
   }
 
@@ -52,6 +53,7 @@ public abstract class LocalClusterDFSMRTest extends BaseTest {
       LOG.debug("Test harness [setUpRuntime] starting");
     }
     fileSystem = FileSystem.getLocal(conf = new JobConf());
+    conf.set(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test harness [setUpRuntime] finished");
     }

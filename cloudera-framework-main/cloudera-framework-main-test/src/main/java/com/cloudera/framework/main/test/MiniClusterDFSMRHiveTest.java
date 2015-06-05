@@ -40,7 +40,7 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
   private static FileSystem fileSystem;
 
   @Override
-  public Configuration getConf() throws Exception {
+  public Configuration getConf()  {
     return conf;
   }
 
@@ -65,14 +65,16 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test harness [setUpRuntime] starting");
     }
-    miniHs2 = new MiniHS2(conf = new HiveConf(new Configuration(),
-        CopyTask.class), true);
-    Map<String, String> hiveConf = new HashMap<String, String>();
-    hiveConf.put(ConfVars.HIVE_SUPPORT_CONCURRENCY.varname, "false");
-    hiveConf.put(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
-    miniHs2.start(hiveConf);
+    HiveConf hiveConf = new HiveConf(new Configuration(),
+        CopyTask.class);
+    miniHs2 = new MiniHS2(hiveConf, true);
+    Map<String, String> hiveConfOverlay = new HashMap<String, String>();
+    hiveConfOverlay.put(ConfVars.HIVE_SUPPORT_CONCURRENCY.varname, "false");
+    hiveConfOverlay.put(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
+    miniHs2.start(hiveConfOverlay);
     fileSystem = miniHs2.getDfs().getFileSystem();
-    SessionState.start(new SessionState(conf));
+    SessionState.start(new SessionState(hiveConf));
+    conf = miniHs2.getHiveConf();
     for (String table : processStatement("SHOW TABLES")) {
       processStatement("DROP TABLE " + table);
     }

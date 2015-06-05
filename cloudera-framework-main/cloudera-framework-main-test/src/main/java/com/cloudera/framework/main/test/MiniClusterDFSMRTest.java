@@ -18,13 +18,13 @@ public abstract class MiniClusterDFSMRTest extends BaseTest {
   private static Logger LOG = LoggerFactory
       .getLogger(MiniClusterDFSMRTest.class);
 
-  private static JobConf conf;
+  private static Configuration conf;
   private static MiniDFSShim miniDfs;
   private static MiniMrShim miniMr;
   private static FileSystem fileSystem;
 
   @Override
-  public Configuration getConf() throws Exception {
+  public Configuration getConf() {
     return conf;
   }
 
@@ -49,11 +49,12 @@ public abstract class MiniClusterDFSMRTest extends BaseTest {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test harness [setUpRuntime] starting");
     }
-    conf = new JobConf();
-    fileSystem = (miniDfs = ShimLoader.getHadoopShims().getMiniDfs(conf, 1,
+    JobConf jobConf = new JobConf();
+    fileSystem = (miniDfs = ShimLoader.getHadoopShims().getMiniDfs(jobConf, 1,
         true, null)).getFileSystem();
-    miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(conf, 1,
+    miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(jobConf, 1,
         fileSystem.getUri().toString(), 1);
+    conf = fileSystem.getConf();
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test harness [setUpRuntime] finished");
     }

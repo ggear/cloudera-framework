@@ -66,7 +66,7 @@ public class MiniClusterDFSMRTestTest extends MiniClusterDFSMRTest {
     writer.write("a a a a a\n");
     writer.write("b b\n");
     writer.close();
-    Job job = Job.getInstance(getFileSystem().getConf());
+    Job job = Job.getInstance(getConf());
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
     job.setMapperClass(MapClass.class);

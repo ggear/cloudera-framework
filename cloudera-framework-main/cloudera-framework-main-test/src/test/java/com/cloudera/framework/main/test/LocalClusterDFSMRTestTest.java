@@ -64,7 +64,7 @@ public class LocalClusterDFSMRTestTest extends LocalClusterDFSMRTest {
   @Test
   public void testFileSystemMkDir() throws IOException {
     Assert.assertFalse(new File(getPathLocal("/some_dir")).exists());
-    Assert.assertTrue(FileSystem.get(getFileSystem().getConf()).mkdirs(
+    Assert.assertTrue(FileSystem.get(getConf()).mkdirs(
         new Path(getPathHDFS("/some_dir"))));
     Assert
         .assertTrue(new File(getPathLocal(getPathHDFS("/some_dir"))).exists());
@@ -81,7 +81,7 @@ public class LocalClusterDFSMRTestTest extends LocalClusterDFSMRTest {
     writer.write("a a a a a\n");
     writer.write("b b\n");
     writer.close();
-    Job job = Job.getInstance(getFileSystem().getConf());
+    Job job = Job.getInstance(getConf());
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(IntWritable.class);
     job.setMapperClass(MapClass.class);

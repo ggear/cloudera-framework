@@ -1,6 +1,7 @@
 package com.cloudera.framework.main.test;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -28,6 +29,7 @@ public abstract class BaseTest {
   public static String DIR_FS_LOCAL = "test-fs-local";
   public static String DIR_HDFS_LOCAL = "test-hdfs-local";
   public static String DIR_HDFS_MINICLUSTER = "test-hdfs-minicluster";
+  public static final String DIR_MINICLUSTER_PREFIX = "MiniMRCluster_";
 
   public static String PATH_FS_LOCAL = DIR_WORKING + "/" + DIR_FS_LOCAL;
   public static String PATH_HDFS_LOCAL = DIR_WORKING + "/" + DIR_HDFS_LOCAL;
@@ -53,7 +55,7 @@ public abstract class BaseTest {
       throws Exception;
 
   @BeforeClass
-  public static void setUpSystem() {
+  public static void setUpSystem() throws Exception {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test harness [setUpSystem] starting");
     }
@@ -76,6 +78,16 @@ public abstract class BaseTest {
         System.getProperty("dir.working.target.derby") + "/db");
     System.setProperty("derby.stream.error.file",
         System.getProperty("dir.working.target.derby") + "/derby.log");
+    for (File file : new File(PATH_LOCAL_WORKING_DIR_TARGET)
+        .listFiles(new FileFilter() {
+          @Override
+          public boolean accept(File pathname) {
+            return pathname.isDirectory()
+                && pathname.getName().startsWith(DIR_MINICLUSTER_PREFIX);
+          }
+        })) {
+      FileUtils.deleteDirectory(file);
+    }
     File derbyDir = new File(System.getProperty("dir.working.target.derby.db"));
     try {
       FileUtils.deleteDirectory(derbyDir);
@@ -100,7 +112,7 @@ public abstract class BaseTest {
       String userHiveDir = userDir + "/hive";
       String userIdDir = userDir + "/" + System.getProperty("user.name");
       String userIdWorkingDir = userIdDir + "/target";
-      String userIdWorkingDirPrefix = "MiniMRCluster_";
+      String userIdWorkingDirPrefix = DIR_MINICLUSTER_PREFIX;
       Path rootPath = new Path(getPathHDFS(rootDir));
       Path tmpPath = new Path(getPathHDFS(tmpDir));
       Path userPath = new Path(getPathHDFS(userDir));
