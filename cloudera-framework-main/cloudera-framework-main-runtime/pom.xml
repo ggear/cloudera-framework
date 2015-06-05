@@ -81,6 +81,12 @@
 			<version>${hadoop-flume.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.flume.flume-ng-sinks</groupId>
+			<artifactId>flume-hdfs-sink</artifactId>
+			<version>${hadoop-flume.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-common</artifactId>
 			<version>${hadoop.version}</version>
@@ -103,7 +109,7 @@
 			<artifactId>hadoop-yarn-server-tests</artifactId>
 			<version>${hadoop.version}</version>
 			<classifier>tests</classifier>
-		</dependency>		
+		</dependency>
 	</dependencies>
 
 	<build>

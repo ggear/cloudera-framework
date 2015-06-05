@@ -195,6 +195,26 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>install-artifact</id>
+						<phase>install</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<pomFile>pom.xml</pomFile>
+							<file>pom.xml</file>
+							<localRepositoryPath>cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</localRepositoryPath>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 
 </project>
