@@ -84,7 +84,6 @@
 			<groupId>org.apache.flume.flume-ng-sinks</groupId>
 			<artifactId>flume-hdfs-sink</artifactId>
 			<version>${hadoop-flume.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
