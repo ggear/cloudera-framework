@@ -486,10 +486,6 @@
 					<artifactId>activation</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>org.apache.flume</groupId>
-					<artifactId>flume-ng-auth</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>xmlenc</groupId>
 					<artifactId>xmlenc</artifactId>
 				</exclusion>
@@ -731,10 +727,6 @@
 				<exclusion>
 					<groupId>javax.activation</groupId>
 					<artifactId>activation</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.flume</groupId>
-					<artifactId>flume-ng-auth</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
