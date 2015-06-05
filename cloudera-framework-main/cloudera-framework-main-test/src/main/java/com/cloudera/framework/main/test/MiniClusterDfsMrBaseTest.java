@@ -13,10 +13,10 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class MiniClusterDFSMRTest extends BaseTest {
+public abstract class MiniClusterDfsMrBaseTest extends BaseTest {
 
   private static Logger LOG = LoggerFactory
-      .getLogger(MiniClusterDFSMRTest.class);
+      .getLogger(MiniClusterDfsMrBaseTest.class);
 
   private static Configuration conf;
   private static MiniDFSShim miniDfs;
@@ -36,44 +36,36 @@ public abstract class MiniClusterDFSMRTest extends BaseTest {
   @Override
   public String getPathLocal(String pathRelativeToModuleRoot) throws Exception {
     throw new UnsupportedOperationException(
-        "Local paths are not accessible in mini-cluster mode");
+        "Local file system paths are not accessible outside of DFS in mini-cluster mode");
   }
 
   @Override
-  public String getPathHDFS(String pathRelativeToHDFSRoot) throws Exception {
-    return pathRelativeToHDFSRoot;
+  public String getPathDfs(String pathRelativeToDfsRoot) throws Exception {
+    return pathRelativeToDfsRoot;
   }
 
   @BeforeClass
   public static void setUpRuntime() throws Exception {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpRuntime] starting");
-    }
+    long time = debugMessageHeader(LOG, "setUpRuntime");
     JobConf jobConf = new JobConf();
     fileSystem = (miniDfs = ShimLoader.getHadoopShims().getMiniDfs(jobConf, 1,
         true, null)).getFileSystem();
     miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(jobConf, 1,
         fileSystem.getUri().toString(), 1);
     conf = fileSystem.getConf();
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpRuntime] finished");
-    }
+    debugMessageFooter(LOG, "setUpRuntime", time);
   }
 
   @AfterClass
   public static void tearDownRuntime() throws Exception {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [tearDownRuntime] starting");
-    }
+    long time = debugMessageHeader(LOG, "tearDownRuntime");
     if (miniMr != null) {
       miniMr.shutdown();
     }
     if (miniDfs != null) {
       miniDfs.shutdown();
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [tearDownRuntime] finished");
-    }
+    debugMessageFooter(LOG, "tearDownRuntime", time);
   }
 
 }

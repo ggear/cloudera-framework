@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hive.conf.HiveConf;
@@ -28,19 +27,19 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
+public abstract class MiniClusterDfsMrHiveBaseTest extends BaseTest {
 
   private static final String COMMAND_DELIMETER = ";";
 
   private static Logger LOG = LoggerFactory
-      .getLogger(MiniClusterDFSMRHiveTest.class);
+      .getLogger(MiniClusterDfsMrHiveBaseTest.class);
 
   private static HiveConf conf;
   private static MiniHS2 miniHs2;
   private static FileSystem fileSystem;
 
   @Override
-  public Configuration getConf()  {
+  public Configuration getConf() {
     return conf;
   }
 
@@ -52,21 +51,18 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
   @Override
   public String getPathLocal(String pathRelativeToModuleRoot) throws Exception {
     throw new UnsupportedOperationException(
-        "Local paths are not accessible in mini-cluster mode");
+        "Local file system paths are not accessible outside of DFS in mini-cluster mode");
   }
 
   @Override
-  public String getPathHDFS(String pathRelativeToHDFSRoot) throws Exception {
-    return pathRelativeToHDFSRoot;
+  public String getPathDfs(String pathRelativeToDfsRoot) throws Exception {
+    return pathRelativeToDfsRoot;
   }
 
   @BeforeClass
   public static void setUpRuntime() throws Exception {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpRuntime] starting");
-    }
-    HiveConf hiveConf = new HiveConf(new Configuration(),
-        CopyTask.class);
+    long time = debugMessageHeader(LOG, "setUpRuntime");
+    HiveConf hiveConf = new HiveConf(new Configuration(), CopyTask.class);
     miniHs2 = new MiniHS2(hiveConf, true);
     Map<String, String> hiveConfOverlay = new HashMap<String, String>();
     hiveConfOverlay.put(ConfVars.HIVE_SUPPORT_CONCURRENCY.varname, "false");
@@ -78,42 +74,30 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
     for (String table : processStatement("SHOW TABLES")) {
       processStatement("DROP TABLE " + table);
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpRuntime] finished");
-    }
+    debugMessageFooter(LOG, "setUpRuntime", time);
   }
 
   @Before
   public void setUpSchema() throws Exception {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpSchema] starting");
-    }
+    long time = debugMessageHeader(LOG, "setUpSchema");
     for (String table : processStatement("SHOW TABLES")) {
       processStatement("DROP TABLE " + table);
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpSchema] finished");
-    }
+    debugMessageFooter(LOG, "setUpSchema", time);
   }
 
   @AfterClass
   public static void tearDownRuntime() throws Exception {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [tearDownRuntime] starting");
-    }
+    long time = debugMessageHeader(LOG, "tearDownRuntime");
     if (miniHs2 != null) {
       miniHs2.stop();
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [tearDownRuntime] finished");
-    }
+    debugMessageFooter(LOG, "tearDownRuntime", time);
   }
 
   public static List<String> processStatement(String statement)
       throws SQLException, CommandNeedRetryException, IOException {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [processStatement] starting\n" + statement);
-    }
+    long time = debugMessageHeader(LOG, "processStatement");
     List<String> results = new ArrayList<String>();
     CommandProcessor commandProcessor = CommandProcessorFactory
         .getForHiveCommand(statement.trim().split("\\s+"), conf);
@@ -122,10 +106,7 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
     if (commandProcessor instanceof Driver) {
       ((Driver) commandProcessor).getResults(results);
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [processStatement] finished\n"
-          + StringUtils.join(results.toArray(), "\n"));
-    }
+    debugMessageFooter(LOG, "processStatement", time);
     return results;
   }
 
@@ -141,7 +122,7 @@ public abstract class MiniClusterDFSMRHiveTest extends BaseTest {
   private static List<String> readFileToLines(String directory, String file,
       String delimeter) throws IOException {
     List<String> lines = new ArrayList<String>();
-    InputStream inputStream = MiniClusterDFSMRHiveTest.class
+    InputStream inputStream = MiniClusterDfsMrHiveBaseTest.class
         .getResourceAsStream(directory + "/" + file);
     if (inputStream != null) {
       try {

@@ -1,5 +1,5 @@
 --
--- Schema Create
+-- Create and describe table
 --
 
 CREATE TABLE IF NOT EXISTS somedata (
@@ -8,7 +8,5 @@ CREATE TABLE IF NOT EXISTS somedata (
 )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE;
-
-SHOW TABLES;
 
 DESCRIBE somedata;

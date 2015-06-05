@@ -21,44 +21,73 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
+/**
+ * Base class for all unit tests, not intended for direct extension
+ */
 public abstract class BaseTest {
+
+  /**
+   * Get the {@link Configuration} for clients of this test
+   *
+   * @return
+   * @throws Exception
+   */
+  public abstract Configuration getConf() throws Exception;
+
+  /**
+   * Get the {@link FileSystem} for clients of this test
+   *
+   * @return
+   * @throws Exception
+   */
+  public abstract FileSystem getFileSystem() throws Exception;
+
+  /**
+   * Get the absolute local file system path from a local file system path
+   * relative to the module root
+   *
+   * @param pathRelativeToModuleRoot
+   * @return
+   * @throws Exception
+   */
+  public abstract String getPathLocal(String pathRelativeToModuleRoot)
+      throws Exception;
+
+  /**
+   * Get the relative local file system path from a local file system path
+   * relative to the DFS root
+   *
+   * @param pathRelativeToDfsRoot
+   * @return
+   * @throws Exception
+   */
+  public abstract String getPathDfs(String pathRelativeToDfsRoot)
+      throws Exception;
 
   private static Logger LOG = LoggerFactory.getLogger(BaseTest.class);
 
   public static String DIR_WORKING = "target";
   public static String DIR_FS_LOCAL = "test-fs-local";
-  public static String DIR_HDFS_LOCAL = "test-hdfs-local";
-  public static String DIR_HDFS_MINICLUSTER = "test-hdfs-minicluster";
+  public static String DIR_DFS_LOCAL = "test-hdfs-local";
+  public static String DIR_DFS_MINICLUSTER = "test-hdfs-minicluster";
   public static final String DIR_MINICLUSTER_PREFIX = "MiniMRCluster_";
 
   public static String PATH_FS_LOCAL = DIR_WORKING + "/" + DIR_FS_LOCAL;
-  public static String PATH_HDFS_LOCAL = DIR_WORKING + "/" + DIR_HDFS_LOCAL;
-  public static String PATH_HDFS_MINICLUSTER = DIR_WORKING + "/"
-      + DIR_HDFS_MINICLUSTER;
+  public static String PATH_DFS_LOCAL = DIR_WORKING + "/" + DIR_DFS_LOCAL;
+  public static String PATH_DFS_MINICLUSTER = DIR_WORKING + "/"
+      + DIR_DFS_MINICLUSTER;
 
   public static String PATH_LOCAL_WORKING_DIR = new File(".").getAbsolutePath();
   public static String PATH_LOCAL_WORKING_DIR_TARGET = PATH_LOCAL_WORKING_DIR
       + "/" + DIR_WORKING;
-  public static String PATH_LOCAL_WORKING_DIR_TARGET_HDFS_LOCAL = PATH_LOCAL_WORKING_DIR_TARGET
-      + "/" + DIR_HDFS_LOCAL;
-  public static String PATH_LOCAL_WORKING_DIR_TARGET_HDFS_MINICLUSTER = PATH_LOCAL_WORKING_DIR_TARGET
-      + "/" + DIR_HDFS_MINICLUSTER;
-
-  public abstract Configuration getConf() throws Exception;
-
-  public abstract FileSystem getFileSystem() throws Exception;
-
-  public abstract String getPathLocal(String pathRelativeToModuleRoot)
-      throws Exception;
-
-  public abstract String getPathHDFS(String pathRelativeToHDFSRoot)
-      throws Exception;
+  public static String PATH_LOCAL_WORKING_DIR_TARGET_DFS_LOCAL = PATH_LOCAL_WORKING_DIR_TARGET
+      + "/" + DIR_DFS_LOCAL;
+  public static String PATH_LOCAL_WORKING_DIR_TARGET_DFS_MINICLUSTER = PATH_LOCAL_WORKING_DIR_TARGET
+      + "/" + DIR_DFS_MINICLUSTER;
 
   @BeforeClass
   public static void setUpSystem() throws Exception {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpSystem] starting");
-    }
+    long time = debugMessageHeader(LOG, "setUpSystem");
     SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
     LogManager.getLogManager().reset();
     SLF4JBridgeHandler.install();
@@ -69,9 +98,9 @@ public abstract class BaseTest {
     System.setProperty("dir.working", PATH_LOCAL_WORKING_DIR);
     System.setProperty("dir.working.target", PATH_LOCAL_WORKING_DIR_TARGET);
     System.setProperty("dir.working.target.hdfs",
-        PATH_LOCAL_WORKING_DIR_TARGET_HDFS_LOCAL);
+        PATH_LOCAL_WORKING_DIR_TARGET_DFS_LOCAL);
     System.setProperty("test.build.data",
-        PATH_LOCAL_WORKING_DIR_TARGET_HDFS_MINICLUSTER);
+        PATH_LOCAL_WORKING_DIR_TARGET_DFS_MINICLUSTER);
     System.setProperty("dir.working.target.derby", PATH_LOCAL_WORKING_DIR
         + "/target/derby");
     System.setProperty("dir.working.target.derby.db",
@@ -94,16 +123,12 @@ public abstract class BaseTest {
       derbyDir.mkdirs();
     } catch (IOException e) {
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpSystem] finished");
-    }
+    debugMessageFooter(LOG, "setUpSystem", time);
   }
 
   @Before
   public void setUpFileSystem() throws Exception {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpFileSystem] starting");
-    }
+    long time = debugMessageHeader(LOG, "setUpFileSystem");
     FileSystem fileSystem = getFileSystem();
     if (fileSystem != null) {
       String rootDir = "/";
@@ -113,12 +138,12 @@ public abstract class BaseTest {
       String userIdDir = userDir + "/" + System.getProperty("user.name");
       String userIdWorkingDir = userIdDir + "/target";
       String userIdWorkingDirPrefix = DIR_MINICLUSTER_PREFIX;
-      Path rootPath = new Path(getPathHDFS(rootDir));
-      Path tmpPath = new Path(getPathHDFS(tmpDir));
-      Path userPath = new Path(getPathHDFS(userDir));
-      Path userHivePath = new Path(getPathHDFS(userHiveDir));
-      Path userIdPath = new Path(getPathHDFS(userIdDir));
-      Path userIdWorkingPath = new Path(getPathHDFS(userIdWorkingDir));
+      Path rootPath = new Path(getPathDfs(rootDir));
+      Path tmpPath = new Path(getPathDfs(tmpDir));
+      Path userPath = new Path(getPathDfs(userDir));
+      Path userHivePath = new Path(getPathDfs(userHiveDir));
+      Path userIdPath = new Path(getPathDfs(userIdDir));
+      Path userIdWorkingPath = new Path(getPathDfs(userIdWorkingDir));
       if (fileSystem.exists(rootPath)) {
         for (FileStatus fileStatus : fileSystem.listStatus(rootPath)) {
           if (!fileStatus.getPath().getName().equals(userPath.getName())) {
@@ -156,9 +181,7 @@ public abstract class BaseTest {
       fileSystem.mkdirs(userIdPath, new FsPermission(FsAction.ALL,
           FsAction.ALL, FsAction.ALL));
     }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Test harness [setUpFileSystem] finished");
-    }
+    debugMessageFooter(LOG, "setUpFileSystem", time);
   }
 
   protected static String stripLeadingSlashes(String string) {
@@ -168,6 +191,20 @@ public abstract class BaseTest {
       ++indexAfterLeadingSlash;
     return indexAfterLeadingSlash == 0 ? string : string.substring(
         indexAfterLeadingSlash, string.length());
+  }
+
+  protected static long debugMessageHeader(Logger log, String method) {
+    if (log.isDebugEnabled()) {
+      log.debug("Test harness [" + method + "] starting ... ");
+    }
+    return System.currentTimeMillis();
+  }
+
+  protected static void debugMessageFooter(Logger log, String method, long start) {
+    long time = System.currentTimeMillis() - start;
+    if (log.isDebugEnabled()) {
+      log.debug("Test harness [" + method + "] finished in [" + time + "] ms");
+    }
   }
 
 }
