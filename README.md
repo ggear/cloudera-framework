@@ -1,6 +1,6 @@
 #Cloudera Framework
 
-Cloudera framework, providing a unit-testing harness, client and runtime bill-of-materials.
+Cloudera framework, providing a unit test harness, client and runtime bill-of-materials with full coverage across HDFS, MR2, YARN and Hive.
 
 ##Install
 
@@ -16,7 +16,7 @@ Alternatively, the module can be distributed as a binary by embedding (or manual
 
 Unit test examples are bundled with the module [here](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-main/cloudera-framework-main-test/src/test/java/com/cloudera/framework/main/test). Note that the mini-cluster driven unit tests require significant heap (and perm-gen), the maven surefire plugin is setup with adequate settings but it may be necessary to bump up the default settings in your IDE as necessary.
 
-Unit test runtime logging verbosity can be controlled via log4j, as per the example [log4j.properties](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-test/src/test/resources/log4j.properties) and suppressing spurious logging via [logging.properties](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-test/src/test/resources/logging.properties). Note that there remains some System.out and System.err logs which cannot easily be suppressed.
+Unit test runtime logging verbosity can be controlled via log4j, as per the example [log4j.properties](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-test/src/test/resources/log4j.properties).
 
 The [client](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-client/pom.xml) and [runtime](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-runtime/pom.xml) bill-of-materials can be used as POM dependencies.
 
@@ -25,9 +25,9 @@ The [client](https://raw.githubusercontent.com/ggear/cloudera-framework/master/c
 To perform a release:
 
 ```bash
-export VERSION_RELEASE=0.0.4
+export VERSION_RELEASE=0.0.5
 export CDH_VERSION_RELEASE=cdh5.4.0
-export VERSION_HEAD=0.0.5
+export VERSION_HEAD=0.0.6
 export CDH_VERSION_HEAD=cdh5.4.0
 mvn release:prepare -B -DreleaseVersion=$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:clean

@@ -2,6 +2,8 @@ package com.cloudera.framework.main.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -14,6 +16,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
+import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 public abstract class BaseTest {
 
@@ -52,8 +57,10 @@ public abstract class BaseTest {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test harness [setUpSystem] starting");
     }
-    System.setProperty("java.util.logging.config.file", PATH_LOCAL_WORKING_DIR
-        + "/src/test/resources/logging.properties");
+    SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+    LogManager.getLogManager().reset();
+    SLF4JBridgeHandler.install();
+    java.util.logging.Logger.getGlobal().setLevel(Level.OFF);
     System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
     System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
     System.setProperty("java.security.krb5.conf", "/dev/null");
