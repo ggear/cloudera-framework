@@ -53,7 +53,8 @@
 		<hadoop-flume.version>1.5.0-cdh5.4.0</hadoop-flume.version>
 		<hadoop-parquet.version>1.5.0-cdh5.4.0</hadoop-parquet.version>
 
-		<slf4j.version>1.7.12</slf4j.version>
+		<slf4j.version>1.7.5</slf4j.version>
+		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
 		<junit.version>4.12</junit.version>
 
 		<java.version>1.7</java.version>
