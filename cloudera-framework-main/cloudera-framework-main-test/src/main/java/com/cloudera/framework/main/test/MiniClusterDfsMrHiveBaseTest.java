@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -19,6 +20,7 @@ import org.apache.hadoop.hive.ql.Driver;
 import org.apache.hadoop.hive.ql.exec.CopyTask;
 import org.apache.hadoop.hive.ql.processors.CommandProcessor;
 import org.apache.hadoop.hive.ql.processors.CommandProcessorFactory;
+import org.apache.hadoop.hive.ql.processors.CommandProcessorResponse;
 import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.hadoop.mapreduce.MRConfig;
 import org.apache.hive.jdbc.miniHS2.MiniHS2;
@@ -98,10 +100,20 @@ public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
     CommandProcessor commandProcessor = CommandProcessorFactory
         .getForHiveCommand((statement = new StrSubstitutor(parameters,
             "${hivevar:", "}").replace(statement.trim())).split("\\s+"), conf);
-    (commandProcessor = commandProcessor == null ? new Driver(conf)
-        : commandProcessor).run(statement);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(LOG_PREFIX + " [processStatement] pre-execute, statement:\n"
+          + statement);
+    }
+    CommandProcessorResponse commandProcessorResponse = (commandProcessor = commandProcessor == null ? new Driver(
+        conf) : commandProcessor).run(statement);
     if (commandProcessor instanceof Driver) {
       ((Driver) commandProcessor).getResults(results);
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(LOG_PREFIX
+          + " [processStatement] post-execute, response code ["
+          + commandProcessorResponse.getResponseCode() + "], result:\n"
+          + StringUtils.join(results.toArray(), "\n"));
     }
     debugMessageFooter(LOG, "processStatement", time);
     return results;

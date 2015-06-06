@@ -28,6 +28,8 @@ public abstract class BaseTest {
 
   private static Logger LOG = LoggerFactory.getLogger(BaseTest.class);
 
+  public static String LOG_PREFIX = "Test harness";
+
   public static String DIR_WORKING = "target";
   public static String DIR_FS_LOCAL = "test-fs-local";
   public static String DIR_DFS_LOCAL = "test-hdfs-local";
@@ -199,7 +201,7 @@ public abstract class BaseTest {
 
   protected static long debugMessageHeader(Logger log, String method) {
     if (log.isDebugEnabled()) {
-      log.debug("Test harness [" + method + "] starting ... ");
+      log.debug(LOG_PREFIX + " [" + method + "] starting ... ");
     }
     return System.currentTimeMillis();
   }
@@ -207,7 +209,7 @@ public abstract class BaseTest {
   protected static void debugMessageFooter(Logger log, String method, long start) {
     long time = System.currentTimeMillis() - start;
     if (log.isDebugEnabled()) {
-      log.debug("Test harness [" + method + "] finished in [" + time + "] ms");
+      log.debug(LOG_PREFIX + " [" + method + "] finished in [" + time + "] ms");
     }
   }
 
