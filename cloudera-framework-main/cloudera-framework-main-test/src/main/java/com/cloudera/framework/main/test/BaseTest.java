@@ -53,17 +53,15 @@ public abstract class BaseTest {
    * Get the {@link Configuration} for clients of this test
    *
    * @return
-   * @throws Exception
    */
-  public abstract Configuration getConf() throws Exception;
+  public abstract Configuration getConf();
 
   /**
    * Get the {@link FileSystem} for clients of this test
    *
    * @return
-   * @throws Exception
    */
-  public abstract FileSystem getFileSystem() throws Exception;
+  public abstract FileSystem getFileSystem();
 
   /**
    * Get the absolute local file system path from a local file system path
@@ -71,10 +69,14 @@ public abstract class BaseTest {
    *
    * @param pathRelativeToModuleRoot
    * @return
-   * @throws Exception
    */
-  public abstract String getPathLocal(String pathRelativeToModuleRoot)
-      throws Exception;
+  public String getPathLocal(String pathRelativeToModuleRoot) {
+    String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(pathRelativeToModuleRoot);
+    return pathRelativeToModuleRootSansLeadingSlashes.equals("") ? PATH_LOCAL_WORKING_DIR
+        .length() < 2 ? "/" : PATH_LOCAL_WORKING_DIR.substring(0,
+        PATH_LOCAL_WORKING_DIR.length() - 2) : new Path(PATH_LOCAL_WORKING_DIR,
+        pathRelativeToModuleRootSansLeadingSlashes).toUri().toString();
+  }
 
   /**
    * Get the relative local file system path from a local file system path
@@ -82,10 +84,10 @@ public abstract class BaseTest {
    *
    * @param pathRelativeToDfsRoot
    * @return
-   * @throws Exception
    */
-  public abstract String getPathDfs(String pathRelativeToDfsRoot)
-      throws Exception;
+  public String getPathDfs(String pathRelativeToDfsRoot) {
+    return pathRelativeToDfsRoot;
+  }
 
   @BeforeClass
   public static void setUpSystem() throws Exception {

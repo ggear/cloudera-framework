@@ -122,9 +122,18 @@ public class MiniClusterDfsMrHiveTest extends MiniClusterDfsMrHiveBaseTest {
    *
    * @throws Exception
    */
-  @Test(expected = Exception.class)
+  @Test
   public void testPathLocal() throws Exception {
-    Assert.assertNull(getPathLocal(""));
+    String localDir = new File(".").getAbsolutePath();
+    localDir = localDir.substring(0, localDir.length() - 2);
+    Assert.assertEquals(localDir, getPathLocal(""));
+    Assert.assertEquals(localDir, getPathLocal("/"));
+    Assert.assertEquals(localDir, getPathLocal("//"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("tmp"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("/tmp"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("//tmp"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("///tmp"));
+    Assert.assertEquals(localDir + "/tmp/tmp", getPathLocal("///tmp//tmp"));
   }
 
 }

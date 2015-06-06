@@ -1,7 +1,5 @@
 package com.cloudera.framework.main.test;
 
-import java.io.IOException;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hive.shims.HadoopShims.MiniDFSShim;
@@ -13,7 +11,7 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class MiniClusterDfsMrBaseTest extends BaseTest {
+public class MiniClusterDfsMrBaseTest extends BaseTest {
 
   private static Logger LOG = LoggerFactory
       .getLogger(MiniClusterDfsMrBaseTest.class);
@@ -29,19 +27,8 @@ public abstract class MiniClusterDfsMrBaseTest extends BaseTest {
   }
 
   @Override
-  public FileSystem getFileSystem() throws IOException {
+  public FileSystem getFileSystem() {
     return fileSystem;
-  }
-
-  @Override
-  public String getPathLocal(String pathRelativeToModuleRoot) throws Exception {
-    throw new UnsupportedOperationException(
-        "Local file system paths are not accessible outside of DFS in mini-cluster mode");
-  }
-
-  @Override
-  public String getPathDfs(String pathRelativeToDfsRoot) throws Exception {
-    return pathRelativeToDfsRoot;
   }
 
   @BeforeClass

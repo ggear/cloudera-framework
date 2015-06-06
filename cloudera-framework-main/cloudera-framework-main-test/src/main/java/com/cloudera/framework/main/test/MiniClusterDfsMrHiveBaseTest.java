@@ -27,7 +27,7 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class MiniClusterDfsMrHiveBaseTest extends BaseTest {
+public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
 
   private static final String COMMAND_DELIMETER = ";";
 
@@ -44,19 +44,8 @@ public abstract class MiniClusterDfsMrHiveBaseTest extends BaseTest {
   }
 
   @Override
-  public FileSystem getFileSystem() throws IOException {
+  public FileSystem getFileSystem() {
     return fileSystem;
-  }
-
-  @Override
-  public String getPathLocal(String pathRelativeToModuleRoot) throws Exception {
-    throw new UnsupportedOperationException(
-        "Local file system paths are not accessible outside of DFS in mini-cluster mode");
-  }
-
-  @Override
-  public String getPathDfs(String pathRelativeToDfsRoot) throws Exception {
-    return pathRelativeToDfsRoot;
   }
 
   @BeforeClass

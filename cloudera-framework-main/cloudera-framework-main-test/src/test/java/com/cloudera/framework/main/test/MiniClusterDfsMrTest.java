@@ -2,6 +2,7 @@ package com.cloudera.framework.main.test;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -160,9 +161,18 @@ public class MiniClusterDfsMrTest extends MiniClusterDfsMrBaseTest {
    *
    * @throws Exception
    */
-  @Test(expected = Exception.class)
+  @Test
   public void testPathLocal() throws Exception {
-    Assert.assertNull(getPathLocal(""));
+    String localDir = new File(".").getAbsolutePath();
+    localDir = localDir.substring(0, localDir.length() - 2);
+    Assert.assertEquals(localDir, getPathLocal(""));
+    Assert.assertEquals(localDir, getPathLocal("/"));
+    Assert.assertEquals(localDir, getPathLocal("//"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("tmp"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("/tmp"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("//tmp"));
+    Assert.assertEquals(localDir + "/tmp", getPathLocal("///tmp"));
+    Assert.assertEquals(localDir + "/tmp/tmp", getPathLocal("///tmp//tmp"));
   }
 
   private static class MapClass extends
