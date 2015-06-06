@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hive.conf.HiveConf;
@@ -86,10 +87,17 @@ public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
 
   public static List<String> processStatement(String statement)
       throws SQLException, CommandNeedRetryException, IOException {
+    return processStatement(statement, new HashMap<String, String>());
+  }
+
+  public static List<String> processStatement(String statement,
+      Map<String, String> parameters) throws SQLException,
+      CommandNeedRetryException, IOException {
     long time = debugMessageHeader(LOG, "processStatement");
     List<String> results = new ArrayList<String>();
     CommandProcessor commandProcessor = CommandProcessorFactory
-        .getForHiveCommand(statement.trim().split("\\s+"), conf);
+        .getForHiveCommand((statement = new StrSubstitutor(parameters,
+            "${hivevar:", "}").replace(statement.trim())).split("\\s+"), conf);
     (commandProcessor = commandProcessor == null ? new Driver(conf)
         : commandProcessor).run(statement);
     if (commandProcessor instanceof Driver) {
@@ -101,9 +109,15 @@ public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
 
   public static List<String> processStatement(String directory, String file)
       throws SQLException, CommandNeedRetryException, IOException {
+    return processStatement(directory, file, new HashMap<String, String>());
+  }
+
+  public static List<String> processStatement(String directory, String file,
+      Map<String, String> parameters) throws SQLException,
+      CommandNeedRetryException, IOException {
     List<String> results = new ArrayList<String>();
     for (String statement : readFileToLines(directory, file, COMMAND_DELIMETER)) {
-      results.addAll(processStatement(statement));
+      results.addAll(processStatement(statement, parameters));
     }
     return results;
   }

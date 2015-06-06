@@ -2,11 +2,11 @@
 -- Create and describe table
 --
 
-CREATE TABLE IF NOT EXISTS somedata (
+CREATE TABLE IF NOT EXISTS ${hivevar:test.table.name} (
 	col1 INT,
 	col2 INT
 )
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '${hivevar:test.table.field.delim}'
 STORED AS TEXTFILE;
 
-DESCRIBE somedata;
+DESCRIBE ${hivevar:test.table.name};

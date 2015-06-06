@@ -9,6 +9,8 @@ import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * Mini-cluster DFS, MR and Hive unit tests
  */
@@ -28,7 +30,12 @@ public class MiniClusterDfsMrHiveTest extends MiniClusterDfsMrHiveBaseTest {
     writer.write("2,2\n");
     writer.write("3,3\n");
     writer.close();
-    processStatement("/com/cloudera/framework/main/test/ddl", "create.sql");
+    processStatement(
+        "/com/cloudera/framework/main/test/ddl",
+        "create.sql",
+        new ImmutableMap.Builder<String, String>()
+            .put("test.table.name", "somedata")
+            .put("test.table.field.delim", ",").build());
     processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString()
         + "' OVERWRITE INTO TABLE somedata");
     Assert.assertEquals("3",
@@ -52,7 +59,12 @@ public class MiniClusterDfsMrHiveTest extends MiniClusterDfsMrHiveBaseTest {
     writer.write("2,2\n");
     writer.write("3,3\n");
     writer.close();
-    processStatement("/com/cloudera/framework/main/test/ddl", "create.sql");
+    processStatement(
+        "/com/cloudera/framework/main/test/ddl",
+        "create.sql",
+        new ImmutableMap.Builder<String, String>()
+            .put("test.table.name", "somedata")
+            .put("test.table.field.delim", ",").build());
     processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString()
         + "' OVERWRITE INTO TABLE somedata");
     Assert.assertEquals("3",
