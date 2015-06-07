@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import parquet.Log;
+import parquet.hadoop.ParquetOutputFormat;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 /**
@@ -31,10 +33,12 @@ public abstract class BaseTest {
   public static String LOG_PREFIX = "Test harness";
 
   public static String DIR_WORKING = "target";
+  public static String DIR_DATA = "test-data";
   public static String DIR_FS_LOCAL = "test-fs-local";
   public static String DIR_DFS_LOCAL = "test-hdfs-local";
   public static String DIR_DFS_MINICLUSTER = "test-hdfs-minicluster";
   public static final String DIR_MINICLUSTER_PREFIX = "MiniMRCluster_";
+  public static String FILE_LOCAL_LOG_CONFIG = "/src/test/resources/log4j.properties";
 
   public static String PATH_FS_LOCAL = DIR_WORKING + "/" + DIR_FS_LOCAL;
   public static String PATH_DFS_LOCAL = DIR_WORKING + "/" + DIR_DFS_LOCAL;
@@ -45,11 +49,14 @@ public abstract class BaseTest {
   public static String PATH_LOCAL_WORKING_DIR_TARGET = PATH_LOCAL_WORKING_DIR
       + "/" + DIR_WORKING;
   public static String PATH_LOCAL_WORKING_DIR_TARGET_DATA = PATH_LOCAL_WORKING_DIR_TARGET
-      + "/test-data";
+      + "/" + DIR_DATA;
   public static String PATH_LOCAL_WORKING_DIR_TARGET_DFS_LOCAL = PATH_LOCAL_WORKING_DIR_TARGET
       + "/" + DIR_DFS_LOCAL;
   public static String PATH_LOCAL_WORKING_DIR_TARGET_DFS_MINICLUSTER = PATH_LOCAL_WORKING_DIR_TARGET
       + "/" + DIR_DFS_MINICLUSTER;
+
+  public static String URI_LOG_CONFIG = "file://"
+      + new LocalClusterDfsMrBaseTest().getPathLocal(FILE_LOCAL_LOG_CONFIG);
 
   /**
    * Get the {@link Configuration} for clients of this test
@@ -94,6 +101,7 @@ public abstract class BaseTest {
   @BeforeClass
   public static void setUpSystem() throws Exception {
     long time = debugMessageHeader(LOG, "setUpSystem");
+    Log.getLog(ParquetOutputFormat.class);
     SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
     LogManager.getLogManager().reset();
     SLF4JBridgeHandler.install();
