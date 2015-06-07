@@ -1,10 +1,17 @@
 #Cloudera Framework
 
-Cloudera framework, providing a unit test harness, client and runtime bill-of-materials with full coverage across HDFS, MR2, YARN and Hive.
+Provide a Cloudera development framework, including a unit test harness, client and runtime bill-of-materials with full coverage across Cloudera, including HDFS, YARN, MR2, Hive, Spark, HBase, Impala and Search.
+
+##Requirements
+
+To compile, build and package from source, this project requires:
+
+* JDK 1.7
+* Maven 3
 
 ##Install
 
-This module can be installed to a local repository:
+This project can be installed to a local repository as per:
 
 ```bash
 mvn clean install -PCMP
