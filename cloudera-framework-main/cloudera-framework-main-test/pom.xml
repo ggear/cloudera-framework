@@ -4,12 +4,12 @@
 	<groupId>com.cloudera.framework.main</groupId>
 	<artifactId>cloudera-framework-main-test</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0-cdh5.4.2-SNAPSHOT</version>
+	<version>1.0.0-cdh5.4.2</version>
 
 	<parent>
 		<groupId>com.cloudera.framework</groupId>
 		<artifactId>cloudera-framework-main</artifactId>
-		<version>1.0.0-cdh5.4.2-SNAPSHOT</version>
+		<version>1.0.0-cdh5.4.2</version>
 	</parent>
 
 	<dependencies>
