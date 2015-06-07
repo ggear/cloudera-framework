@@ -36,6 +36,7 @@ export VERSION_RELEASE=1.0.0
 export CDH_VERSION_RELEASE=5.4.0
 export VERSION_HEAD=1.0.1
 export CDH_VERSION_HEAD=5.4.0
+rm -rfv cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository/com/cloudera/framework
 mvn release:prepare -B -DreleaseVersion=$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:clean
 git checkout -b cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE
@@ -44,5 +45,6 @@ git add -A cloudera-framework-repo/cloudera-framework-repo-external/src/main/rep
 git commit -m "Add binaries for cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE"
 git checkout master
 git push --all
+git tag --all
 git branch --all
 ```
