@@ -17,7 +17,7 @@ This project can be installed to a local repository as per:
 mvn clean install -PCMP
 ```
 
-Alternatively, the module can be distributed as a binary by embedding (or manually installing) the dependencies via the appropriate branch repository (eg [cloudera-framework-0.0.4-cdhcdh5.4.0](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-0.0.4-cdhcdh5.4.0/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) as per [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire))
+Alternatively, the module can be distributed as a binary by embedding (or manually installing) the dependencies via the appropriate branch repository (eg [cloudera-framework-1.0.0-cdh5.4.0](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.0.0-cdh5.4.0/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) as per [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire))
 
 ##Usage
 
