@@ -32,10 +32,10 @@ The [client](https://raw.githubusercontent.com/ggear/cloudera-framework/master/c
 To perform a release:
 
 ```bash
-export VERSION_RELEASE=1.0.0
-export CDH_VERSION_RELEASE=5.4.0
-export VERSION_HEAD=1.0.1
-export CDH_VERSION_HEAD=5.4.0
+export VERSION_RELEASE=1.0.1
+export CDH_VERSION_RELEASE=5.4.2
+export VERSION_HEAD=1.0.2
+export CDH_VERSION_HEAD=5.4.2
 mvn clean
 mvn release:prepare -B -DreleaseVersion=$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:clean
@@ -44,7 +44,8 @@ mvn clean install -PCMP
 git add -A cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository
 git commit -m "Add binaries for cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE"
 git checkout master
+mvn clean
 git push --all
-git tag --all
+git tag
 git branch --all
 ```
