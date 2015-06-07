@@ -33,9 +33,9 @@ To perform a release:
 
 ```bash
 export VERSION_RELEASE=1.0.0
-export CDH_VERSION_RELEASE=cdh5.4.0
+export CDH_VERSION_RELEASE=5.4.0
 export VERSION_HEAD=1.0.1
-export CDH_VERSION_HEAD=cdh5.4.1
+export CDH_VERSION_HEAD=5.4.0
 mvn release:prepare -B -DreleaseVersion=$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:clean
 git checkout -b cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE
