@@ -47,10 +47,10 @@
 		<maven.assembly.skip>false</maven.assembly.skip>
 
 		<hadoop-cdh.version>5</hadoop-cdh.version>
-		<hadoop.version>2.6.0-cdh5.4.1</hadoop.version>
-		<hadoop-hive.version>1.1.0-cdh5.4.1</hadoop-hive.version>
-		<hadoop-flume.version>1.5.0-cdh5.4.1</hadoop-flume.version>
-		<hadoop-parquet.version>1.5.0-cdh5.4.1</hadoop-parquet.version>
+		<hadoop.version>2.6.0-cdh5.4.2</hadoop.version>
+		<hadoop-hive.version>1.1.0-cdh5.4.2</hadoop-hive.version>
+		<hadoop-flume.version>1.5.0-cdh5.4.2</hadoop-flume.version>
+		<hadoop-parquet.version>1.5.0-cdh5.4.2</hadoop-parquet.version>
 
 		<slf4j.version>1.7.5</slf4j.version>
 		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
