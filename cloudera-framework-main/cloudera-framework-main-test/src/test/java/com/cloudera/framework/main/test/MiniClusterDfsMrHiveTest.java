@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
@@ -30,14 +31,19 @@ public class MiniClusterDfsMrHiveTest extends MiniClusterDfsMrHiveBaseTest {
     writer.write("2,2\n");
     writer.write("3,3\n");
     writer.close();
-    processStatement(
-        "/com/cloudera/framework/main/test/ddl",
-        "create.sql",
-        new ImmutableMap.Builder<String, String>()
-            .put("test.table.name", "somedata")
-            .put("test.table.field.delim", ",").build());
-    processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString()
-        + "' OVERWRITE INTO TABLE somedata");
+    Assert.assertEquals(
+        2,
+        processStatement(
+            "/com/cloudera/framework/main/test/ddl",
+            "create.sql",
+            new ImmutableMap.Builder<String, String>()
+                .put("test.table.name", "somedata")
+                .put("test.table.field.delim", ",").build()).size());
+    Assert.assertEquals(
+        1,
+        processStatement(
+            "LOAD DATA LOCAL INPATH '" + localDataFile.toString()
+                + "' OVERWRITE INTO TABLE somedata").size());
     Assert.assertEquals("3",
         processStatement("SELECT count(1) AS cnt FROM somedata").get(0));
     Assert.assertEquals("2",
@@ -59,14 +65,19 @@ public class MiniClusterDfsMrHiveTest extends MiniClusterDfsMrHiveBaseTest {
     writer.write("2,2\n");
     writer.write("3,3\n");
     writer.close();
-    processStatement(
-        "/com/cloudera/framework/main/test/ddl",
-        "create.sql",
-        new ImmutableMap.Builder<String, String>()
-            .put("test.table.name", "somedata")
-            .put("test.table.field.delim", ",").build());
-    processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString()
-        + "' OVERWRITE INTO TABLE somedata");
+    Assert.assertEquals(
+        2,
+        processStatement(
+            "/com/cloudera/framework/main/test/ddl",
+            "create.sql",
+            new ImmutableMap.Builder<String, String>()
+                .put("test.table.name", "somedata")
+                .put("test.table.field.delim", ",").build()).size());
+    Assert.assertEquals(
+        1,
+        processStatement(
+            "LOAD DATA LOCAL INPATH '" + localDataFile.toString()
+                + "' OVERWRITE INTO TABLE somedata").size());
     Assert.assertEquals("3",
         processStatement("SELECT count(1) AS cnt FROM somedata").get(0));
     Assert.assertEquals("2",
@@ -81,7 +92,17 @@ public class MiniClusterDfsMrHiveTest extends MiniClusterDfsMrHiveBaseTest {
    */
   @Test
   public void testHiveClean() throws Exception {
-    Assert.assertEquals(0, processStatement("SHOW TABLES").size());
+    Assert.assertEquals(1, processStatement("SHOW TABLES").size());
+  }
+
+  /**
+   * Test Hive error
+   *
+   * @throws Exception
+   */
+  @Test(expected = SQLException.class)
+  public void testHiveError() throws Exception {
+    Assert.assertNotEquals(1, processStatement("SOME BAD STATEMENT").size());
   }
 
   /**

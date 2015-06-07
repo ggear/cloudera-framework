@@ -15,12 +15,10 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.conf.HiveConf.ConfVars;
-import org.apache.hadoop.hive.ql.CommandNeedRetryException;
 import org.apache.hadoop.hive.ql.Driver;
 import org.apache.hadoop.hive.ql.exec.CopyTask;
 import org.apache.hadoop.hive.ql.processors.CommandProcessor;
 import org.apache.hadoop.hive.ql.processors.CommandProcessorFactory;
-import org.apache.hadoop.hive.ql.processors.CommandProcessorResponse;
 import org.apache.hadoop.hive.ql.session.SessionState;
 import org.apache.hadoop.mapreduce.MRConfig;
 import org.apache.hive.jdbc.miniHS2.MiniHS2;
@@ -51,6 +49,98 @@ public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
     return fileSystem;
   }
 
+  /**
+   * Process a <code>statement</code>
+   *
+   * @param statement
+   * @return {@link List} of {@link String} results, no result will be indicated
+   *         by 1-length empty {@link String} {@link List}
+   * @throws Exception
+   */
+  public static List<String> processStatement(String statement)
+      throws Exception {
+    return processStatement(statement, new HashMap<String, String>());
+  }
+
+  /**
+   * Process a <code>statement</code>, making <code>hivevar</code> substitutions
+   * from <code>parameters</code>
+   *
+   * @param statement
+   * @param parameters
+   * @return {@link List} of {@link String} results, no result will be indicated
+   *         by 1-length empty {@link String} {@link List}
+   * @throws Exception
+   */
+  public static List<String> processStatement(String statement,
+      Map<String, String> parameters) throws Exception {
+    long time = debugMessageHeader(LOG, "processStatement");
+    List<String> results = new ArrayList<String>();
+    CommandProcessor commandProcessor = CommandProcessorFactory
+        .getForHiveCommand((statement = new StrSubstitutor(parameters,
+            "${hivevar:", "}").replace(statement.trim())).split("\\s+"), conf);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(LOG_PREFIX + " [processStatement] pre-execute, statement:\n"
+          + statement);
+    }
+    int responseCode = (commandProcessor = commandProcessor == null ? new Driver(
+        conf) : commandProcessor).run(statement).getResponseCode();
+    if (commandProcessor instanceof Driver) {
+      ((Driver) commandProcessor).getResults(results);
+    }
+    if (results.isEmpty()) {
+      results.add("");
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(LOG_PREFIX + " [processStatement] post-execute, result:\n"
+          + StringUtils.join(results.toArray(), "\n"));
+    }
+    debugMessageFooter(LOG, "processStatement", time);
+    if (responseCode != 0) {
+      throw new SQLException("Statement executed with error response code ["
+          + responseCode + "]");
+    }
+    return results;
+  }
+
+  /**
+   * Process a set of <code>;</code> delimited statements from a
+   * <code>file</code> in a <code>directory</code>
+   *
+   * @param directory
+   * @param file
+   * @return {@link List} of {@link List} of {@link String} results per
+   *         statement, no result will be indicated by 1-length empty
+   *         {@link String} {@link List}
+   * @throws Exception
+   */
+  public static List<List<String>> processStatement(String directory,
+      String file) throws Exception {
+    return processStatement(directory, file, new HashMap<String, String>());
+  }
+
+  /**
+   * Process a set of <code>;</code> delimited statements from a
+   * <code>file</code> in a <code>directory</code>, making <code>hivevar</code>
+   * substitutions from <code>parameters</code>
+   *
+   * @param directory
+   * @param file
+   * @param parameters
+   * @return {@link List} of {@link List} of {@link String} results per
+   *         statement, no result will be indicated by 1-length empty
+   *         {@link String} {@link List}
+   * @throws Exception
+   */
+  public static List<List<String>> processStatement(String directory,
+      String file, Map<String, String> parameters) throws Exception {
+    List<List<String>> results = new ArrayList<List<String>>();
+    for (String statement : readFileToLines(directory, file, COMMAND_DELIMETER)) {
+      results.add(processStatement(statement, parameters));
+    }
+    return results;
+  }
+
   @BeforeClass
   public static void setUpRuntime() throws Exception {
     long time = debugMessageHeader(LOG, "setUpRuntime");
@@ -63,9 +153,6 @@ public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
     fileSystem = miniHs2.getDfs().getFileSystem();
     SessionState.start(new SessionState(hiveConf));
     conf = miniHs2.getHiveConf();
-    for (String table : processStatement("SHOW TABLES")) {
-      processStatement("DROP TABLE " + table);
-    }
     debugMessageFooter(LOG, "setUpRuntime", time);
   }
 
@@ -73,7 +160,9 @@ public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
   public void setUpSchema() throws Exception {
     long time = debugMessageHeader(LOG, "setUpSchema");
     for (String table : processStatement("SHOW TABLES")) {
-      processStatement("DROP TABLE " + table);
+      if (table.length() > 0) {
+        processStatement("DROP TABLE " + table);
+      }
     }
     debugMessageFooter(LOG, "setUpSchema", time);
   }
@@ -85,53 +174,6 @@ public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
       miniHs2.stop();
     }
     debugMessageFooter(LOG, "tearDownRuntime", time);
-  }
-
-  public static List<String> processStatement(String statement)
-      throws SQLException, CommandNeedRetryException, IOException {
-    return processStatement(statement, new HashMap<String, String>());
-  }
-
-  public static List<String> processStatement(String statement,
-      Map<String, String> parameters) throws SQLException,
-      CommandNeedRetryException, IOException {
-    long time = debugMessageHeader(LOG, "processStatement");
-    List<String> results = new ArrayList<String>();
-    CommandProcessor commandProcessor = CommandProcessorFactory
-        .getForHiveCommand((statement = new StrSubstitutor(parameters,
-            "${hivevar:", "}").replace(statement.trim())).split("\\s+"), conf);
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(LOG_PREFIX + " [processStatement] pre-execute, statement:\n"
-          + statement);
-    }
-    CommandProcessorResponse commandProcessorResponse = (commandProcessor = commandProcessor == null ? new Driver(
-        conf) : commandProcessor).run(statement);
-    if (commandProcessor instanceof Driver) {
-      ((Driver) commandProcessor).getResults(results);
-    }
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(LOG_PREFIX
-          + " [processStatement] post-execute, response code ["
-          + commandProcessorResponse.getResponseCode() + "], result:\n"
-          + StringUtils.join(results.toArray(), "\n"));
-    }
-    debugMessageFooter(LOG, "processStatement", time);
-    return results;
-  }
-
-  public static List<String> processStatement(String directory, String file)
-      throws SQLException, CommandNeedRetryException, IOException {
-    return processStatement(directory, file, new HashMap<String, String>());
-  }
-
-  public static List<String> processStatement(String directory, String file,
-      Map<String, String> parameters) throws SQLException,
-      CommandNeedRetryException, IOException {
-    List<String> results = new ArrayList<String>();
-    for (String statement : readFileToLines(directory, file, COMMAND_DELIMETER)) {
-      results.addAll(processStatement(statement, parameters));
-    }
-    return results;
   }
 
   private static List<String> readFileToLines(String directory, String file,
