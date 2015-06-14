@@ -15,8 +15,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.cloudera.framework.main</groupId>
-			<artifactId>cloudera-framework-main-client</artifactId>
+			<groupId>com.cloudera.framework.main.client</groupId>
+			<artifactId>cloudera-framework-main-client-core</artifactId>
 			<version>${project.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
