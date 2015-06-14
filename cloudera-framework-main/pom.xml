@@ -16,6 +16,7 @@
 		<module>cloudera-framework-main-client</module>
 		<module>cloudera-framework-main-runtime</module>
 		<module>cloudera-framework-main-test</module>
+		<module>cloudera-framework-main-common</module>
 	</modules>
 
 	<build>
