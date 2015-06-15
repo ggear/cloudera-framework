@@ -1,6 +1,6 @@
 #Cloudera Framework
 
-Provide a Cloudera development framework, including a unit test harness, client and runtime bill-of-materials with full coverage across Cloudera, including HDFS, YARN, MR2, Hive, Spark, HBase, Impala and Search.
+Provide a Cloudera development framework, including a unit test harness, client and runtime bill-of-materials and driver base class, with full coverage across Cloudera, including HDFS, YARN, MR2, Hive, Spark, HBase, Impala and Search.
 
 ##Requirements
 
@@ -21,11 +21,13 @@ Alternatively, the module can be distributed as a binary by embedding (or manual
 
 ##Usage
 
-Unit test examples are bundled with the module [here](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-main/cloudera-framework-main-test/src/test/java/com/cloudera/framework/main/test). Note that the mini-cluster driven unit tests require significant heap (and perm-gen), the maven surefire plugin is setup with adequate settings but it may be necessary to bump up the default settings in your IDE as necessary.
+[Unit test examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-main/cloudera-framework-main-test/src/test/java/com/cloudera/framework/main/test) are bundled with the module. Note that the mini-cluster driven unit tests require significant heap (and perm-gen), the shipped maven surefire plugin configuration includes adequate settings but it may be necessary to bump up the default settings in your own POM's and IDE as necessary.
 
 Unit test runtime logging verbosity can be controlled via log4j, as per the example [log4j.properties](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-test/src/test/resources/log4j.properties).
 
 The [client](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-client/pom.xml) and [runtime](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-runtime/pom.xml) bill-of-materials can be used as POM dependencies.
+
+Examples of the (driver)[https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-common/src/main/java/com/cloudera/framework/main/common/Driver.java] are detailed as part of the (driver unit test)[https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-common/src/test/java/com/cloudera/framework/main/common/DriverTest.java]
 
 ##Release
 
