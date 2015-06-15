@@ -27,7 +27,7 @@ Unit test runtime logging verbosity can be controlled via log4j, as per the exam
 
 The [client](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-client/pom.xml) and [runtime](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-runtime/pom.xml) bill-of-materials can be used as POM dependencies.
 
-Examples of the (driver)[https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-common/src/main/java/com/cloudera/framework/main/common/Driver.java] are detailed as part of the (driver unit test)[https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-common/src/test/java/com/cloudera/framework/main/common/DriverTest.java]
+Examples of the [driver](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-common/src/main/java/com/cloudera/framework/main/common/Driver.java) are detailed as part of the [driver unit test](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-common/src/test/java/com/cloudera/framework/main/common/DriverTest.java).
 
 ##Release
 
