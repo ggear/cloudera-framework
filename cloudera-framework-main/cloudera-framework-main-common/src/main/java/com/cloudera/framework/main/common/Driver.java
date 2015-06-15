@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Driver extends Configured implements Tool {
 
+  private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
+
   public static final int RETURN_SUCCESS = 0;
   public static final int RETURN_FAILURE_RUNTIME = 10;
 
@@ -36,8 +38,6 @@ public abstract class Driver extends Configured implements Tool {
 
   private Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<String, Map<Enum<?>, Long>>();
 
-  private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
-
   public Driver() {
     super();
   }
@@ -46,41 +46,86 @@ public abstract class Driver extends Configured implements Tool {
     super(conf);
   }
 
+  /**
+   * Provide a brief description of the driver for printing as part of the usage
+   *
+   * @return
+   */
   public String description() {
     return "";
   }
 
+  /**
+   * Declare non-mandatory options, passed in as command line "-Dname=value"
+   * switches or typed configurations as part of the {@link Configuration}
+   * available from {@link #getConf()}
+   *
+   * @return the options as a <code>name=value1|value2</code> array
+   */
   public String[] options() {
     return new String[0];
   }
 
+  /**
+   * Declare mandatory parameters, passed in as command line arguments
+   *
+   * @return the parameters as a <code>description</code> array
+   */
   public String[] paramaters() {
     return new String[0];
   }
 
+  /**
+   * Prepare the driver
+   *
+   * @param arguments
+   *          the arguments passed in via the command line, option switches will
+   *          be populated into the {@link Configuration} available from
+   *          {@link #getConf()}
+   * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
+   *         failure
+   * @throws Exception
+   */
   public int prepare(String... arguments) throws Exception {
-    return 0;
+    return RETURN_SUCCESS;
   }
 
+  /**
+   * Execute the driver
+   *
+   * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
+   *         failure
+   * @throws Exception
+   */
   public abstract int execute() throws Exception;
 
+  /**
+   * Clean the driver on shutdown
+   *
+   * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
+   *         failure
+   * @throws Exception
+   */
   public int cleanup() throws Exception {
-    return 0;
+    return RETURN_SUCCESS;
   }
 
+  /**
+   * Reset the driver to be used again, should be called if overridden
+   */
   public void reset() {
     counters.clear();
   }
 
+  /**
+   * Run the driver
+   */
   @Override
   final public int run(String[] args) {
-
     if (LOG.isInfoEnabled()) {
       LOG.info("Driver [" + this.getClass().getSimpleName() + "] started");
     }
-
     long timeTotal = System.currentTimeMillis();
-
     ShutdownHookManager.get().addShutdownHook(new Runnable() {
       @Override
       public void run() {
@@ -93,13 +138,10 @@ public abstract class Driver extends Configured implements Tool {
         }
       }
     }, RunJar.SHUTDOWN_HOOK_PRIORITY + 1);
-
     if (Driver.class.getResource("/" + CONF_SETTINGS) != null) {
       getConf().addResource(CONF_SETTINGS);
     }
-
     reset();
-
     if (LOG.isTraceEnabled() && getConf() != null) {
       LOG.trace("Driver [" + this.getClass().getCanonicalName()
           + "] initialised with configuration properties:");
@@ -107,7 +149,6 @@ public abstract class Driver extends Configured implements Tool {
         LOG.trace("\t" + entry.getKey() + "=" + entry.getValue());
       }
     }
-
     int exitValue = RETURN_FAILURE_RUNTIME;
     try {
       if ((exitValue = prepare(args)) == RETURN_SUCCESS) {
@@ -128,9 +169,7 @@ public abstract class Driver extends Configured implements Tool {
         }
       }
     }
-
     timeTotal = System.currentTimeMillis() - timeTotal;
-
     if (LOG.isInfoEnabled()) {
       if (getCountersGroups().size() > 0) {
         LOG.info("Driver [" + this.getClass().getCanonicalName()
@@ -144,15 +183,12 @@ public abstract class Driver extends Configured implements Tool {
         }
       }
     }
-
     if (LOG.isInfoEnabled()) {
       LOG.info("Driver [" + this.getClass().getSimpleName() + "] finshed "
           + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully")
           + " with exit value [" + exitValue + "] in " + formatTime(timeTotal));
     }
-
     return exitValue;
-
   }
 
   final public int runner(String[] arguments) {

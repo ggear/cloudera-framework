@@ -4,9 +4,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.cloudera.framework.main.test.LocalClusterDfsMrBaseTest;
+import com.cloudera.framework.main.test.MiniClusterDfsMrBaseTest;
 
-public class DriverTest extends LocalClusterDfsMrBaseTest {
+public class DriverTest extends MiniClusterDfsMrBaseTest {
 
   @Test
   public void testRunnerSuccessParamaters() throws Exception {
