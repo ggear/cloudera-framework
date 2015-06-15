@@ -1,6 +1,12 @@
 package com.cloudera.framework.main.common;
 
+import java.io.IOException;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,14 +16,14 @@ public class DriverTest extends MiniClusterDfsMrBaseTest {
 
   @Test
   public void testRunnerSuccessParameters() throws Exception {
-    Driver driver = new DriverNoOp(getConf());
+    Driver driver = new CountFilesDriver(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS,
         driver.runner(new String[] { "false" }));
   }
 
   @Test
   public void testRunnerSuccessOptions() throws Exception {
-    Driver driver = new DriverNoOp(getConf());
+    Driver driver = new CountFilesDriver(getConf());
     driver.getConf().setBoolean("i.should.fail.option", false);
     Assert.assertEquals(Driver.RETURN_SUCCESS,
         driver.runner(new String[] { "false" }));
@@ -25,35 +31,35 @@ public class DriverTest extends MiniClusterDfsMrBaseTest {
 
   @Test
   public void testRunnerFailureParameters() throws Exception {
-    Driver driver = new DriverNoOp(getConf());
+    Driver driver = new CountFilesDriver(getConf());
     Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME,
         driver.runner(new String[] { "true" }));
   }
 
   @Test
   public void testRunnerFailureOptions() throws Exception {
-    Driver driver = new DriverNoOp(getConf());
+    Driver driver = new CountFilesDriver(getConf());
     driver.getConf().setBoolean("i.should.fail.option", true);
     Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME,
         driver.runner(new String[] { "false" }));
   }
 
   private enum Counter {
-    TEST
+    FILES_NUMBER
   };
 
-  private class DriverNoOp extends Driver {
+  private class CountFilesDriver extends Driver {
 
     private boolean iShouldFailOption;
     private String iShouldFailParameter;
 
-    public DriverNoOp(Configuration confguration) {
+    public CountFilesDriver(Configuration confguration) {
       super(confguration);
     }
 
     @Override
     public String description() {
-      return "A dummy driver";
+      return "A dummy driver that counts the numer of files stored in DFS";
     }
 
     @Override
@@ -77,8 +83,14 @@ public class DriverTest extends MiniClusterDfsMrBaseTest {
     }
 
     @Override
-    public int execute() {
-      incrementCounter(Counter.TEST, 1);
+    public int execute() throws IOException {
+      FileSystem fileSystem = FileSystem.newInstance(getConf());
+      RemoteIterator<LocatedFileStatus> files = fileSystem.listFiles(new Path(
+          "/"), true);
+      while (files.hasNext()) {
+        files.next();
+        incrementCounter(Counter.FILES_NUMBER, 1);
+      }
       return iShouldFailOption
           || iShouldFailParameter.toLowerCase().equals(
               Boolean.TRUE.toString().toLowerCase()) ? RETURN_FAILURE_RUNTIME
