@@ -3,8 +3,6 @@ package com.cloudera.framework.main.test;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -102,10 +100,9 @@ public abstract class BaseTest {
   public static void setUpSystem() throws Exception {
     long time = debugMessageHeader(LOG, "setUpSystem");
     Log.getLog(ParquetOutputFormat.class);
-    SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-    LogManager.getLogManager().reset();
+    SLF4JBridgeHandler.removeHandlersForRootLogger();
     SLF4JBridgeHandler.install();
-    java.util.logging.Logger.getGlobal().setLevel(Level.OFF);
+    SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
     System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
     System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
     System.setProperty("java.security.krb5.conf", "/dev/null");

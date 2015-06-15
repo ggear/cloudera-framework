@@ -2,39 +2,87 @@ package com.cloudera.framework.main.common;
 
 import org.apache.hadoop.conf.Configuration;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.cloudera.framework.main.test.LocalClusterDfsMrBaseTest;
 
 public class DriverTest extends LocalClusterDfsMrBaseTest {
 
-  private Driver driver;
-
-  @Before
-  public void setUpDriver() throws Exception {
-    driver = new DriverNoOp(getConf());
+  @Test
+  public void testRunnerSuccessParamaters() throws Exception {
+    Driver driver = new DriverNoOp(getConf());
+    Assert.assertEquals(Driver.RETURN_SUCCESS,
+        driver.runner(new String[] { "false" }));
   }
 
   @Test
-  public void testRunner() throws Exception {
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[0]));
+  public void testRunnerSuccessOptions() throws Exception {
+    Driver driver = new DriverNoOp(getConf());
+    driver.getConf().setBoolean("i.should.fail.option", false);
+    Assert.assertEquals(Driver.RETURN_SUCCESS,
+        driver.runner(new String[] { "false" }));
   }
 
+  @Test
+  public void testRunnerFailureParamaters() throws Exception {
+    Driver driver = new DriverNoOp(getConf());
+    Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME,
+        driver.runner(new String[] { "true" }));
+  }
+
+  @Test
+  public void testRunnerFailureOptions() throws Exception {
+    Driver driver = new DriverNoOp(getConf());
+    driver.getConf().setBoolean("i.should.fail.option", true);
+    Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME,
+        driver.runner(new String[] { "false" }));
+  }
+
+  private enum Counter {
+    TEST
+  };
+
   private class DriverNoOp extends Driver {
+
+    private boolean iShouldFailOption;
+    private String iShouldFailParamater;
 
     public DriverNoOp(Configuration confguration) {
       super(confguration);
     }
 
     @Override
-    public int execute() {
-      try {
-        Thread.sleep(10);
-      } catch (InterruptedException e) {
+    public String description() {
+      return "A dummy driver";
+    }
+
+    @Override
+    public String[] options() {
+      return new String[] { "i.should.fail.option=true|false" };
+    }
+
+    @Override
+    public String[] paramaters() {
+      return new String[] { "i.should.fail.parameter" };
+    }
+
+    @Override
+    public int prepare(String... arguments) throws Exception {
+      if (arguments == null || arguments.length != 1) {
+        throw new Exception("Invalid number of arguments");
       }
+      iShouldFailParamater = arguments[0];
+      iShouldFailOption = getConf().getBoolean("i.should.fail.option", false);
       return RETURN_SUCCESS;
     }
 
+    @Override
+    public int execute() {
+      incrementCounter(Counter.TEST, 1);
+      return iShouldFailOption
+          || iShouldFailParamater.toLowerCase().equals(
+              Boolean.TRUE.toString().toLowerCase()) ? RETURN_FAILURE_RUNTIME
+          : RETURN_SUCCESS;
+    }
   }
 }
