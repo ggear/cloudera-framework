@@ -71,7 +71,7 @@ public abstract class Driver extends Configured implements Tool {
    *
    * @return the parameters as a <code>description</code> array
    */
-  public String[] paramaters() {
+  public String[] parameters() {
     return new String[0];
   }
 
@@ -203,19 +203,19 @@ public abstract class Driver extends Configured implements Tool {
     }
     if (returnValue != RETURN_SUCCESS) {
       if (LOG.isInfoEnabled()) {
-        StringBuilder optionsAndParamaters = new StringBuilder(256);
+        StringBuilder optionsAndParameters = new StringBuilder(256);
         for (int i = 0; i < options().length; i++) {
-          optionsAndParamaters.append(" [-D" + options()[i] + "]");
+          optionsAndParameters.append(" [-D" + options()[i] + "]");
         }
-        for (int i = 0; i < paramaters().length; i++) {
-          optionsAndParamaters.append(options().length == 0 ? "" : " " + "<"
-              + paramaters()[i] + ">");
+        for (int i = 0; i < parameters().length; i++) {
+          optionsAndParameters.append(options().length == 0 ? "" : " " + "<"
+              + parameters()[i] + ">");
         }
         if (description() != null && !description().equals("")) {
           LOG.info("Description: " + description());
         }
         LOG.info("Usage: hadoop " + this.getClass().getCanonicalName()
-            + " [generic options]" + optionsAndParamaters);
+            + " [generic options]" + optionsAndParameters);
         ByteArrayOutputStream byteArrayPrintStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayPrintStream);
         ToolRunner.printGenericCommandUsage(printStream);

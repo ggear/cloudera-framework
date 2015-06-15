@@ -9,7 +9,7 @@ import com.cloudera.framework.main.test.MiniClusterDfsMrBaseTest;
 public class DriverTest extends MiniClusterDfsMrBaseTest {
 
   @Test
-  public void testRunnerSuccessParamaters() throws Exception {
+  public void testRunnerSuccessParameters() throws Exception {
     Driver driver = new DriverNoOp(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS,
         driver.runner(new String[] { "false" }));
@@ -24,7 +24,7 @@ public class DriverTest extends MiniClusterDfsMrBaseTest {
   }
 
   @Test
-  public void testRunnerFailureParamaters() throws Exception {
+  public void testRunnerFailureParameters() throws Exception {
     Driver driver = new DriverNoOp(getConf());
     Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME,
         driver.runner(new String[] { "true" }));
@@ -45,7 +45,7 @@ public class DriverTest extends MiniClusterDfsMrBaseTest {
   private class DriverNoOp extends Driver {
 
     private boolean iShouldFailOption;
-    private String iShouldFailParamater;
+    private String iShouldFailParameter;
 
     public DriverNoOp(Configuration confguration) {
       super(confguration);
@@ -62,7 +62,7 @@ public class DriverTest extends MiniClusterDfsMrBaseTest {
     }
 
     @Override
-    public String[] paramaters() {
+    public String[] parameters() {
       return new String[] { "i.should.fail.parameter" };
     }
 
@@ -71,7 +71,7 @@ public class DriverTest extends MiniClusterDfsMrBaseTest {
       if (arguments == null || arguments.length != 1) {
         throw new Exception("Invalid number of arguments");
       }
-      iShouldFailParamater = arguments[0];
+      iShouldFailParameter = arguments[0];
       iShouldFailOption = getConf().getBoolean("i.should.fail.option", false);
       return RETURN_SUCCESS;
     }
@@ -80,7 +80,7 @@ public class DriverTest extends MiniClusterDfsMrBaseTest {
     public int execute() {
       incrementCounter(Counter.TEST, 1);
       return iShouldFailOption
-          || iShouldFailParamater.toLowerCase().equals(
+          || iShouldFailParameter.toLowerCase().equals(
               Boolean.TRUE.toString().toLowerCase()) ? RETURN_FAILURE_RUNTIME
           : RETURN_SUCCESS;
     }
