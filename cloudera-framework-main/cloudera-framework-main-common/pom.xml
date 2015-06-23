@@ -21,6 +21,13 @@
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
+ 		<dependency>
+			<groupId>com.cloudera.framework.main.client</groupId>
+			<artifactId>cloudera-framework-main-client-flume</artifactId>
+			<version>${project.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.cloudera.framework.main</groupId>
 			<artifactId>cloudera-framework-main-test</artifactId>
