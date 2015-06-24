@@ -10,7 +10,7 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<cloudera-framework.version>1.1.0-cdh5.4.3-SNAPSHOT</cloudera-framework.version>
+		<cloudera-framework.version>1.1.0-cdh5.4.2-SNAPSHOT</cloudera-framework.version>
 		<junit.version>4.12</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
