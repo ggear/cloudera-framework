@@ -35,7 +35,7 @@ To perform a release:
 
 ```bash
 export VERSION_RELEASE=1.1.0
-export CDH_VERSION_RELEASE=5.4.3
+export CDH_VERSION_RELEASE=5.4.2
 export VERSION_HEAD=1.2.0
 export CDH_VERSION_HEAD=5.4.3
 mvn clean
