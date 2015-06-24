@@ -10,9 +10,9 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.cloudera.framework.main.test.MiniClusterDfsMrBaseTest;
+import com.cloudera.framework.main.test.MiniClusterDfsMrTest;
 
-public class DriverTest extends MiniClusterDfsMrBaseTest {
+public class DriverTest extends MiniClusterDfsMrTest {
 
   @Test
   public void testRunnerSuccessParameters() throws Exception {

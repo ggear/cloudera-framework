@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Mini-cluster DFS, MR and Hive unit tests
  */
-public class MiniClusterDfsMrHiveTest extends MiniClusterDfsMrHiveBaseTest {
+public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
 
   /**
    * Test Hive

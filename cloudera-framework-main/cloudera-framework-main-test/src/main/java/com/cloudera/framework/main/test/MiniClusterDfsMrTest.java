@@ -11,10 +11,10 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MiniClusterDfsMrBaseTest extends BaseTest {
+public class MiniClusterDfsMrTest extends BaseTest {
 
   private static Logger LOG = LoggerFactory
-      .getLogger(MiniClusterDfsMrBaseTest.class);
+      .getLogger(MiniClusterDfsMrTest.class);
 
   private static Configuration conf;
   private static MiniDFSShim miniDfs;

@@ -13,10 +13,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Base class for all local-cluster tests, intended to be extended in public
  */
-public class LocalClusterDfsMrBaseTest extends BaseTest {
+public class LocalClusterDfsMrTest extends BaseTest {
 
   private static Logger LOG = LoggerFactory
-      .getLogger(LocalClusterDfsMrBaseTest.class);
+      .getLogger(LocalClusterDfsMrTest.class);
 
   private static JobConf conf;
   private static FileSystem fileSystem;

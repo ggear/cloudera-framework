@@ -3,8 +3,12 @@ package com.cloudera.framework.main.test;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -32,6 +36,7 @@ public abstract class BaseTest {
 
   public static String DIR_WORKING = "target";
   public static String DIR_DATA = "test-data";
+  public static String DIR_CLASSES = "test-classes";
   public static String DIR_FS_LOCAL = "test-fs-local";
   public static String DIR_DFS_LOCAL = "test-hdfs-local";
   public static String DIR_DFS_MINICLUSTER = "test-hdfs-minicluster";
@@ -48,13 +53,15 @@ public abstract class BaseTest {
       + "/" + DIR_WORKING;
   public static String PATH_LOCAL_WORKING_DIR_TARGET_DATA = PATH_LOCAL_WORKING_DIR_TARGET
       + "/" + DIR_DATA;
+  public static String PATH_LOCAL_WORKING_DIR_TARGET_CLASSES = PATH_LOCAL_WORKING_DIR_TARGET
+      + "/" + DIR_CLASSES;
   public static String PATH_LOCAL_WORKING_DIR_TARGET_DFS_LOCAL = PATH_LOCAL_WORKING_DIR_TARGET
       + "/" + DIR_DFS_LOCAL;
   public static String PATH_LOCAL_WORKING_DIR_TARGET_DFS_MINICLUSTER = PATH_LOCAL_WORKING_DIR_TARGET
       + "/" + DIR_DFS_MINICLUSTER;
 
   public static String URI_LOG_CONFIG = "file://"
-      + new LocalClusterDfsMrBaseTest().getPathLocal(FILE_LOCAL_LOG_CONFIG);
+      + new LocalClusterDfsMrTest().getPathLocal(FILE_LOCAL_LOG_CONFIG);
 
   /**
    * Get the {@link Configuration} for clients of this test
@@ -94,6 +101,70 @@ public abstract class BaseTest {
    */
   public String getPathDfs(String pathRelativeToDfsRoot) {
     return pathRelativeToDfsRoot;
+  }
+
+  /**
+   * Copy, flatten and overlay datasets matching specific
+   * <code>sourceLabels</code> from <code>sourcePath</code> relative to the test
+   * classes directory to a <code>destinationPath</code> DFS directory.
+   *
+   * @param sourcePath
+   * @param destinationPath
+   * @param sourceLabels
+   * @throws IllegalArgumentException
+   * @throws IOException
+   */
+  public void copyFromTestClassesDir(String sourcePath, String destinationPath,
+      String... sourceLabels) throws IllegalArgumentException, IOException {
+    long time = debugMessageHeader(LOG, "copyFromTestClassesDir");
+    final File sourcePathFile = new File(PATH_LOCAL_WORKING_DIR_TARGET_CLASSES
+        + "/" + sourcePath);
+    if (!sourcePathFile.exists() || !sourcePathFile.isDirectory()) {
+      throw new IllegalArgumentException("Could not find directory ["
+          + sourcePathFile.getAbsolutePath() + "]");
+    }
+    boolean copiedAtleastOneFile = false;
+    String datasetPath = ((sourceLabels.length == 0 ? "*" : sourceLabels[0])
+        + "/" + (sourceLabels.length <= 1 ? "*" : sourceLabels[1]) + "/" + (sourceLabels.length <= 2 ? "*"
+        : sourceLabels[2])).replace(PATH_LOCAL_WORKING_DIR, ".");
+    getFileSystem().mkdirs(new Path(getPathDfs(destinationPath)));
+    for (File datasetFile : sourcePathFile
+        .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
+      if (sourceLabels.length == 0
+          || sourceLabels[0].equals(datasetFile.getName())) {
+        for (File datasetSubFile : datasetFile
+            .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
+          if (sourceLabels.length <= 1
+              || sourceLabels[1].equals(datasetSubFile.getName())) {
+            for (File datasetSubSubFile : datasetSubFile
+                .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
+              if (sourceLabels.length <= 2
+                  || sourceLabels[2].equals(datasetSubSubFile.getName())) {
+                for (File datasetSubSubFiles : datasetSubSubFile.listFiles()) {
+                  copyFromLocalFile(
+                      Arrays.asList(new Path(datasetSubSubFiles.getPath())),
+                      new Path(getPathDfs(destinationPath)));
+                  copiedAtleastOneFile = true;
+                  if (LOG.isDebugEnabled()) {
+                    LOG.debug(LOG_PREFIX + " [copyFromTestClassesDir] copied ["
+                        + datasetFile.getName() + "/"
+                        + datasetSubFile.getName() + "/"
+                        + datasetSubSubFile.getName() + "/"
+                        + datasetSubSubFiles.getName() + "] of glob ["
+                        + datasetPath + "/*] to [" + destinationPath + "]");
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    if (!copiedAtleastOneFile) {
+      throw new IllegalArgumentException("Cloud not find dataset with path ["
+          + datasetPath + "]");
+    }
+    debugMessageFooter(LOG, "copyFromTestClassesDir", time);
   }
 
   @BeforeClass
@@ -218,4 +289,28 @@ public abstract class BaseTest {
     }
   }
 
+  private boolean copyFromLocalFile(List<Path> sources, Path destination)
+      throws IOException {
+    FileSystem fileSystem = getFileSystem();
+    for (Path source : sources) {
+      File sourceFile = new File(source.toString());
+      Path destinationChildPath = new Path(destination, source.getName());
+      if (fileSystem.exists(destinationChildPath)) {
+        if (sourceFile.isDirectory()
+            && fileSystem.isDirectory(destinationChildPath)) {
+          List<Path> sourceChildPaths = new ArrayList<Path>();
+          for (File sourceChildFile : sourceFile.listFiles()) {
+            sourceChildPaths.add(new Path(sourceChildFile.getPath()));
+          }
+          return copyFromLocalFile(sourceChildPaths, destinationChildPath);
+        } else if (sourceFile.isDirectory()
+            && fileSystem.isFile(destinationChildPath) || sourceFile.isFile()
+            && fileSystem.isDirectory(destinationChildPath)) {
+          fileSystem.delete(destinationChildPath, true);
+        }
+      }
+      fileSystem.copyFromLocalFile(source, destination);
+    }
+    return true;
+  }
 }

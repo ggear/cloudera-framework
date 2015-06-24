@@ -25,9 +25,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Mini-cluster DFS and MR unit tests
+ * Local-cluster unit tests
  */
-public class MiniClusterDfsMrTest extends MiniClusterDfsMrBaseTest {
+public class LocalClusterDfsMrTestTest extends LocalClusterDfsMrTest {
 
   /**
    * Test MR
@@ -118,14 +118,12 @@ public class MiniClusterDfsMrTest extends MiniClusterDfsMrBaseTest {
    */
   @Test
   public void testDfsMkDir() throws Exception {
-    Assert.assertFalse(getFileSystem().exists(
-        new Path(getPathDfs("/some_dir/some_file"))));
+    Assert.assertFalse(new File(getPathLocal("/some_dir/some_file")).exists());
     Assert
         .assertTrue(getFileSystem().mkdirs(new Path(getPathDfs("/some_dir"))));
     Assert.assertTrue(getFileSystem().createNewFile(
         new Path(getPathDfs("/some_dir/some_file"))));
-    Assert.assertTrue(getFileSystem().exists(
-        new Path(getPathDfs("/some_dir/some_file"))));
+    Assert.assertFalse(new File(getPathLocal("/some_dir/some_file")).exists());
   }
 
   /**
@@ -134,9 +132,8 @@ public class MiniClusterDfsMrTest extends MiniClusterDfsMrBaseTest {
    * @throws IOException
    */
   @Test
-  public void testDfsClean() throws Exception {
-    Assert.assertFalse(getFileSystem().exists(
-        new Path(getPathDfs("/some_dir/some_file"))));
+  public void testDfsClean() throws IOException {
+    Assert.assertFalse(new File(getPathLocal("/some_dir/some_file")).exists());
   }
 
   /**
@@ -146,14 +143,15 @@ public class MiniClusterDfsMrTest extends MiniClusterDfsMrBaseTest {
    */
   @Test
   public void testPathDfs() throws Exception {
-    Assert.assertEquals("", getPathDfs(""));
-    Assert.assertEquals("/", getPathDfs("/"));
-    Assert.assertEquals("//", getPathDfs("//"));
-    Assert.assertEquals("tmp", getPathDfs("tmp"));
-    Assert.assertEquals("/tmp", getPathDfs("/tmp"));
-    Assert.assertEquals("//tmp", getPathDfs("//tmp"));
-    Assert.assertEquals("///tmp", getPathDfs("///tmp"));
-    Assert.assertEquals("///tmp//tmp", getPathDfs("///tmp//tmp"));
+    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL, getPathDfs(""));
+    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL, getPathDfs("/"));
+    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL, getPathDfs("//"));
+    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp", getPathDfs("tmp"));
+    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp", getPathDfs("/tmp"));
+    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp", getPathDfs("//tmp"));
+    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp", getPathDfs("///tmp"));
+    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp/tmp",
+        getPathDfs("///tmp//tmp"));
   }
 
   /**

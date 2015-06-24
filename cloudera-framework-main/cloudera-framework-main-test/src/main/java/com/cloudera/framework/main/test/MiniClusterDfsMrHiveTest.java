@@ -28,12 +28,12 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
+public class MiniClusterDfsMrHiveTest extends BaseTest {
 
   private static final String COMMAND_DELIMETER = ";";
 
   private static Logger LOG = LoggerFactory
-      .getLogger(MiniClusterDfsMrHiveBaseTest.class);
+      .getLogger(MiniClusterDfsMrHiveTest.class);
 
   private static HiveConf conf;
   private static MiniHS2 miniHs2;
@@ -179,7 +179,7 @@ public class MiniClusterDfsMrHiveBaseTest extends BaseTest {
   private static List<String> readFileToLines(String directory, String file,
       String delimeter) throws IOException {
     List<String> lines = new ArrayList<String>();
-    InputStream inputStream = MiniClusterDfsMrHiveBaseTest.class
+    InputStream inputStream = MiniClusterDfsMrHiveTest.class
         .getResourceAsStream(directory + "/" + file);
     if (inputStream != null) {
       try {
