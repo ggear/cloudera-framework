@@ -34,7 +34,7 @@ public class MiniClusterDfsMrHiveTest extends MiniClusterDfsMrHiveBaseTest {
     Assert.assertEquals(
         2,
         processStatement(
-            "/com/cloudera/framework/main/test/ddl",
+            "/ddl",
             "create.sql",
             new ImmutableMap.Builder<String, String>()
                 .put("test.table.name", "somedata")
@@ -68,7 +68,7 @@ public class MiniClusterDfsMrHiveTest extends MiniClusterDfsMrHiveBaseTest {
     Assert.assertEquals(
         2,
         processStatement(
-            "/com/cloudera/framework/main/test/ddl",
+            "/ddl",
             "create.sql",
             new ImmutableMap.Builder<String, String>()
                 .put("test.table.name", "somedata")
