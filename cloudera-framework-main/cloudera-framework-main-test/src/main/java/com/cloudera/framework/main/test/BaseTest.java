@@ -2,6 +2,7 @@ package com.cloudera.framework.main.test;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,10 +10,13 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.junit.Before;
@@ -52,6 +56,7 @@ public abstract class BaseTest {
   public static final String ABS_DIR_WORKING = new File(".").getAbsolutePath();
   public static final String ABS_DIR_TARGET = ABS_DIR_WORKING + "/"
       + DIR_TARGET;
+  public static final String ABS_DIR_DATA = ABS_DIR_WORKING + "/" + DIR_DATA;
   public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/"
       + DIR_DFS_LOCAL;
   public static final String ABS_DIR_DFS_MINICLUSTER = ABS_DIR_TARGET + "/"
@@ -75,11 +80,11 @@ public abstract class BaseTest {
    * Get the absolute local file system path from a local file system path
    * relative to the module root
    *
-   * @param pathRelativeToModuleRoot
+   * @param path
    * @return
    */
-  public String getPathLocal(String pathRelativeToModuleRoot) {
-    String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(pathRelativeToModuleRoot);
+  public static String getPathLocal(String path) {
+    String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(path);
     return pathRelativeToModuleRootSansLeadingSlashes.equals("") ? ABS_DIR_WORKING
         .length() < 2 ? "/" : ABS_DIR_WORKING.substring(0,
         ABS_DIR_WORKING.length() - 2) : new Path(ABS_DIR_WORKING,
@@ -90,78 +95,89 @@ public abstract class BaseTest {
    * Get the relative local file system path from a local file system path
    * relative to the DFS root
    *
-   * @param pathRelativeToDfsRoot
+   * @param path
    * @return
    */
-  public String getPathDfs(String pathRelativeToDfsRoot) {
-    return pathRelativeToDfsRoot;
+  public String getPathDfs(String path) {
+    return path;
   }
 
   /**
-   * Copy files matching specific directory <code>sourcePaths</code> relative to
-   * a <code>sourcePath</code>, in turn relative to the working directory, to a
-   * <code>destinationPath</code> DFS directory.
+   * Get a local file listing relative to the module root
+   *
+   * @param path
+   * @return
+   */
+  public static List<File> listFilesLocal(String path, String... paths) {
+    return listFilesLocal(path, true, paths);
+  }
+
+  /**
+   * Get a DFS file listing relative to the DFS root
+   *
+   * @param path
+   * @return
+   */
+  public List<Path> listFilesDfs(String path) throws IllegalArgumentException,
+      IOException {
+    List<Path> paths = new ArrayList<Path>();
+    try {
+      RemoteIterator<LocatedFileStatus> locatedFileStatuses = getFileSystem()
+          .listFiles(new Path(getPathDfs(path)), true);
+      while (locatedFileStatuses.hasNext()) {
+        paths.add(locatedFileStatuses.next().getPath());
+      }
+    } catch (FileNotFoundException fileNotFoundException) {
+      // ignore
+    }
+    return paths;
+  }
+
+  /**
+   * Copy files from a local directory relative to to the module root, to a DFS
+   * directory relative to the DFS root, matching specific directory labels
    *
    * @param sourcePath
-   *          the source path relative to the working directory
+   *          the source path relative to the module root
    * @param destinationPath
    *          the destination path relative to the DFS root
    * @param sourcePaths
    *          optional list of up to 3 nested directories to include, if not
    *          specified all directories at that level will be included
-   * @throws IllegalArgumentException
-   * @throws IOException
+   * @return local files that have been copied
    */
-  public void copyFromLocalDir(String sourcePath, String destinationPath,
+  public List<File> copyFromLocalDir(String sourcePath, String destinationPath,
       String... sourcePaths) throws IllegalArgumentException, IOException {
     long time = debugMessageHeader(LOG, "copyFromLocalDir");
-    final File sourcePathFile = new File(ABS_DIR_WORKING + "/" + sourcePath);
-    if (!sourcePathFile.exists() || !sourcePathFile.isDirectory()) {
-      throw new IllegalArgumentException("Could not find directory ["
-          + sourcePathFile.getAbsolutePath() + "]");
-    }
-    boolean copiedAtleastOneFile = false;
-    String datasetPath = ((sourcePaths.length == 0 ? "*" : sourcePaths[0])
+    List<File> files = new ArrayList<File>();
+    String sourcePathGlob = ((sourcePaths.length == 0 ? "*" : sourcePaths[0])
         + "/" + (sourcePaths.length <= 1 ? "*" : sourcePaths[1]) + "/" + (sourcePaths.length <= 2 ? "*"
         : sourcePaths[2])).replace(ABS_DIR_WORKING, ".");
     getFileSystem().mkdirs(new Path(getPathDfs(destinationPath)));
-    for (File datasetFile : sourcePathFile
-        .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-      if (sourcePaths.length == 0
-          || sourcePaths[0].equals(datasetFile.getName())) {
-        for (File datasetSubFile : datasetFile
-            .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-          if (sourcePaths.length <= 1
-              || sourcePaths[1].equals(datasetSubFile.getName())) {
-            for (File datasetSubSubFile : datasetSubFile
-                .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-              if (sourcePaths.length <= 2
-                  || sourcePaths[2].equals(datasetSubSubFile.getName())) {
-                for (File datasetSubSubFiles : datasetSubSubFile.listFiles()) {
-                  copyFromLocalFile(
-                      Arrays.asList(new Path(datasetSubSubFiles.getPath())),
-                      new Path(getPathDfs(destinationPath)));
-                  copiedAtleastOneFile = true;
-                  if (LOG.isDebugEnabled()) {
-                    LOG.debug(LOG_PREFIX + " [copyFromLocalDir] copied ["
-                        + datasetFile.getName() + "/"
-                        + datasetSubFile.getName() + "/"
-                        + datasetSubSubFile.getName() + "/"
-                        + datasetSubSubFiles.getName() + "] of glob ["
-                        + datasetPath + "/*] to [" + destinationPath + "]");
-                  }
-                }
-              }
-            }
-          }
-        }
+    for (File file : listFilesLocal(sourcePath, false, sourcePaths)) {
+      copyFromLocalFile(Arrays.asList(new Path(file.getPath())), new Path(
+          getPathDfs(destinationPath)));
+      if (file.isFile()) {
+        files.add(file);
+      } else {
+        files.addAll(FileUtils.listFiles(file, TrueFileFilter.INSTANCE,
+            TrueFileFilter.INSTANCE));
+      }
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(LOG_PREFIX + " [copyFromLocalDir] copied ["
+            + file.getParentFile().getParentFile().getParentFile().getName()
+            + "/" + file.getParentFile().getParentFile().getName() + "/"
+            + file.getParentFile().getName() + "/" + file.getName()
+            + (file.isDirectory() ? "/" : "") + "] of glob [" + sourcePathGlob
+            + "/*] to [" + destinationPath + "]");
       }
     }
-    if (!copiedAtleastOneFile) {
-      throw new IllegalArgumentException("Cloud not find dataset with path ["
-          + datasetPath + "]");
+    if (files.isEmpty()) {
+      throw new IllegalArgumentException("Cloud not find files with path ["
+          + sourcePathGlob + "]");
     }
     debugMessageFooter(LOG, "copyFromLocalDir", time);
+    return files;
   }
 
   @BeforeClass
@@ -281,6 +297,41 @@ public abstract class BaseTest {
     if (log.isDebugEnabled()) {
       log.debug(LOG_PREFIX + " [" + method + "] finished in [" + time + "] ms");
     }
+  }
+
+  private static List<File> listFilesLocal(String path, boolean explode,
+      String... paths) {
+    final File pathFile = new File(ABS_DIR_WORKING + "/" + path);
+    if (!pathFile.exists() || !pathFile.isDirectory()) {
+      throw new IllegalArgumentException("Could not find directory ["
+          + pathFile.getAbsolutePath() + "]");
+    }
+    List<File> files = new ArrayList<File>();
+    for (File pathParentFile : pathFile
+        .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
+      if (paths.length == 0 || paths[0].equals(pathParentFile.getName())) {
+        for (File pathChildFile : pathParentFile
+            .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
+          if (paths.length <= 1 || paths[1].equals(pathChildFile.getName())) {
+            for (File pathChildChildFile : pathChildFile
+                .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
+              if (paths.length <= 2
+                  || paths[2].equals(pathChildChildFile.getName())) {
+                for (File pathChildChildFiles : pathChildChildFile.listFiles()) {
+                  if (explode && pathChildChildFiles.isDirectory()) {
+                    files.addAll(FileUtils.listFiles(pathChildChildFiles,
+                        TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE));
+                  } else {
+                    files.add(pathChildChildFiles);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return files;
   }
 
   private boolean copyFromLocalFile(List<Path> sources, Path destination)
