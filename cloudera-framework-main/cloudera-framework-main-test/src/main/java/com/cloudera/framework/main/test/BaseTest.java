@@ -30,38 +30,32 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
  */
 public abstract class BaseTest {
 
-  private static Logger LOG = LoggerFactory.getLogger(BaseTest.class);
-
-  public static String LOG_PREFIX = "Test harness";
-
-  public static String DIR_WORKING = "target";
-  public static String DIR_DATA = "test-data";
-  public static String DIR_CLASSES = "test-classes";
-  public static String DIR_FS_LOCAL = "test-fs-local";
-  public static String DIR_DFS_LOCAL = "test-hdfs-local";
-  public static String DIR_DFS_MINICLUSTER = "test-hdfs-minicluster";
+  // Directories
+  public static final String DIR_TARGET = "target";
+  public static final String DIR_DATA = "test-data";
+  public static final String DIR_CLASSES = "test-classes";
+  public static final String DIR_FS_LOCAL = "test-fs-local";
+  public static final String DIR_DFS_LOCAL = "test-hdfs-local";
+  public static final String DIR_DFS_MINICLUSTER = "test-hdfs-minicluster";
   public static final String DIR_MINICLUSTER_PREFIX = "MiniMRCluster_";
-  public static String FILE_LOCAL_LOG_CONFIG = "/src/test/resources/log4j.properties";
 
-  public static String PATH_FS_LOCAL = DIR_WORKING + "/" + DIR_FS_LOCAL;
-  public static String PATH_DFS_LOCAL = DIR_WORKING + "/" + DIR_DFS_LOCAL;
-  public static String PATH_DFS_MINICLUSTER = DIR_WORKING + "/"
+  // Relative directories
+  public static final String REL_DIR_DATA = DIR_TARGET + "/" + DIR_DATA;
+  public static final String REL_DIR_CLASSES = DIR_TARGET + "/" + DIR_CLASSES;
+  public static final String REL_DIR_FS_LOCAL = DIR_TARGET + "/" + DIR_FS_LOCAL;
+  public static final String REL_DIR_DFS_LOCAL = DIR_TARGET + "/"
+      + DIR_DFS_LOCAL;
+  public static final String REL_DIR_DFS_MINICLUSTER = DIR_TARGET + "/"
       + DIR_DFS_MINICLUSTER;
 
-  public static String PATH_LOCAL_WORKING_DIR = new File(".").getAbsolutePath();
-  public static String PATH_LOCAL_WORKING_DIR_TARGET = PATH_LOCAL_WORKING_DIR
-      + "/" + DIR_WORKING;
-  public static String PATH_LOCAL_WORKING_DIR_TARGET_DATA = PATH_LOCAL_WORKING_DIR_TARGET
-      + "/" + DIR_DATA;
-  public static String PATH_LOCAL_WORKING_DIR_TARGET_CLASSES = PATH_LOCAL_WORKING_DIR_TARGET
-      + "/" + DIR_CLASSES;
-  public static String PATH_LOCAL_WORKING_DIR_TARGET_DFS_LOCAL = PATH_LOCAL_WORKING_DIR_TARGET
-      + "/" + DIR_DFS_LOCAL;
-  public static String PATH_LOCAL_WORKING_DIR_TARGET_DFS_MINICLUSTER = PATH_LOCAL_WORKING_DIR_TARGET
-      + "/" + DIR_DFS_MINICLUSTER;
-
-  public static String URI_LOG_CONFIG = "file://"
-      + new LocalClusterDfsMrTest().getPathLocal(FILE_LOCAL_LOG_CONFIG);
+  // Absolute directories
+  public static final String ABS_DIR_WORKING = new File(".").getAbsolutePath();
+  public static final String ABS_DIR_TARGET = ABS_DIR_WORKING + "/"
+      + DIR_TARGET;
+  public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/"
+      + DIR_DFS_LOCAL;
+  public static final String ABS_DIR_DFS_MINICLUSTER = ABS_DIR_TARGET + "/"
+      + DIR_DFS_MINICLUSTER;
 
   /**
    * Get the {@link Configuration} for clients of this test
@@ -86,9 +80,9 @@ public abstract class BaseTest {
    */
   public String getPathLocal(String pathRelativeToModuleRoot) {
     String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(pathRelativeToModuleRoot);
-    return pathRelativeToModuleRootSansLeadingSlashes.equals("") ? PATH_LOCAL_WORKING_DIR
-        .length() < 2 ? "/" : PATH_LOCAL_WORKING_DIR.substring(0,
-        PATH_LOCAL_WORKING_DIR.length() - 2) : new Path(PATH_LOCAL_WORKING_DIR,
+    return pathRelativeToModuleRootSansLeadingSlashes.equals("") ? ABS_DIR_WORKING
+        .length() < 2 ? "/" : ABS_DIR_WORKING.substring(0,
+        ABS_DIR_WORKING.length() - 2) : new Path(ABS_DIR_WORKING,
         pathRelativeToModuleRootSansLeadingSlashes).toUri().toString();
   }
 
@@ -104,49 +98,52 @@ public abstract class BaseTest {
   }
 
   /**
-   * Copy, flatten and overlay datasets matching specific
-   * <code>sourceLabels</code> from <code>sourcePath</code> relative to the test
-   * classes directory to a <code>destinationPath</code> DFS directory.
+   * Copy files matching specific directory <code>sourcePaths</code> relative to
+   * a <code>sourcePath</code>, in turn relative to the working directory, to a
+   * <code>destinationPath</code> DFS directory.
    *
    * @param sourcePath
+   *          the source path relative to the working directory
    * @param destinationPath
-   * @param sourceLabels
+   *          the destination path relative to the DFS root
+   * @param sourcePaths
+   *          optional list of up to 3 nested directories to include, if not
+   *          specified all directories at that level will be included
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public void copyFromTestClassesDir(String sourcePath, String destinationPath,
-      String... sourceLabels) throws IllegalArgumentException, IOException {
-    long time = debugMessageHeader(LOG, "copyFromTestClassesDir");
-    final File sourcePathFile = new File(PATH_LOCAL_WORKING_DIR_TARGET_CLASSES
-        + "/" + sourcePath);
+  public void copyFromLocalDir(String sourcePath, String destinationPath,
+      String... sourcePaths) throws IllegalArgumentException, IOException {
+    long time = debugMessageHeader(LOG, "copyFromLocalDir");
+    final File sourcePathFile = new File(ABS_DIR_WORKING + "/" + sourcePath);
     if (!sourcePathFile.exists() || !sourcePathFile.isDirectory()) {
       throw new IllegalArgumentException("Could not find directory ["
           + sourcePathFile.getAbsolutePath() + "]");
     }
     boolean copiedAtleastOneFile = false;
-    String datasetPath = ((sourceLabels.length == 0 ? "*" : sourceLabels[0])
-        + "/" + (sourceLabels.length <= 1 ? "*" : sourceLabels[1]) + "/" + (sourceLabels.length <= 2 ? "*"
-        : sourceLabels[2])).replace(PATH_LOCAL_WORKING_DIR, ".");
+    String datasetPath = ((sourcePaths.length == 0 ? "*" : sourcePaths[0])
+        + "/" + (sourcePaths.length <= 1 ? "*" : sourcePaths[1]) + "/" + (sourcePaths.length <= 2 ? "*"
+        : sourcePaths[2])).replace(ABS_DIR_WORKING, ".");
     getFileSystem().mkdirs(new Path(getPathDfs(destinationPath)));
     for (File datasetFile : sourcePathFile
         .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-      if (sourceLabels.length == 0
-          || sourceLabels[0].equals(datasetFile.getName())) {
+      if (sourcePaths.length == 0
+          || sourcePaths[0].equals(datasetFile.getName())) {
         for (File datasetSubFile : datasetFile
             .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-          if (sourceLabels.length <= 1
-              || sourceLabels[1].equals(datasetSubFile.getName())) {
+          if (sourcePaths.length <= 1
+              || sourcePaths[1].equals(datasetSubFile.getName())) {
             for (File datasetSubSubFile : datasetSubFile
                 .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-              if (sourceLabels.length <= 2
-                  || sourceLabels[2].equals(datasetSubSubFile.getName())) {
+              if (sourcePaths.length <= 2
+                  || sourcePaths[2].equals(datasetSubSubFile.getName())) {
                 for (File datasetSubSubFiles : datasetSubSubFile.listFiles()) {
                   copyFromLocalFile(
                       Arrays.asList(new Path(datasetSubSubFiles.getPath())),
                       new Path(getPathDfs(destinationPath)));
                   copiedAtleastOneFile = true;
                   if (LOG.isDebugEnabled()) {
-                    LOG.debug(LOG_PREFIX + " [copyFromTestClassesDir] copied ["
+                    LOG.debug(LOG_PREFIX + " [copyFromLocalDir] copied ["
                         + datasetFile.getName() + "/"
                         + datasetSubFile.getName() + "/"
                         + datasetSubSubFile.getName() + "/"
@@ -164,7 +161,7 @@ public abstract class BaseTest {
       throw new IllegalArgumentException("Cloud not find dataset with path ["
           + datasetPath + "]");
     }
-    debugMessageFooter(LOG, "copyFromTestClassesDir", time);
+    debugMessageFooter(LOG, "copyFromLocalDir", time);
   }
 
   @BeforeClass
@@ -177,26 +174,23 @@ public abstract class BaseTest {
     System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
     System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
     System.setProperty("java.security.krb5.conf", "/dev/null");
-    System.setProperty("dir.working", PATH_LOCAL_WORKING_DIR);
-    System.setProperty("dir.working.target", PATH_LOCAL_WORKING_DIR_TARGET);
-    System.setProperty("dir.working.target.hdfs",
-        PATH_LOCAL_WORKING_DIR_TARGET_DFS_LOCAL);
-    System.setProperty("test.build.data",
-        PATH_LOCAL_WORKING_DIR_TARGET_DFS_MINICLUSTER);
-    System.setProperty("dir.working.target.derby", PATH_LOCAL_WORKING_DIR
+    System.setProperty("dir.working", ABS_DIR_WORKING);
+    System.setProperty("dir.working.target", ABS_DIR_TARGET);
+    System.setProperty("dir.working.target.hdfs", ABS_DIR_DFS_LOCAL);
+    System.setProperty("test.build.data", ABS_DIR_DFS_MINICLUSTER);
+    System.setProperty("dir.working.target.derby", ABS_DIR_WORKING
         + "/target/derby");
     System.setProperty("dir.working.target.derby.db",
         System.getProperty("dir.working.target.derby") + "/db");
     System.setProperty("derby.stream.error.file",
         System.getProperty("dir.working.target.derby") + "/derby.log");
-    for (File file : new File(PATH_LOCAL_WORKING_DIR_TARGET)
-        .listFiles(new FileFilter() {
-          @Override
-          public boolean accept(File pathname) {
-            return pathname.isDirectory()
-                && pathname.getName().startsWith(DIR_MINICLUSTER_PREFIX);
-          }
-        })) {
+    for (File file : new File(ABS_DIR_TARGET).listFiles(new FileFilter() {
+      @Override
+      public boolean accept(File pathname) {
+        return pathname.isDirectory()
+            && pathname.getName().startsWith(DIR_MINICLUSTER_PREFIX);
+      }
+    })) {
       FileUtils.deleteDirectory(file);
     }
     File derbyDir = new File(System.getProperty("dir.working.target.derby.db"));
@@ -313,4 +307,9 @@ public abstract class BaseTest {
     }
     return true;
   }
+
+  protected static String LOG_PREFIX = "Test harness";
+
+  private static Logger LOG = LoggerFactory.getLogger(BaseTest.class);
+
 }

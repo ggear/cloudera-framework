@@ -34,8 +34,8 @@ public class LocalClusterDfsMrTest extends BaseTest {
   @Override
   public String getPathDfs(String pathRelativeToDfsRoot) {
     String pathRelativeToDfsRootSansLeadingSlashes = stripLeadingSlashes(pathRelativeToDfsRoot);
-    return pathRelativeToDfsRootSansLeadingSlashes.equals("") ? PATH_DFS_LOCAL
-        : new Path(PATH_DFS_LOCAL, pathRelativeToDfsRootSansLeadingSlashes)
+    return pathRelativeToDfsRootSansLeadingSlashes.equals("") ? REL_DIR_DFS_LOCAL
+        : new Path(REL_DIR_DFS_LOCAL, pathRelativeToDfsRootSansLeadingSlashes)
             .toUri().toString();
   }
 

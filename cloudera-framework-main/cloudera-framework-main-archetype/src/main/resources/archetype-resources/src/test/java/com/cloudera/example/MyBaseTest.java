@@ -1,18 +1,22 @@
 package com.cloudera.example;
 
+import com.cloudera.framework.main.test.BaseTest;
+
 /**
  * Base test for all unit-tests
  */
 public interface MyBaseTest {
 
-  public static final String DATA_NAME = "data";
-  public static final String DATASET_NAME = "my-dataset";
-  public static final String DATASET_PATH = "/" + DATASET_NAME;
-  public static final String DATASET_TAB_NAME = "tab-delim";
-  public static final String DATASET_TAB_PATH = DATASET_PATH + "/raw/"
-      + DATASET_TAB_NAME;
-  public static final String DATASET_COMMA_NAME = "comma-delim";
-  public static final String DATASET_COMMA_PATH = DATASET_PATH + "/raw/"
-      + DATASET_COMMA_NAME;
+  public static final String DIR_DATASET = "my-dataset";
+  public static final String DIR_DATASET_TAB = "tab-delim";
+  public static final String DIR_DATASET_COMMA = "comma-delim";
+
+  public static final String REL_DIR_SOURCE = BaseTest.REL_DIR_CLASSES
+      + "/data";
+  public static final String REL_DIR_DESTINATION = "/" + DIR_DATASET;
+  public static final String REL_DIR_DATASET_TAB = REL_DIR_DESTINATION
+      + "/raw/" + DIR_DATASET_TAB;
+  public static final String REL_DIR_DATASET_COMMA = REL_DIR_DESTINATION
+      + "/raw/" + DIR_DATASET_COMMA;
 
 }

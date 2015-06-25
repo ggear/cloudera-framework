@@ -10,14 +10,15 @@ import com.cloudera.framework.main.test.MiniClusterDfsMrTest;
 /**
  * Test dataset cleanse operation
  */
-public class MyDatasetCleanseTest extends MiniClusterDfsMrTest implements MyBaseTest {
+public class MyDatasetCleanseTest extends MiniClusterDfsMrTest implements
+    MyBaseTest {
 
   @Before
   public void prepareData() throws IllegalArgumentException, IOException {
-    copyFromTestClassesDir(DATA_NAME, DATASET_TAB_PATH, DATASET_NAME,
-        DATASET_TAB_NAME);
-    copyFromTestClassesDir(DATA_NAME, DATASET_COMMA_PATH, DATASET_NAME,
-        DATASET_COMMA_NAME);
+    copyFromLocalDir(REL_DIR_SOURCE, REL_DIR_DATASET_TAB, DIR_DATASET,
+        DIR_DATASET_TAB);
+    copyFromLocalDir(REL_DIR_SOURCE, REL_DIR_DATASET_COMMA, DIR_DATASET,
+        DIR_DATASET_COMMA);
   }
 
   @Test

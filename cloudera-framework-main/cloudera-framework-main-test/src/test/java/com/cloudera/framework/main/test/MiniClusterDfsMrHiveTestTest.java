@@ -24,8 +24,8 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
    */
   @Test
   public void testHiveCreateSelect() throws Exception {
-    new File(BaseTest.PATH_FS_LOCAL).mkdirs();
-    File localDataFile = new File(BaseTest.PATH_FS_LOCAL + "/somedata.csv");
+    new File(BaseTest.REL_DIR_FS_LOCAL).mkdirs();
+    File localDataFile = new File(BaseTest.REL_DIR_FS_LOCAL + "/somedata.csv");
     BufferedWriter writer = new BufferedWriter(new FileWriter(localDataFile));
     writer.write("1,1\n");
     writer.write("2,2\n");
@@ -58,8 +58,8 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
    */
   @Test
   public void testHiveCreateSelectAgain() throws Exception {
-    new File(BaseTest.PATH_FS_LOCAL).mkdirs();
-    File localDataFile = new File(BaseTest.PATH_FS_LOCAL + "/somedata.csv");
+    new File(BaseTest.REL_DIR_FS_LOCAL).mkdirs();
+    File localDataFile = new File(BaseTest.REL_DIR_FS_LOCAL + "/somedata.csv");
     BufferedWriter writer = new BufferedWriter(new FileWriter(localDataFile));
     writer.write("1,1\n");
     writer.write("2,2\n");

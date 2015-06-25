@@ -16,16 +16,16 @@ public class MyDatasetTest extends LocalClusterDfsMrTest implements MyBaseTest {
 
   @Before
   public void prepareData() throws IllegalArgumentException, IOException {
-    copyFromTestClassesDir(DATA_NAME, DATASET_TAB_PATH, DATASET_NAME,
-        DATASET_TAB_NAME);
-    copyFromTestClassesDir(DATA_NAME, DATASET_COMMA_PATH, DATASET_NAME,
-        DATASET_COMMA_NAME);
+    copyFromLocalDir(REL_DIR_SOURCE, REL_DIR_DATASET_TAB, DIR_DATASET,
+        DIR_DATASET_TAB);
+    copyFromLocalDir(REL_DIR_SOURCE, REL_DIR_DATASET_COMMA, DIR_DATASET,
+        DIR_DATASET_COMMA);
   }
 
   @Test
   public void testDataAvailable() throws Exception {
-    Assert.assertTrue(getFileSystem()
-        .exists(new Path(getPathDfs(DATASET_PATH))));
+    Assert.assertTrue(getFileSystem().exists(
+        new Path(getPathDfs(REL_DIR_DESTINATION))));
   }
 
 }

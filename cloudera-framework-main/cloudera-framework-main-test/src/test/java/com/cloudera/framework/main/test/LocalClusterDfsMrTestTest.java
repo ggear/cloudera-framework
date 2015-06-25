@@ -143,14 +143,17 @@ public class LocalClusterDfsMrTestTest extends LocalClusterDfsMrTest {
    */
   @Test
   public void testPathDfs() throws Exception {
-    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL, getPathDfs(""));
-    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL, getPathDfs("/"));
-    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL, getPathDfs("//"));
-    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp", getPathDfs("tmp"));
-    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp", getPathDfs("/tmp"));
-    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp", getPathDfs("//tmp"));
-    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp", getPathDfs("///tmp"));
-    Assert.assertEquals(BaseTest.PATH_DFS_LOCAL + "/tmp/tmp",
+    Assert.assertEquals(BaseTest.REL_DIR_DFS_LOCAL, getPathDfs(""));
+    Assert.assertEquals(BaseTest.REL_DIR_DFS_LOCAL, getPathDfs("/"));
+    Assert.assertEquals(BaseTest.REL_DIR_DFS_LOCAL, getPathDfs("//"));
+    Assert.assertEquals(BaseTest.REL_DIR_DFS_LOCAL + "/tmp", getPathDfs("tmp"));
+    Assert
+        .assertEquals(BaseTest.REL_DIR_DFS_LOCAL + "/tmp", getPathDfs("/tmp"));
+    Assert.assertEquals(BaseTest.REL_DIR_DFS_LOCAL + "/tmp",
+        getPathDfs("//tmp"));
+    Assert.assertEquals(BaseTest.REL_DIR_DFS_LOCAL + "/tmp",
+        getPathDfs("///tmp"));
+    Assert.assertEquals(BaseTest.REL_DIR_DFS_LOCAL + "/tmp/tmp",
         getPathDfs("///tmp//tmp"));
   }
 
