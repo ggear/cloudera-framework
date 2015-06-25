@@ -4,14 +4,12 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>${groupId}</groupId>
-	<artifactId>${artifactId}</artifactId>
-	<version>${version}</version>
+	<groupId>\${groupId}</groupId>
+	<artifactId>\${artifactId}</artifactId>
+	<version>\${version}</version>
 	<packaging>jar</packaging>
 
 	<properties>
-		<cloudera-framework.version>1.1.0-cdh5.4.2-SNAPSHOT</cloudera-framework.version>
-		<junit.version>4.12</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -19,19 +17,19 @@
 		<dependency>
 			<groupId>com.cloudera.framework.main.client</groupId>
 			<artifactId>cloudera-framework-main-client-core</artifactId>
-			<version>${cloudera-framework.version}</version>
+			<version>${project.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cloudera.framework.main</groupId>
 			<artifactId>cloudera-framework-main-common</artifactId>
-			<version>${cloudera-framework.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.cloudera.framework.main</groupId>
 			<artifactId>cloudera-framework-main-test</artifactId>
-			<version>${cloudera-framework.version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

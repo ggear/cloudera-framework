@@ -1,6 +1,6 @@
 #Cloudera Framework
 
-Provide a Cloudera development framework, including a unit test harness, client and runtime bill-of-materials and driver base class, with full coverage across Cloudera, including HDFS, YARN, MR2, Hive, Spark, HBase, Impala and Search.
+Provide a Cloudera development framework, including a unit test harness, client and runtime bill-of-materials and driver base class, with full coverage across the Cloudera stack, including HDFS, YARN, MR2, Hive, Spark, HBase, Impala and Solr.
 
 ##Requirements
 
@@ -14,37 +14,48 @@ To compile, build and package from source, this project requires:
 This project can be installed to a local repository as per:
 
 ```bash
+export CF_VERSION=1.1.0
+export CDH_VERSION=5.4.2
+git clone git@github.com:ggear/cloudera-framework.git
+cd cloudera-framework
+git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
 mvn clean install -PCMP
 ```
 
-Alternatively, the module can be distributed as a binary by embedding (or manually installing) the dependencies via the appropriate branch repository (eg [cloudera-framework-1.0.0-cdh5.4.0](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.0.0-cdh5.4.0/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) as per [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire))
+Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.1.0-cdh5.4.2](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.1.0-cdh5.4.2/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
 
 ##Usage
 
-[Unit test examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-main/cloudera-framework-main-test/src/test/java/com/cloudera/framework/main/test) are bundled with the module. Note that the mini-cluster driven unit tests require significant heap (and perm-gen), the shipped maven surefire plugin configuration includes adequate settings but it may be necessary to bump up the default settings in your own POM's and IDE as necessary.
+The cloudera-framework includes an archetype allowing you to stand up a simple project and get going fast:
 
-Unit test runtime logging verbosity can be controlled via log4j, as per the example [log4j.properties](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-test/src/test/resources/log4j.properties).
-
-The [client](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-client/pom.xml) and [runtime](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-runtime/pom.xml) bill-of-materials can be used as POM dependencies.
-
-Examples of the [driver](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-common/src/main/java/com/cloudera/framework/main/common/Driver.java) are detailed as part of the [driver unit test](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-main/cloudera-framework-main-common/src/test/java/com/cloudera/framework/main/common/DriverTest.java).
+```bash
+mvn archetype:generate \
+  -DarchetypeGroupId=com.cloudera.framework.main \
+  -DarchetypeArtifactId=cloudera-framework-main-archetype \
+  -Dversion=1.0.0-SNAPSHOT \
+  -DgroupId=com.my.company \
+  -DartifactId=my-cloudera-project \
+  -Dpackage="com.my.company"
+cd my-cloudera-project
+mvn clean install
+```
 
 ##Release
 
 To perform a release:
 
 ```bash
-export VERSION_RELEASE=1.1.0
+export CF_VERSION_RELEASE=1.1.0
 export CDH_VERSION_RELEASE=5.4.2
-export VERSION_HEAD=1.2.0
+export CF_VERSION_HEAD=1.2.0
 export CDH_VERSION_HEAD=5.4.3
 mvn clean
-mvn release:prepare -B -DreleaseVersion=$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
+mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:clean
-git checkout -b cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE
+git checkout -b cloudera-framework-$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE cloudera-framework-$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE
 mvn clean install -PCMP
 git add -A cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository
-git commit -m "Add binaries for cloudera-framework-$VERSION_RELEASE-cdh$CDH_VERSION_RELEASE"
+git commit -m "Add binaries for cloudera-framework-$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE"
 git checkout master
 mvn clean
 git push --all
