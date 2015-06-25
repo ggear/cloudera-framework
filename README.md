@@ -1,6 +1,17 @@
 #Cloudera Framework
 
-Provide a Cloudera development framework, including a unit test harness, client and runtime bill-of-materials and driver base class, with full coverage across the Cloudera stack, including HDFS, YARN, MR2, Hive, Spark, HBase, Impala and Solr.
+Provide a Cloudera development framework, including a unit test harness, client and runtime bill-of-materials and driver base class, with full coverage across the Cloudera stack, including:
+
+* HDFS
+* YARN
+* MR2
+* Hive
+* Spark
+* HBase
+* Impala
+* Solr
+* Flume
+* Kafka
 
 ##Requirements
 
