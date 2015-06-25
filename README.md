@@ -22,7 +22,7 @@ git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
 mvn clean install -PCMP
 ```
 
-Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.1.0-cdh5.4.2](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.1.0-cdh5.4.2/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
+Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.0.0-cdh5.4.2](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.0.0-cdh5.4.2/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
 
 ##Usage
 
