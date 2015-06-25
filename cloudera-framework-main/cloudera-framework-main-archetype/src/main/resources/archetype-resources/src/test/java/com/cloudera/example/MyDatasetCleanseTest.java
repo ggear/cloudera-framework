@@ -2,17 +2,15 @@ package com.cloudera.example;
 
 import java.io.IOException;
 
-import org.apache.hadoop.fs.Path;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cloudera.framework.main.test.LocalClusterDfsMrTest;
+import com.cloudera.framework.main.test.MiniClusterDfsMrTest;
 
 /**
- * Test dataset ingest
+ * Test dataset cleanse operation
  */
-public class MyDatasetTest extends LocalClusterDfsMrTest implements MyBaseTest {
+public class MyDatasetCleanseTest extends MiniClusterDfsMrTest implements MyBaseTest {
 
   @Before
   public void prepareData() throws IllegalArgumentException, IOException {
@@ -23,9 +21,7 @@ public class MyDatasetTest extends LocalClusterDfsMrTest implements MyBaseTest {
   }
 
   @Test
-  public void testDataAvailable() throws Exception {
-    Assert.assertTrue(getFileSystem()
-        .exists(new Path(getPathDfs(DATASET_PATH))));
+  public void testDriver() throws Exception {
   }
 
 }
