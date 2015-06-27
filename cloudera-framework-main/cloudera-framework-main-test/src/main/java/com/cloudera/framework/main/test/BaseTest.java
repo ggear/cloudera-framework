@@ -145,31 +145,35 @@ public abstract class BaseTest {
    * @param paths
    * @return
    */
-  public static Map<String, Map<String, Map<String, File[]>>> mapFilesLocal(
+  public static Map<String, Map<String, Map<String, List<File>>>> mapFilesLocal(
       String path, String... paths) {
-    Map<String, Map<String, Map<String, File[]>>> files = new TreeMap<String, Map<String, Map<String, File[]>>>();
+    Map<String, Map<String, Map<String, List<File>>>> files = new TreeMap<String, Map<String, Map<String, List<File>>>>();
     for (File file : listFilesLocal(path, false, paths)) {
       String pathDataset = file.getParentFile().getParentFile().getParentFile()
           .getName();
       String pathSubset = file.getParentFile().getParentFile().getName();
       String pathLabel = file.getParentFile().getName();
       if (files.get(pathDataset) == null) {
-        files.put(pathDataset, new TreeMap<String, Map<String, File[]>>());
+        files.put(pathDataset, new TreeMap<String, Map<String, List<File>>>());
       }
       if (files.get(pathDataset).get(pathSubset) == null) {
-        files.get(pathDataset).put(pathSubset, new TreeMap<String, File[]>());
+        files.get(pathDataset).put(pathSubset,
+            new TreeMap<String, List<File>>());
+      }
+      if (files.get(pathDataset).get(pathSubset).get(pathLabel) == null) {
+        files.get(pathDataset).get(pathSubset)
+            .put(pathLabel, new ArrayList<File>());
       }
       if (file.isFile()) {
-        files.get(pathDataset).get(pathSubset)
-            .put(pathLabel, new File[] { file });
+        files.get(pathDataset).get(pathSubset).get(pathLabel).add(file);
       } else {
         files
             .get(pathDataset)
             .get(pathSubset)
-            .put(
-                pathLabel,
+            .get(pathLabel)
+            .addAll(
                 FileUtils.listFiles(file, TrueFileFilter.INSTANCE,
-                    TrueFileFilter.INSTANCE).toArray(new File[0]));
+                    TrueFileFilter.INSTANCE));
       }
     }
     return files;

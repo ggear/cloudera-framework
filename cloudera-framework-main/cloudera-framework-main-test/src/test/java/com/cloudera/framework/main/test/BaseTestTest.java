@@ -3,6 +3,7 @@ package com.cloudera.framework.main.test;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -154,7 +155,7 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
 
   @Test
   public void testMapFilesLocalAndListFilesLocal() throws Exception {
-    Map<String, Map<String, Map<String, File[]>>> files = mapFilesLocal(DIR_SOURCE);
+    Map<String, Map<String, Map<String, List<File>>>> files = mapFilesLocal(DIR_SOURCE);
     Assert.assertEquals(3, files.size());
     for (String dataset : files.keySet()) {
       Assert.assertArrayEquals(
@@ -168,7 +169,7 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
           Assert.assertArrayEquals(
               copyFromLocalDir(DIR_SOURCE, DIR_DESTINATION, dataset, subset,
                   label), listFilesLocal(DIR_SOURCE, dataset, subset, label));
-          Assert.assertArrayEquals(files.get(dataset).get(subset).get(label),
+          Assert.assertEquals(files.get(dataset).get(subset).get(label),
               mapFilesLocal(DIR_SOURCE, dataset, subset, label).get(dataset)
                   .get(subset).get(label));
         }
