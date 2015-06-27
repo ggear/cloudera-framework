@@ -17,9 +17,9 @@ public class MyDatasetTest extends LocalClusterDfsMrTest implements MyBaseTest {
   @Before
   public void prepareData() throws IllegalArgumentException, IOException {
     Assert.assertTrue(copyFromLocalDir(REL_DIR_SOURCE, REL_DIR_DATASET_TAB,
-        DIR_DATASET, DIR_DATASET_TAB).size() > 0);
+        DIR_DATASET, DIR_DATASET_TAB).length > 0);
     Assert.assertTrue(copyFromLocalDir(REL_DIR_SOURCE, REL_DIR_DATASET_COMMA,
-        DIR_DATASET, DIR_DATASET_COMMA).size() > 0);
+        DIR_DATASET, DIR_DATASET_COMMA).length > 0);
   }
 
   @Test

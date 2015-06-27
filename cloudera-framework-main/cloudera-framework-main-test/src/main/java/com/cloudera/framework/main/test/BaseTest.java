@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -56,7 +58,7 @@ public abstract class BaseTest {
   public static final String ABS_DIR_WORKING = new File(".").getAbsolutePath();
   public static final String ABS_DIR_TARGET = ABS_DIR_WORKING + "/"
       + DIR_TARGET;
-  public static final String ABS_DIR_DATA = ABS_DIR_WORKING + "/" + DIR_DATA;
+  public static final String ABS_DIR_DATA = ABS_DIR_TARGET + "/" + DIR_DATA;
   public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/"
       + DIR_DFS_LOCAL;
   public static final String ABS_DIR_DFS_MINICLUSTER = ABS_DIR_TARGET + "/"
@@ -103,12 +105,14 @@ public abstract class BaseTest {
   }
 
   /**
-   * Get a local file listing relative to the module root
+   * Get a local file listing relative to the module root, matching specific
+   * directory paths
    *
    * @param path
+   * @param paths
    * @return
    */
-  public static List<File> listFilesLocal(String path, String... paths) {
+  public static File[] listFilesLocal(String path, String... paths) {
     return listFilesLocal(path, true, paths);
   }
 
@@ -118,7 +122,7 @@ public abstract class BaseTest {
    * @param path
    * @return
    */
-  public List<Path> listFilesDfs(String path) throws IllegalArgumentException,
+  public Path[] listFilesDfs(String path) throws IllegalArgumentException,
       IOException {
     List<Path> paths = new ArrayList<Path>();
     try {
@@ -130,12 +134,107 @@ public abstract class BaseTest {
     } catch (FileNotFoundException fileNotFoundException) {
       // ignore
     }
-    return paths;
+    return paths.toArray(new Path[paths.size()]);
+  }
+
+  /**
+   * Map a local file listing relative to the module root, matching specific
+   * directory paths
+   *
+   * @param path
+   * @param paths
+   * @return
+   */
+  public static Map<String, Map<String, Map<String, File[]>>> mapFilesLocal(
+      String path, String... paths) {
+    Map<String, Map<String, Map<String, File[]>>> files = new TreeMap<String, Map<String, Map<String, File[]>>>();
+    for (File file : listFilesLocal(path, false, paths)) {
+      String pathDataset = file.getParentFile().getParentFile().getParentFile()
+          .getName();
+      String pathSubset = file.getParentFile().getParentFile().getName();
+      String pathLabel = file.getParentFile().getName();
+      if (files.get(pathDataset) == null) {
+        files.put(pathDataset, new TreeMap<String, Map<String, File[]>>());
+      }
+      if (files.get(pathDataset).get(pathSubset) == null) {
+        files.get(pathDataset).put(pathSubset, new TreeMap<String, File[]>());
+      }
+      if (file.isFile()) {
+        files.get(pathDataset).get(pathSubset)
+            .put(pathLabel, new File[] { file });
+      } else {
+        files
+            .get(pathDataset)
+            .get(pathSubset)
+            .put(
+                pathLabel,
+                FileUtils.listFiles(file, TrueFileFilter.INSTANCE,
+                    TrueFileFilter.INSTANCE).toArray(new File[0]));
+      }
+    }
+    return files;
+  }
+
+  /**
+   * Copy files from local directories relative to to the module root, to DFS
+   * directories relative to the DFS root, matching specific directory paths
+   *
+   * @param sourcePaths
+   *          the source paths relative to the module root
+   * @param destinationPaths
+   *          the destinations path relative to the DFS root
+   * @param datasets
+   *          list of datasets matching root dataset directories, null will
+   *          match all
+   * @param subsets
+   *          list of subset datasets matching child dataset directories, null
+   *          will match all
+   * @param labels
+   *          list of labeled subset datasets matching child of subset, null
+   *          will match all directories
+   * @return local files that have been copied
+   */
+  public File[] copyFromLocalDir(String[] sourcePaths,
+      String[] destinationPaths, String[] datasets, String[][] subsets,
+      String[][][] labels) throws IllegalArgumentException, IOException {
+    List<File> files = new ArrayList<File>();
+    if (datasets.length != sourcePaths.length
+        || datasets.length != destinationPaths.length
+        || datasets.length != subsets.length
+        || datasets.length != labels.length) {
+      throw new IllegalArgumentException(
+          "Number of datasets exceeds number of source paths, destination paths, subsets and or labels");
+    }
+    for (int i = 0; i < datasets.length; i++) {
+      if (subsets[i].length != labels[i].length) {
+        throw new IllegalArgumentException(
+            "Number of subsets exceeds number of labels");
+      }
+      for (int j = 0; j < subsets[i].length; j++) {
+        for (int k = 0; k < labels[i][j].length; k++) {
+          if (datasets[i] == null) {
+            files.addAll(Arrays.asList(copyFromLocalDir(sourcePaths[i],
+                destinationPaths[i])));
+          } else if (subsets[i][j] == null) {
+            files.addAll(Arrays.asList(copyFromLocalDir(sourcePaths[i],
+                destinationPaths[i], datasets[i])));
+          } else if (labels[i][j][k] == null) {
+            files.addAll(Arrays.asList(copyFromLocalDir(sourcePaths[i],
+                destinationPaths[i], datasets[i], subsets[i][j])));
+          } else {
+            files.addAll(Arrays.asList(copyFromLocalDir(sourcePaths[i],
+                destinationPaths[i], datasets[i], subsets[i][j],
+                labels[i][j][k])));
+          }
+        }
+      }
+    }
+    return files.toArray(new File[files.size()]);
   }
 
   /**
    * Copy files from a local directory relative to to the module root, to a DFS
-   * directory relative to the DFS root, matching specific directory labels
+   * directory relative to the DFS root, matching specific directory paths
    *
    * @param sourcePath
    *          the source path relative to the module root
@@ -146,7 +245,7 @@ public abstract class BaseTest {
    *          specified all directories at that level will be included
    * @return local files that have been copied
    */
-  public List<File> copyFromLocalDir(String sourcePath, String destinationPath,
+  public File[] copyFromLocalDir(String sourcePath, String destinationPath,
       String... sourcePaths) throws IllegalArgumentException, IOException {
     long time = debugMessageHeader(LOG, "copyFromLocalDir");
     List<File> files = new ArrayList<File>();
@@ -177,7 +276,7 @@ public abstract class BaseTest {
           + sourcePathGlob + "]");
     }
     debugMessageFooter(LOG, "copyFromLocalDir", time);
-    return files;
+    return files.toArray(new File[files.size()]);
   }
 
   @BeforeClass
@@ -299,7 +398,7 @@ public abstract class BaseTest {
     }
   }
 
-  private static List<File> listFilesLocal(String path, boolean explode,
+  private static File[] listFilesLocal(String path, boolean explode,
       String... paths) {
     final File pathFile = new File(ABS_DIR_WORKING + "/" + path);
     if (!pathFile.exists() || !pathFile.isDirectory()) {
@@ -307,22 +406,21 @@ public abstract class BaseTest {
           + pathFile.getAbsolutePath() + "]");
     }
     List<File> files = new ArrayList<File>();
-    for (File pathParentFile : pathFile
+    for (File pathDatasetFile : pathFile
         .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-      if (paths.length == 0 || paths[0].equals(pathParentFile.getName())) {
-        for (File pathChildFile : pathParentFile
+      if (paths.length == 0 || paths[0].equals(pathDatasetFile.getName())) {
+        for (File pathSubsetFile : pathDatasetFile
             .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-          if (paths.length <= 1 || paths[1].equals(pathChildFile.getName())) {
-            for (File pathChildChildFile : pathChildFile
+          if (paths.length <= 1 || paths[1].equals(pathSubsetFile.getName())) {
+            for (File pathLabelFile : pathSubsetFile
                 .listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-              if (paths.length <= 2
-                  || paths[2].equals(pathChildChildFile.getName())) {
-                for (File pathChildChildFiles : pathChildChildFile.listFiles()) {
-                  if (explode && pathChildChildFiles.isDirectory()) {
-                    files.addAll(FileUtils.listFiles(pathChildChildFiles,
+              if (paths.length <= 2 || paths[2].equals(pathLabelFile.getName())) {
+                for (File pathLabelFiles : pathLabelFile.listFiles()) {
+                  if (explode && pathLabelFiles.isDirectory()) {
+                    files.addAll(FileUtils.listFiles(pathLabelFiles,
                         TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE));
                   } else {
-                    files.add(pathChildChildFiles);
+                    files.add(pathLabelFiles);
                   }
                 }
               }
@@ -331,7 +429,7 @@ public abstract class BaseTest {
         }
       }
     }
-    return files;
+    return files.toArray(new File[files.size()]);
   }
 
   private boolean copyFromLocalFile(List<Path> sources, Path destination)
