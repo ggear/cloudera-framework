@@ -2,6 +2,7 @@ package com.cloudera.example;
 
 import java.util.Arrays;
 
+import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,7 @@ import com.cloudera.framework.main.test.LocalClusterDfsMrTest;
  * Test dataset setup
  */
 @RunWith(Parameterized.class)
-public class MyDatasetCleanseTest extends LocalClusterDfsMrTest implements MyDataset {
+public class MyDatasetIngestTest extends LocalClusterDfsMrTest implements MyDataset {
 
   @Parameters
   public static Iterable<Object[]> paramaters() {
@@ -45,9 +46,17 @@ public class MyDatasetCleanseTest extends LocalClusterDfsMrTest implements MyDat
     });
   }
 
-  public MyDatasetCleanseTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
+  public MyDatasetIngestTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
       String[][][] labels) {
     super(sources, destinations, datasets, subsets, labels);
+  }
+
+  @Test
+  public void testData() throws Exception {
+    Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs(DIR_DS_MYDATASET_TAB))));
+    Assert.assertTrue(getFileSystem().listFiles(new Path(getPathDfs(DIR_DS_MYDATASET_TAB)), true).hasNext());
+    Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs(DIR_DS_MYDATASET_COMMA))));
+    Assert.assertTrue(getFileSystem().listFiles(new Path(getPathDfs(DIR_DS_MYDATASET_COMMA)), true).hasNext());
   }
 
   @Test

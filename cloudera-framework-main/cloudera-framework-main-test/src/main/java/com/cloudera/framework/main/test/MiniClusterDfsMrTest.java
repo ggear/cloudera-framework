@@ -20,6 +20,15 @@ public class MiniClusterDfsMrTest extends BaseTest {
   private static MiniMrShim miniMr;
   private static FileSystem fileSystem;
 
+  public MiniClusterDfsMrTest() {
+    super();
+  }
+
+  public MiniClusterDfsMrTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
+      String[][][] labels) {
+    super(sources, destinations, datasets, subsets, labels);
+  }
+
   @Override
   public Configuration getConf() {
     return conf;

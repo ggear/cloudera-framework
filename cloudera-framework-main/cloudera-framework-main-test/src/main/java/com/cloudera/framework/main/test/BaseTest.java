@@ -23,6 +23,7 @@ import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -38,6 +39,7 @@ public abstract class BaseTest {
 
   // Directories
   public static final String DIR_TARGET = "target";
+  public static final String DIR_DATASET = "data";
   public static final String DIR_DATA = "test-data";
   public static final String DIR_CLASSES = "test-classes";
   public static final String DIR_FS_LOCAL = "test-fs-local";
@@ -48,6 +50,7 @@ public abstract class BaseTest {
   // Relative directories
   public static final String REL_DIR_DATA = DIR_TARGET + "/" + DIR_DATA;
   public static final String REL_DIR_CLASSES = DIR_TARGET + "/" + DIR_CLASSES;
+  public static final String REL_DIR_DATASET = REL_DIR_CLASSES + "/" + DIR_DATASET;
   public static final String REL_DIR_FS_LOCAL = DIR_TARGET + "/" + DIR_FS_LOCAL;
   public static final String REL_DIR_DFS_LOCAL = DIR_TARGET + "/" + DIR_DFS_LOCAL;
   public static final String REL_DIR_DFS_MINICLUSTER = DIR_TARGET + "/" + DIR_DFS_MINICLUSTER;
@@ -58,6 +61,44 @@ public abstract class BaseTest {
   public static final String ABS_DIR_DATA = ABS_DIR_TARGET + "/" + DIR_DATA;
   public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/" + DIR_DFS_LOCAL;
   public static final String ABS_DIR_DFS_MINICLUSTER = ABS_DIR_TARGET + "/" + DIR_DFS_MINICLUSTER;
+
+  /**
+   * Default paramaters for a {@link Parameterized} runner, all datasets,
+   * subsets and labels suitable for loading into an extending classes
+   * {@link #BaseTest(String[], String[], String[], String[][], String[][][])}
+   * implementation, and later invoked via {@link #setupDatasets()}
+   * 
+   * @return
+   */
+  public static Iterable<Object[]> paramaters() {
+    return Arrays.asList(new Object[][] {
+    //
+    {
+        //
+        new String[] { REL_DIR_DATASET, },//
+        new String[] { DIR_DATASET, }, //
+        new String[] { null, }, //
+        new String[][] { { null, }, }, //
+        new String[][][] { { { null }, }, } }, //
+    });
+  }
+
+  public String[] sources;
+  public String[] destinations;
+  public String[] datasets;
+  public String[][] subsets;
+  public String[][][] labels;
+
+  public BaseTest() {
+  }
+
+  public BaseTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels) {
+    this.sources = sources;
+    this.destinations = destinations;
+    this.datasets = datasets;
+    this.subsets = subsets;
+    this.labels = labels;
+  }
 
   /**
    * Get the {@link Configuration} for clients of this test
@@ -355,6 +396,13 @@ public abstract class BaseTest {
       fileSystem.mkdirs(userIdPath, new FsPermission(FsAction.ALL, FsAction.ALL, FsAction.ALL));
     }
     debugMessageFooter(LOG, "setUpFileSystem", time);
+  }
+
+  @Before
+  public void setupDatasets() throws IllegalArgumentException, IOException {
+    if (sources != null && destinations != null) {
+      copyFromLocalDir(sources, destinations, datasets, subsets, labels);
+    }
   }
 
   protected static String stripLeadingSlashes(String string) {

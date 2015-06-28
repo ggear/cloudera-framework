@@ -20,6 +20,15 @@ public class LocalClusterDfsMrTest extends BaseTest {
   private static JobConf conf;
   private static FileSystem fileSystem;
 
+  public LocalClusterDfsMrTest() {
+    super();
+  }
+
+  public LocalClusterDfsMrTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
+      String[][][] labels) {
+    super(sources, destinations, datasets, subsets, labels);
+  }
+
   @Override
   public Configuration getConf() {
     return conf;

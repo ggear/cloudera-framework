@@ -38,6 +38,16 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
   private static MiniHS2 miniHs2;
   private static FileSystem fileSystem;
 
+  public MiniClusterDfsMrHiveTest() {
+    super();
+  }
+
+  public MiniClusterDfsMrHiveTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
+      String[][][] labels) {
+    super(sources, destinations, datasets, subsets, labels);
+  }
+
+  
   @Override
   public Configuration getConf() {
     return conf;

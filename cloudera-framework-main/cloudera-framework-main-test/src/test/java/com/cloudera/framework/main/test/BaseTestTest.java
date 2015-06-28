@@ -18,26 +18,8 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(value = Parameterized.class)
 public class BaseTestTest extends LocalClusterDfsMrTest {
 
-  private static final String DIR_SOURCE = REL_DIR_CLASSES + "/data";
-  private static final String DIR_DESTINATION = "/tmp/data";
-
-  private String[] sources;
-  private String[] destinations;
-  private String[] datasets;
-  private String[][] subsets;
-  private String[][][] labels;
-
-  public BaseTestTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
-      String[][][] labels) {
-    this.sources = sources;
-    this.destinations = destinations;
-    this.datasets = datasets;
-    this.subsets = subsets;
-    this.labels = labels;
-  }
-
   @Parameters()
-  public static Iterable<Object[]> data1() {
+  public static Iterable<Object[]> paramaters() {
     return Arrays.asList(new Object[][] {
         //
         {
@@ -111,6 +93,18 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
             } }, //
     });
   }
+
+  public BaseTestTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
+      String[][][] labels) {
+    super(sources, destinations, datasets, subsets, labels);
+  }
+
+  @Override
+  public void setupDatasets() throws IllegalArgumentException, IOException {
+  }
+
+  private static final String DIR_SOURCE = REL_DIR_CLASSES + "/data";
+  private static final String DIR_DESTINATION = "/tmp/data";
 
   @Test
   public void testCopyFromTestClassesDirAll() throws Exception {
