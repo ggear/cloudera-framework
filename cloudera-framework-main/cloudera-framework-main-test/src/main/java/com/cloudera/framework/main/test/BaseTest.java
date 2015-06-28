@@ -67,23 +67,24 @@ public abstract class BaseTest {
   /**
    * Get the {@link Configuration} for clients of this test
    *
-   * @return
+   * @return the test conf
    */
   public abstract Configuration getConf();
 
   /**
    * Get the {@link FileSystem} for clients of this test
    *
-   * @return
+   * @return the test file system
    */
   public abstract FileSystem getFileSystem();
 
   /**
-   * Get the absolute local file system path from a local file system path
-   * relative to the module root
+   * Get a local file system path from a local file system <code>path</code>
    *
    * @param path
-   * @return
+   *          the path relative to the module root, can be with or without '/'
+   *          prefix
+   * @return the local path
    */
   public static String getPathLocal(String path) {
     String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(path);
@@ -94,33 +95,40 @@ public abstract class BaseTest {
   }
 
   /**
-   * Get the relative local file system path from a local file system path
-   * relative to the DFS root
+   * Get a DFS path from a local file system <code>path</code>
    *
    * @param path
-   * @return
+   *          the path relative to the DFS root, can be with or without '/'
+   *          prefix
+   * @return the DFS path
    */
   public String getPathDfs(String path) {
     return path;
   }
 
   /**
-   * Get a local file listing relative to the module root, matching specific
-   * directory paths
+   * Get a local file system listing of <code>path</code> matching specific
+   * dataset, subset and label <code>paths</code>
    *
    * @param path
+   *          the path relative to the module root, can be with or without '/'
+   *          prefix
    * @param paths
-   * @return
+   *          optional list of dataset, subset and label paths to include, if
+   *          not specified all paths at that level will be included
+   * @return the local files
    */
   public static File[] listFilesLocal(String path, String... paths) {
     return listFilesLocal(path, true, paths);
   }
 
   /**
-   * Get a DFS file listing relative to the DFS root
+   * Get a DFS listing of <code>path</code>
    *
    * @param path
-   * @return
+   *          the path relative to the DFS root, can be with or without '/'
+   *          prefix
+   * @return the DFS files
    */
   public Path[] listFilesDfs(String path) throws IllegalArgumentException,
       IOException {
@@ -138,12 +146,17 @@ public abstract class BaseTest {
   }
 
   /**
-   * Map a local file listing relative to the module root, matching specific
-   * directory paths
+   * Get a dataset, subset and label keyed map of the local file listing of
+   * <code>path</code> matching specific dataset, subset and label
+   * <code>paths</code>
    *
    * @param path
+   *          the path relative to the module root, can be with or without '/'
+   *          prefix
    * @param paths
-   * @return
+   *          optional list of dataset, subset and label paths to include, if
+   *          not specified all paths at that level will be included
+   * @return the local files as mapped by dataset, subset and label
    */
   public static Map<String, Map<String, Map<String, List<File>>>> mapFilesLocal(
       String path, String... paths) {
@@ -180,22 +193,22 @@ public abstract class BaseTest {
   }
 
   /**
-   * Copy files from local directories relative to to the module root, to DFS
-   * directories relative to the DFS root, matching specific directory paths
+   * Copy local <code>sourcePaths</code> matching <code>datasets</code>,
+   * <code>subsets</code> and <code>labels</code> paths, to DFS
+   * <code>destinationPaths</code>
    *
    * @param sourcePaths
    *          the source paths relative to the module root
    * @param destinationPaths
-   *          the destinations path relative to the DFS root
+   *          the destination paths relative to the DFS root
    * @param datasets
-   *          list of datasets matching root dataset directories, null will
-   *          match all
+   *          list of datasets, null will match all dataset paths
    * @param subsets
-   *          list of subset datasets matching child dataset directories, null
-   *          will match all
+   *          list of dataset subsets matching child dataset paths, null will
+   *          match all subsets for this indexed dataset
    * @param labels
-   *          list of labeled subset datasets matching child of subset, null
-   *          will match all directories
+   *          list of dataset subset labels, null will match all labels for this
+   *          indexed dataset subset
    * @return local files that have been copied
    */
   public File[] copyFromLocalDir(String[] sourcePaths,
@@ -237,16 +250,17 @@ public abstract class BaseTest {
   }
 
   /**
-   * Copy files from a local directory relative to to the module root, to a DFS
-   * directory relative to the DFS root, matching specific directory paths
+   * Copy a local <code>sourcePath</code> matching <code>dataset</code>,
+   * <code>subset</code> and <code>label</code> paths, to DFS
+   * <code>destinationPath</code>
    *
    * @param sourcePath
    *          the source path relative to the module root
    * @param destinationPath
    *          the destination path relative to the DFS root
-   * @param sourcePaths
-   *          optional list of up to 3 nested directories to include, if not
-   *          specified all directories at that level will be included
+   * @param paths
+   *          optional list of dataset, subset and label paths to include, if
+   *          not specified all paths at that level will be included
    * @return local files that have been copied
    */
   public File[] copyFromLocalDir(String sourcePath, String destinationPath,
