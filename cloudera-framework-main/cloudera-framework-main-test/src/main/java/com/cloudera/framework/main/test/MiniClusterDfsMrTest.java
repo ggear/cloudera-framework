@@ -13,8 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public class MiniClusterDfsMrTest extends BaseTest {
 
-  private static Logger LOG = LoggerFactory
-      .getLogger(MiniClusterDfsMrTest.class);
+  private static Logger LOG = LoggerFactory.getLogger(MiniClusterDfsMrTest.class);
 
   private static Configuration conf;
   private static MiniDFSShim miniDfs;
@@ -35,10 +34,8 @@ public class MiniClusterDfsMrTest extends BaseTest {
   public static void setUpRuntime() throws Exception {
     long time = debugMessageHeader(LOG, "setUpRuntime");
     JobConf jobConf = new JobConf();
-    fileSystem = (miniDfs = ShimLoader.getHadoopShims().getMiniDfs(jobConf, 1,
-        true, null)).getFileSystem();
-    miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(jobConf, 1,
-        fileSystem.getUri().toString(), 1);
+    fileSystem = (miniDfs = ShimLoader.getHadoopShims().getMiniDfs(jobConf, 1, true, null)).getFileSystem();
+    miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(jobConf, 1, fileSystem.getUri().toString(), 1);
     conf = fileSystem.getConf();
     debugMessageFooter(LOG, "setUpRuntime", time);
   }

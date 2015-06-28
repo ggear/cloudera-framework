@@ -143,8 +143,7 @@ public abstract class Driver extends Configured implements Tool {
     }
     reset();
     if (LOG.isTraceEnabled() && getConf() != null) {
-      LOG.trace("Driver [" + this.getClass().getCanonicalName()
-          + "] initialised with configuration properties:");
+      LOG.trace("Driver [" + this.getClass().getCanonicalName() + "] initialised with configuration properties:");
       for (Entry<String, String> entry : getConf()) {
         LOG.trace("\t" + entry.getKey() + "=" + entry.getValue());
       }
@@ -156,37 +155,33 @@ public abstract class Driver extends Configured implements Tool {
       }
     } catch (Exception exception) {
       if (LOG.isErrorEnabled()) {
-        LOG.error("Exception raised executing runtime pipeline handlers",
-            exception);
+        LOG.error("Exception raised executing runtime pipeline handlers", exception);
       }
     } finally {
       try {
         cleanup();
       } catch (Exception exception) {
         if (LOG.isErrorEnabled()) {
-          LOG.error("Exception raised cleaning up runtime pipeline handlers",
-              exception);
+          LOG.error("Exception raised cleaning up runtime pipeline handlers", exception);
         }
       }
     }
     timeTotal = System.currentTimeMillis() - timeTotal;
     if (LOG.isInfoEnabled()) {
       if (getCountersGroups().size() > 0) {
-        LOG.info("Driver [" + this.getClass().getCanonicalName()
-            + "] counters:");
+        LOG.info("Driver [" + this.getClass().getCanonicalName() + "] counters:");
         for (String group : getCountersGroups()) {
           Map<Enum<?>, Long> counters = getCounters(group);
           for (Enum<?> counter : counters.keySet()) {
-            LOG.info("\t" + group + "." + counter.toString() + "="
-                + counters.get(counter));
+            LOG.info("\t" + group + "." + counter.toString() + "=" + counters.get(counter));
           }
         }
       }
     }
     if (LOG.isInfoEnabled()) {
       LOG.info("Driver [" + this.getClass().getSimpleName() + "] finshed "
-          + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully")
-          + " with exit value [" + exitValue + "] in " + formatTime(timeTotal));
+          + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully") + " with exit value [" + exitValue
+          + "] in " + formatTime(timeTotal));
     }
     return exitValue;
   }
@@ -208,14 +203,12 @@ public abstract class Driver extends Configured implements Tool {
           optionsAndParameters.append(" [-D" + options()[i] + "]");
         }
         for (int i = 0; i < parameters().length; i++) {
-          optionsAndParameters.append(options().length == 0 ? "" : " " + "<"
-              + parameters()[i] + ">");
+          optionsAndParameters.append(options().length == 0 ? "" : " " + "<" + parameters()[i] + ">");
         }
         if (description() != null && !description().equals("")) {
           LOG.info("Description: " + description());
         }
-        LOG.info("Usage: hadoop " + this.getClass().getCanonicalName()
-            + " [generic options]" + optionsAndParameters);
+        LOG.info("Usage: hadoop " + this.getClass().getCanonicalName() + " [generic options]" + optionsAndParameters);
         ByteArrayOutputStream byteArrayPrintStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(byteArrayPrintStream);
         ToolRunner.printGenericCommandUsage(printStream);
@@ -231,8 +224,8 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Map<Enum<?>, Long> getCounters(String group) {
-    return counters.get(group) == null ? Collections.<Enum<?>, Long> emptyMap()
-        : new LinkedHashMap<Enum<?>, Long>(counters.get(group));
+    return counters.get(group) == null ? Collections.<Enum<?>, Long> emptyMap() : new LinkedHashMap<Enum<?>, Long>(
+        counters.get(group));
   }
 
   public Set<String> getCountersGroups() {
@@ -240,9 +233,8 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Long getCounter(String group, Enum<?> counter) {
-    return counters.get(group) == null
-        || counters.get(group).get(counter) == null ? null : counters
-        .get(group).get(counter);
+    return counters.get(group) == null || counters.get(group).get(counter) == null ? null : counters.get(group).get(
+        counter);
   }
 
   protected void importCountersAll(Map<String, Map<Enum<?>, Long>> counters) {
@@ -263,19 +255,17 @@ public abstract class Driver extends Configured implements Tool {
       if (counters.get(value) != null) {
         this.counters.get(group).put(
             value,
-            (this.counters.get(group).get(value) == null ? 0 : this.counters
-                .get(group).get(value)) + counters.get(value));
+            (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value))
+                + counters.get(value));
       }
     }
   }
 
-  protected void importCounters(Job job, Enum<?>[] values) throws IOException,
-      InterruptedException {
+  protected void importCounters(Job job, Enum<?>[] values) throws IOException, InterruptedException {
     importCounters(this.getClass().getCanonicalName(), job, values);
   }
 
-  protected void importCounters(String group, Job job, Enum<?>[] values)
-      throws IOException, InterruptedException {
+  protected void importCounters(String group, Job job, Enum<?>[] values) throws IOException, InterruptedException {
     if (this.counters.get(group) == null) {
       this.counters.put(group, new LinkedHashMap<Enum<?>, Long>());
     }
@@ -284,36 +274,29 @@ public abstract class Driver extends Configured implements Tool {
       if (counters.findCounter(value) != null) {
         this.counters.get(group).put(
             value,
-            (this.counters.get(group).get(value) == null ? 0 : this.counters
-                .get(group).get(value))
+            (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value))
                 + counters.findCounter(value).getValue());
       }
     }
   }
 
   public Long incrementCounter(Enum<?> counter, int incrament) {
-    return incrementCounter(this.getClass().getCanonicalName(), counter,
-        incrament);
+    return incrementCounter(this.getClass().getCanonicalName(), counter, incrament);
   }
 
   public Long incrementCounter(String group, Enum<?> counter, int incrament) {
     if (this.counters.get(group) == null) {
       this.counters.put(group, new LinkedHashMap<Enum<?>, Long>());
     }
-    return counters.get(group).put(
-        counter,
-        (counters.get(group).get(counter) == null ? 0 : counters.get(group)
-            .get(counter)) + incrament);
+    return counters.get(group).put(counter,
+        (counters.get(group).get(counter) == null ? 0 : counters.get(group).get(counter)) + incrament);
   }
 
-  public Long incrementCounter(Enum<?> counter, int incrament, String tag,
-      Set<String> set) {
-    return incrementCounter(this.getClass().getCanonicalName(), counter,
-        incrament, tag, set);
+  public Long incrementCounter(Enum<?> counter, int incrament, String tag, Set<String> set) {
+    return incrementCounter(this.getClass().getCanonicalName(), counter, incrament, tag, set);
   }
 
-  public Long incrementCounter(String group, Enum<?> counter, int incrament,
-      String tag, Set<String> set) {
+  public Long incrementCounter(String group, Enum<?> counter, int incrament, String tag, Set<String> set) {
     if (set.add(tag)) {
       return incrementCounter(group, counter, incrament);
     }

@@ -17,31 +17,27 @@ public class DriverTest extends MiniClusterDfsMrTest {
   @Test
   public void testRunnerSuccessParameters() throws Exception {
     Driver driver = new CountFilesDriver(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { "false" }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { "false" }));
   }
 
   @Test
   public void testRunnerSuccessOptions() throws Exception {
     Driver driver = new CountFilesDriver(getConf());
     driver.getConf().setBoolean("i.should.fail.option", false);
-    Assert.assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { "false" }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { "false" }));
   }
 
   @Test
   public void testRunnerFailureParameters() throws Exception {
     Driver driver = new CountFilesDriver(getConf());
-    Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME,
-        driver.runner(new String[] { "true" }));
+    Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[] { "true" }));
   }
 
   @Test
   public void testRunnerFailureOptions() throws Exception {
     Driver driver = new CountFilesDriver(getConf());
     driver.getConf().setBoolean("i.should.fail.option", true);
-    Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME,
-        driver.runner(new String[] { "false" }));
+    Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[] { "false" }));
   }
 
   private enum Counter {
@@ -85,15 +81,12 @@ public class DriverTest extends MiniClusterDfsMrTest {
     @Override
     public int execute() throws IOException {
       FileSystem fileSystem = FileSystem.newInstance(getConf());
-      RemoteIterator<LocatedFileStatus> files = fileSystem.listFiles(new Path(
-          "/"), true);
+      RemoteIterator<LocatedFileStatus> files = fileSystem.listFiles(new Path("/"), true);
       while (files.hasNext()) {
         files.next();
         incrementCounter(Counter.FILES_NUMBER, 1);
       }
-      return iShouldFailOption
-          || iShouldFailParameter.toLowerCase().equals(
-              Boolean.TRUE.toString().toLowerCase()) ? RETURN_FAILURE_RUNTIME
+      return iShouldFailOption || iShouldFailParameter.toLowerCase().equals(Boolean.TRUE.toString().toLowerCase()) ? RETURN_FAILURE_RUNTIME
           : RETURN_SUCCESS;
     }
   }

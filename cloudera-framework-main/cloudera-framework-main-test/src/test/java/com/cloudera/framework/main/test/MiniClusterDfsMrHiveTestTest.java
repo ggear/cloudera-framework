@@ -36,18 +36,13 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
         processStatement(
             "/ddl",
             "create.sql",
-            new ImmutableMap.Builder<String, String>()
-                .put("test.table.name", "somedata")
+            new ImmutableMap.Builder<String, String>().put("test.table.name", "somedata")
                 .put("test.table.field.delim", ",").build()).size());
-    Assert.assertEquals(
-        1,
-        processStatement(
-            "LOAD DATA LOCAL INPATH '" + localDataFile.toString()
-                + "' OVERWRITE INTO TABLE somedata").size());
-    Assert.assertEquals("3",
-        processStatement("SELECT count(1) AS cnt FROM somedata").get(0));
-    Assert.assertEquals("2",
-        processStatement("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
+    Assert.assertEquals(1,
+        processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata")
+            .size());
+    Assert.assertEquals("3", processStatement("SELECT count(1) AS cnt FROM somedata").get(0));
+    Assert.assertEquals("2", processStatement("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
     Assert.assertEquals(1, processStatement("SHOW TABLES").size());
   }
 
@@ -70,18 +65,13 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
         processStatement(
             "/ddl",
             "create.sql",
-            new ImmutableMap.Builder<String, String>()
-                .put("test.table.name", "somedata")
+            new ImmutableMap.Builder<String, String>().put("test.table.name", "somedata")
                 .put("test.table.field.delim", ",").build()).size());
-    Assert.assertEquals(
-        1,
-        processStatement(
-            "LOAD DATA LOCAL INPATH '" + localDataFile.toString()
-                + "' OVERWRITE INTO TABLE somedata").size());
-    Assert.assertEquals("3",
-        processStatement("SELECT count(1) AS cnt FROM somedata").get(0));
-    Assert.assertEquals("2",
-        processStatement("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
+    Assert.assertEquals(1,
+        processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata")
+            .size());
+    Assert.assertEquals("3", processStatement("SELECT count(1) AS cnt FROM somedata").get(0));
+    Assert.assertEquals("2", processStatement("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
     Assert.assertEquals(1, processStatement("SHOW TABLES").size());
   }
 
@@ -112,14 +102,10 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
    */
   @Test
   public void testDfsMkDir() throws Exception {
-    Assert.assertFalse(getFileSystem().exists(
-        new Path(getPathDfs("/some_dir/some_file"))));
-    Assert
-        .assertTrue(getFileSystem().mkdirs(new Path(getPathDfs("/some_dir"))));
-    Assert.assertTrue(getFileSystem().createNewFile(
-        new Path(getPathDfs("/some_dir/some_file"))));
-    Assert.assertTrue(getFileSystem().exists(
-        new Path(getPathDfs("/some_dir/some_file"))));
+    Assert.assertFalse(getFileSystem().exists(new Path(getPathDfs("/some_dir/some_file"))));
+    Assert.assertTrue(getFileSystem().mkdirs(new Path(getPathDfs("/some_dir"))));
+    Assert.assertTrue(getFileSystem().createNewFile(new Path(getPathDfs("/some_dir/some_file"))));
+    Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs("/some_dir/some_file"))));
   }
 
   /**
@@ -129,8 +115,7 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
    */
   @Test
   public void testDfsClean() throws Exception {
-    Assert.assertFalse(getFileSystem().exists(
-        new Path(getPathDfs("/some_dir/some_file"))));
+    Assert.assertFalse(getFileSystem().exists(new Path(getPathDfs("/some_dir/some_file"))));
   }
 
   /**

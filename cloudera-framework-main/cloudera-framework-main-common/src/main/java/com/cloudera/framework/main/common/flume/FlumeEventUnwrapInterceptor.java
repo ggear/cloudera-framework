@@ -27,16 +27,14 @@ import org.slf4j.LoggerFactory;
  */
 public class FlumeEventUnwrapInterceptor implements Interceptor {
 
-  private final static Logger LOG = LoggerFactory
-      .getLogger(FlumeEventUnwrapInterceptor.class);
+  private final static Logger LOG = LoggerFactory.getLogger(FlumeEventUnwrapInterceptor.class);
 
   private BinaryDecoder decoder = null;
   private SpecificDatumReader<AvroFlumeEvent> reader = null;
 
   @Override
   public void initialize() {
-    decoder = DecoderFactory.get().directBinaryDecoder(
-        new ByteArrayInputStream(new byte[0]), decoder);
+    decoder = DecoderFactory.get().directBinaryDecoder(new ByteArrayInputStream(new byte[0]), decoder);
     reader = new SpecificDatumReader<AvroFlumeEvent>(AvroFlumeEvent.class);
     if (LOG.isInfoEnabled()) {
       LOG.info("Flume Event Unwrap Interceptor initialised");
@@ -63,27 +61,22 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
 
   public Event unwrap(Event event) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Attempting to unwrap Flume Event, body ["
-          + event.getBody().length + "] bytes");
+      LOG.debug("Attempting to unwrap Flume Event, body [" + event.getBody().length + "] bytes");
     }
     Event eventUnwrapped = event;
     InputStream eventWrappedStream = new ByteArrayInputStream(event.getBody());
     try {
-      decoder = DecoderFactory.get().directBinaryDecoder(eventWrappedStream,
-          decoder);
+      decoder = DecoderFactory.get().directBinaryDecoder(eventWrappedStream, decoder);
       AvroFlumeEvent eventUnwrappedAvro = reader.read(null, decoder);
-      eventUnwrapped = EventBuilder.withBody(eventUnwrappedAvro.getBody()
-          .array(),
+      eventUnwrapped = EventBuilder.withBody(eventUnwrappedAvro.getBody().array(),
           toStringMap(eventUnwrappedAvro.getHeaders(), event.getHeaders()));
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Flume Event successfully unwrapped, header ["
-            + eventUnwrappedAvro.getHeaders().size() + "] fields, body ["
-            + eventUnwrapped.getBody().length + "] bytes");
+        LOG.debug("Flume Event successfully unwrapped, header [" + eventUnwrappedAvro.getHeaders().size()
+            + "] fields, body [" + eventUnwrapped.getBody().length + "] bytes");
       }
     } catch (Exception exception) {
       if (LOG.isWarnEnabled()) {
-        LOG.warn("Failed to unwrap Flume Event, "
-            + "perhaps this source is not connected to a sinkless connector?",
+        LOG.warn("Failed to unwrap Flume Event, " + "perhaps this source is not connected to a sinkless connector?",
             exception);
       }
     } finally {
@@ -92,12 +85,10 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
     return eventUnwrapped;
   }
 
-  private static Map<String, String> toStringMap(
-      Map<CharSequence, CharSequence> charSequenceMap,
+  private static Map<String, String> toStringMap(Map<CharSequence, CharSequence> charSequenceMap,
       Map<String, String> mergeMap) {
     Map<String, String> stringMap = new HashMap<String, String>();
-    for (Map.Entry<CharSequence, CharSequence> entry : charSequenceMap
-        .entrySet()) {
+    for (Map.Entry<CharSequence, CharSequence> entry : charSequenceMap.entrySet()) {
       stringMap.put(entry.getKey().toString(), entry.getValue().toString());
     }
     stringMap.putAll(mergeMap);

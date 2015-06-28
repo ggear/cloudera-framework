@@ -13,8 +13,7 @@ import com.cloudera.framework.main.common.Driver;
  */
 public class MyDatasetCleanseDriver extends Driver {
 
-  private static final Logger LOG = LoggerFactory
-      .getLogger(MyDatasetCleanseDriver.class);
+  private static final Logger LOG = LoggerFactory.getLogger(MyDatasetCleanseDriver.class);
 
   private Path inputPath;
   private Path outputPath;

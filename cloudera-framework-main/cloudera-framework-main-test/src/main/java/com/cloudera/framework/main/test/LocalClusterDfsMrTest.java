@@ -15,8 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalClusterDfsMrTest extends BaseTest {
 
-  private static Logger LOG = LoggerFactory
-      .getLogger(LocalClusterDfsMrTest.class);
+  private static Logger LOG = LoggerFactory.getLogger(LocalClusterDfsMrTest.class);
 
   private static JobConf conf;
   private static FileSystem fileSystem;
@@ -34,9 +33,8 @@ public class LocalClusterDfsMrTest extends BaseTest {
   @Override
   public String getPathDfs(String path) {
     String pathRelativeToDfsRootSansLeadingSlashes = stripLeadingSlashes(path);
-    return pathRelativeToDfsRootSansLeadingSlashes.equals("") ? REL_DIR_DFS_LOCAL
-        : new Path(REL_DIR_DFS_LOCAL, pathRelativeToDfsRootSansLeadingSlashes)
-            .toUri().toString();
+    return pathRelativeToDfsRootSansLeadingSlashes.equals("") ? REL_DIR_DFS_LOCAL : new Path(REL_DIR_DFS_LOCAL,
+        pathRelativeToDfsRootSansLeadingSlashes).toUri().toString();
   }
 
   @BeforeClass

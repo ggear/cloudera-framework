@@ -32,8 +32,7 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
 
   private static final String COMMAND_DELIMETER = ";";
 
-  private static Logger LOG = LoggerFactory
-      .getLogger(MiniClusterDfsMrHiveTest.class);
+  private static Logger LOG = LoggerFactory.getLogger(MiniClusterDfsMrHiveTest.class);
 
   private static HiveConf conf;
   private static MiniHS2 miniHs2;
@@ -57,8 +56,7 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
    *         by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
-  public static List<String> processStatement(String statement)
-      throws Exception {
+  public static List<String> processStatement(String statement) throws Exception {
     return processStatement(statement, new HashMap<String, String>());
   }
 
@@ -72,19 +70,16 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
    *         by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
-  public static List<String> processStatement(String statement,
-      Map<String, String> parameters) throws Exception {
+  public static List<String> processStatement(String statement, Map<String, String> parameters) throws Exception {
     long time = debugMessageHeader(LOG, "processStatement");
     List<String> results = new ArrayList<String>();
-    CommandProcessor commandProcessor = CommandProcessorFactory
-        .getForHiveCommand((statement = new StrSubstitutor(parameters,
-            "${hivevar:", "}").replace(statement.trim())).split("\\s+"), conf);
+    CommandProcessor commandProcessor = CommandProcessorFactory.getForHiveCommand((statement = new StrSubstitutor(
+        parameters, "${hivevar:", "}").replace(statement.trim())).split("\\s+"), conf);
     if (LOG.isDebugEnabled()) {
-      LOG.debug(LOG_PREFIX + " [processStatement] pre-execute, statement:\n"
-          + statement);
+      LOG.debug(LOG_PREFIX + " [processStatement] pre-execute, statement:\n" + statement);
     }
-    int responseCode = (commandProcessor = commandProcessor == null ? new Driver(
-        conf) : commandProcessor).run(statement).getResponseCode();
+    int responseCode = (commandProcessor = commandProcessor == null ? new Driver(conf) : commandProcessor).run(
+        statement).getResponseCode();
     if (commandProcessor instanceof Driver) {
       ((Driver) commandProcessor).getResults(results);
     }
@@ -92,13 +87,11 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
       results.add("");
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug(LOG_PREFIX + " [processStatement] post-execute, result:\n"
-          + StringUtils.join(results.toArray(), "\n"));
+      LOG.debug(LOG_PREFIX + " [processStatement] post-execute, result:\n" + StringUtils.join(results.toArray(), "\n"));
     }
     debugMessageFooter(LOG, "processStatement", time);
     if (responseCode != 0) {
-      throw new SQLException("Statement executed with error response code ["
-          + responseCode + "]");
+      throw new SQLException("Statement executed with error response code [" + responseCode + "]");
     }
     return results;
   }
@@ -114,8 +107,7 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
    *         {@link String} {@link List}
    * @throws Exception
    */
-  public static List<List<String>> processStatement(String directory,
-      String file) throws Exception {
+  public static List<List<String>> processStatement(String directory, String file) throws Exception {
     return processStatement(directory, file, new HashMap<String, String>());
   }
 
@@ -132,8 +124,8 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
    *         {@link String} {@link List}
    * @throws Exception
    */
-  public static List<List<String>> processStatement(String directory,
-      String file, Map<String, String> parameters) throws Exception {
+  public static List<List<String>> processStatement(String directory, String file, Map<String, String> parameters)
+      throws Exception {
     List<List<String>> results = new ArrayList<List<String>>();
     for (String statement : readFileToLines(directory, file, COMMAND_DELIMETER)) {
       results.add(processStatement(statement, parameters));
@@ -176,11 +168,9 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
     debugMessageFooter(LOG, "tearDownRuntime", time);
   }
 
-  private static List<String> readFileToLines(String directory, String file,
-      String delimeter) throws IOException {
+  private static List<String> readFileToLines(String directory, String file, String delimeter) throws IOException {
     List<String> lines = new ArrayList<String>();
-    InputStream inputStream = MiniClusterDfsMrHiveTest.class
-        .getResourceAsStream(directory + "/" + file);
+    InputStream inputStream = MiniClusterDfsMrHiveTest.class.getResourceAsStream(directory + "/" + file);
     if (inputStream != null) {
       try {
         for (String line : IOUtils.toString(inputStream).split(delimeter)) {
@@ -193,8 +183,7 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
         inputStream.close();
       }
     }
-    throw new IOException("Could not load file [" + directory + "/" + file
-        + "] from classpath");
+    throw new IOException("Could not load file [" + directory + "/" + file + "] from classpath");
   }
 
 }
