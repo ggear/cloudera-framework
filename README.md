@@ -26,7 +26,7 @@ This project can be installed to a local repository as per:
 
 ```bash
 export CF_VERSION=1.1.0
-export CDH_VERSION=5.4.2
+export CDH_VERSION=5.4.3
 git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
 git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
@@ -57,7 +57,7 @@ To perform a release:
 
 ```bash
 export CF_VERSION_RELEASE=1.1.0
-export CDH_VERSION_RELEASE=5.4.2
+export CDH_VERSION_RELEASE=5.4.3
 export CF_VERSION_HEAD=1.2.0
 export CDH_VERSION_HEAD=5.4.3
 mvn clean
