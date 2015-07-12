@@ -59,7 +59,7 @@ To perform a release:
 export CF_VERSION_RELEASE=1.1.0
 export CDH_VERSION_RELEASE=5.4.3
 export CF_VERSION_HEAD=1.2.0
-export CDH_VERSION_HEAD=5.4.3
+export CDH_VERSION_HEAD=5.4.4
 mvn clean
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:clean
