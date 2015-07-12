@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.cloudera.framework</groupId>
+	<artifactId>cloudera-framework-main</artifactId>
+	<packaging>pom</packaging>
+	<version>1.1.0-cdh5.4.3</version>
+
+	<parent>
+		<groupId>com.cloudera</groupId>
+		<artifactId>cloudera-framework</artifactId>
+		<version>1.1.0-cdh5.4.3</version>
+	</parent>
+
+	<modules>
+		<module>cloudera-framework-main-client</module>
+		<module>cloudera-framework-main-runtime</module>
+		<module>cloudera-framework-main-test</module>
+		<module>cloudera-framework-main-common</module>
+		<module>cloudera-framework-main-archetype</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>../cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</directory>
+							<includes>
+								<include>**/${project.artifactId}/**</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>install-artifact</id>
+						<phase>install</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<pomFile>pom.xml</pomFile>
+							<file>pom.xml</file>
+							<localRepositoryPath>../cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</localRepositoryPath>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
