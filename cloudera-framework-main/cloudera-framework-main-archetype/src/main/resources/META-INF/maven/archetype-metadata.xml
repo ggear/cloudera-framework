@@ -12,6 +12,9 @@
 			<directory>src/main/resources</directory>
 		</fileSet>
 		<fileSet filtered="false" packaged="false">
+			<directory>src/main/assembly</directory>
+		</fileSet>
+		<fileSet filtered="false" packaged="false">
 			<directory>src/test/java</directory>
 		</fileSet>
 		<fileSet filtered="false" packaged="false">

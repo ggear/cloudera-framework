@@ -3,6 +3,7 @@ package com.cloudera.framework.main.test;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Base test unit tests
@@ -33,7 +36,9 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
             new String[][][] { { //
             //
             { null }, //
-            } } }, //
+            } }, //
+            new Map[] { Collections.EMPTY_MAP, }, //
+        }, //
         {
             //
             new String[] { DIR_SOURCE, }, //
@@ -45,7 +50,9 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
             new String[][][] { { //
             //
             { null }, //
-            } } }, //
+            } }, //
+            new Map[] { Collections.EMPTY_MAP, }, //
+        }, //
         {
             //
             new String[] { DIR_SOURCE, }, //
@@ -57,7 +64,9 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
             new String[][][] { { //
             //
             { null }, //
-            } } }, //
+            } }, //
+            new Map[] { Collections.EMPTY_MAP, }, //
+        }, //
         {
             //
             new String[] { DIR_SOURCE, }, //
@@ -69,7 +78,9 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
             new String[][][] { { //
             //
             { "dataset-1-sub-1-sub-1" }, //
-            } } }, //
+            } }, //
+            new Map[] { Collections.EMPTY_MAP, }, //
+        }, //
         {
             //
             new String[] {
@@ -90,13 +101,26 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
                 //
                 { { "dataset-1-sub-1-sub-1" }, }, //
                 { { "dataset-1-sub-1-sub-1" }, }, //
-            } }, //
+            }, //
+            new Map[] {
+                //
+                ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)), //
+                ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER2, 2L)), //
+                ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER3, 3L, Counter.COUNTER4, 4L)), //
+            }, //
+        }, //
     });
   }
 
+  public static final String COUNTER_GROUP = BaseTestTest.class.getCanonicalName();
+
+  public enum Counter {
+    COUNTER1, COUNTER2, COUNTER3, COUNTER4
+  }
+
   public BaseTestTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
-      String[][][] labels) {
-    super(sources, destinations, datasets, subsets, labels);
+      String[][][] labels, @SuppressWarnings("rawtypes") Map[] counters) {
+    super(sources, destinations, datasets, subsets, labels, counters);
   }
 
   @Override
@@ -171,6 +195,40 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
     Assert.assertEquals(countUpstream, listFilesDfs(destinationPath).length);
     Assert.assertTrue(copyFromLocalDir(sourcePath, destinationPath, sourceLabels).length > 0);
     Assert.assertEquals(countDownstream, listFilesDfs(destinationPath).length);
+  }
+
+  @Test
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public void testAssertCounterEqualsLessThanGreaterThan() {
+    assertCounterEquals(counters[0], counters[0]);
+    assertCounterEquals(ImmutableMap.of(COUNTER_GROUP + "1",
+        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
+        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)), (Map) ImmutableMap.of(COUNTER_GROUP + "1",
+        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
+        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)));
+    assertCounterLessThan(ImmutableMap.of(COUNTER_GROUP + "1",
+        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
+        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)), (Map) ImmutableMap.of(COUNTER_GROUP + "1",
+        ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L, Counter.COUNTER3, 2L), COUNTER_GROUP + "2",
+        ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L)));
+    assertCounterGreaterThan(ImmutableMap.of(COUNTER_GROUP + "1",
+        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
+        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)), (Map) ImmutableMap.of(COUNTER_GROUP + "1",
+        ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L, Counter.COUNTER3, 4L), COUNTER_GROUP + "2",
+        ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L)));
+    assertCounterEqualsLessThanGreaterThan(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)),
+        Collections.EMPTY_MAP, Collections.EMPTY_MAP,
+        (Map) ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
+    assertCounterEqualsLessThanGreaterThan(Collections.EMPTY_MAP,
+        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)), Collections.EMPTY_MAP,
+        (Map) ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
+    assertCounterEqualsLessThanGreaterThan(Collections.EMPTY_MAP, Collections.EMPTY_MAP,
+        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)),
+        (Map) ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
+    assertCounterEqualsLessThanGreaterThan(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)),
+        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)),
+        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)),
+        (Map) ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
   }
 
 }

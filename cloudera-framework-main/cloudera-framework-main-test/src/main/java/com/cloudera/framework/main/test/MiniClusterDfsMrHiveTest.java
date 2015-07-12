@@ -43,11 +43,10 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
   }
 
   public MiniClusterDfsMrHiveTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
-      String[][][] labels) {
-    super(sources, destinations, datasets, subsets, labels);
+      String[][][] labels, @SuppressWarnings("rawtypes") Map[] counters) {
+    super(sources, destinations, datasets, subsets, labels, counters);
   }
 
-  
   @Override
   public Configuration getConf() {
     return conf;

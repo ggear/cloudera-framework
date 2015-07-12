@@ -21,6 +21,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runners.Parameterized;
@@ -67,7 +68,7 @@ public abstract class BaseTest {
    * subsets and labels suitable for loading into an extending classes
    * {@link #BaseTest(String[], String[], String[], String[][], String[][][])}
    * implementation, and later invoked via {@link #setupDatasets()}
-   * 
+   *
    * @return
    */
   public static Iterable<Object[]> paramaters() {
@@ -88,16 +89,20 @@ public abstract class BaseTest {
   public String[] datasets;
   public String[][] subsets;
   public String[][][] labels;
+  @SuppressWarnings("rawtypes")
+  public Map[] counters;
 
   public BaseTest() {
   }
 
-  public BaseTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels) {
+  public BaseTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
+      @SuppressWarnings("rawtypes") Map[] counters) {
     this.sources = sources;
     this.destinations = destinations;
     this.datasets = datasets;
     this.subsets = subsets;
     this.labels = labels;
+    this.counters = counters;
   }
 
   /**
@@ -402,6 +407,105 @@ public abstract class BaseTest {
   public void setupDatasets() throws IllegalArgumentException, IOException {
     if (sources != null && destinations != null) {
       copyFromLocalDir(sources, destinations, datasets, subsets, labels);
+    }
+  }
+
+  /**
+   * Assert <code>actual</code> equals <code>expected</code>
+   *
+   * @param expected
+   *          <code>Map<String, Map<Enum<?>, Long>></code>
+   * @param actual
+   *          <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterEquals(@SuppressWarnings("rawtypes") Map expected,
+      Map<String, Map<Enum<?>, Long>> actual) {
+    assertCounterEqualsLessThanGreaterThan(expected, actual, true, false, false, false);
+  }
+
+  /**
+   * Assert <code>actual</code> less than <code>expected</code>
+   *
+   * @param expected
+   *          <code>Map<String, Map<Enum<?>, Long>></code>
+   * @param actual
+   *          <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterLessThan(@SuppressWarnings("rawtypes") Map expected,
+      Map<String, Map<Enum<?>, Long>> actual) {
+    assertCounterEqualsLessThanGreaterThan(expected, actual, false, true, false, false);
+  }
+
+  /**
+   * Assert <code>actual</code> greater than <code>expected</code>
+   *
+   * @param expected
+   *          <code>Map<String, Map<Enum<?>, Long>></code>
+   * @param actual
+   *          <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterGreaterThan(@SuppressWarnings("rawtypes") Map expected,
+      Map<String, Map<Enum<?>, Long>> actual) {
+    assertCounterEqualsLessThanGreaterThan(expected, actual, false, false, true, false);
+  }
+
+  /**
+   * Assert <code>actual</code> equals <code>expectedEquals</code>, less then
+   * <code>expectedLessThan</code> and greater than
+   * <code>expectedGreaterThan</code>
+   *
+   * @param expectedEquals
+   *          <code>Map<String, Map<Enum<?>, Long>></code>, may be empty
+   * @param expectedLessThan
+   *          <code>Map<String, Map<Enum<?>, Long>></code>, may be empty
+   * @param expectedGreaterThan
+   *          <code>Map<String, Map<Enum<?>, Long>></code>, may be empty
+   * @param actual
+   *          <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterEqualsLessThanGreaterThan(@SuppressWarnings("rawtypes") Map expectedEquals,
+      @SuppressWarnings("rawtypes") Map expectedLessThan, @SuppressWarnings("rawtypes") Map expectedGreaterThan,
+      Map<String, Map<Enum<?>, Long>> actual) {
+    assertCounterEqualsLessThanGreaterThan(expectedEquals, actual, true, false, false, true);
+    assertCounterEqualsLessThanGreaterThan(expectedLessThan, actual, false, true, false, true);
+    assertCounterEqualsLessThanGreaterThan(expectedGreaterThan, actual, false, false, true, true);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static void assertCounterEqualsLessThanGreaterThan(@SuppressWarnings("rawtypes") Map expected,
+      Map<String, Map<Enum<?>, Long>> actual, boolean assertEquals, boolean assertLessThan, boolean assertGreaterThan,
+      boolean isBatch) {
+    if (!isBatch) {
+      Assert.assertEquals("Expected and actual array sizes differ", expected.size(), actual.size());
+    }
+    for (String group : actual.keySet()) {
+      if (!isBatch || expected.containsKey(group)) {
+        Assert.assertTrue("Expected does not contain group [" + group + "]", expected.containsKey(group));
+        if (!isBatch) {
+          Assert.assertEquals("Expected and actual group [" + group + "] map sizes differ",
+              ((Map<Enum<?>, Long>) expected.get(group)).size(), actual.get(group).size());
+        }
+        for (Enum<?> counter : actual.get(group).keySet()) {
+          if (!isBatch || ((Map<Enum<?>, Long>) expected.get(group)).containsKey(counter)) {
+            Assert.assertTrue("Expected group [" + group + "] does not contain counter [" + counter + "]",
+                ((Map<Enum<?>, Long>) expected.get(group)).containsKey(counter));
+            Long expectedLong = ((Map<Enum<?>, Long>) expected.get(group)).get(counter);
+            Long actualLong = actual.get(group).get(counter);
+            if (assertEquals) {
+              Assert.assertTrue("Expected [" + expectedLong + "] to be equal to actual [" + actualLong + "]",
+                  expectedLong.equals(actualLong));
+            }
+            if (assertLessThan) {
+              Assert.assertTrue("Expected [" + expectedLong + "] to be greater than actual [" + actualLong + "]",
+                  expectedLong > actualLong);
+            }
+            if (assertGreaterThan) {
+              Assert.assertTrue("Expected [" + expectedLong + "] to be less than actual [" + actualLong + "]",
+                  expectedLong < actualLong);
+            }
+          }
+        }
+      }
     }
   }
 

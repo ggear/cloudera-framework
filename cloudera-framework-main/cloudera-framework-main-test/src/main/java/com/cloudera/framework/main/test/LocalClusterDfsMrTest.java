@@ -1,5 +1,7 @@
 package com.cloudera.framework.main.test;
 
+import java.util.Map;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -25,8 +27,8 @@ public class LocalClusterDfsMrTest extends BaseTest {
   }
 
   public LocalClusterDfsMrTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
-      String[][][] labels) {
-    super(sources, destinations, datasets, subsets, labels);
+      String[][][] labels, @SuppressWarnings("rawtypes") Map[] counters) {
+    super(sources, destinations, datasets, subsets, labels, counters);
   }
 
   @Override
