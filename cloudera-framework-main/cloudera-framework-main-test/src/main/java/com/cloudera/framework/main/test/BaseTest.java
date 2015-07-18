@@ -73,14 +73,14 @@ public abstract class BaseTest {
    */
   public static Iterable<Object[]> paramaters() {
     return Arrays.asList(new Object[][] {
-    //
-    {
         //
-        new String[] { REL_DIR_DATASET, },//
-        new String[] { DIR_DATASET, }, //
-        new String[] { null, }, //
-        new String[][] { { null, }, }, //
-        new String[][][] { { { null }, }, } }, //
+        {
+            //
+            new String[] { REL_DIR_DATASET, }, //
+            new String[] { DIR_DATASET, }, //
+            new String[] { null, }, //
+            new String[][] { { null, }, }, //
+            new String[][][] { { { null }, }, } }, //
     });
   }
 
@@ -129,9 +129,9 @@ public abstract class BaseTest {
    */
   public static String getPathLocal(String path) {
     String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(path);
-    return pathRelativeToModuleRootSansLeadingSlashes.equals("") ? ABS_DIR_WORKING.length() < 2 ? "/" : ABS_DIR_WORKING
-        .substring(0, ABS_DIR_WORKING.length() - 2) : new Path(ABS_DIR_WORKING,
-        pathRelativeToModuleRootSansLeadingSlashes).toUri().toString();
+    return pathRelativeToModuleRootSansLeadingSlashes.equals("")
+        ? ABS_DIR_WORKING.length() < 2 ? "/" : ABS_DIR_WORKING.substring(0, ABS_DIR_WORKING.length() - 2)
+        : new Path(ABS_DIR_WORKING, pathRelativeToModuleRootSansLeadingSlashes).toUri().toString();
   }
 
   /**
@@ -241,8 +241,8 @@ public abstract class BaseTest {
    *          indexed dataset subset
    * @return local files that have been copied
    */
-  public File[] copyFromLocalDir(String[] sourcePaths, String[] destinationPaths, String[] datasets,
-      String[][] subsets, String[][][] labels) throws IllegalArgumentException, IOException {
+  public File[] copyFromLocalDir(String[] sourcePaths, String[] destinationPaths, String[] datasets, String[][] subsets,
+      String[][][] labels) throws IllegalArgumentException, IOException {
     List<File> files = new ArrayList<File>();
     if (datasets.length != sourcePaths.length || datasets.length != destinationPaths.length
         || datasets.length != subsets.length || datasets.length != labels.length) {
@@ -260,11 +260,11 @@ public abstract class BaseTest {
           } else if (subsets[i][j] == null) {
             files.addAll(Arrays.asList(copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i])));
           } else if (labels[i][j][k] == null) {
-            files.addAll(Arrays
-                .asList(copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i], subsets[i][j])));
+            files.addAll(
+                Arrays.asList(copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i], subsets[i][j])));
           } else {
-            files.addAll(Arrays.asList(copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i],
-                subsets[i][j], labels[i][j][k])));
+            files.addAll(Arrays.asList(
+                copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i], subsets[i][j], labels[i][j][k])));
           }
         }
       }
@@ -292,7 +292,7 @@ public abstract class BaseTest {
     List<File> files = new ArrayList<File>();
     String sourcePathGlob = ((sourcePaths.length == 0 ? "*" : sourcePaths[0]) + "/"
         + (sourcePaths.length <= 1 ? "*" : sourcePaths[1]) + "/" + (sourcePaths.length <= 2 ? "*" : sourcePaths[2]))
-        .replace(ABS_DIR_WORKING, ".");
+            .replace(ABS_DIR_WORKING, ".");
     getFileSystem().mkdirs(new Path(getPathDfs(destinationPath)));
     for (File file : listFilesLocal(sourcePath, false, sourcePaths)) {
       copyFromLocalFile(Arrays.asList(new Path(file.getPath())), new Path(getPathDfs(destinationPath)));
@@ -302,11 +302,11 @@ public abstract class BaseTest {
         files.addAll(FileUtils.listFiles(file, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE));
       }
       if (LOG.isDebugEnabled()) {
-        LOG.debug(LOG_PREFIX + " [copyFromLocalDir] copied ["
-            + file.getParentFile().getParentFile().getParentFile().getName() + "/"
-            + file.getParentFile().getParentFile().getName() + "/" + file.getParentFile().getName() + "/"
-            + file.getName() + (file.isDirectory() ? "/" : "") + "] of glob [" + sourcePathGlob + "/*] to ["
-            + destinationPath + "]");
+        LOG.debug(
+            LOG_PREFIX + " [copyFromLocalDir] copied [" + file.getParentFile().getParentFile().getParentFile().getName()
+                + "/" + file.getParentFile().getParentFile().getName() + "/" + file.getParentFile().getName() + "/"
+                + file.getName() + (file.isDirectory() ? "/" : "") + "] of glob [" + sourcePathGlob + "/*] to ["
+                + destinationPath + "]");
       }
     }
     if (files.isEmpty()) {
@@ -570,8 +570,8 @@ public abstract class BaseTest {
             sourceChildPaths.add(new Path(sourceChildFile.getPath()));
           }
           return copyFromLocalFile(sourceChildPaths, destinationChildPath);
-        } else if (sourceFile.isDirectory() && fileSystem.isFile(destinationChildPath) || sourceFile.isFile()
-            && fileSystem.isDirectory(destinationChildPath)) {
+        } else if (sourceFile.isDirectory() && fileSystem.isFile(destinationChildPath)
+            || sourceFile.isFile() && fileSystem.isDirectory(destinationChildPath)) {
           fileSystem.delete(destinationChildPath, true);
         }
       }

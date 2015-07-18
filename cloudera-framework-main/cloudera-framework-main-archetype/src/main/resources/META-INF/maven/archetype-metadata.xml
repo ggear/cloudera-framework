@@ -7,6 +7,9 @@
 	<fileSets>
 		<fileSet filtered="false" packaged="false">
 			<directory>src/main/java</directory>
+			<excludes>
+				<exclude>com/cloudera//example/model/Record.java</exclude>
+			</excludes>
 		</fileSet>
 		<fileSet filtered="false" packaged="false">
 			<directory>src/main/resources</directory>

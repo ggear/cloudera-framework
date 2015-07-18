@@ -51,6 +51,7 @@
 		<hadoop.version>2.6.0-cdh5.4.4</hadoop.version>
 		<hadoop-hive.version>1.1.0-cdh5.4.4</hadoop-hive.version>
 		<hadoop-flume.version>1.5.0-cdh5.4.4</hadoop-flume.version>
+		<hadoop-avro.version>1.7.6-cdh5.4.4</hadoop-avro.version>
 		<hadoop-parquet.version>1.5.0-cdh5.4.4</hadoop-parquet.version>
 
 		<slf4j.version>1.7.5</slf4j.version>

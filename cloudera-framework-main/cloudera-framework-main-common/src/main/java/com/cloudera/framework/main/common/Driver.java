@@ -224,8 +224,8 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Map<Enum<?>, Long> getCounters(String group) {
-    return counters.get(group) == null ? Collections.<Enum<?>, Long> emptyMap() : new LinkedHashMap<Enum<?>, Long>(
-        counters.get(group));
+    return counters.get(group) == null ? Collections.<Enum<?>, Long> emptyMap()
+        : new LinkedHashMap<Enum<?>, Long>(counters.get(group));
   }
 
   public Set<String> getCountersGroups() {
@@ -233,8 +233,8 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Long getCounter(String group, Enum<?> counter) {
-    return counters.get(group) == null || counters.get(group).get(counter) == null ? null : counters.get(group).get(
-        counter);
+    return counters.get(group) == null || counters.get(group).get(counter) == null ? null
+        : counters.get(group).get(counter);
   }
 
   protected void importCountersAll(Map<String, Map<Enum<?>, Long>> counters) {
@@ -253,8 +253,7 @@ public abstract class Driver extends Configured implements Tool {
     }
     for (Enum<?> value : counters.keySet()) {
       if (counters.get(value) != null) {
-        this.counters.get(group).put(
-            value,
+        this.counters.get(group).put(value,
             (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value))
                 + counters.get(value));
       }
@@ -272,8 +271,7 @@ public abstract class Driver extends Configured implements Tool {
     Counters counters = job.getCounters();
     for (Enum<?> value : values) {
       if (counters.findCounter(value) != null) {
-        this.counters.get(group).put(
-            value,
+        this.counters.get(group).put(value,
             (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value))
                 + counters.findCounter(value).getValue());
       }

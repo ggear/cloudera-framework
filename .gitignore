@@ -14,3 +14,4 @@ buildNumber.properties
 cloudera-framework-repo/**/*SNAPSHOT*/
 cloudera-framework-repo/**/maven-metadata-local.xml
 cloudera-framework-repo/**/_remote.repositories
+cloudera-framework-main/cloudera-framework-main-archetype/src/main/resources/archetype-resources/src/main/java/com/cloudera/example/model/Record.java

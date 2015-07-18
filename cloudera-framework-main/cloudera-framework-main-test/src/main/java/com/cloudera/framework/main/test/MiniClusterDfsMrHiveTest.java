@@ -82,13 +82,13 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
   public static List<String> processStatement(String statement, Map<String, String> parameters) throws Exception {
     long time = debugMessageHeader(LOG, "processStatement");
     List<String> results = new ArrayList<String>();
-    CommandProcessor commandProcessor = CommandProcessorFactory.getForHiveCommand((statement = new StrSubstitutor(
-        parameters, "${hivevar:", "}").replace(statement.trim())).split("\\s+"), conf);
+    CommandProcessor commandProcessor = CommandProcessorFactory.getForHiveCommand(
+        (statement = new StrSubstitutor(parameters, "${hivevar:", "}").replace(statement.trim())).split("\\s+"), conf);
     if (LOG.isDebugEnabled()) {
       LOG.debug(LOG_PREFIX + " [processStatement] pre-execute, statement:\n" + statement);
     }
-    int responseCode = (commandProcessor = commandProcessor == null ? new Driver(conf) : commandProcessor).run(
-        statement).getResponseCode();
+    int responseCode = (commandProcessor = commandProcessor == null ? new Driver(conf) : commandProcessor)
+        .run(statement).getResponseCode();
     if (commandProcessor instanceof Driver) {
       ((Driver) commandProcessor).getResults(results);
     }

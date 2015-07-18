@@ -30,12 +30,12 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
             new String[] { DIR_SOURCE, }, //
             new String[] { DIR_DESTINATION, }, //
             new String[] { null, }, //
-            new String[][] {//
-            { null }, //
-            }, //
+            new String[][] { //
+                { null }, //
+        }, //
             new String[][][] { { //
-            //
-            { null }, //
+                //
+                { null }, //
             } }, //
             new Map[] { Collections.EMPTY_MAP, }, //
         }, //
@@ -44,12 +44,12 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
             new String[] { DIR_SOURCE, }, //
             new String[] { DIR_DESTINATION, }, //
             new String[] { "dataset-1", }, //
-            new String[][] {//
-            { null }, //
-            }, //
+            new String[][] { //
+                { null }, //
+        }, //
             new String[][][] { { //
-            //
-            { null }, //
+                //
+                { null }, //
             } }, //
             new Map[] { Collections.EMPTY_MAP, }, //
         }, //
@@ -58,12 +58,12 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
             new String[] { DIR_SOURCE, }, //
             new String[] { DIR_DESTINATION, }, //
             new String[] { "dataset-1", }, //
-            new String[][] {//
-            { "dataset-1-sub-1" }, //
-            }, //
+            new String[][] { //
+                { "dataset-1-sub-1" }, //
+        }, //
             new String[][][] { { //
-            //
-            { null }, //
+                //
+                { null }, //
             } }, //
             new Map[] { Collections.EMPTY_MAP, }, //
         }, //
@@ -72,12 +72,12 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
             new String[] { DIR_SOURCE, }, //
             new String[] { DIR_DESTINATION, }, //
             new String[] { "dataset-1", }, //
-            new String[][] {//
-            { "dataset-1-sub-1" }, //
-            }, //
+            new String[][] { //
+                { "dataset-1-sub-1" }, //
+        }, //
             new String[][][] { { //
-            //
-            { "dataset-1-sub-1-sub-1" }, //
+                //
+                { "dataset-1-sub-1-sub-1" }, //
             } }, //
             new Map[] { Collections.EMPTY_MAP, }, //
         }, //
@@ -96,18 +96,18 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
                 //
                 { "dataset-1-sub-1" }, //
                 { "dataset-1-sub-1" }, //
-            }, //
+        }, //
             new String[][][] {
                 //
                 { { "dataset-1-sub-1-sub-1" }, }, //
                 { { "dataset-1-sub-1-sub-1" }, }, //
-            }, //
+        }, //
             new Map[] {
                 //
                 ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)), //
                 ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER2, 2L)), //
                 ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER3, 3L, Counter.COUNTER4, 4L)), //
-            }, //
+        }, //
         }, //
     });
   }
@@ -190,8 +190,8 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
     copyFromLocalDir(sources, destinations, datasets, subsets, labels);
   }
 
-  private void assertCopyFromLocalDir(int countUpstream, int countDownstream, String sourcePath,
-      String destinationPath, String... sourceLabels) throws Exception {
+  private void assertCopyFromLocalDir(int countUpstream, int countDownstream, String sourcePath, String destinationPath,
+      String... sourceLabels) throws Exception {
     Assert.assertEquals(countUpstream, listFilesDfs(destinationPath).length);
     Assert.assertTrue(copyFromLocalDir(sourcePath, destinationPath, sourceLabels).length > 0);
     Assert.assertEquals(countDownstream, listFilesDfs(destinationPath).length);
@@ -201,21 +201,27 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public void testAssertCounterEqualsLessThanGreaterThan() {
     assertCounterEquals(counters[0], counters[0]);
-    assertCounterEquals(ImmutableMap.of(COUNTER_GROUP + "1",
-        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
-        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)), (Map) ImmutableMap.of(COUNTER_GROUP + "1",
-        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
-        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)));
-    assertCounterLessThan(ImmutableMap.of(COUNTER_GROUP + "1",
-        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
-        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)), (Map) ImmutableMap.of(COUNTER_GROUP + "1",
-        ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L, Counter.COUNTER3, 2L), COUNTER_GROUP + "2",
-        ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L)));
-    assertCounterGreaterThan(ImmutableMap.of(COUNTER_GROUP + "1",
-        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
-        ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)), (Map) ImmutableMap.of(COUNTER_GROUP + "1",
-        ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L, Counter.COUNTER3, 4L), COUNTER_GROUP + "2",
-        ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L)));
+    assertCounterEquals(
+        ImmutableMap.of(COUNTER_GROUP + "1",
+            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
+            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
+        (Map) ImmutableMap.of(COUNTER_GROUP + "1",
+            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
+            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)));
+    assertCounterLessThan(
+        ImmutableMap.of(COUNTER_GROUP + "1",
+            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
+            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
+        (Map) ImmutableMap.of(COUNTER_GROUP + "1",
+            ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L, Counter.COUNTER3, 2L), COUNTER_GROUP + "2",
+            ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L)));
+    assertCounterGreaterThan(
+        ImmutableMap.of(COUNTER_GROUP + "1",
+            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
+            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
+        (Map) ImmutableMap.of(COUNTER_GROUP + "1",
+            ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L, Counter.COUNTER3, 4L), COUNTER_GROUP + "2",
+            ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L)));
     assertCounterEqualsLessThanGreaterThan(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)),
         Collections.EMPTY_MAP, Collections.EMPTY_MAP,
         (Map) ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));

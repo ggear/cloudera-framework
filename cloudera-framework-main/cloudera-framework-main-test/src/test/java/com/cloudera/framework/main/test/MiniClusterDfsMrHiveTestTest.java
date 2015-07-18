@@ -31,13 +31,8 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
     writer.write("2,2\n");
     writer.write("3,3\n");
     writer.close();
-    Assert.assertEquals(
-        2,
-        processStatement(
-            "/ddl",
-            "create.sql",
-            new ImmutableMap.Builder<String, String>().put("test.table.name", "somedata")
-                .put("test.table.field.delim", ",").build()).size());
+    Assert.assertEquals(2, processStatement("/ddl", "create.sql", new ImmutableMap.Builder<String, String>()
+        .put("test.table.name", "somedata").put("test.table.field.delim", ",").build()).size());
     Assert.assertEquals(1,
         processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata")
             .size());
@@ -60,13 +55,8 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
     writer.write("2,2\n");
     writer.write("3,3\n");
     writer.close();
-    Assert.assertEquals(
-        2,
-        processStatement(
-            "/ddl",
-            "create.sql",
-            new ImmutableMap.Builder<String, String>().put("test.table.name", "somedata")
-                .put("test.table.field.delim", ",").build()).size());
+    Assert.assertEquals(2, processStatement("/ddl", "create.sql", new ImmutableMap.Builder<String, String>()
+        .put("test.table.name", "somedata").put("test.table.field.delim", ",").build()).size());
     Assert.assertEquals(1,
         processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata")
             .size());
