@@ -26,7 +26,7 @@ export CDH_VERSION=5.4.4
 git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
 git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
-mvn eclipse:eclipse clean install -PCMP
+mvn clean install -PCMP
 ```
 
 Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.2.0-cdh5.4.4](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.2.0-cdh5.4.4/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
@@ -36,15 +36,18 @@ Alternatively, the module can be distributed as a binary by copying the dependen
 The cloudera-framework includes an archetype allowing you to stand up a simple project and get going fast:
 
 ```bash
+export CF_VERSION=1.2.0
+export CDH_VERSION=5.4.4
 mvn archetype:generate \
   -DarchetypeGroupId=com.cloudera.framework.main \
   -DarchetypeArtifactId=cloudera-framework-main-archetype \
+  -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
   -Dversion=1.0.0-SNAPSHOT \
   -DgroupId=com.my.company \
   -DartifactId=my-cloudera-project \
   -Dpackage="com.my.company"
 cd my-cloudera-project
-mvn clean install
+mvn eclipse:eclipse clean install
 ```
 
 ##Release
