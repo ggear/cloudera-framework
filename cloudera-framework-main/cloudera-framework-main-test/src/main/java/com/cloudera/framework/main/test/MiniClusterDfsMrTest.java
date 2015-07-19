@@ -13,6 +13,11 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Base class for all local-cluster DFS and MR tests, multi-process,
+ * multi-threaded DFS and MR daemons, exercises the full read/write path of the
+ * stack, provides isolated and idempotent runtime
+ */
 public class MiniClusterDfsMrTest extends BaseTest {
 
   private static Logger LOG = LoggerFactory.getLogger(MiniClusterDfsMrTest.class);

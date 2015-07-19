@@ -6,6 +6,9 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.OutputFormat;
 
+/**
+ * Override default behaviour to not check if directory exists or not
+ */
 public class LazyOutputFormatNoCheck<K, V> extends LazyOutputFormat<K, V> {
 
   public static void setOutputFormatClass(Job job,

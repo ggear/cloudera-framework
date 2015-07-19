@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Use this {@link Interceptor} to unwrap a Flume encoded event from a direct
- * {@link Source} {@link Channel} link (ie Kafka).
+ * {@link Source source} {@link Channel channel} (ie Kafka).
  */
 public class FlumeEventUnwrapInterceptor implements Interceptor {
 

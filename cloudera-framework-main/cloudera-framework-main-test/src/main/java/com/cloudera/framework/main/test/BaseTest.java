@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -80,7 +81,9 @@ public abstract class BaseTest {
             new String[] { DIR_DATASET, }, //
             new String[] { null, }, //
             new String[][] { { null, }, }, //
-            new String[][][] { { { null }, }, } }, //
+            new String[][][] { { { null }, }, }, //
+            new Map[] { Collections.EMPTY_MAP, }, //
+        }, //
     });
   }
 
