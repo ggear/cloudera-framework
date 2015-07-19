@@ -64,11 +64,16 @@ public abstract class BaseTest {
   public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/" + DIR_DFS_LOCAL;
   public static final String ABS_DIR_DFS_MINICLUSTER = ABS_DIR_TARGET + "/" + DIR_DFS_MINICLUSTER;
 
+  protected static String LOG_PREFIX = "Test harness";
+
+  private static Logger LOG = LoggerFactory.getLogger(BaseTest.class);
+
   /**
    * Default paramaters for a {@link Parameterized} runner, all datasets,
-   * subsets and labels suitable for loading into an extending classes
-   * {@link #BaseTest(String[], String[], String[], String[][], String[][][])}
-   * implementation, and later invoked via {@link #setupDatasets()}
+   * subsets, labels and counters suitable for loading into an extending class
+   * {@link #BaseTest(String[], String[], String[], String[][], String[][][], Map[])
+   * implementation, and later invoked via {@link #setupDatasets()} or manually,
+   * with associated asserts made against the counters
    *
    * @return
    */
@@ -582,9 +587,5 @@ public abstract class BaseTest {
     }
     return true;
   }
-
-  protected static String LOG_PREFIX = "Test harness";
-
-  private static Logger LOG = LoggerFactory.getLogger(BaseTest.class);
 
 }
