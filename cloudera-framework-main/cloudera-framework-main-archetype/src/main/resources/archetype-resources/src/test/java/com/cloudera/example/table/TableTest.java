@@ -45,29 +45,29 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest
                   { { null }, }, //
           }, // Table DDL parameters and row count tests
               new Map[] {
-                  //
+                  // Raw text tab
                   ImmutableMap.of(//
                       DDL_FILE, DDL_FILE_TEXT, //
                       DDL_TABLEDELIM, "\\t", //
                       DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB, //
                       DDL_ROWS, "36" //
-              ), //
+              ), // Raw text comma
                   ImmutableMap.of(//
                       DDL_FILE, DDL_FILE_TEXT, //
                       DDL_TABLEDELIM, ",", //
                       DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA, //
                       DDL_ROWS, "36" //
-              ), //
+              ), // Processed cleansed avro
                   ImmutableMap.of(//
                       DDL_FILE, DDL_FILE_AVRO, //
                       DDL_TABLEAVROSCHEMA, IOUtils.toString(TableTest.class.getResourceAsStream(MODEL_AVRO)), //
-                      DDL_TABLELOCATION, DIR_DS_MYDATASET_PROCESSED_CLEANSED_ABSOLUTE, //
+                      DDL_TABLELOCATION, DIR_DS_MYDATASET_PROCESSED_CLEANSED_AVRO, //
                       DDL_ROWS, "10" //
-              ), //
+              ), // Processed duplicate avro
                   ImmutableMap.of(//
                       DDL_FILE, DDL_FILE_AVRO, //
                       DDL_TABLEAVROSCHEMA, IOUtils.toString(TableTest.class.getResourceAsStream(MODEL_AVRO)), //
-                      DDL_TABLELOCATION, DIR_DS_MYDATASET_PROCESSED_DUPLICATE_ABSOLUTE, //
+                      DDL_TABLELOCATION, DIR_DS_MYDATASET_PROCESSED_DUPLICATE_AVRO, //
                       DDL_ROWS, "30" //
               ), //
           }, //

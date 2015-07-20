@@ -268,8 +268,9 @@ public class Cleanse extends Driver {
           calendar.setTimeInMillis(record.datum().getMyTimestamp());
           string.setLength(0);
           multipleOutputsAvro.write(OUTPUT_AVRO, this.record, NullWritable.get(), string
-              .append(counter.equals(Counter.RECORDS_CLEANSED) ? Constants.DIR_DS_MYDATASET_PROCESSED_CLEANSED_RELATIVE
-                  : Constants.DIR_DS_MYDATASET_PROCESSED_DUPLICATE_RELATIVE)
+              .append(
+                  counter.equals(Counter.RECORDS_CLEANSED) ? Constants.DIR_DS_MYDATASET_PROCESSED_CLEANSED_AVRO_RELATIVE
+                      : Constants.DIR_DS_MYDATASET_PROCESSED_DUPLICATE_AVRO_RELATIVE)
               .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR))
               .append(Path.SEPARATOR_CHAR).append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1)
               .append(Path.SEPARATOR_CHAR).append(PARTITION_FILE).toString());
