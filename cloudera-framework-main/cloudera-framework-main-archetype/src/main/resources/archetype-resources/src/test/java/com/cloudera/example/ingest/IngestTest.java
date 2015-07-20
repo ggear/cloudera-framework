@@ -20,7 +20,7 @@ import com.cloudera.framework.main.test.LocalClusterDfsMrTest;
 public class IngestTest extends LocalClusterDfsMrTest implements ConstantsTest {
 
   @Parameters
-  public static Iterable<Object[]> paramaters() {
+  public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
         //
         {
@@ -44,8 +44,8 @@ public class IngestTest extends LocalClusterDfsMrTest implements ConstantsTest {
   }
 
   public IngestTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
-      @SuppressWarnings("rawtypes") Map[] counters) {
-    super(sources, destinations, datasets, subsets, labels, counters);
+      @SuppressWarnings("rawtypes") Map[] metadata) {
+    super(sources, destinations, datasets, subsets, labels, metadata);
   }
 
   @Test

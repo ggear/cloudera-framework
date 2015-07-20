@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 public class CleanseTest extends LocalClusterDfsMrTest implements ConstantsTest {
 
   @Parameters
-  public static Iterable<Object[]> paramaters() {
+  public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
         // All datasets
         {
@@ -81,8 +81,8 @@ public class CleanseTest extends LocalClusterDfsMrTest implements ConstantsTest 
   }
 
   public CleanseTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
-      String[][][] labels, @SuppressWarnings("rawtypes") Map[] counters) {
-    super(sources, destinations, datasets, subsets, labels, counters);
+      String[][][] labels, @SuppressWarnings("rawtypes") Map[] metadata) {
+    super(sources, destinations, datasets, subsets, labels, metadata);
   }
 
   /**
@@ -93,7 +93,7 @@ public class CleanseTest extends LocalClusterDfsMrTest implements ConstantsTest 
     Driver driver = new Cleanse(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS,
         driver.runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
-    assertCounterEquals(counters[0], driver.getCounters());
+    assertCounterEquals(metadata[0], driver.getCounters());
   }
 
 }

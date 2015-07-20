@@ -69,15 +69,16 @@ public abstract class BaseTest {
   private static Logger LOG = LoggerFactory.getLogger(BaseTest.class);
 
   /**
-   * Default paramaters for a {@link Parameterized} runner, all datasets,
-   * subsets, labels and counters suitable for loading into an extending class
+   * Default parameters for a {@link Parameterized} runner, all datasets,
+   * subsets, labels and metadata suitable for loading into an extending class
+   * via
    * {@link #BaseTest(String[], String[], String[], String[][], String[][][], Map[])
-   * implementation, and later invoked via {@link #setupDatasets()} or manually,
-   * with associated asserts made against the counters
+   * implementation, and later invoked via {@link #setupDatasets()},
+   * {@link #assertCounterEquals(Map, Map)} or manually
    *
    * @return
    */
-  public static Iterable<Object[]> paramaters() {
+  public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
         //
         {
@@ -98,19 +99,19 @@ public abstract class BaseTest {
   public String[][] subsets;
   public String[][][] labels;
   @SuppressWarnings("rawtypes")
-  public Map[] counters;
+  public Map[] metadata;
 
   public BaseTest() {
   }
 
   public BaseTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
-      @SuppressWarnings("rawtypes") Map[] counters) {
+      @SuppressWarnings("rawtypes") Map[] metadata) {
     this.sources = sources;
     this.destinations = destinations;
     this.datasets = datasets;
     this.subsets = subsets;
     this.labels = labels;
-    this.counters = counters;
+    this.metadata = metadata;
   }
 
   /**

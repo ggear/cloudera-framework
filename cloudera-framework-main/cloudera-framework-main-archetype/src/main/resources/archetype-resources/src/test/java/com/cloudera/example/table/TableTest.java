@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableMap;
 public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest {
 
   @Parameters
-  public static Iterable<Object[]> paramaters() {
+  public static Iterable<Object[]> parameters() {
     try {
       return Arrays.asList(new Object[][] {
           // All datasets
@@ -43,7 +43,7 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest
                   //
                   { { null }, }, //
                   { { null }, }, //
-          }, // Table DDL paramaters and row count tests
+          }, // Table DDL parameters and row count tests
               new Map[] {
                   //
                   ImmutableMap.of(//
@@ -74,13 +74,13 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest
           }, //
       });
     } catch (IOException exception) {
-      throw new RuntimeException("Could not set up paramaters", exception);
+      throw new RuntimeException("Could not set up parameters", exception);
     }
   }
 
   public TableTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
-      @SuppressWarnings("rawtypes") Map[] counters) {
-    super(sources, destinations, datasets, subsets, labels, counters);
+      @SuppressWarnings("rawtypes") Map[] metadata) {
+    super(sources, destinations, datasets, subsets, labels, metadata);
   }
 
   /**
@@ -98,12 +98,12 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest
   @Test
   @SuppressWarnings("unchecked")
   public void testTable() throws Exception {
-    for (int i = 0; i < counters.length; i++) {
-      String tableName = ((String) counters[i].get(DDL_TABLELOCATION))
-          .substring(1, ((String) counters[i].get(DDL_TABLELOCATION)).length()).replace('-', '_').replace('/', '_');
-      Assert.assertNotNull(processStatement(DDL_DIR, (String) counters[i].get(DDL_FILE),
-          ImmutableMap.<String, String> builder().putAll(counters[i]).put(DDL_TABLENAME, tableName).build()));
-      Assert.assertEquals(counters[i].get(DDL_ROWS),
+    for (int i = 0; i < metadata.length; i++) {
+      String tableName = ((String) metadata[i].get(DDL_TABLELOCATION))
+          .substring(1, ((String) metadata[i].get(DDL_TABLELOCATION)).length()).replace('-', '_').replace('/', '_');
+      Assert.assertNotNull(processStatement(DDL_DIR, (String) metadata[i].get(DDL_FILE),
+          ImmutableMap.<String, String> builder().putAll(metadata[i]).put(DDL_TABLENAME, tableName).build()));
+      Assert.assertEquals(metadata[i].get(DDL_ROWS),
           processStatement("SELECT COUNT(1) AS number_of_records FROM " + tableName).get(0));
     }
   }

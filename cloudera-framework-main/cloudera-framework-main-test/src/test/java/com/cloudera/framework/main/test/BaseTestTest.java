@@ -22,7 +22,7 @@ import com.google.common.collect.ImmutableMap;
 public class BaseTestTest extends LocalClusterDfsMrTest {
 
   @Parameters()
-  public static Iterable<Object[]> paramaters() {
+  public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
         //
         {
@@ -119,8 +119,8 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
   }
 
   public BaseTestTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
-      String[][][] labels, @SuppressWarnings("rawtypes") Map[] counters) {
-    super(sources, destinations, datasets, subsets, labels, counters);
+      String[][][] labels, @SuppressWarnings("rawtypes") Map[] metadata) {
+    super(sources, destinations, datasets, subsets, labels, metadata);
   }
 
   @Override
@@ -200,7 +200,7 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
   @Test
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public void testAssertCounterEqualsLessThanGreaterThan() {
-    assertCounterEquals(counters[0], counters[0]);
+    assertCounterEquals(metadata[0], metadata[0]);
     assertCounterEquals(
         ImmutableMap.of(COUNTER_GROUP + "1",
             ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
