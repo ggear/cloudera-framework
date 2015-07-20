@@ -1,3 +1,6 @@
+/**
+ * Avro model
+ */
 {
   "namespace":"com.cloudera.example.model",
   "type":"record",

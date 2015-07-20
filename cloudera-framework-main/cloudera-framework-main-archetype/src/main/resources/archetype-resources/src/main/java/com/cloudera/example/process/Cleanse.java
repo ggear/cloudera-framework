@@ -138,6 +138,7 @@ public class Cleanse extends Driver {
     job.setMapOutputValueClass(AvroValue.class);
     AvroJob.setMapOutputValueSchema(job, Record.getClassSchema());
     job.setReducerClass(CleanseReducer.class);
+    job.setNumReduceTasks(inputPaths.size());
     AvroJob.setOutputKeySchema(job, Schema.create(Type.NULL));
     AvroJob.setOutputValueSchema(job, Record.getClassSchema());
     MultipleOutputs.addNamedOutput(job, OUTPUT_TEXT, TextOutputFormat.class, NullWritable.class, Text.class);

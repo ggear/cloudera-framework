@@ -1,13 +1,10 @@
 --
--- Create and describe table
+-- Run queries accross dataset
 --
 
-CREATE TABLE IF NOT EXISTS ${hivevar:test.table.name} (
-  my_int INT,
-  my_lowercase_string STRING,
-  my_uppercase_string STRING
-)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY '${hivevar:test.table.field.delim}'
-STORED AS TEXTFILE;
+DESCRIBE ${hivevar:my.table.name};
 
-DESCRIBE ${hivevar:test.table.name};
+SELECT 
+  COUNT(1) AS number_of_records
+FROM ${hivevar:my.table.name};
+
