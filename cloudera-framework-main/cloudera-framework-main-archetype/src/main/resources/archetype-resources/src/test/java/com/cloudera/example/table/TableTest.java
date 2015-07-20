@@ -1,5 +1,6 @@
 package com.cloudera.example.table;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -25,26 +26,56 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest
 
   @Parameters
   public static Iterable<Object[]> paramaters() {
-    return Arrays.asList(new Object[][] {
-        // All datasets
-        {
-            // Both tab and comma dataset metadata
-            new String[] { DS_DIR, DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA, }, //
-            new String[] { DS_MYDATASET, DS_MYDATASET }, //
-            new String[][] {
-                // Both tab and comma dataset
-                { DSS_MYDATASET_TAB }, //
-                { DSS_MYDATASET_COMMA }, //
-        }, // All tab and comma dataset subsets
-            new String[][][] {
-                //
-                { { null }, }, //
-                { { null }, }, //
-        }, // Counter equality tests
-            new Map[] {}, //
-        }, //
-    });
+    try {
+      return Arrays.asList(new Object[][] {
+          // All datasets
+          {
+              // Both tab and comma dataset metadata
+              new String[] { DS_DIR, DS_DIR, }, //
+              new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA, }, //
+              new String[] { DS_MYDATASET, DS_MYDATASET }, //
+              new String[][] {
+                  // Both tab and comma dataset
+                  { DSS_MYDATASET_TAB }, //
+                  { DSS_MYDATASET_COMMA }, //
+          }, // All tab and comma dataset subsets
+              new String[][][] {
+                  //
+                  { { null }, }, //
+                  { { null }, }, //
+          }, // Table DDL paramaters and row count tests
+              new Map[] {
+                  //
+                  ImmutableMap.of(//
+                      DDL_FILE, DDL_FILE_TEXT, //
+                      DDL_TABLEDELIM, "\\t", //
+                      DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB, //
+                      DDL_ROWS, "36" //
+              ), //
+                  ImmutableMap.of(//
+                      DDL_FILE, DDL_FILE_TEXT, //
+                      DDL_TABLEDELIM, ",", //
+                      DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA, //
+                      DDL_ROWS, "36" //
+              ), //
+                  ImmutableMap.of(//
+                      DDL_FILE, DDL_FILE_AVRO, //
+                      DDL_TABLEAVROSCHEMA, IOUtils.toString(TableTest.class.getResourceAsStream(MODEL_AVRO)), //
+                      DDL_TABLELOCATION, DIR_DS_MYDATASET_PROCESSED_CLEANSED_ABSOLUTE, //
+                      DDL_ROWS, "10" //
+              ), //
+                  ImmutableMap.of(//
+                      DDL_FILE, DDL_FILE_AVRO, //
+                      DDL_TABLEAVROSCHEMA, IOUtils.toString(TableTest.class.getResourceAsStream(MODEL_AVRO)), //
+                      DDL_TABLELOCATION, DIR_DS_MYDATASET_PROCESSED_DUPLICATE_ABSOLUTE, //
+                      DDL_ROWS, "30" //
+              ), //
+          }, //
+          }, //
+      });
+    } catch (IOException exception) {
+      throw new RuntimeException("Could not set up paramaters", exception);
+    }
   }
 
   public TableTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
@@ -61,24 +92,19 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest
         .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
   }
 
-  private static final String[] TABLE_DDL_FILE = { DDL_TEXT, DDL_TEXT, DDL_AVRO, DDL_AVRO };
-  private static final String[] TABLE_DDL_DELIM = { "\\t", ",", "", "" };
-  private static final String[] TABLE_DFS_LOCATIONS = { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB,
-      DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA, DIR_DS_MYDATASET_PROCESSED_CLEANSED,
-      DIR_DS_MYDATASET_PROCESSED_DUPLICATE };
-
   /**
    * Test the tables
    */
   @Test
+  @SuppressWarnings("unchecked")
   public void testTable() throws Exception {
-    String tableAvroSchema = IOUtils.toString(TableTest.class.getResourceAsStream(AVRO_DIR + "/" + AVRO_MODEL));
-    for (int i = 0; i < TABLE_DDL_FILE.length; i++) {
-      String tableName = TABLE_DFS_LOCATIONS[i].substring(1, TABLE_DFS_LOCATIONS[i].length()).replace('-', '_')
-          .replace('/', '_');
-      processStatement(DDL_DIR, TABLE_DDL_FILE[i], ImmutableMap.of(DDL_TABLENAME, tableName, DDL_TABLEDELIM,
-          TABLE_DDL_DELIM[i], DDL_TABLEAVROSCHEMA, tableAvroSchema, DDL_TABLELOCATION, TABLE_DFS_LOCATIONS[i]));
-      processStatement(SQL_DIR, SQL_STATS, ImmutableMap.of(DDL_TABLENAME, tableName));
+    for (int i = 0; i < counters.length; i++) {
+      String tableName = ((String) counters[i].get(DDL_TABLELOCATION))
+          .substring(1, ((String) counters[i].get(DDL_TABLELOCATION)).length()).replace('-', '_').replace('/', '_');
+      Assert.assertNotNull(processStatement(DDL_DIR, (String) counters[i].get(DDL_FILE),
+          ImmutableMap.<String, String> builder().putAll(counters[i]).put(DDL_TABLENAME, tableName).build()));
+      Assert.assertEquals(counters[i].get(DDL_ROWS),
+          processStatement("SELECT COUNT(1) AS number_of_records FROM " + tableName).get(0));
     }
   }
 

@@ -41,8 +41,40 @@ public class CleanseTest extends LocalClusterDfsMrTest implements ConstantsTest 
         }, // Counter equality tests
             new Map[] {
                 //
-                ImmutableMap.of(Cleanse.class.getCanonicalName(), ImmutableMap.of(Counter.RECORDS, 72L,
-                    Counter.RECORDS_CLEANSED, 10L, Counter.RECORDS_DUPLICATE, 30L, Counter.RECORDS_MALFORMED, 32L)), //
+                ImmutableMap.of(Cleanse.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        Counter.RECORDS, 72L, //
+                        Counter.RECORDS_CLEANSED, 10L, //
+                        Counter.RECORDS_DUPLICATE, 30L, //
+                        Counter.RECORDS_MALFORMED, 32L//
+            )), //
+        }, //
+        }, //
+        // Pristine datasets
+        {
+            // Both tab and comma dataset metadata
+            new String[] { DS_DIR, DS_DIR, }, //
+            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA, }, //
+            new String[] { DS_MYDATASET, DS_MYDATASET }, //
+            new String[][] {
+                // Both tab and comma dataset
+                { DSS_MYDATASET_TAB }, //
+                { DSS_MYDATASET_COMMA }, //
+        }, // Pristine tab and comma dataset subsets
+            new String[][][] {
+                //
+                { { DSS_MYDATASET_PRISTINE }, }, //
+                { { DSS_MYDATASET_PRISTINE }, }, //
+        }, // Counter equality tests
+            new Map[] {
+                //
+                ImmutableMap.of(Cleanse.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        Counter.RECORDS, 20L, //
+                        Counter.RECORDS_CLEANSED, 10L, //
+                        Counter.RECORDS_DUPLICATE, 10L, //
+                        Counter.RECORDS_MALFORMED, 0L//
+            )), //
         }, //
         }, //
     });

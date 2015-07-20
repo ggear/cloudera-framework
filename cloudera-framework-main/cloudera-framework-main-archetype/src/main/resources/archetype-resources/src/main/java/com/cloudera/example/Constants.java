@@ -20,16 +20,33 @@ public interface Constants {
       + DIR_DS_MYDATASET_CLEANSED;
   public static final String DIR_DS_MYDATASET_PROCESSED_CLEANSED_RELATIVE = DIR_DS_MYDATASET_CLEANSED
       + "/avro/binary/none";
+  public static final String DIR_DS_MYDATASET_PROCESSED_CLEANSED_ABSOLUTE = DIR_DS_MYDATASET_PROCESSED + "/"
+      + DIR_DS_MYDATASET_PROCESSED_CLEANSED_RELATIVE;
   public static final String DIR_DS_MYDATASET_DUPLICATE = "duplicate";
   public static final String DIR_DS_MYDATASET_PROCESSED_DUPLICATE = DIR_DS_MYDATASET_PROCESSED + "/"
       + DIR_DS_MYDATASET_DUPLICATE;
   public static final String DIR_DS_MYDATASET_PROCESSED_DUPLICATE_RELATIVE = DIR_DS_MYDATASET_DUPLICATE
       + "/avro/binary/none";
+  public static final String DIR_DS_MYDATASET_PROCESSED_DUPLICATE_ABSOLUTE = DIR_DS_MYDATASET_PROCESSED + "/"
+      + DIR_DS_MYDATASET_PROCESSED_DUPLICATE_RELATIVE;
   public static final String DIR_DS_MYDATASET_MALFORMED = "malformed";
   public static final String DIR_DS_MYDATASET_PROCESSED_MALFORMED = DIR_DS_MYDATASET_PROCESSED + "/"
       + DIR_DS_MYDATASET_MALFORMED;
   public static final String DIR_DS_MYDATASET_PROCESSED_MALFORMED_RELATIVE = DIR_DS_MYDATASET_MALFORMED
       + "/avro/binary/none";
+
+  public static final String DDL_DIR = "/ddl";
+  public static final String DDL_FILE_TEXT = "table_text.ddl";
+  public static final String DDL_FILE_AVRO = "table_avro.ddl";
+  public static final String DDL_FILE_PARQUET = "table_parquet.ddl";
+  public static final String DDL_FILE = "my.table.file";
+  public static final String DDL_ROWS = "my.table.rows";
+  public static final String DDL_TABLENAME = "my.table.name";
+  public static final String DDL_TABLEDELIM = "my.table.delim";
+  public static final String DDL_TABLEAVROSCHEMA = "my.table.avroschema";
+  public static final String DDL_TABLELOCATION = "my.table.location";
+
+  public static final String MODEL_AVRO = "/avro/model.avsc";
 
   public enum Counter {
     RECORDS, RECORDS_CLEANSED, RECORDS_DUPLICATE, RECORDS_MALFORMED;
