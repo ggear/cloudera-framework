@@ -25,7 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Mini-cluster DFS and MR unit tests
+ * MiniClusterDfsMrTest system test
  */
 public class MiniClusterDfsMrTestTest extends MiniClusterDfsMrTest {
 

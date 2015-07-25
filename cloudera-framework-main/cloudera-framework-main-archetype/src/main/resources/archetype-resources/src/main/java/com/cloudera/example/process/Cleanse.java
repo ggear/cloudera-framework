@@ -1,8 +1,6 @@
 package com.cloudera.example.process;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,8 +23,6 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
@@ -39,9 +35,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cloudera.example.Constants;
-import com.cloudera.example.Constants.Counter;
 import com.cloudera.example.model.Record;
+import com.cloudera.example.model.RecordCounter;
 import com.cloudera.example.model.RecordKey;
+import com.cloudera.example.model.RecordType;
 import com.cloudera.framework.main.common.Driver;
 
 /**
@@ -86,7 +83,7 @@ public class Cleanse extends Driver {
   @Override
   public void reset() {
     super.reset();
-    for (Counter counter : Counter.values()) {
+    for (RecordCounter counter : RecordCounter.values()) {
       incrementCounter(Cleanse.class.getCanonicalName(), counter, 0);
     }
   }
@@ -132,36 +129,34 @@ public class Cleanse extends Driver {
     LazyOutputFormatNoCheck.setOutputFormatClass(job, TextOutputFormat.class);
     job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
     job.setSortComparatorClass(RecordKey.RecordKeyComparator.class);
-    job.setMapperClass(CleanseMapper.class);
+    job.setMapperClass(Mapper.class);
     job.setInputFormatClass(TextInputFormat.class);
     job.setMapOutputKeyClass(RecordKey.class);
     job.setMapOutputValueClass(AvroValue.class);
     AvroJob.setMapOutputValueSchema(job, Record.getClassSchema());
-    job.setReducerClass(CleanseReducer.class);
+    job.setReducerClass(Reducer.class);
     job.setNumReduceTasks(inputPaths.size());
     AvroJob.setOutputKeySchema(job, Schema.create(Type.NULL));
     AvroJob.setOutputValueSchema(job, Record.getClassSchema());
     MultipleOutputs.addNamedOutput(job, OUTPUT_TEXT, TextOutputFormat.class, NullWritable.class, Text.class);
     AvroMultipleOutputs.addNamedOutput(job, OUTPUT_AVRO, AvroKeyOutputFormat.class, Record.getClassSchema());
     boolean jobSuccess = job.waitForCompletion(LOG.isInfoEnabled());
-    importCounters(job, new Counter[] { Counter.RECORDS_MALFORMED, Counter.RECORDS_DUPLICATE, Counter.RECORDS_CLEANSED,
-        Counter.RECORDS });
+    importCounters(job, new RecordCounter[] { RecordCounter.RECORDS_MALFORMED, RecordCounter.RECORDS_DUPLICATE,
+        RecordCounter.RECORDS_CLEANSED, RecordCounter.RECORDS });
     return jobSuccess ? RETURN_SUCCESS : RETURN_FAILURE_RUNTIME;
   }
 
   /**
-   * Cleanse mapper, parse both comma and tab separated values into
-   * {@link Record Records} keyed by {@link RecordKey RecordKeys}.<br>
+   * Mapper, parse both comma and tab separated values into {@link Record
+   * Records} keyed by {@link RecordKey RecordKeys}.<br>
    * <br>
    * Note this class is not thread-safe but is jvm-reuse-safe, reusing objects
    * where possible.
    */
-  private static class CleanseMapper extends Mapper<LongWritable, Text, RecordKey, AvroValue<Record>> {
+  private static class Mapper
+      extends org.apache.hadoop.mapreduce.Mapper<LongWritable, Text, RecordKey, AvroValue<Record>> {
 
     private final Record EMPTY_RECORD = new Record();
-    private final String[] EMPTY_STRING_ARRAY = new String[0];
-
-    private final DateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-DD");
 
     private String splitFileName;
     private String splitFilePathRelative;
@@ -171,8 +166,9 @@ public class Cleanse extends Driver {
     private AvroValue<Record> recordValueWrapped = new AvroValue<Record>();
 
     @Override
-    protected void setup(Mapper<LongWritable, Text, RecordKey, AvroValue<Record>>.Context context)
-        throws IOException, InterruptedException {
+    protected void setup(
+        org.apache.hadoop.mapreduce.Mapper<LongWritable, Text, RecordKey, AvroValue<Record>>.Context context)
+            throws IOException, InterruptedException {
       Path splitFilePath = ((FileSplit) context.getInputSplit()).getPath();
       splitFileName = splitFilePath.getName();
       splitFilePathRelative = new StringBuilder(128).append(splitFilePath.getParent().getParent().getParent().getName())
@@ -183,30 +179,10 @@ public class Cleanse extends Driver {
 
     @Override
     protected void map(LongWritable key, Text value,
-        Mapper<LongWritable, Text, RecordKey, AvroValue<Record>>.Context context)
+        org.apache.hadoop.mapreduce.Mapper<LongWritable, Text, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
       String valueString = value.toString();
-      String[] valueStrings = EMPTY_STRING_ARRAY;
-      // Note that String.split() implementation is efficient given a single
-      // character length split string, which it chooses not to use as a regex
-      if (splitFileName.endsWith(Constants.DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA_SUFFIX)) {
-        valueStrings = valueString.split(",");
-      } else if (splitFileName.endsWith(Constants.DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB_SUFFIX)) {
-        valueStrings = valueString.split("\t");
-      }
-      boolean recordValid = valueStrings.length == Record.SCHEMA$.getFields().size();
-      if (recordValid) {
-        try {
-          recordValue.setMyTimestamp(DATE_FORMAT.parse(valueStrings[0]).getTime());
-          recordValue.setMyInteger(Integer.parseInt(valueStrings[1]));
-          recordValue.setMyDouble(Double.parseDouble(valueStrings[2]));
-          recordValue.setMyBoolean(Boolean.parseBoolean(valueStrings[3]));
-          recordValue.setMyString(valueStrings[4]);
-        } catch (Exception exception) {
-          // This exception branch is expensive, but assume this is rare
-          recordValid = false;
-        }
-      }
+      boolean recordValid = RecordType.deserialise(recordValue, splitFileName, valueString);
       recordKey.setValid(recordValid);
       recordKey.setPath(splitFilePathRelative);
       recordKey.setSource(recordValid ? null : valueString);
@@ -218,14 +194,15 @@ public class Cleanse extends Driver {
   }
 
   /**
-   * Cleanse reducer, write out cleansed, partitioned {@link Record Records},
-   * filtering malformed and duplicate records as necessary.<br>
+   * Reducer, write out cleansed, partitioned {@link Record Records}, filtering
+   * malformed and duplicate records as necessary.<br>
    * <br>
    * Note this class is not thread-safe but is jvm-reuse-safe, reusing objects
    * where possible.
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  private static class CleanseReducer extends Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>> {
+  private static class Reducer
+      extends org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>> {
 
     private static final String PARTITION_YEAR = "year=";
     private static final String PARTITION_MONTH = "month=";
@@ -241,8 +218,9 @@ public class Cleanse extends Driver {
     private Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
     @Override
-    protected void setup(Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
-        throws IOException, InterruptedException {
+    protected void setup(
+        org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
+            throws IOException, InterruptedException {
       multipleOutputs = new MultipleOutputs(context);
       multipleOutputsAvro = new AvroMultipleOutputs(context);
     }
@@ -255,25 +233,27 @@ public class Cleanse extends Driver {
 
     @Override
     protected void reduce(RecordKey key, Iterable<AvroValue<Record>> values,
-        Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
+        org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
       records.clear();
       Iterator<AvroValue<Record>> valuesIterator = values.iterator();
       while (valuesIterator.hasNext()) {
         AvroValue<Record> record = valuesIterator.next();
-        context.getCounter(Counter.RECORDS).increment(1);
+        context.getCounter(RecordCounter.RECORDS).increment(1);
         if (key.isValid()) {
-          Counter counter = records.add(record) ? Counter.RECORDS_CLEANSED : Counter.RECORDS_DUPLICATE;
+          RecordCounter counter = records.add(record) ? RecordCounter.RECORDS_CLEANSED
+              : RecordCounter.RECORDS_DUPLICATE;
           this.record.datum(record.datum());
           calendar.setTimeInMillis(record.datum().getMyTimestamp());
           string.setLength(0);
-          multipleOutputsAvro.write(OUTPUT_AVRO, this.record, NullWritable.get(), string
-              .append(
-                  counter.equals(Counter.RECORDS_CLEANSED) ? Constants.DIR_DS_MYDATASET_PROCESSED_CLEANSED_AVRO_RELATIVE
+          multipleOutputsAvro.write(OUTPUT_AVRO, this.record, NullWritable.get(),
+              string
+                  .append(counter.equals(RecordCounter.RECORDS_CLEANSED)
+                      ? Constants.DIR_DS_MYDATASET_PROCESSED_CLEANSED_AVRO_RELATIVE
                       : Constants.DIR_DS_MYDATASET_PROCESSED_DUPLICATE_AVRO_RELATIVE)
-              .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR))
-              .append(Path.SEPARATOR_CHAR).append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1)
-              .append(Path.SEPARATOR_CHAR).append(PARTITION_FILE).toString());
+                  .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR))
+                  .append(Path.SEPARATOR_CHAR).append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1)
+                  .append(Path.SEPARATOR_CHAR).append(PARTITION_FILE).toString());
           context.getCounter(counter).increment(1);
         } else {
           source.set(key.getSource());
@@ -281,7 +261,7 @@ public class Cleanse extends Driver {
           multipleOutputs.write(OUTPUT_TEXT, NullWritable.get(), source,
               string.append(Constants.DIR_DS_MYDATASET_MALFORMED).append(Path.SEPARATOR_CHAR).append(key.getPath())
                   .toString());
-          context.getCounter(Counter.RECORDS_MALFORMED).increment(1);
+          context.getCounter(RecordCounter.RECORDS_MALFORMED).increment(1);
         }
       }
     }

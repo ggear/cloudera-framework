@@ -7,12 +7,13 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.cloudera.example.ConstantsTest;
+import com.cloudera.example.TestConstants;
 import com.cloudera.example.process.Cleanse;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.MiniClusterDfsMrHiveTest;
@@ -21,9 +22,13 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Test dataset tables
  */
+@Ignore
 @RunWith(Parameterized.class)
-public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest {
+public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants {
 
+  /**
+   * Paramaterise the unit tests
+   */
   @Parameters
   public static Iterable<Object[]> parameters() {
     try {
@@ -78,20 +83,6 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest
     }
   }
 
-  public TableTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
-      @SuppressWarnings("rawtypes") Map[] metadata) {
-    super(sources, destinations, datasets, subsets, labels, metadata);
-  }
-
-  /**
-   * Setup the data
-   */
-  @Before
-  public void setupData() throws Exception {
-    Assert.assertEquals(Driver.RETURN_SUCCESS, new Cleanse(getConf())
-        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
-  }
-
   /**
    * Test the tables
    */
@@ -108,4 +99,17 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements ConstantsTest
     }
   }
 
+  public TableTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
+      @SuppressWarnings("rawtypes") Map[] metadata) {
+    super(sources, destinations, datasets, subsets, labels, metadata);
+  }
+
+  /**
+   * Setup the data
+   */
+  @Before
+  public void setupData() throws Exception {
+    Assert.assertEquals(Driver.RETURN_SUCCESS, new Cleanse(getConf())
+        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+  }
 }

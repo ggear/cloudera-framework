@@ -10,10 +10,8 @@ public interface Constants {
   public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT = DIR_DS_MYDATASET_RAW + "/source/text";
   public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB = DIR_DS_MYDATASET_RAW_SOURCE_TEXT
       + "/tab-delim/none";
-  public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB_SUFFIX = ".tsv";
   public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA = DIR_DS_MYDATASET_RAW_SOURCE_TEXT
       + "/comma-delim/none";
-  public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA_SUFFIX = ".csv";
   public static final String DIR_DS_MYDATASET_PROCESSED = DIR_DS_MYDATASET + "/processed";
   public static final String DIR_DS_MYDATASET_CLEANSED = "cleansed";
   public static final String DIR_DS_MYDATASET_PROCESSED_CLEANSED = DIR_DS_MYDATASET_PROCESSED + "/"
@@ -35,7 +33,7 @@ public interface Constants {
   public static final String DIR_DS_MYDATASET_PROCESSED_MALFORMED_RELATIVE = DIR_DS_MYDATASET_MALFORMED
       + "/avro/binary/none";
 
-  public static final String DDL_DIR = "/ddl";
+  public static final String DDL_DIR = "/ddl/hive";
   public static final String DDL_FILE_TEXT = "table_text.ddl";
   public static final String DDL_FILE_AVRO = "table_avro.ddl";
   public static final String DDL_FILE_PARQUET = "table_parquet.ddl";
@@ -46,10 +44,6 @@ public interface Constants {
   public static final String DDL_TABLEAVROSCHEMA = "my.table.avroschema";
   public static final String DDL_TABLELOCATION = "my.table.location";
 
-  public static final String MODEL_AVRO = "/avro/model.avsc";
-
-  public enum Counter {
-    RECORDS, RECORDS_CLEANSED, RECORDS_DUPLICATE, RECORDS_MALFORMED;
-  }
+  public static final String MODEL_AVRO = "/cfg/avro/model.avsc";
 
 }

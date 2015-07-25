@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Base class for all local-cluster DFS and MR tests, single-process,
  * multi-threaded DFS facade over local file system and local MR job runner,
- * provides fast, functional read/write API compatibility, provides isolated and
+ * provides fast, functional read/write API compatibility, isolated and
  * idempotent runtime
  */
 public class LocalClusterDfsMrTest extends BaseTest {

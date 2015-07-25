@@ -53,6 +53,8 @@
 		<hadoop-flume.version>1.5.0-cdh5.4.4</hadoop-flume.version>
 		<hadoop-avro.version>1.7.6-cdh5.4.4</hadoop-avro.version>
 		<hadoop-parquet.version>1.5.0-cdh5.4.4</hadoop-parquet.version>
+		<hadoop-zookeeper.version>3.4.5-cdh5.4.4</hadoop-zookeeper.version>
+		<hadoop-kafka.version>0.8.2.0-kafka-1.3.0</hadoop-kafka.version>
 
 		<slf4j.version>1.7.5</slf4j.version>
 		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>

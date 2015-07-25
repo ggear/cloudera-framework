@@ -10,15 +10,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.cloudera.example.ConstantsTest;
+import com.cloudera.example.TestConstants;
 import com.cloudera.framework.main.test.LocalClusterDfsMrTest;
 
 /**
  * Test dataset ingest
  */
 @RunWith(Parameterized.class)
-public class IngestTest extends LocalClusterDfsMrTest implements ConstantsTest {
+public class IngestTest extends LocalClusterDfsMrTest implements TestConstants {
 
+  /**
+   * Paramaterise the unit tests
+   */
   @Parameters
   public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
@@ -43,11 +46,6 @@ public class IngestTest extends LocalClusterDfsMrTest implements ConstantsTest {
     });
   }
 
-  public IngestTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
-      @SuppressWarnings("rawtypes") Map[] metadata) {
-    super(sources, destinations, datasets, subsets, labels, metadata);
-  }
-
   @Test
   public void testIngest() throws Exception {
     Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB))));
@@ -56,6 +54,11 @@ public class IngestTest extends LocalClusterDfsMrTest implements ConstantsTest {
     Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA))));
     Assert.assertTrue(
         getFileSystem().listFiles(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA)), true).hasNext());
+  }
+
+  public IngestTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
+      @SuppressWarnings("rawtypes") Map[] metadata) {
+    super(sources, destinations, datasets, subsets, labels, metadata);
   }
 
 }

@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Base class for all local-cluster DFS, MR and Hive tests, single-process,
  * multi-threaded DFS, MR and Hive daemons, exercises the full read/write path
- * of the stack, provides isolated and idempotent runtime
+ * of the stack providing isolated and idempotent runtime
  */
 public class MiniClusterDfsMrHiveTest extends BaseTest {
 

@@ -25,7 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Local-cluster unit tests
+ * LocalClusterDfsMrTest system test
  */
 public class LocalClusterDfsMrTestTest extends LocalClusterDfsMrTest {
 

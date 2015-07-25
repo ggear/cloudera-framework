@@ -16,7 +16,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Base test unit tests
+ * Base system test
  */
 @RunWith(value = Parameterized.class)
 public class BaseTestTest extends LocalClusterDfsMrTest {

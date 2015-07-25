@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Mini-cluster DFS, MR and Hive unit tests
+ * MiniClusterDfsMrHiveTest system test
  */
 public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
 

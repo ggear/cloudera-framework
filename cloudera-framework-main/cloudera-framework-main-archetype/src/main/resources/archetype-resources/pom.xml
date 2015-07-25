@@ -22,6 +22,27 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.cloudera.framework.main.client</groupId>
+			<artifactId>cloudera-framework-main-client-zookeeper</artifactId>
+			<version>${project.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cloudera.framework.main.client</groupId>
+			<artifactId>cloudera-framework-main-client-kafka</artifactId>
+			<version>${project.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cloudera.framework.main.client</groupId>
+			<artifactId>cloudera-framework-main-client-flume</artifactId>
+			<version>${project.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.cloudera.framework.main</groupId>
 			<artifactId>cloudera-framework-main-common</artifactId>
 			<version>${project.version}</version>
@@ -47,7 +68,7 @@
 							<goal>schema</goal>
 						</goals>
 						<configuration>
-							<sourceDirectory>src/main/resources/avro/</sourceDirectory>
+							<sourceDirectory>src/main/resources/cfg/avro/</sourceDirectory>
 							<outputDirectory>src/main/java/</outputDirectory>
 						</configuration>
 					</execution>
