@@ -32,10 +32,10 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Base class for all local-cluster DFS, MR, Kafka and Flume tests,
- * single-process, multi-threaded DFS facade over local file system and local MR
- * job runner, provides fast, functional read/write API compatibility, isolated
- * and idempotent runtime
+ * Base class for all local-cluster DFS, MR and Flume tests, single-process,
+ * multi-threaded DFS facade over local file system and local MR job runner,
+ * provides fast, functional read/write API compatibility, isolated and
+ * idempotent runtime
  */
 public class LocalClusterDfsMrFlumeTest extends BaseTest {
 

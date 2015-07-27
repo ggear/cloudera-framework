@@ -12,6 +12,7 @@ import org.apache.flume.Context;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
 import org.apache.flume.PollableSource;
+import org.apache.flume.Source;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.event.EventBuilder;
 import org.apache.flume.instrumentation.SourceCounter;
@@ -22,28 +23,35 @@ import org.slf4j.LoggerFactory;
 import com.cloudera.example.model.Record;
 import com.cloudera.example.model.RecordType;
 
+/**
+ * Flume {@link Source} to generate dataset events
+ */
 public class Stream extends AbstractSource implements Configurable, PollableSource {
 
-  public static final String HEADER_TYPE = "my_type";
-  public static final String HEADER_BATCH = "my_batch";
-  public static final String HEADER_INDEX = "my_index";
-  public static final String HEADER_TOTAL = "my_total";
-  public static final String HEADER_AGENT_ID = "my_agent_id";
-  public static final String HEADER_TIMESTAMP = "my_timestamp";
+  public static final String HEADER_TYPE = "type";
+  public static final String HEADER_BATCH = "batch";
+  public static final String HEADER_INDEX = "index";
+  public static final String HEADER_TOTAL = "total";
+  public static final String HEADER_AGENT_ID = "agent";
+  public static final String HEADER_TIMESTAMP = "timestamp";
 
   public static final String PROPERTY_POLL_MS = "pollMs";
   public static final String PROPERTY_POLL_TICKS = "pollTicks";
   public static final String PROPERTY_BATCH_SIZE = "batchSize";
   public static final String PROPERTY_RECORD_TYPE = "recordType";
+  public static final String PROPERTY_RECORD_NUMBER = "recordNumber";
 
   public static final String AGENT_ID = UUID.randomUUID().toString();
+
+  private static final int RECORD_SIZE_TYPICAL = 128;
 
   private static final Logger LOG = LoggerFactory.getLogger(Stream.class);
 
   private int pollMs = 1000;
   private int pollTicks = 0;
   private int batchSize = 1;
-  private RecordType recordType = RecordType.TEXT_COMMA;
+  private RecordType recordType = RecordType.TEXT_CSV;
+  private int recordNumber = 10;
 
   private List<Event> eventBatch;
   private SourceCounter sourceCounter;
@@ -70,6 +78,11 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     } catch (IllegalArgumentException exception) {
       throw new IllegalArgumentException(
           "Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_TYPE + "] value [" + recordType + "]");
+    }
+    recordNumber = context.getInteger(PROPERTY_RECORD_NUMBER, recordNumber);
+    if (recordNumber < 1) {
+      throw new IllegalArgumentException("Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_NUMBER
+          + "] value [" + recordNumber + "]");
     }
     if (sourceCounter == null) {
       sourceCounter = new SourceCounter(getName());
@@ -102,7 +115,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
   private Map<String, String> getEventHeader(long timestamp) {
     Map<String, String> header = new HashMap<String, String>();
     header.put(HEADER_AGENT_ID, AGENT_ID);
-    header.put(HEADER_TYPE, recordType.getSuffix());
+    header.put(HEADER_TYPE, recordType.getQualifier());
     header.put(HEADER_TIMESTAMP, "" + timestamp);
     return header;
   }
@@ -146,10 +159,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     }
     Status status = Status.BACKOFF;
     try {
-
-      // TODO Paramaterise invocation
-      int recordNumber = 10;
-      StringBuilder record = new StringBuilder(recordNumber * 128);
+      StringBuilder record = new StringBuilder(recordNumber * RECORD_SIZE_TYPICAL);
       for (int i = 0; i < recordNumber; i++) {
         record
             .append(recordType.serialise(Record.newBuilder().setMyTimestamp(System.currentTimeMillis())
@@ -157,7 +167,6 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
                 .setMyBoolean(Math.random() < 0.5 ? true : false).setMyString(UUID.randomUUID().toString()).build()))
             .append("\n");
       }
-
       processEvent(EventBuilder.withBody(record.toString(), Charset.forName(Charsets.UTF_8.name()),
           getEventHeader(System.currentTimeMillis())), false);
       int sleepMs = 0;
@@ -251,7 +260,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
 
     private Event getEventWithHeaders(Event event, String batch, int index, int total, long timestamp) {
       putHeader(event, HEADER_AGENT_ID, AGENT_ID);
-      putHeader(event, HEADER_TYPE, RecordType.TEXT_COMMA.getSuffix());
+      putHeader(event, HEADER_TYPE, RecordType.TEXT_CSV.getQualifier());
       putHeader(event, HEADER_TIMESTAMP, "" + timestamp);
       putHeader(event, HEADER_BATCH, batch, true);
       putHeader(event, HEADER_INDEX, String.format("%03d", index), true);

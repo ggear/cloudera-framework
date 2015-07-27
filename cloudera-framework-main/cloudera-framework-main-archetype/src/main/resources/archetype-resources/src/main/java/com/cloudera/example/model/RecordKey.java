@@ -9,7 +9,7 @@ import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.io.WritableUtils;
 
 /**
- * Store meta-data against {@link Record Records}, allowing efficient equality
+ * Store meta-data against {@link Record records}, allowing efficient equality
  * and comparison for sorting
  */
 public class RecordKey implements WritableComparable<RecordKey> {

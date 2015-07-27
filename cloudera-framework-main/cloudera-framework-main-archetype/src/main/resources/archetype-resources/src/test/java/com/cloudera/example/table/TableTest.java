@@ -14,7 +14,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.TestConstants;
-import com.cloudera.example.process.Cleanse;
+import com.cloudera.example.process.Process;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.MiniClusterDfsMrHiveTest;
 import com.google.common.collect.ImmutableMap;
@@ -37,12 +37,12 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
           {
               // Both tab and comma dataset metadata
               new String[] { DS_DIR, DS_DIR, }, //
-              new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA, }, //
+              new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
               new String[] { DS_MYDATASET, DS_MYDATASET }, //
               new String[][] {
                   // Both tab and comma dataset
-                  { DSS_MYDATASET_TAB }, //
-                  { DSS_MYDATASET_COMMA }, //
+                  { DSS_MYDATASET_TSV }, //
+                  { DSS_MYDATASET_CSV }, //
           }, // All tab and comma dataset subsets
               new String[][][] {
                   //
@@ -54,13 +54,13 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
                   ImmutableMap.of(//
                       DDL_FILE, DDL_FILE_TEXT, //
                       DDL_TABLEDELIM, "\\t", //
-                      DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB, //
+                      DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, //
                       DDL_ROWS, "36" //
               ), // Raw text comma
                   ImmutableMap.of(//
                       DDL_FILE, DDL_FILE_TEXT, //
                       DDL_TABLEDELIM, ",", //
-                      DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA, //
+                      DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, //
                       DDL_ROWS, "36" //
               ), // Processed cleansed avro
                   ImmutableMap.of(//
@@ -84,7 +84,7 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
   }
 
   /**
-   * Test the tables
+   * Test dataset tables
    */
   @Test
   @SuppressWarnings("unchecked")
@@ -109,7 +109,7 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
    */
   @Before
   public void setupData() throws Exception {
-    Assert.assertEquals(Driver.RETURN_SUCCESS, new Cleanse(getConf())
+    Assert.assertEquals(Driver.RETURN_SUCCESS, new Process(getConf())
         .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
   }
 }

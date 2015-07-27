@@ -8,10 +8,8 @@ public interface Constants {
   public static final String DIR_DS_MYDATASET = "/my-dataset";
   public static final String DIR_DS_MYDATASET_RAW = DIR_DS_MYDATASET + "/raw";
   public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT = DIR_DS_MYDATASET_RAW + "/source/text";
-  public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB = DIR_DS_MYDATASET_RAW_SOURCE_TEXT
-      + "/tab-delim/none";
-  public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA = DIR_DS_MYDATASET_RAW_SOURCE_TEXT
-      + "/comma-delim/none";
+  public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV = DIR_DS_MYDATASET_RAW_SOURCE_TEXT + "/tsv/none";
+  public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV = DIR_DS_MYDATASET_RAW_SOURCE_TEXT + "/csv/none";
   public static final String DIR_DS_MYDATASET_PROCESSED = DIR_DS_MYDATASET + "/processed";
   public static final String DIR_DS_MYDATASET_CLEANSED = "cleansed";
   public static final String DIR_DS_MYDATASET_PROCESSED_CLEANSED = DIR_DS_MYDATASET_PROCESSED + "/"

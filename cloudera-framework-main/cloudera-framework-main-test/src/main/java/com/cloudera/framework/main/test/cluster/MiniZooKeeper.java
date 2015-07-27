@@ -16,6 +16,9 @@ import org.apache.zookeeper.server.ZooKeeperServer;
 
 import com.cloudera.framework.main.test.BaseTest;
 
+/**
+ * Provide a mini-ZooKeeper cluster
+ */
 public class MiniZooKeeper {
 
   public static final int ZOOKEEPER_TICK_MS = 2000;

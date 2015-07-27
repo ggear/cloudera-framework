@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Provide host network utilities
+ */
 public class HostNetwork {
 
   public static final String SERVER_BIND_IP = "127.0.0.1";

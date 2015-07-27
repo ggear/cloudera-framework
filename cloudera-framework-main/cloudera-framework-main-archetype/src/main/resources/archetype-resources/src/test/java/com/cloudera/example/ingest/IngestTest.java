@@ -25,35 +25,38 @@ public class IngestTest extends LocalClusterDfsMrTest implements TestConstants {
   @Parameters
   public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
-        //
+        // All datasets
         {
-            //
+            // Both tab and comma dataset metadata
             new String[] { DS_DIR, DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA, }, //
+            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
             new String[] { DS_MYDATASET, DS_MYDATASET }, //
             new String[][] {
-                //
-                { null }, //
-                { null }, //
-        }, //
+                // Both tab and comma dataset
+                { DSS_MYDATASET_TSV }, //
+                { DSS_MYDATASET_CSV }, //
+        }, // All tab and comma dataset subsets
             new String[][][] {
                 //
                 { { null }, }, //
                 { { null }, }, //
-        }, //
+        }, // Counter equality tests
             new Map[] {}, //
         }, //
     });
   }
 
+  /**
+   * Test dataset ingest
+   */
   @Test
   public void testIngest() throws Exception {
-    Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB))));
+    Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV))));
     Assert.assertTrue(
-        getFileSystem().listFiles(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TAB)), true).hasNext());
-    Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA))));
+        getFileSystem().listFiles(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV)), true).hasNext());
+    Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV))));
     Assert.assertTrue(
-        getFileSystem().listFiles(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_COMMA)), true).hasNext());
+        getFileSystem().listFiles(new Path(getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV)), true).hasNext());
   }
 
   public IngestTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,

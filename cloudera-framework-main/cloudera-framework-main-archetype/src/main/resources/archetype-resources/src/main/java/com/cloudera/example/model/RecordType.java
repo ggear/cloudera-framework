@@ -5,29 +5,30 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Define record source types
+ * Define {@link Record record} source types
  */
 public enum RecordType {
 
-  TEXT_TAB(".tsv", "\\t"), TEXT_COMMA(".csv", ",");
+  TEXT_TSV(".tsv", "\\t"), //
+  TEXT_CSV(".csv", ",");
 
   private static final int BYTES_TYPICAL_LENGTH = 512;
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-  private String suffix;
+  private String qualifier;
   private String delimiter;
 
-  private RecordType(String suffix) {
-    this.suffix = suffix;
+  private RecordType(String qualifier) {
+    this.qualifier = qualifier;
   }
 
-  private RecordType(String suffix, String delimiter) {
-    this.suffix = suffix;
+  private RecordType(String qualifier, String delimiter) {
+    this.qualifier = qualifier;
     this.delimiter = delimiter;
   }
 
-  public String getSuffix() {
-    return suffix;
+  public String getQualifier() {
+    return qualifier;
   }
 
   public String getDelimiter() {
@@ -72,13 +73,13 @@ public enum RecordType {
    */
   public static boolean deserialise(Record record, String name, String value) {
     String[] values = null;
-    if (name.endsWith(TEXT_TAB.getSuffix())) {
+    if (name.endsWith(TEXT_TSV.getQualifier())) {
       // Note that String.split() implementation is efficient given a single
       // character length split string, which it chooses not to use as a regex
-      values = value.split(TEXT_TAB.getDelimiter());
-    } else if (name.endsWith(TEXT_COMMA.getSuffix())) {
+      values = value.split(TEXT_TSV.getDelimiter());
+    } else if (name.endsWith(TEXT_CSV.getQualifier())) {
       // Ditto as above
-      values = value.split(TEXT_COMMA.getDelimiter());
+      values = value.split(TEXT_CSV.getDelimiter());
     }
     boolean valid = values != null && values.length == Record.SCHEMA$.getFields().size();
     if (valid) {

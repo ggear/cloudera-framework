@@ -22,6 +22,10 @@ import kafka.server.KafkaConfig;
 import kafka.server.KafkaServerStartable;
 import kafka.utils.ZKStringSerializer$;
 
+/**
+ * Provide a mini-Kafka cluster, requires an externally managed mini-ZooKeeper
+ * instance
+ */
 public class MiniKafka {
 
   public static final int KAFKA_POLL_MS = 250;

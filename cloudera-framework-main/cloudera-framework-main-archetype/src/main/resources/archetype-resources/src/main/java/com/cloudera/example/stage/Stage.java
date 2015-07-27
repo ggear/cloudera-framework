@@ -1,4 +1,4 @@
-package com.cloudera.example.process;
+package com.cloudera.example.stage;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -42,26 +42,29 @@ import com.cloudera.example.model.RecordType;
 import com.cloudera.framework.main.common.Driver;
 
 /**
- * Cleanse driver, take comma and tab delimitered fields in text files,
- * validate, cleanse and de-dupe them, rewriting into a canonical, partitioned
- * row Avro format as per {@link Record#getClassSchema() schema} and filtering
- * off erroneous records, retaining their original source format
+ * Stage driver, take a dataset of various formats (command and tab field
+ * separated UTF8/16, new line record delimietered text files) with a known
+ * naming scheme and stage their records into an ingest timestamp partitioned
+ * staging set, written as sequence files with timestamp key and original record
+ * format UTF16 values.
  */
-public class Cleanse extends Driver {
+public class Stage extends Driver {
+
+  // TODO Provide implementation
 
   protected static final String OUTPUT_TEXT = "text";
   protected static final String OUTPUT_AVRO = "avro";
 
-  private static final Logger LOG = LoggerFactory.getLogger(Cleanse.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Stage.class);
 
   private Set<Path> inputPaths;
   private Path outputPath;
 
-  public Cleanse() {
+  public Stage() {
     super();
   }
 
-  public Cleanse(Configuration confguration) {
+  public Stage(Configuration confguration) {
     super(confguration);
   }
 
@@ -84,7 +87,7 @@ public class Cleanse extends Driver {
   public void reset() {
     super.reset();
     for (RecordCounter counter : RecordCounter.values()) {
-      incrementCounter(Cleanse.class.getCanonicalName(), counter, 0);
+      incrementCounter(Stage.class.getCanonicalName(), counter, 0);
     }
   }
 
@@ -121,7 +124,7 @@ public class Cleanse extends Driver {
   public int execute() throws Exception {
     Job job = Job.getInstance(getConf());
     job.setJobName(getClass().getSimpleName());
-    job.setJarByClass(Cleanse.class);
+    job.setJarByClass(Stage.class);
     for (Path inputPath : inputPaths) {
       FileInputFormat.addInputPath(job, inputPath);
     }

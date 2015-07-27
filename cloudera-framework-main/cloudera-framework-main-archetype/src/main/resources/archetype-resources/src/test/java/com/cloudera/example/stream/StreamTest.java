@@ -77,6 +77,9 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
     });
   }
 
+  /**
+   * Test dataset stream
+   */
   @Test
   @SuppressWarnings("unchecked")
   public void testStream() throws IOException, EventDeliveryException {

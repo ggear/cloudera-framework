@@ -35,7 +35,8 @@ import parquet.hadoop.ParquetOutputFormat;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 /**
- * Base class for all unit tests, not intended for direct extension
+ * Base class for all unit tests, not intended for direct extension, the
+ * concrete classes in this package are used for this purpose
  */
 public abstract class BaseTest {
 
