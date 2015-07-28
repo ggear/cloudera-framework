@@ -71,34 +71,52 @@ public class LocalClusterDfsMrFlumeTest extends BaseTest {
   }
 
   /**
-   * Process a Flume pipeline
-   *
+   * Process a single Flume <code>sink</code> and <code>source</code> pipeline,
+   * wired together automatically
+   * 
    * @param substitutions
+   *          Config file $KEY, VALUE substitutions
    * @param configFile
+   *          optional (can be <code>null</code>) classpath relative Flume
+   *          config, including <code>agentName</code>, <code>sourceName</code>
+   *          and <code>sinkName</code> prefixed configuration properties
    * @param configSourceOverlay
+   *          configuration properties overlay for the source, not prefixed with
+   *          <code>agentName</code> or <code>sourceName</code>
    * @param configSinkOverlay
+   *          configuration properties overlay for the sink, not prefixed with
+   *          <code>agentName</code> or <code>sinkName</code>
    * @param agentName
+   *          the agent name
    * @param sourceName
+   *          the source name
    * @param sinkName
+   *          the sink name
    * @param source
+   *          the source instance
    * @param sink
+   *          the sink instance
    * @param outputPath
+   *          the optional (can be <code>null</code>) root DFS output path for
+   *          the sink
    * @param iterations
-   * @return
-   * @throws IOException
-   * @throws EventDeliveryException
+   *          the number of iterations to run the source and sink for
+   * @return the number of files existing post-process under
+   *         <code>outputPath</code>, 0 if <code>outputPath</code> is
+   *         <code>null</code>
    */
-  public int processPipeline(Map<String, String> substitutions, String configFile,
+  public int processSouceSinkPipeline(Map<String, String> substitutions, String configFile,
       Map<String, String> configSourceOverlay, Map<String, String> configSinkOverlay, String agentName,
       String sourceName, String sinkName, PollableSource source, Sink sink, String outputPath, int iterations)
           throws IOException, EventDeliveryException {
-    InputStream configStream = LocalClusterDfsMrFlumeTest.class.getClassLoader().getResourceAsStream(configFile);
-    if (configStream == null) {
-      throw new IOException("Could not load [" + configFile + "] from classpath");
-    }
     Properties config = new Properties();
-    config.load(configStream);
-    configStream.close();
+    if (configFile != null) {
+      InputStream configStream = LocalClusterDfsMrFlumeTest.class.getClassLoader().getResourceAsStream(configFile);
+      if (configStream != null) {
+        config.load(configStream);
+        configStream.close();
+      }
+    }
     String sinkConfigPrefix = agentName + ".sinks." + sinkName + ".";
     String sourceConfigPrefix = agentName + ".sources." + sourceName + ".";
     Map<String, String> sinkConfig = new HashMap<String, String>();
@@ -118,7 +136,9 @@ public class LocalClusterDfsMrFlumeTest extends BaseTest {
     }
     sinkConfig.putAll(configSinkOverlay);
     sourceConfig.putAll(configSourceOverlay);
-    getFileSystem().mkdirs(new Path(getPathDfs(outputPath)));
+    if (outputPath != null) {
+      getFileSystem().mkdirs(new Path(getPathDfs(outputPath)));
+    }
     Channel channel = new MemoryChannel();
     channel.setName(sourceName + "-" + sinkName + "-channel");
     Configurables.configure(channel, new Context(ImmutableMap.of("keep-alive", "1")));
@@ -144,7 +164,7 @@ public class LocalClusterDfsMrFlumeTest extends BaseTest {
     source.stop();
     sink.stop();
     channel.stop();
-    return listFilesDfs(outputPath).length;
+    return outputPath == null ? 0 : listFilesDfs(outputPath).length;
   }
 
   @BeforeClass

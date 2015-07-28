@@ -84,7 +84,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
   @SuppressWarnings("unchecked")
   public void testStream() throws IOException, EventDeliveryException {
     Assert.assertEquals(((Integer) metadata[2].get(KEY_FLUME_PROCESS_FILE_COUNT)).intValue(),
-        processPipeline(FLUME_SUBSTITUTIONS, FLUME_CONFIG_FILE, metadata[0], metadata[1], FLUME_AGENT_NAME,
+        processSouceSinkPipeline(FLUME_SUBSTITUTIONS, FLUME_CONFIG_FILE, metadata[0], metadata[1], FLUME_AGENT_NAME,
             (String) metadata[2].get(KEY_FLUME_SOURCE_NAME), (String) metadata[2].get(KEY_FLUME_SINK_NAME),
             new Stream(), new HDFSEventSink(), (String) metadata[2].get(KEY_FLUME_OUTPUT_DIR),
             (Integer) metadata[2].get(KEY_FLUME_PROCESS_ITERATIONS)));
