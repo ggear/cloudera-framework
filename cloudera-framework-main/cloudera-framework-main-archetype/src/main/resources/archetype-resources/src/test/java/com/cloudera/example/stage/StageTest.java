@@ -27,6 +27,30 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
   @Parameters
   public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
+        // Single dataset, pristine subset
+        {
+            // Both tab and comma dataset metadata
+            new String[] { DS_DIR, }, //
+            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, }, //
+            new String[] { DS_MYDATASET, }, //
+            new String[][] {
+                // Both tab and comma dataset
+                { DSS_MYDATASET_TSV }, //
+        }, // Pristine tab and comma dataset subsets
+            new String[][][] {
+                //
+                { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
+        }, // Counter equality tests
+            new Map[] {
+                //
+                ImmutableMap.of(Stage.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.FILES, 1L, //
+                        RecordCounter.FILES_PARTITIONED, 1L, //
+                        RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+        }, //
+        }, //
         // All datasets
         {
             // Both tab and comma dataset metadata
@@ -45,39 +69,11 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
         }, // Counter equality tests
             new Map[] {
                 //
-                ImmutableMap.of(Process.class.getCanonicalName(),
+                ImmutableMap.of(Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 72L, //
-                        RecordCounter.RECORDS_CLEANSED, 10L, //
-                        RecordCounter.RECORDS_DUPLICATE, 30L, //
-                        RecordCounter.RECORDS_MALFORMED, 32L//
-            )), //
-        }, //
-        }, //
-        // Pristine datasets
-        {
-            // Both tab and comma dataset metadata
-            new String[] { DS_DIR, DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
-            new String[] { DS_MYDATASET, DS_MYDATASET }, //
-            new String[][] {
-                // Both tab and comma dataset
-                { DSS_MYDATASET_TSV }, //
-                { DSS_MYDATASET_CSV }, //
-        }, // Pristine tab and comma dataset subsets
-            new String[][][] {
-                //
-                { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
-                { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
-        }, // Counter equality tests
-            new Map[] {
-                //
-                ImmutableMap.of(Process.class.getCanonicalName(),
-                    ImmutableMap.of(//
-                        RecordCounter.RECORDS, 20L, //
-                        RecordCounter.RECORDS_CLEANSED, 10L, //
-                        RecordCounter.RECORDS_DUPLICATE, 10L, //
-                        RecordCounter.RECORDS_MALFORMED, 0L//
+                        RecordCounter.FILES, 92L, //
+                        RecordCounter.FILES_PARTITIONED, 58L, //
+                        RecordCounter.FILES_MALFORMED, 34L //
             )), //
         }, //
         }, //
@@ -85,16 +81,14 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
   }
 
   /**
-   * Test dataset process
+   * Test stage
    */
   @Test
-  public void testProcess() throws Exception {
+  public void testStage() throws Exception {
     Driver driver = new Stage(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
-
-    // TODO Re-enable counter checking
-    // assertCounterEquals(metadata[0], driver.getCounters());
+        driver.runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+    assertCounterEquals(metadata[0], driver.getCounters());
   }
 
   public StageTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,

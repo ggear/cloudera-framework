@@ -19,17 +19,17 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormatNoCheck;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,23 +41,29 @@ import com.cloudera.example.model.RecordKey;
 import com.cloudera.example.model.RecordType;
 import com.cloudera.framework.main.common.Driver;
 
+// TODO Provide implementation
+
 /**
- * Process driver, take comma and tab delimitered fields in text files,
- * validate, cleanse and de-dupe them, rewriting into a canonical, partitioned
- * row Avro format as per {@link Record#getClassSchema() schema} and filtering
- * off erroneous records, retaining their original source format
+ * Process driver, take a set of staged sequence files and rewrite them into
+ * consolidated, schema partitioned, row order Avro
+ * {@link Record#getClassSchema() files}. The driver can be configured as a
+ * pass-through, de-depulication and most-recent filter. Malformed files are
+ * annexed off and written in the staging format with {@link RecordKey key} and
+ * original text value.
  */
 public class Process extends Driver {
 
-  // TODO Provide implementation
+  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS,
+      RecordCounter.RECORDS_CLEANSED, RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
 
-  protected static final String OUTPUT_TEXT = "text";
   protected static final String OUTPUT_AVRO = "avro";
+  protected static final String OUTPUT_SEQUENCE = "sequence";
 
   private static final Logger LOG = LoggerFactory.getLogger(Process.class);
 
-  private Set<Path> inputPaths;
+  private Path inputPath;
   private Path outputPath;
+  private Set<Path> inputPaths;
 
   public Process() {
     super();
@@ -69,7 +75,7 @@ public class Process extends Driver {
 
   @Override
   public String description() {
-    return "Clense my dataset";
+    return "Process my dataset";
   }
 
   @Override
@@ -85,7 +91,7 @@ public class Process extends Driver {
   @Override
   public void reset() {
     super.reset();
-    for (RecordCounter counter : RecordCounter.values()) {
+    for (RecordCounter counter : COUNTERS) {
       incrementCounter(Process.class.getCanonicalName(), counter, 0);
     }
   }
@@ -96,7 +102,7 @@ public class Process extends Driver {
       throw new Exception("Invalid number of arguments");
     }
     FileSystem hdfs = FileSystem.newInstance(getConf());
-    Path inputPath = new Path(arguments[0]);
+    inputPath = new Path(arguments[0]);
     if (!hdfs.exists(inputPath)) {
       throw new Exception("Input path [" + inputPath + "] does not exist");
     }
@@ -124,15 +130,17 @@ public class Process extends Driver {
     Job job = Job.getInstance(getConf());
     job.setJobName(getClass().getSimpleName());
     job.setJarByClass(Process.class);
+    job.getConfiguration().set(Constants.CONFIG_INPUT_PATH, inputPath.toString());
+    job.getConfiguration().set(Constants.CONFIG_OUTPUT_PATH, outputPath.toString());
+    job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
+    job.setInputFormatClass(SequenceFileInputFormat.class);
     for (Path inputPath : inputPaths) {
       FileInputFormat.addInputPath(job, inputPath);
     }
     FileOutputFormat.setOutputPath(job, outputPath);
     LazyOutputFormatNoCheck.setOutputFormatClass(job, TextOutputFormat.class);
-    job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
     job.setSortComparatorClass(RecordKey.RecordKeyComparator.class);
     job.setMapperClass(Mapper.class);
-    job.setInputFormatClass(TextInputFormat.class);
     job.setMapOutputKeyClass(RecordKey.class);
     job.setMapOutputValueClass(AvroValue.class);
     AvroJob.setMapOutputValueSchema(job, Record.getClassSchema());
@@ -140,23 +148,21 @@ public class Process extends Driver {
     job.setNumReduceTasks(inputPaths.size());
     AvroJob.setOutputKeySchema(job, Schema.create(Type.NULL));
     AvroJob.setOutputValueSchema(job, Record.getClassSchema());
-    MultipleOutputs.addNamedOutput(job, OUTPUT_TEXT, TextOutputFormat.class, NullWritable.class, Text.class);
+    MultipleOutputs.addNamedOutput(job, OUTPUT_SEQUENCE, SequenceFileOutputFormat.class, RecordKey.class, Text.class);
     AvroMultipleOutputs.addNamedOutput(job, OUTPUT_AVRO, AvroKeyOutputFormat.class, Record.getClassSchema());
     boolean jobSuccess = job.waitForCompletion(LOG.isInfoEnabled());
-    importCounters(job, new RecordCounter[] { RecordCounter.RECORDS_MALFORMED, RecordCounter.RECORDS_DUPLICATE,
-        RecordCounter.RECORDS_CLEANSED, RecordCounter.RECORDS });
+    importCounters(job, COUNTERS);
     return jobSuccess ? RETURN_SUCCESS : RETURN_FAILURE_RUNTIME;
   }
 
   /**
-   * Mapper, parse both comma and tab separated values into {@link Record
-   * Records} keyed by {@link RecordKey RecordKeys}.<br>
+   * Mapper.<br>
    * <br>
    * Note this class is not thread-safe but is jvm-reuse-safe, reusing objects
    * where possible.
    */
   private static class Mapper
-      extends org.apache.hadoop.mapreduce.Mapper<LongWritable, Text, RecordKey, AvroValue<Record>> {
+      extends org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>> {
 
     private final Record EMPTY_RECORD = new Record();
 
@@ -169,7 +175,7 @@ public class Process extends Driver {
 
     @Override
     protected void setup(
-        org.apache.hadoop.mapreduce.Mapper<LongWritable, Text, RecordKey, AvroValue<Record>>.Context context)
+        org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
       Path splitFilePath = ((FileSplit) context.getInputSplit()).getPath();
       splitFileName = splitFilePath.getName();
@@ -180,14 +186,14 @@ public class Process extends Driver {
     }
 
     @Override
-    protected void map(LongWritable key, Text value,
-        org.apache.hadoop.mapreduce.Mapper<LongWritable, Text, RecordKey, AvroValue<Record>>.Context context)
+    protected void map(RecordKey key, Text value,
+        org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
       String valueString = value.toString();
       boolean recordValid = RecordType.deserialise(recordValue, splitFileName, valueString);
       recordKey.setValid(recordValid);
-      recordKey.setPath(splitFilePathRelative);
-      recordKey.setSource(recordValid ? null : valueString);
+      recordKey.setBatch(splitFilePathRelative);
+      recordKey.setTimestamp(System.currentTimeMillis());
       recordKey.setHash(recordValid ? recordValue.hashCode() : valueString.hashCode());
       recordValueWrapped.datum(recordValid ? recordValue : EMPTY_RECORD);
       context.write(recordKey, recordValueWrapped);
@@ -196,8 +202,7 @@ public class Process extends Driver {
   }
 
   /**
-   * Reducer, write out cleansed, partitioned {@link Record Records}, filtering
-   * malformed and duplicate records as necessary.<br>
+   * Reducer.<br>
    * <br>
    * Note this class is not thread-safe but is jvm-reuse-safe, reusing objects
    * where possible.
@@ -208,7 +213,7 @@ public class Process extends Driver {
 
     private static final String PARTITION_YEAR = "year=";
     private static final String PARTITION_MONTH = "month=";
-    private static final String PARTITION_FILE = "data";
+    private static final String PARTITION_FILE = "mydataset";
 
     private MultipleOutputs multipleOutputs;
     private AvroMultipleOutputs multipleOutputsAvro;
@@ -258,11 +263,11 @@ public class Process extends Driver {
                   .append(Path.SEPARATOR_CHAR).append(PARTITION_FILE).toString());
           context.getCounter(counter).increment(1);
         } else {
-          source.set(key.getSource());
+          // TODO Update for source'less key
+          // source.set(key.getSource());
           string.setLength(0);
-          multipleOutputs.write(OUTPUT_TEXT, NullWritable.get(), source,
-              string.append(Constants.DIR_DS_MYDATASET_MALFORMED).append(Path.SEPARATOR_CHAR).append(key.getPath())
-                  .toString());
+          multipleOutputs.write(OUTPUT_SEQUENCE, key, source, string.append(Constants.DIR_DS_MYDATASET_MALFORMED)
+              .append(Path.SEPARATOR_CHAR).append(key.getBatch()).toString());
           context.getCounter(RecordCounter.RECORDS_MALFORMED).increment(1);
         }
       }

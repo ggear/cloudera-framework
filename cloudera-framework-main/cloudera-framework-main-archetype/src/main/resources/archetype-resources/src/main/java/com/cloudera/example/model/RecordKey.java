@@ -3,6 +3,8 @@ package com.cloudera.example.model;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
@@ -14,19 +16,49 @@ import org.apache.hadoop.io.WritableUtils;
  */
 public class RecordKey implements WritableComparable<RecordKey> {
 
+  private static final Pattern REGEX_PATH = Pattern.compile(
+      ".*/?(([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-]*)\\.([a-z]+)\\.?([a-z]*)/([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-\\.]*)\\.(.*))");
+
   private int hash;
-  private String path;
+  private String type;
+  private String codec;
+  private String container;
+  private long timestamp;
+  private String batch;
   private boolean valid;
-  private String source;
 
   public RecordKey() {
   }
 
-  public RecordKey(int hash, String path, boolean valid, String source) {
+  public RecordKey(int hash, String batch) {
     this.hash = hash;
-    this.path = path;
+    this.batch = batch;
+    this.valid = false;
+    if (batch != null) {
+      Matcher matcher = REGEX_PATH.matcher(batch);
+      if (matcher.matches()) {
+        try {
+          this.type = matcher.group(3);
+          this.codec = matcher.group(4);
+          this.container = matcher.group(2);
+          this.timestamp = Long.parseLong(matcher.group(10));
+          this.batch = matcher.group(1);
+          this.valid = true;
+        } catch (Exception exception) {
+          // ignore
+        }
+      }
+    }
+  }
+
+  public RecordKey(int hash, String type, String codec, String container, long timestamp, String batch, boolean valid) {
+    this.hash = hash;
+    this.type = type;
+    this.codec = codec;
+    this.container = container;
+    this.timestamp = timestamp;
+    this.batch = batch;
     this.valid = valid;
-    this.source = source;
   }
 
   public int getHash() {
@@ -37,12 +69,44 @@ public class RecordKey implements WritableComparable<RecordKey> {
     this.hash = hash;
   }
 
-  public String getPath() {
-    return path;
+  public String getType() {
+    return type;
   }
 
-  public void setPath(String path) {
-    this.path = path;
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getCodec() {
+    return codec;
+  }
+
+  public void setCodec(String codec) {
+    this.codec = codec;
+  }
+
+  public String getContainer() {
+    return container;
+  }
+
+  public void setContainer(String container) {
+    this.container = container;
+  }
+
+  public long getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(long timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  public String getBatch() {
+    return batch;
+  }
+
+  public void setBatch(String batch) {
+    this.batch = batch;
   }
 
   public boolean isValid() {
@@ -53,28 +117,27 @@ public class RecordKey implements WritableComparable<RecordKey> {
     this.valid = valid;
   }
 
-  public String getSource() {
-    return source;
-  }
-
-  public void setSource(String source) {
-    this.source = source;
-  }
-
   @Override
   public void write(DataOutput out) throws IOException {
     WritableUtils.writeVInt(out, hash);
-    WritableUtils.writeString(out, path);
+    WritableUtils.writeString(out, type);
+    WritableUtils.writeString(out, codec);
+    WritableUtils.writeString(out, container);
+    WritableUtils.writeVLong(out, timestamp);
+    WritableUtils.writeString(out, batch);
     WritableUtils.writeVInt(out, valid ? 1 : 0);
-    WritableUtils.writeString(out, source);
+
   }
 
   @Override
   public void readFields(DataInput in) throws IOException {
     hash = WritableUtils.readVInt(in);
-    path = WritableUtils.readString(in);
+    type = WritableUtils.readString(in);
+    codec = WritableUtils.readString(in);
+    container = WritableUtils.readString(in);
+    timestamp = WritableUtils.readVLong(in);
+    batch = WritableUtils.readString(in);
     valid = WritableUtils.readVInt(in) == 0 ? false : true;
-    source = WritableUtils.readString(in);
   }
 
   @Override
@@ -84,7 +147,8 @@ public class RecordKey implements WritableComparable<RecordKey> {
 
   @Override
   public String toString() {
-    return "RecordKey [hash=" + hash + ", path=" + path + ", valid=" + valid + ", source=" + source + "]";
+    return "RecordKey [hash=" + hash + ", type=" + type + ", codec=" + codec + ", container=" + container
+        + ", timestamp=" + timestamp + ", batch=" + batch + ", valid=" + valid + "]";
   }
 
   @Override
@@ -115,4 +179,5 @@ public class RecordKey implements WritableComparable<RecordKey> {
     }
 
   }
+
 }

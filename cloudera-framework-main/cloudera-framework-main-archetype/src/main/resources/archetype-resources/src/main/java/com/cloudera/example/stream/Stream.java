@@ -2,12 +2,14 @@ package com.cloudera.example.stream;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.io.Charsets;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.flume.Context;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
@@ -16,11 +18,14 @@ import org.apache.flume.Source;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.event.EventBuilder;
 import org.apache.flume.instrumentation.SourceCounter;
+import org.apache.flume.sink.hdfs.SequenceFileSerializer;
 import org.apache.flume.source.AbstractSource;
+import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cloudera.example.model.Record;
+import com.cloudera.example.model.RecordKey;
 import com.cloudera.example.model.RecordType;
 
 /**
@@ -293,6 +298,47 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       @Override
       public Interceptor build() {
         return new Interceptor();
+      }
+
+    }
+
+  }
+
+  public static class Serializer implements SequenceFileSerializer {
+
+    private static final String DFS_BATCH_PATTERN = "sequence/%{type}/none/%{batch}_mydataset-%{agent}.seq";
+
+    @Override
+    public Class<RecordKey> getKeyClass() {
+      return RecordKey.class;
+    }
+
+    @Override
+    public Class<Text> getValueClass() {
+      return Text.class;
+    }
+
+    @Override
+    public Iterable<Record> serialize(Event event) {
+      RecordKey key = new RecordKey();
+      Text value = new Text();
+      try {
+        key.setHash(event.getHeaders().get(HEADER_TIMESTAMP).hashCode());
+        key.setTimestamp(Long.parseLong(event.getHeaders().get(HEADER_TIMESTAMP)));
+        key.setBatch(new StrSubstitutor(event.getHeaders(), "%{", "}").replace(DFS_BATCH_PATTERN));
+        value.set(new String(event.getBody(), Charsets.UTF_8.name()));
+        key.setValid(true);
+      } catch (Exception exception) {
+        key.setValid(false);
+      }
+      return Collections.singletonList(new Record(key, value));
+    }
+
+    public static class Builder implements SequenceFileSerializer.Builder {
+
+      @Override
+      public SequenceFileSerializer build(Context context) {
+        return new Serializer();
       }
 
     }

@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
+import com.sun.jersey.api.model.Parameter.Source;
 
 /**
  * Base class for all local-cluster DFS, MR and Flume tests, single-process,
@@ -72,8 +73,10 @@ public class LocalClusterDfsMrFlumeTest extends BaseTest {
 
   /**
    * Process a single Flume <code>sink</code> and <code>source</code> pipeline,
-   * wired together automatically
-   * 
+   * wired together automatically, used to test custom {@link Source sources} or
+   * {@link Sink sinks}. A full Flume deployment is suggested to integration
+   * test a full Flume pipeline configuration.
+   *
    * @param substitutions
    *          Config file $KEY, VALUE substitutions
    * @param configFile

@@ -15,6 +15,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.TestConstants;
 import com.cloudera.example.process.Process;
+import com.cloudera.example.stage.Stage;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.MiniClusterDfsMrHiveTest;
 import com.google.common.collect.ImmutableMap;
@@ -109,7 +110,10 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
    */
   @Before
   public void setupData() throws Exception {
-    Assert.assertEquals(Driver.RETURN_SUCCESS, new Process(getConf())
-        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, new Stage(getConf())
+        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, new Process(getConf()).runner(
+        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_PARTITIONED), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
   }
+
 }

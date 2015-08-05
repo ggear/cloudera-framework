@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -11,6 +12,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.TestConstants;
 import com.cloudera.example.model.RecordCounter;
+import com.cloudera.example.stage.Stage;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.LocalClusterDfsMrTest;
 import com.google.common.collect.ImmutableMap;
@@ -20,13 +22,37 @@ import com.google.common.collect.ImmutableMap;
  */
 @RunWith(Parameterized.class)
 public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants {
-
+  
   /**
    * Paramaterise the unit tests
    */
   @Parameters
   public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
+        // Single dataset, pristine subset
+        {
+            // Both tab and comma dataset metadata
+            new String[] { DS_DIR, }, //
+            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, }, //
+            new String[] { DS_MYDATASET, }, //
+            new String[][] {
+                // Both tab and comma dataset
+                { DSS_MYDATASET_TSV }, //
+        }, // Pristine tab and comma dataset subsets
+            new String[][][] {
+                //
+                { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
+        }, // Counter equality tests
+            new Map[] {
+                //
+                ImmutableMap.of(Stage.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.FILES, 1L, //
+                        RecordCounter.FILES_PARTITIONED, 1L, //
+                        RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+        }, //
+        }, //
         // All datasets
         {
             // Both tab and comma dataset metadata
@@ -54,33 +80,6 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
             )), //
         }, //
         }, //
-        // Pristine datasets
-        {
-            // Both tab and comma dataset metadata
-            new String[] { DS_DIR, DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
-            new String[] { DS_MYDATASET, DS_MYDATASET }, //
-            new String[][] {
-                // Both tab and comma dataset
-                { DSS_MYDATASET_TSV }, //
-                { DSS_MYDATASET_CSV }, //
-        }, // Pristine tab and comma dataset subsets
-            new String[][][] {
-                //
-                { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
-                { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
-        }, // Counter equality tests
-            new Map[] {
-                //
-                ImmutableMap.of(Process.class.getCanonicalName(),
-                    ImmutableMap.of(//
-                        RecordCounter.RECORDS, 20L, //
-                        RecordCounter.RECORDS_CLEANSED, 10L, //
-                        RecordCounter.RECORDS_DUPLICATE, 10L, //
-                        RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
-        }, //
-        }, //
     });
   }
 
@@ -91,7 +90,7 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
   public void testProcess() throws Exception {
     Driver driver = new Process(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+        driver.runner(new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_PARTITIONED), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
 
     // TODO Re-enable counter checking
     // assertCounterEquals(metadata[0], driver.getCounters());
@@ -100,6 +99,15 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
   public ProcessTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
       String[][][] labels, @SuppressWarnings("rawtypes") Map[] metadata) {
     super(sources, destinations, datasets, subsets, labels, metadata);
+  }
+
+  /**
+   * Setup the data
+   */
+  @Before
+  public void setupData() throws Exception {
+    Assert.assertEquals(Driver.RETURN_SUCCESS, new Stage(getConf())
+        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
   }
 
 }

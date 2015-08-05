@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public enum RecordType {
 
-  TEXT_TSV(".tsv", "\\t"), //
-  TEXT_CSV(".csv", ",");
+  TEXT_TSV("tsv", "\\t"), //
+  TEXT_CSV("csv", ",");
 
   private static final int BYTES_TYPICAL_LENGTH = 512;
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");

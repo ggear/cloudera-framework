@@ -85,6 +85,7 @@ public class LocalClusterDfsMrZkKafkaTest extends BaseTest {
   @Before
   public void setUpZookeeper() throws Exception {
     long time = debugMessageHeader(LOG, "setUpZookeeper");
+    // TODO Flush state between tests
     if (LOG.isWarnEnabled()) {
       LOG.warn(LOG_PREFIX + " [setUpZookeeper] does not flush state between tests");
     }
@@ -94,6 +95,7 @@ public class LocalClusterDfsMrZkKafkaTest extends BaseTest {
   @Before
   public void setUpKafka() throws Exception {
     long time = debugMessageHeader(LOG, "setUpKafka");
+    // TODO Flush state between tests
     if (LOG.isWarnEnabled()) {
       LOG.warn(LOG_PREFIX + " [setUpKafka] does not flush state between tests");
     }
