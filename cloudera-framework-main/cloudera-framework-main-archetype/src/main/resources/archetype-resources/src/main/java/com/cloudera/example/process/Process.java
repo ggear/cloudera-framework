@@ -16,14 +16,11 @@ import org.apache.avro.mapreduce.AvroKeyOutputFormat;
 import org.apache.avro.mapreduce.AvroMultipleOutputs;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -40,6 +37,7 @@ import com.cloudera.example.model.RecordCounter;
 import com.cloudera.example.model.RecordKey;
 import com.cloudera.example.model.RecordType;
 import com.cloudera.framework.main.common.Driver;
+import com.cloudera.framework.main.common.util.DfsUtil;
 
 // TODO Provide implementation
 
@@ -64,6 +62,8 @@ public class Process extends Driver {
   private Path inputPath;
   private Path outputPath;
   private Set<Path> inputPaths;
+
+  private FileSystem hdfs;
 
   public Process() {
     super();
@@ -101,7 +101,7 @@ public class Process extends Driver {
     if (arguments == null || arguments.length != 2) {
       throw new Exception("Invalid number of arguments");
     }
-    FileSystem hdfs = FileSystem.newInstance(getConf());
+    hdfs = FileSystem.newInstance(getConf());
     inputPath = new Path(arguments[0]);
     if (!hdfs.exists(inputPath)) {
       throw new Exception("Input path [" + inputPath + "] does not exist");
@@ -109,11 +109,7 @@ public class Process extends Driver {
     if (LOG.isInfoEnabled()) {
       LOG.info("Input path [" + inputPath + "] validated");
     }
-    inputPaths = new HashSet<Path>();
-    RemoteIterator<LocatedFileStatus> inputPathsIterator = hdfs.listFiles(inputPath, true);
-    while (inputPathsIterator.hasNext()) {
-      inputPaths.add(inputPathsIterator.next().getPath().getParent());
-    }
+    inputPaths = DfsUtil.listDirs(hdfs, inputPath, true, true);
     outputPath = new Path(arguments[1]);
     hdfs.mkdirs(outputPath.getParent());
     if (LOG.isInfoEnabled()) {
@@ -124,31 +120,37 @@ public class Process extends Driver {
 
   @Override
   public int execute() throws Exception {
-    Job job = Job.getInstance(getConf());
-    job.setJobName(getClass().getSimpleName());
-    job.setJarByClass(Process.class);
-    job.getConfiguration().set(Constants.CONFIG_INPUT_PATH, inputPath.toString());
-    job.getConfiguration().set(Constants.CONFIG_OUTPUT_PATH, outputPath.toString());
-    job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
-    job.setInputFormatClass(SequenceFileInputFormat.class);
-    for (Path inputPath : inputPaths) {
-      FileInputFormat.addInputPath(job, inputPath);
+    boolean jobSuccess = true;
+    if (inputPaths.size() > 0) {
+      Job job = Job.getInstance(getConf());
+      job.setJobName(getClass().getSimpleName());
+      job.setJarByClass(Process.class);
+      job.getConfiguration().set(Constants.CONFIG_INPUT_PATH, inputPath.toString());
+      job.getConfiguration().set(Constants.CONFIG_OUTPUT_PATH, outputPath.toString());
+      job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
+      job.setInputFormatClass(SequenceFileInputFormat.class);
+      for (Path inputPath : inputPaths) {
+        FileInputFormat.addInputPath(job, inputPath);
+      }
+      job.setMapperClass(Mapper.class);
+      job.setSortComparatorClass(RecordKey.RecordKeyComparator.class);
+      job.setMapOutputKeyClass(RecordKey.class);
+      job.setMapOutputValueClass(AvroValue.class);
+      AvroJob.setMapOutputValueSchema(job, Record.getClassSchema());
+      job.setReducerClass(Reducer.class);
+      job.setNumReduceTasks(inputPaths.size());
+      FileOutputFormat.setOutputPath(job, outputPath);
+      LazyOutputFormatNoCheck.setOutputFormatClass(job, TextOutputFormat.class);
+      AvroJob.setOutputKeySchema(job, Schema.create(Type.NULL));
+      AvroJob.setOutputValueSchema(job, Record.getClassSchema());
+      MultipleOutputs.addNamedOutput(job, OUTPUT_SEQUENCE, SequenceFileOutputFormat.class, RecordKey.class, Text.class);
+      AvroMultipleOutputs.addNamedOutput(job, OUTPUT_AVRO, AvroKeyOutputFormat.class, Record.getClassSchema());
+      jobSuccess = job.waitForCompletion(LOG.isInfoEnabled());
+      for (Path path : inputPaths) {
+        hdfs.createNewFile(new Path(path, FileOutputCommitter.SUCCEEDED_FILE_NAME));
+      }
+      importCounters(job, COUNTERS);
     }
-    FileOutputFormat.setOutputPath(job, outputPath);
-    LazyOutputFormatNoCheck.setOutputFormatClass(job, TextOutputFormat.class);
-    job.setSortComparatorClass(RecordKey.RecordKeyComparator.class);
-    job.setMapperClass(Mapper.class);
-    job.setMapOutputKeyClass(RecordKey.class);
-    job.setMapOutputValueClass(AvroValue.class);
-    AvroJob.setMapOutputValueSchema(job, Record.getClassSchema());
-    job.setReducerClass(Reducer.class);
-    job.setNumReduceTasks(inputPaths.size());
-    AvroJob.setOutputKeySchema(job, Schema.create(Type.NULL));
-    AvroJob.setOutputValueSchema(job, Record.getClassSchema());
-    MultipleOutputs.addNamedOutput(job, OUTPUT_SEQUENCE, SequenceFileOutputFormat.class, RecordKey.class, Text.class);
-    AvroMultipleOutputs.addNamedOutput(job, OUTPUT_AVRO, AvroKeyOutputFormat.class, Record.getClassSchema());
-    boolean jobSuccess = job.waitForCompletion(LOG.isInfoEnabled());
-    importCounters(job, COUNTERS);
     return jobSuccess ? RETURN_SUCCESS : RETURN_FAILURE_RUNTIME;
   }
 
@@ -165,35 +167,48 @@ public class Process extends Driver {
 
     private final RecordKey recordKey = new RecordKey();
     private final Record recordValue = new Record();
-    private final AvroValue<Record> recordValueWrapped = new AvroValue<Record>();
+    private final Text textValue = new Text();
+    private final StringBuilder string = new StringBuilder(512);
+    private final AvroValue<Record> recordWrapped = new AvroValue<Record>();
 
-    private String splitFileName;
-    private String splitFilePathRelative;
+    private MultipleOutputs<RecordKey, Text> multipleOutputs;
 
     @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void setup(
         org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
-      Path splitFilePath = ((FileSplit) context.getInputSplit()).getPath();
-      splitFileName = splitFilePath.getName();
-      splitFilePathRelative = new StringBuilder(128).append(splitFilePath.getParent().getParent().getParent().getName())
-          .append(Path.SEPARATOR_CHAR).append(splitFilePath.getParent().getParent().getName())
-          .append(Path.SEPARATOR_CHAR).append(splitFilePath.getParent().getName()).append(Path.SEPARATOR_CHAR)
-          .append(splitFileName).toString();
+      multipleOutputs = new MultipleOutputs(context);
+    }
+
+    @Override
+    protected void cleanup(
+        org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>>.Context context)
+            throws IOException, InterruptedException {
+      multipleOutputs.close();
     }
 
     @Override
     protected void map(RecordKey key, Text value,
         org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
-      String valueString = value.toString();
-      boolean recordValid = RecordType.deserialise(recordValue, splitFileName, valueString);
-      recordKey.setValid(recordValid);
-      recordKey.setBatch(splitFilePathRelative);
-      recordKey.setTimestamp(System.currentTimeMillis());
-      recordKey.setHash(recordValid ? recordValue.hashCode() : valueString.hashCode());
-      recordValueWrapped.datum(recordValid ? recordValue : EMPTY_RECORD);
-      context.write(recordKey, recordValueWrapped);
+      String valuesString = value.toString();
+      RecordType recordType = RecordType.valueOfQualifier(key.getType());
+      for (String valueString : recordType.recordise(valuesString)) {
+        boolean isRecordValid = recordType == null ? false : recordType.deserialise(recordValue, valueString);
+        if (isRecordValid) {
+          recordKey.setHash(recordValue.hashCode());
+          recordWrapped.datum(isRecordValid ? recordValue : EMPTY_RECORD);
+          context.write(recordKey, recordWrapped);
+        } else {
+          context.getCounter(RecordCounter.RECORDS).increment(1);
+          context.getCounter(RecordCounter.RECORDS_MALFORMED).increment(1);
+          textValue.set(valueString);
+          string.setLength(0);
+          multipleOutputs.write(OUTPUT_SEQUENCE, key, textValue, string.append(Constants.DIR_DS_MYDATASET_MALFORMED)
+              .append(Path.SEPARATOR_CHAR).append(key.getBatch()).toString());
+        }
+      }
     }
 
   }
@@ -204,7 +219,6 @@ public class Process extends Driver {
    * Note this class is not thread-safe but is jvm-reuse-safe, reusing objects
    * where possible.
    */
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   private static class Reducer
       extends org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>> {
 
@@ -212,26 +226,22 @@ public class Process extends Driver {
     private static final String PARTITION_MONTH = "month=";
     private static final String PARTITION_FILE = "mydataset";
 
-    private final Text source = new Text();
     private final AvroKey<Record> record = new AvroKey<Record>();
     private final StringBuilder string = new StringBuilder(512);
     private final Set<AvroValue<Record>> records = new HashSet<AvroValue<Record>>(32);
     private final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
-    private MultipleOutputs multipleOutputs;
     private AvroMultipleOutputs multipleOutputsAvro;
 
     @Override
     protected void setup(
         org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
-      multipleOutputs = new MultipleOutputs(context);
       multipleOutputsAvro = new AvroMultipleOutputs(context);
     }
 
     @Override
     public void cleanup(Context context) throws IOException, InterruptedException {
-      multipleOutputs.close();
       multipleOutputsAvro.close();
     }
 
@@ -244,29 +254,19 @@ public class Process extends Driver {
       while (valuesIterator.hasNext()) {
         AvroValue<Record> record = valuesIterator.next();
         context.getCounter(RecordCounter.RECORDS).increment(1);
-        if (key.isValid()) {
-          RecordCounter counter = records.add(record) ? RecordCounter.RECORDS_CLEANSED
-              : RecordCounter.RECORDS_DUPLICATE;
-          this.record.datum(record.datum());
-          calendar.setTimeInMillis(record.datum().getMyTimestamp());
-          string.setLength(0);
-          multipleOutputsAvro.write(OUTPUT_AVRO, this.record, NullWritable.get(),
-              string
-                  .append(counter.equals(RecordCounter.RECORDS_CLEANSED)
-                      ? Constants.DIR_DS_MYDATASET_PROCESSED_CLEANSED_AVRO_RELATIVE
-                      : Constants.DIR_DS_MYDATASET_PROCESSED_DUPLICATE_AVRO_RELATIVE)
-                  .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR))
-                  .append(Path.SEPARATOR_CHAR).append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1)
-                  .append(Path.SEPARATOR_CHAR).append(PARTITION_FILE).toString());
-          context.getCounter(counter).increment(1);
-        } else {
-          // TODO Update for source'less key
-          // source.set(key.getSource());
-          string.setLength(0);
-          multipleOutputs.write(OUTPUT_SEQUENCE, key, source, string.append(Constants.DIR_DS_MYDATASET_MALFORMED)
-              .append(Path.SEPARATOR_CHAR).append(key.getBatch()).toString());
-          context.getCounter(RecordCounter.RECORDS_MALFORMED).increment(1);
-        }
+        RecordCounter counter = records.add(record) ? RecordCounter.RECORDS_CLEANSED : RecordCounter.RECORDS_DUPLICATE;
+        context.getCounter(counter).increment(1);
+        this.record.datum(record.datum());
+        calendar.setTimeInMillis(record.datum().getMyTimestamp());
+        string.setLength(0);
+        multipleOutputsAvro.write(OUTPUT_AVRO, this.record, NullWritable.get(),
+            string
+                .append(counter.equals(RecordCounter.RECORDS_CLEANSED)
+                    ? Constants.DIR_DS_MYDATASET_PROCESSED_CLEANSED_AVRO_RELATIVE
+                    : Constants.DIR_DS_MYDATASET_PROCESSED_DUPLICATE_AVRO_RELATIVE)
+                .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR))
+                .append(Path.SEPARATOR_CHAR).append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1)
+                .append(Path.SEPARATOR_CHAR).append(PARTITION_FILE).toString());
       }
     }
   }

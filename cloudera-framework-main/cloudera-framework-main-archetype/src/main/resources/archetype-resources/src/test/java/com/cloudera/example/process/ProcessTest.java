@@ -44,12 +44,21 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
                 { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
         }, // Counter equality tests
             new Map[] {
-                //
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+                // First run
+                ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.FILES, 1L, //
-                        RecordCounter.FILES_STAGED, 1L, //
-                        RecordCounter.FILES_MALFORMED, 0L //
+                        RecordCounter.RECORDS, 1L, //
+                        RecordCounter.RECORDS_CLEANSED, 1L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
+            )), //
+                // Second run
+                ImmutableMap.of(Process.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 0L, //
+                        RecordCounter.RECORDS_CLEANSED, 0L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
         }, //
         }, //
@@ -70,13 +79,21 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
                 { { null }, }, //
         }, // Counter equality tests
             new Map[] {
-                //
+                // First run
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 72L, //
-                        RecordCounter.RECORDS_CLEANSED, 10L, //
-                        RecordCounter.RECORDS_DUPLICATE, 30L, //
-                        RecordCounter.RECORDS_MALFORMED, 32L//
+                        RecordCounter.RECORDS, 536L, //
+                        RecordCounter.RECORDS_CLEANSED, 121L, //
+                        RecordCounter.RECORDS_DUPLICATE, 381L, //
+                        RecordCounter.RECORDS_MALFORMED, 34L//
+            )), //
+                // Second run
+                ImmutableMap.of(Process.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 0L, //
+                        RecordCounter.RECORDS_CLEANSED, 0L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
         }, //
         }, //
@@ -91,9 +108,10 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
     Driver driver = new Process(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(
         new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_PARTITIONED), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
-
-    // TODO Re-enable counter checking
-    // assertCounterEquals(metadata[0], driver.getCounters());
+    assertCounterEquals(metadata[0], driver.getCounters());
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(
+        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_PARTITIONED), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+    assertCounterEquals(metadata[1], driver.getCounters());
   }
 
   public ProcessTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
