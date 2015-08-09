@@ -33,7 +33,6 @@ import com.cloudera.example.model.RecordType;
  */
 public class Stream extends AbstractSource implements Configurable, PollableSource {
 
-  public static final String HEADER_AGENT_ID = "aid";
   public static final String HEADER_TIMESTAMP = "ts";
   public static final String HEADER_BATCH_ID = "bid";
   public static final String HEADER_BATCH_TYPE = "bt";
@@ -122,7 +121,6 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
 
   private Map<String, String> getEventHeader(long timestamp) {
     Map<String, String> header = new HashMap<String, String>();
-    header.put(HEADER_AGENT_ID, AGENT_ID);
     header.put(HEADER_BATCH_TYPE, recordType.getQualifier());
     header.put(HEADER_TIMESTAMP, "" + timestamp);
     return header;
@@ -272,7 +270,6 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
 
     private Event getEventWithHeaders(Event event, String timestamp, String batchId, int batchIndex, int batchSum,
         String batchTimestampStart, String batchTimestampFinish) {
-      putHeader(event, HEADER_AGENT_ID, AGENT_ID);
       putHeader(event, HEADER_TIMESTAMP, "" + timestamp);
       putHeader(event, HEADER_BATCH_ID, batchId);
       putHeader(event, HEADER_BATCH_TYPE, recordType.getQualifier());
