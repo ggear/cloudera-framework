@@ -9,10 +9,6 @@ public enum RecordCounter {
   FILES_STAGED, //
   FILES_MALFORMED, //
 
-  BATCHES, //
-  BATCHES_PROCESSED, //
-  BATCHES_MALFORMED, //
-
   RECORDS, //
   RECORDS_CLEANSED, //
   RECORDS_DUPLICATE, //
