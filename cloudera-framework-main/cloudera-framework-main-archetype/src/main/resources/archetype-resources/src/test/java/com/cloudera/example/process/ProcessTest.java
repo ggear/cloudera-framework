@@ -22,7 +22,7 @@ import com.google.common.collect.ImmutableMap;
  */
 @RunWith(Parameterized.class)
 public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants {
-  
+
   /**
    * Paramaterise the unit tests
    */
@@ -48,7 +48,7 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
                 ImmutableMap.of(Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 1L, //
-                        RecordCounter.FILES_PARTITIONED, 1L, //
+                        RecordCounter.FILES_STAGED, 1L, //
                         RecordCounter.FILES_MALFORMED, 0L //
             )), //
         }, //
@@ -89,8 +89,8 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
   @Test
   public void testProcess() throws Exception {
     Driver driver = new Process(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_PARTITIONED), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(
+        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_PARTITIONED), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
 
     // TODO Re-enable counter checking
     // assertCounterEquals(metadata[0], driver.getCounters());

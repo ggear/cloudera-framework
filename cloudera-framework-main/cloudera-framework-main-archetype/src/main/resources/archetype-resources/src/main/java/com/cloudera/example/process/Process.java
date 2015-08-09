@@ -48,8 +48,8 @@ import com.cloudera.framework.main.common.Driver;
  * consolidated, schema partitioned, row order Avro
  * {@link Record#getClassSchema() files}. The driver can be configured as a
  * pass-through, de-depulication and most-recent filter. Malformed files are
- * annexed off and written in the staging format with {@link RecordKey key} and
- * original text value.
+ * annexed off and written in the staging sequence file format with
+ * {@link RecordKey key} and original String value.
  */
 public class Process extends Driver {
 
@@ -116,9 +116,6 @@ public class Process extends Driver {
     }
     outputPath = new Path(arguments[1]);
     hdfs.mkdirs(outputPath.getParent());
-    if (hdfs.exists(outputPath)) {
-      throw new Exception("Output path [" + inputPath + "] already exists");
-    }
     if (LOG.isInfoEnabled()) {
       LOG.info("Output path [" + outputPath + "] validated");
     }
@@ -166,12 +163,12 @@ public class Process extends Driver {
 
     private final Record EMPTY_RECORD = new Record();
 
+    private final RecordKey recordKey = new RecordKey();
+    private final Record recordValue = new Record();
+    private final AvroValue<Record> recordValueWrapped = new AvroValue<Record>();
+
     private String splitFileName;
     private String splitFilePathRelative;
-
-    private RecordKey recordKey = new RecordKey();
-    private Record recordValue = new Record();
-    private AvroValue<Record> recordValueWrapped = new AvroValue<Record>();
 
     @Override
     protected void setup(
@@ -215,14 +212,14 @@ public class Process extends Driver {
     private static final String PARTITION_MONTH = "month=";
     private static final String PARTITION_FILE = "mydataset";
 
+    private final Text source = new Text();
+    private final AvroKey<Record> record = new AvroKey<Record>();
+    private final StringBuilder string = new StringBuilder(512);
+    private final Set<AvroValue<Record>> records = new HashSet<AvroValue<Record>>(32);
+    private final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
     private MultipleOutputs multipleOutputs;
     private AvroMultipleOutputs multipleOutputsAvro;
-
-    private Text source = new Text();
-    private AvroKey<Record> record = new AvroKey<Record>();
-    private StringBuilder string = new StringBuilder(512);
-    private Set<AvroValue<Record>> records = new HashSet<AvroValue<Record>>(32);
-    private Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
     @Override
     protected void setup(

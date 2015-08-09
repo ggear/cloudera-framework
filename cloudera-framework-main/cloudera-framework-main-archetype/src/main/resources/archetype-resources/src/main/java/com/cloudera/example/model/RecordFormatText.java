@@ -4,11 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
@@ -19,6 +21,10 @@ import org.apache.hadoop.mapreduce.lib.input.CombineFileSplit;
 
 import com.cloudera.example.Constants;
 
+/**
+ * A {@link InputFormat} to act on multiple text files, forming the appropriate
+ * {@link RecordKey key} and UTF8 parsed {@link String value}.
+ */
 public class RecordFormatText extends CombineFileInputFormat<RecordKey, Text> {
 
   public RecordFormatText() {
@@ -70,7 +76,7 @@ public class RecordFormatText extends CombineFileInputFormat<RecordKey, Text> {
     public boolean nextKeyValue() throws IOException, InterruptedException {
       if (stream != null) {
         try {
-          String valueString = IOUtils.toString(stream);
+          String valueString = IOUtils.toString(stream, Charsets.UTF_8.name());
           value = new Text(valueString);
           String pathString = path.toString();
           try {

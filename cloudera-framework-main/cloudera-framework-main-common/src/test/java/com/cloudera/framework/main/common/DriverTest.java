@@ -89,5 +89,7 @@ public class DriverTest extends MiniClusterDfsMrTest {
       return iShouldFailOption || iShouldFailParameter.toLowerCase().equals(Boolean.TRUE.toString().toLowerCase())
           ? RETURN_FAILURE_RUNTIME : RETURN_SUCCESS;
     }
+
   }
+
 }

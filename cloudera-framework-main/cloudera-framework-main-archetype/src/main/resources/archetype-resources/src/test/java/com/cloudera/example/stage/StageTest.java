@@ -16,7 +16,7 @@ import com.cloudera.framework.main.test.LocalClusterDfsMrTest;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Test dataset process
+ * Test dataset stage
  */
 @RunWith(Parameterized.class)
 public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
@@ -42,11 +42,18 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
                 { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
         }, // Counter equality tests
             new Map[] {
-                //
+                // First run
                 ImmutableMap.of(Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 1L, //
-                        RecordCounter.FILES_PARTITIONED, 1L, //
+                        RecordCounter.FILES_STAGED, 1L, //
+                        RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+                // Second run
+                ImmutableMap.of(Stage.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.FILES, 0L, //
+                        RecordCounter.FILES_STAGED, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
             )), //
         }, //
@@ -68,12 +75,19 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
                 { { null }, }, //
         }, // Counter equality tests
             new Map[] {
-                //
+                // First run
                 ImmutableMap.of(Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 92L, //
-                        RecordCounter.FILES_PARTITIONED, 58L, //
+                        RecordCounter.FILES_STAGED, 58L, //
                         RecordCounter.FILES_MALFORMED, 34L //
+            )), //
+                // Second run
+                ImmutableMap.of(Stage.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.FILES, 0L, //
+                        RecordCounter.FILES_STAGED, 0L, //
+                        RecordCounter.FILES_MALFORMED, 0L //
             )), //
         }, //
         }, //
@@ -89,6 +103,9 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
     Assert.assertEquals(Driver.RETURN_SUCCESS,
         driver.runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
     assertCounterEquals(metadata[0], driver.getCounters());
+    Assert.assertEquals(Driver.RETURN_SUCCESS,
+        driver.runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+    assertCounterEquals(metadata[1], driver.getCounters());
   }
 
   public StageTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
