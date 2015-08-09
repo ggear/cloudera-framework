@@ -90,9 +90,6 @@ public class Stage extends Driver {
     }
     hdfs = FileSystem.newInstance(getConf());
     inputPath = new Path(arguments[0]);
-    if (!hdfs.exists(inputPath)) {
-      throw new Exception("Input path [" + inputPath + "] does not exist");
-    }
     if (LOG.isInfoEnabled()) {
       LOG.info("Input path [" + inputPath + "] validated");
     }

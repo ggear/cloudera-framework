@@ -13,6 +13,10 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.TestConstants;
+import com.cloudera.example.model.RecordCounter;
+import com.cloudera.example.process.Process;
+import com.cloudera.example.stage.Stage;
+import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.LocalClusterDfsMrFlumeTest;
 import com.google.common.collect.ImmutableMap;
 
@@ -38,10 +42,12 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(//
                     Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
                     Stream.PROPERTY_BATCH_SIZE, "1"//
-            ), // Sink overlay properties
+            ), //
+               // Sink overlay properties
                 ImmutableMap.of(//
                     Stream.PROPERTY_BATCH_SIZE, "1"//
-            ), // Pipeline properties
+            ), //
+               // Pipeline properties
                 ImmutableMap.of(//
                     KEY_FLUME_SOURCE_NAME, "source_single", //
                     KEY_FLUME_SINK_NAME, "sink_single_hdfs", //
@@ -49,6 +55,21 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                     KEY_FLUME_PROCESS_ITERATIONS, 3, //
                     KEY_FLUME_PROCESS_FILE_COUNT, 3//
             ), //
+               // Stage counters
+                ImmutableMap.of(Stage.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.FILES, 3L, //
+                        RecordCounter.FILES_STAGED, 3L, //
+                        RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+                // Process counters
+                ImmutableMap.of(Process.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 30L, //
+                        RecordCounter.RECORDS_CLEANSED, 30L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
+            )), //
         }, //
         }, //
         // Batch flume pipeline
@@ -61,10 +82,12 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(//
                     Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
                     Stream.PROPERTY_BATCH_SIZE, "2"//
-            ), // Sink overlay properties
+            ), //
+               // Sink overlay properties
                 ImmutableMap.of(//
                     Stream.PROPERTY_BATCH_SIZE, "2"//
-            ), // Pipeline properties
+            ), //
+               // Pipeline properties
                 ImmutableMap.of(//
                     KEY_FLUME_SOURCE_NAME, "source_single", //
                     KEY_FLUME_SINK_NAME, "sink_batch_hdfs", //
@@ -72,6 +95,21 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                     KEY_FLUME_PROCESS_ITERATIONS, 3, //
                     KEY_FLUME_PROCESS_FILE_COUNT, 1//
             ), //
+               // Stage counters
+                ImmutableMap.of(Stage.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.FILES, 0L, //
+                        RecordCounter.FILES_STAGED, 0L, //
+                        RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+                // Process counters
+                ImmutableMap.of(Process.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 20L, //
+                        RecordCounter.RECORDS_CLEANSED, 20L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
+            )), //
         }, //
         }, //
     });
@@ -88,6 +126,14 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
             (String) metadata[2].get(KEY_FLUME_SOURCE_NAME), (String) metadata[2].get(KEY_FLUME_SINK_NAME),
             new Stream(), new HDFSEventSink(), (String) metadata[2].get(KEY_FLUME_OUTPUT_DIR),
             (Integer) metadata[2].get(KEY_FLUME_PROCESS_ITERATIONS)));
+    Driver driverStage = new Stage(getConf());
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driverStage
+        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+    assertCounterEquals(metadata[3], driverStage.getCounters());
+    Driver driverProcess = new Process(getConf());
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driverProcess.runner(
+        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_PARTITIONED), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+    assertCounterEquals(metadata[4], driverProcess.getCounters());
   }
 
   public StreamTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,

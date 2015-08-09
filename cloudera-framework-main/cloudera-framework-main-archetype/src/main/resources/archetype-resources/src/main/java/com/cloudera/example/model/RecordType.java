@@ -112,9 +112,11 @@ public enum RecordType {
   }
 
   /**
+   * Get {@link RecordType} from <code>qualifier</code>
    * 
-   * @param type
-   * @return
+   * @param qualifier
+   *          the qualifier
+   * @return the {@link RecordType} if macthed, else <code>null</code>
    */
   public static RecordType valueOfQualifier(String qualifier) {
     return RECORD_TYPES_BY_QUALIFIER.get(qualifier);

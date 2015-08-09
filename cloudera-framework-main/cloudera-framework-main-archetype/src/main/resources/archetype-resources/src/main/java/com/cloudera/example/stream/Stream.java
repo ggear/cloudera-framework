@@ -321,7 +321,10 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
 
   public static class Serializer implements SequenceFileSerializer {
 
-    private static final String DFS_BATCH_PATTERN = "sequence/%{type}/none/%{batch}_mydataset-%{agent}.seq";
+    private static final String DFS_CODEC = "none";
+    private static final String DFS_CONTAINER = "sequence";
+    private static final String DFS_BATCH_PATTERN = DFS_CONTAINER + "/%{bt}/" + DFS_CODEC
+        + "/%{btss}_%{btsf}_mydataset-%{bid}.seq";
 
     @Override
     public Class<RecordKey> getKeyClass() {
@@ -338,10 +341,13 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       RecordKey key = new RecordKey();
       Text value = new Text();
       try {
-        key.setHash(event.getHeaders().get(HEADER_TIMESTAMP).hashCode());
-        key.setTimestamp(Long.parseLong(event.getHeaders().get(HEADER_TIMESTAMP)));
-        key.setBatch(new StrSubstitutor(event.getHeaders(), "%{", "}").replace(DFS_BATCH_PATTERN));
         value.set(new String(event.getBody(), Charsets.UTF_8.name()));
+        key.setHash(event.getHeaders().get(HEADER_TIMESTAMP).hashCode());
+        key.setType(event.getHeaders().get(HEADER_BATCH_TYPE));
+        key.setCodec(DFS_CODEC);
+        key.setContainer(DFS_CONTAINER);
+        key.setBatch(new StrSubstitutor(event.getHeaders(), "%{", "}").replace(DFS_BATCH_PATTERN));
+        key.setTimestamp(Long.parseLong(event.getHeaders().get(HEADER_TIMESTAMP)));
         key.setValid(true);
       } catch (Exception exception) {
         key.setValid(false);
