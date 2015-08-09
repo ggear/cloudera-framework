@@ -25,9 +25,9 @@ import com.cloudera.example.Constants;
  * A {@link InputFormat} to act on multiple text files, forming the appropriate
  * {@link RecordKey key} and UTF8 parsed {@link String value}.
  */
-public class RecordFormatText extends CombineFileInputFormat<RecordKey, Text> {
+public class RecordTextFormat extends CombineFileInputFormat<RecordKey, Text> {
 
-  public RecordFormatText() {
+  public RecordTextFormat() {
     super();
     setMaxSplitSize(128 * 1024 * 1024);
   }

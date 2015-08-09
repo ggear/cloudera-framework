@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cloudera.example.Constants;
 import com.cloudera.example.model.RecordCounter;
-import com.cloudera.example.model.RecordFormatText;
+import com.cloudera.example.model.RecordTextFormat;
 import com.cloudera.example.model.RecordKey;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.common.util.DfsUtil;
@@ -112,7 +112,7 @@ public class Stage extends Driver {
       job.getConfiguration().set(Constants.CONFIG_INPUT_PATH, inputPath.toString());
       job.getConfiguration().set(Constants.CONFIG_OUTPUT_PATH, outputPath.toString());
       job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
-      job.setInputFormatClass(RecordFormatText.class);
+      job.setInputFormatClass(RecordTextFormat.class);
       for (Path inputPath : inputPaths) {
         FileInputFormat.addInputPath(job, inputPath);
       }

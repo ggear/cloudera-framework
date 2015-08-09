@@ -39,8 +39,6 @@ import com.cloudera.example.model.RecordType;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.common.util.DfsUtil;
 
-// TODO Provide implementation
-
 /**
  * Process driver, take a set of staged sequence files and rewrite them into
  * consolidated, schema partitioned, row order Avro
