@@ -29,16 +29,16 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
   @Parameters
   public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
-        // Single dataset, pristine subset
+        // CSV dataset, pristine subset
         {
-            // Both tab and comma dataset metadata
+            // CSV dataset metadata
             new String[] { DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, }, //
+            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
             new String[] { DS_MYDATASET, }, //
             new String[][] {
-                // Both tab and comma dataset
-                { DSS_MYDATASET_TSV }, //
-        }, // Pristine tab and comma dataset subsets
+                // CSV dataset
+                { DSS_MYDATASET_CSV }, //
+        }, // CSV pristine-single dataset subset
             new String[][][] {
                 //
                 { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
@@ -62,17 +62,50 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
             )), //
         }, //
         }, //
-        // All datasets
+        // XML dataset, pristine subset
         {
-            // Both tab and comma dataset metadata
+            // XML dataset metadata
+            new String[] { DS_DIR, }, //
+            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_XML, }, //
+            new String[] { DS_MYDATASET, }, //
+            new String[][] {
+                // XML dataset
+                { DSS_MYDATASET_XML }, //
+        }, // XML pristine-single dataset subset
+            new String[][][] {
+                //
+                { { DSS_MYDATASET_PRISTINE_SINGLE }, }, //
+        }, // Counter equality tests
+            new Map[] {
+                // First run
+                ImmutableMap.of(Process.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 1L, //
+                        RecordCounter.RECORDS_CLEANSED, 1L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
+            )), //
+                // Second run
+                ImmutableMap.of(Process.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 0L, //
+                        RecordCounter.RECORDS_CLEANSED, 0L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
+            )), //
+        }, //
+        }, //
+        // All datasets, all subsets
+        {
+            // All datasets metadata
             new String[] { DS_DIR, DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
+            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_XML, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
             new String[] { DS_MYDATASET, DS_MYDATASET }, //
             new String[][] {
-                // Both tab and comma dataset
-                { DSS_MYDATASET_TSV }, //
+                // All datasets
+                { DSS_MYDATASET_XML }, //
                 { DSS_MYDATASET_CSV }, //
-        }, // All tab and comma dataset subsets
+        }, // All dataset subsets
             new String[][][] {
                 //
                 { { null }, }, //
@@ -82,10 +115,10 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
                 // First run
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 536L, //
-                        RecordCounter.RECORDS_CLEANSED, 121L, //
-                        RecordCounter.RECORDS_DUPLICATE, 381L, //
-                        RecordCounter.RECORDS_MALFORMED, 34L//
+                        RecordCounter.RECORDS, 493L, //
+                        RecordCounter.RECORDS_CLEANSED, 332L, //
+                        RecordCounter.RECORDS_DUPLICATE, 140L, //
+                        RecordCounter.RECORDS_MALFORMED, 21L//
             )), //
                 // Second run
                 ImmutableMap.of(Process.class.getCanonicalName(),

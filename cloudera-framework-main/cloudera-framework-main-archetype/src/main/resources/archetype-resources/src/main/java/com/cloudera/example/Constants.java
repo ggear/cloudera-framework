@@ -14,7 +14,7 @@ public interface Constants {
   public static final String DIR_DS_MYDATASET_RAW = DIR_DS_MYDATASET + "/raw";
   public static final String DIR_DS_MYDATASET_RAW_SOURCE = DIR_DS_MYDATASET_RAW + "/source";
   public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT = DIR_DS_MYDATASET_RAW_SOURCE + "/text";
-  public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV = DIR_DS_MYDATASET_RAW_SOURCE_TEXT + "/tsv/none";
+  public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_XML = DIR_DS_MYDATASET_RAW_SOURCE_TEXT + "/xml/none";
   public static final String DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV = DIR_DS_MYDATASET_RAW_SOURCE_TEXT + "/csv/none";
 
   public static final String DIR_DS_MYDATASET_STAGED = DIR_DS_MYDATASET + "/staged";

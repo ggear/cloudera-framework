@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<records>
+    <record>
+        <my_timestamp>1439466571684</my_timestamp>
+        <my_integer>2</my_integer>
+        <my_double>0.1611825794158469</my_double>
+        <my_boolean>true</my_boolean>
+        <my_string>1896f812-5581-4dae-b778-46313fd97dac</my_string>
+    </record>
+    <record>
+        <my_timestamp>1439466571684</my_timestamp>
+        <my_integer>8</my_integer>
+        <my_double>0.9579748033331483</my_double>
+        <my_boolean>false</my_boolean>
+        <my_string>01e39f08-48af-401d-8b7c-96dcd3ee4d0d</my_string>
+    </record>
+    <record>
+        <my_timestamp>1439466571685</my_timestamp>
+        <my_integer>1</my_integer>
+        <my_double>0.19814384980614086</my_double>
+        <my_boolean>false</my_boolean>
+        <my_string>c9360968-185b-498e-8f3d-155f8664093f</my_string>
+    </record>
+<!-- file ends abruptly --> 

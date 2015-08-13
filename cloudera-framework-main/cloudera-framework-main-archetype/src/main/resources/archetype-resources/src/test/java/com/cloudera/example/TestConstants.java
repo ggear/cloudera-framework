@@ -9,8 +9,8 @@ public interface TestConstants extends Constants {
 
   public static final String DS_DIR = BaseTest.REL_DIR_DATASET;
   public static final String DS_MYDATASET = "my-dataset";
-  public static final String DSS_MYDATASET_TSV = "tsv";
   public static final String DSS_MYDATASET_CSV = "csv";
+  public static final String DSS_MYDATASET_XML = "xml";
 
   public static final String DSS_MYDATASET_PRISTINE_SINGLE = "pristine-single";
   public static final String DSS_MYDATASET_PRISTINE_MULTI = "pristine-multi";

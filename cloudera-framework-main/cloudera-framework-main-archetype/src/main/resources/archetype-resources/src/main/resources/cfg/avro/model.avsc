@@ -7,6 +7,33 @@
   "name":"Record",
   "fields":[
     {
+      "name":"ingest_key",
+           "type":[
+        "null",
+        "string"
+      ],
+      "default":null,
+      "order":"ignore"
+    },
+    {
+      "name":"ingest_batch",
+           "type":[
+        "null",
+        "string"
+      ],
+      "default":null,
+      "order":"ignore"
+    },
+    {
+      "name":"ingest_timestamp",
+       "type":[
+        "null",
+        "long"
+      ],
+      "default":null,
+      "order":"ignore"
+    },
+    {
       "name":"my_timestamp",
       "type":[
         "null",

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import org.apache.avro.Schema;
 import org.apache.avro.Schema.Type;
@@ -20,8 +21,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormatNoCheck;
@@ -34,8 +34,8 @@ import org.slf4j.LoggerFactory;
 import com.cloudera.example.Constants;
 import com.cloudera.example.model.Record;
 import com.cloudera.example.model.RecordCounter;
+import com.cloudera.example.model.RecordFactory;
 import com.cloudera.example.model.RecordKey;
-import com.cloudera.example.model.RecordType;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.common.util.DfsUtil;
 
@@ -123,9 +123,9 @@ public class Process extends Driver {
       job.getConfiguration().set(Constants.CONFIG_INPUT_PATH, inputPath.toString());
       job.getConfiguration().set(Constants.CONFIG_OUTPUT_PATH, outputPath.toString());
       job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
-      job.setInputFormatClass(SequenceFileInputFormat.class);
       for (Path inputPath : inputPaths) {
-        FileInputFormat.addInputPath(job, inputPath);
+        MultipleInputs.addInputPath(job, inputPath, RecordFactory
+            .getRecordSequenceInputFormat(inputPath.getParent().getParent().getParent().getParent().getName()));
       }
       job.setMapperClass(Mapper.class);
       job.setSortComparatorClass(RecordKey.RecordKeyComparator.class);
@@ -156,9 +156,7 @@ public class Process extends Driver {
    * where possible.
    */
   private static class Mapper
-      extends org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>> {
-
-    private final Record EMPTY_RECORD = new Record();
+      extends org.apache.hadoop.mapreduce.Mapper<RecordKey, Record, RecordKey, AvroValue<Record>> {
 
     private final RecordKey recordKey = new RecordKey();
     private final Record recordValue = new Record();
@@ -171,39 +169,33 @@ public class Process extends Driver {
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void setup(
-        org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>>.Context context)
+        org.apache.hadoop.mapreduce.Mapper<RecordKey, Record, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
       multipleOutputs = new MultipleOutputs(context);
     }
 
     @Override
     protected void cleanup(
-        org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>>.Context context)
+        org.apache.hadoop.mapreduce.Mapper<RecordKey, Record, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
       multipleOutputs.close();
     }
 
     @Override
-    protected void map(RecordKey key, Text value,
-        org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, AvroValue<Record>>.Context context)
+    protected void map(RecordKey key, Record value,
+        org.apache.hadoop.mapreduce.Mapper<RecordKey, Record, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
-      String valuesString = value.toString();
-      RecordType recordType = RecordType.valueOfQualifier(key.getType());
-      for (String valueString : recordType == null ? new String[] { valuesString }
-          : recordType.recordise(valuesString)) {
-        boolean isRecordValid = recordType == null ? false : recordType.deserialise(recordValue, valueString);
-        if (isRecordValid) {
-          recordKey.setHash(recordValue.hashCode());
-          recordWrapped.datum(isRecordValid ? recordValue : EMPTY_RECORD);
-          context.write(recordKey, recordWrapped);
-        } else {
-          context.getCounter(RecordCounter.RECORDS).increment(1);
-          context.getCounter(RecordCounter.RECORDS_MALFORMED).increment(1);
-          textValue.set(valueString);
-          string.setLength(0);
-          multipleOutputs.write(OUTPUT_SEQUENCE, key, textValue, string.append(Constants.DIR_DS_MYDATASET_MALFORMED)
-              .append(Path.SEPARATOR_CHAR).append(key.getBatch()).toString());
-        }
+      if (key.isValid()) {
+        key.setHash(recordValue.hashCode());
+        recordWrapped.datum(value);
+        context.write(recordKey, recordWrapped);
+      } else {
+        context.getCounter(RecordCounter.RECORDS).increment(1);
+        context.getCounter(RecordCounter.RECORDS_MALFORMED).increment(1);
+        textValue.set(key.getSource());
+        string.setLength(0);
+        multipleOutputs.write(OUTPUT_SEQUENCE, key, textValue, string.append(Constants.DIR_DS_MYDATASET_MALFORMED)
+            .append(Path.SEPARATOR_CHAR).append(key.getBatch()).toString());
       }
     }
 
@@ -218,9 +210,9 @@ public class Process extends Driver {
   private static class Reducer
       extends org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>> {
 
-    private static final String PARTITION_YEAR = "year=";
-    private static final String PARTITION_MONTH = "month=";
-    private static final String PARTITION_FILE = "mydataset";
+    private static final String PARTITION_YEAR = "ingest_year=";
+    private static final String PARTITION_MONTH = "ingest_month=";
+    private static final String PARTITION_FILE = "mydataset-" + UUID.randomUUID().toString();
 
     private final AvroKey<Record> record = new AvroKey<Record>();
     private final StringBuilder string = new StringBuilder(512);

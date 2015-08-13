@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.avro.Schema.Field;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.io.WritableUtils;
@@ -16,8 +17,20 @@ import org.apache.hadoop.io.WritableUtils;
  */
 public class RecordKey implements WritableComparable<RecordKey> {
 
+  public static final int FIELDS_NUMBER;
+
+  static {
+    int recordFieldsNumber = 0;
+    for (Field field : Record.SCHEMA$.getFields()) {
+      if (field.order() != Field.Order.IGNORE) {
+        recordFieldsNumber++;
+      }
+    }
+    FIELDS_NUMBER = recordFieldsNumber;
+  }
+
   private static final Pattern REGEX_PATH = Pattern.compile(
-      ".*/?(([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-]*)\\.([a-z]+)\\.?([a-z]*)/([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-\\.]*)\\.(.*))");
+      ".*/?(([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/ingest_batch=([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-]*)\\.([a-z]+)\\.?([a-z]*)/([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-\\.]*)\\.(.*))");
 
   private int hash;
   private String type;
@@ -25,6 +38,7 @@ public class RecordKey implements WritableComparable<RecordKey> {
   private String container;
   private long timestamp;
   private String batch;
+  private String source;
   private boolean valid;
 
   public RecordKey() {
@@ -51,13 +65,26 @@ public class RecordKey implements WritableComparable<RecordKey> {
     }
   }
 
-  public RecordKey(int hash, String type, String codec, String container, long timestamp, String batch, boolean valid) {
+  public RecordKey(RecordKey that) {
+    this.hash = that.hash;
+    this.type = that.type;
+    this.codec = that.codec;
+    this.container = that.container;
+    this.timestamp = that.timestamp;
+    this.batch = that.batch;
+    this.source = that.source;
+    this.valid = that.valid;
+  }
+
+  public RecordKey(int hash, String type, String codec, String container, long timestamp, String batch, String source,
+      boolean valid) {
     this.hash = hash;
     this.type = type;
     this.codec = codec;
     this.container = container;
     this.timestamp = timestamp;
     this.batch = batch;
+    this.source = source;
     this.valid = valid;
   }
 
@@ -109,6 +136,14 @@ public class RecordKey implements WritableComparable<RecordKey> {
     this.batch = batch;
   }
 
+  public String getSource() {
+    return source;
+  }
+
+  public void setSource(String source) {
+    this.source = source;
+  }
+
   public boolean isValid() {
     return valid;
   }
@@ -148,7 +183,7 @@ public class RecordKey implements WritableComparable<RecordKey> {
   @Override
   public String toString() {
     return "RecordKey [hash=" + hash + ", type=" + type + ", codec=" + codec + ", container=" + container
-        + ", timestamp=" + timestamp + ", batch=" + batch + ", valid=" + valid + "]";
+        + ", timestamp=" + timestamp + ", batch=" + batch + ", source=" + source + ", valid=" + valid + "]";
   }
 
   @Override

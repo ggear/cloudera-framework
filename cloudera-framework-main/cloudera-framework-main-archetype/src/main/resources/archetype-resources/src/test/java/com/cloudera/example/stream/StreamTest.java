@@ -14,6 +14,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.TestConstants;
 import com.cloudera.example.model.RecordCounter;
+import com.cloudera.example.model.RecordFactory;
 import com.cloudera.example.process.Process;
 import com.cloudera.example.stage.Stage;
 import com.cloudera.framework.main.common.Driver;
@@ -32,7 +33,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
   @Parameters
   public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
-        // Single flume pipeline
+        // Single flume pipeline, CSV
         {
             // No datasets
             null, null, null, null, null,
@@ -41,7 +42,8 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Source overlay properties
                 ImmutableMap.of(//
                     Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
-                    Stream.PROPERTY_BATCH_SIZE, "1"//
+                    Stream.PROPERTY_BATCH_SIZE, "1", //
+                    Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_CSV//
             ), //
                // Sink overlay properties
                 ImmutableMap.of(//
@@ -72,7 +74,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
             )), //
         }, //
         }, //
-        // Batch flume pipeline
+        // Batch flume pipeline, CSV
         {
             // No datasets
             null, null, null, null, null,
@@ -81,7 +83,90 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Source overlay properties
                 ImmutableMap.of(//
                     Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
+                    Stream.PROPERTY_BATCH_SIZE, "2", //
+                    Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_CSV//
+            ), //
+               // Sink overlay properties
+                ImmutableMap.of(//
                     Stream.PROPERTY_BATCH_SIZE, "2"//
+            ), //
+               // Pipeline properties
+                ImmutableMap.of(//
+                    KEY_FLUME_SOURCE_NAME, "source_single", //
+                    KEY_FLUME_SINK_NAME, "sink_batch_hdfs", //
+                    KEY_FLUME_OUTPUT_DIR, DIR_DS_MYDATASET_STAGED, //
+                    KEY_FLUME_PROCESS_ITERATIONS, 3, //
+                    KEY_FLUME_PROCESS_FILE_COUNT, 1//
+            ), //
+               // Stage counters
+                ImmutableMap.of(Stage.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.FILES, 0L, //
+                        RecordCounter.FILES_STAGED, 0L, //
+                        RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+                // Process counters
+                ImmutableMap.of(Process.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 20L, //
+                        RecordCounter.RECORDS_CLEANSED, 20L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
+            )), //
+        }, //
+        }, //
+        // Single flume pipeline, XML
+        {
+            // No datasets
+            null, null, null, null, null,
+            // Flume pipeline
+            new Map[] {
+                // Source overlay properties
+                ImmutableMap.of(//
+                    Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
+                    Stream.PROPERTY_BATCH_SIZE, "1", //
+                    Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_XML//
+            ), //
+               // Sink overlay properties
+                ImmutableMap.of(//
+                    Stream.PROPERTY_BATCH_SIZE, "1"//
+            ), //
+               // Pipeline properties
+                ImmutableMap.of(//
+                    KEY_FLUME_SOURCE_NAME, "source_single", //
+                    KEY_FLUME_SINK_NAME, "sink_single_hdfs", //
+                    KEY_FLUME_OUTPUT_DIR, DIR_DS_MYDATASET_RAW, //
+                    KEY_FLUME_PROCESS_ITERATIONS, 3, //
+                    KEY_FLUME_PROCESS_FILE_COUNT, 3//
+            ), //
+               // Stage counters
+                ImmutableMap.of(Stage.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.FILES, 3L, //
+                        RecordCounter.FILES_STAGED, 3L, //
+                        RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+                // Process counters
+                ImmutableMap.of(Process.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 30L, //
+                        RecordCounter.RECORDS_CLEANSED, 30L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
+            )), //
+        }, //
+        }, //
+        // Batch flume pipeline, XML
+        {
+            // No datasets
+            null, null, null, null, null,
+            // Flume pipeline
+            new Map[] {
+                // Source overlay properties
+                ImmutableMap.of(//
+                    Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
+                    Stream.PROPERTY_BATCH_SIZE, "2", //
+                    Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_XML//
             ), //
                // Sink overlay properties
                 ImmutableMap.of(//

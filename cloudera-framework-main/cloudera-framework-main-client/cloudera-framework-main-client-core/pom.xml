@@ -45,10 +45,6 @@
 					<artifactId>guice</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>javax.xml.bind</groupId>
-					<artifactId>jaxb-api</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>org.codehaus.jettison</groupId>
 					<artifactId>jettison</artifactId>
 				</exclusion>
@@ -77,14 +73,6 @@
 					<artifactId>servlet-api</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>com.sun.jersey</groupId>
-					<artifactId>jersey-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jersey</groupId>
-					<artifactId>jersey-client</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>io.netty</groupId>
 					<artifactId>netty</artifactId>
 				</exclusion>
@@ -103,14 +91,6 @@
 				<exclusion>
 					<groupId>com.google.inject.extensions</groupId>
 					<artifactId>guice-servlet</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jersey.contribs</groupId>
-					<artifactId>jersey-guice</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.xml.bind</groupId>
-					<artifactId>jaxb-impl</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.codehaus.jackson</groupId>
@@ -152,10 +132,6 @@
 					<artifactId>protobuf-java</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>com.sun.jersey</groupId>
-					<artifactId>jersey-json</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>org.apache.directory.api</groupId>
 					<artifactId>api-asn1-api</artifactId>
 				</exclusion>
@@ -174,10 +150,6 @@
 				<exclusion>
 					<groupId>org.apache.httpcomponents</groupId>
 					<artifactId>httpclient</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jersey</groupId>
-					<artifactId>jersey-core</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>com.jcraft</groupId>
@@ -248,10 +220,6 @@
 					<artifactId>apacheds-i18n</artifactId>
 				</exclusion>
 				<exclusion>
-					<groupId>javax.xml.bind</groupId>
-					<artifactId>jaxb-api</artifactId>
-				</exclusion>
-				<exclusion>
 					<groupId>org.codehaus.jettison</groupId>
 					<artifactId>jettison</artifactId>
 				</exclusion>
@@ -282,10 +250,6 @@
 				<exclusion>
 					<groupId>org.htrace</groupId>
 					<artifactId>htrace-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.xml.bind</groupId>
-					<artifactId>jaxb-impl</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>tomcat</groupId>

@@ -38,11 +38,11 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
           {
               // Both tab and comma dataset metadata
               new String[] { DS_DIR, DS_DIR, }, //
-              new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
+              new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_XML, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
               new String[] { DS_MYDATASET, DS_MYDATASET }, //
               new String[][] {
                   // Both tab and comma dataset
-                  { DSS_MYDATASET_TSV }, //
+                  { DSS_MYDATASET_XML }, //
                   { DSS_MYDATASET_CSV }, //
           }, // All tab and comma dataset subsets
               new String[][][] {
@@ -55,7 +55,7 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
                   ImmutableMap.of(//
                       DDL_FILE, DDL_FILE_TEXT, //
                       DDL_TABLEDELIM, "\\t", //
-                      DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_TSV, //
+                      DDL_TABLELOCATION, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_XML, //
                       DDL_ROWS, "36" //
               ), // Raw text comma
                   ImmutableMap.of(//

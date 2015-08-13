@@ -1,9 +1,7 @@
 package com.cloudera.example.stage;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
@@ -24,8 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import com.cloudera.example.Constants;
 import com.cloudera.example.model.RecordCounter;
-import com.cloudera.example.model.RecordTextFormat;
 import com.cloudera.example.model.RecordKey;
+import com.cloudera.example.model.input.RecordTextInputFormat;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.common.util.DfsUtil;
 
@@ -112,7 +110,7 @@ public class Stage extends Driver {
       job.getConfiguration().set(Constants.CONFIG_INPUT_PATH, inputPath.toString());
       job.getConfiguration().set(Constants.CONFIG_OUTPUT_PATH, outputPath.toString());
       job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
-      job.setInputFormatClass(RecordTextFormat.class);
+      job.setInputFormatClass(RecordTextInputFormat.class);
       for (Path inputPath : inputPaths) {
         FileInputFormat.addInputPath(job, inputPath);
       }
@@ -143,15 +141,16 @@ public class Stage extends Driver {
    */
   private static class Mapper extends org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, Text> {
 
-    private final String PARTITION_YEAR = Path.SEPARATOR_CHAR + "year=";
-    private final String PARTITION_MONTH = Path.SEPARATOR_CHAR + "month=";
-    private final String PARTITION_PATH_SUFFIX = Path.SEPARATOR_CHAR + "mydataset-" + UUID.randomUUID();
+    private final String PARTITION_BATCH_START = Path.SEPARATOR_CHAR + "ingest_batch_id=" + UUID.randomUUID()
+        + Path.SEPARATOR_CHAR + "ingest_batch_start=";
+    private final String PARTITION_FINISH = Path.SEPARATOR_CHAR + "ingest_batch_finish=";
+    private final String PARTITION_PATH_SUFFIX = Path.SEPARATOR_CHAR + "mydataset";
     private final String PARTITION_PATH_PREFIX = Constants.DIR_DS_MYDATASET_PARTITIONED + Path.SEPARATOR_CHAR
         + OUTPUT_SEQUENCE + Path.SEPARATOR_CHAR;
     private final String MALFORMED_PATH_PREFIX = Constants.DIR_DS_MYDATASET_MALFORMED + Path.SEPARATOR_CHAR;
 
+    private final String timestamp = "" + System.currentTimeMillis();
     private final StringBuilder string = new StringBuilder(512);
-    private final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
     private MultipleOutputs<RecordKey, Text> multipleOutputs;
 
@@ -175,12 +174,10 @@ public class Stage extends Driver {
       context.getCounter(RecordCounter.FILES).increment(1);
       if (key.isValid()) {
         context.getCounter(RecordCounter.FILES_STAGED).increment(1);
-        calendar.setTimeInMillis(key.getTimestamp());
         multipleOutputs.write(OUTPUT_SEQUENCE, key, value,
             string.append(PARTITION_PATH_PREFIX).append(key.getType()).append(Path.SEPARATOR_CHAR)
-                .append(key.getCodec()).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR))
-                .append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1).append(PARTITION_PATH_SUFFIX)
-                .toString());
+                .append(key.getCodec()).append(PARTITION_BATCH_START).append(timestamp).append(PARTITION_FINISH)
+                .append(timestamp).append(PARTITION_PATH_SUFFIX).toString());
       } else {
         context.getCounter(RecordCounter.FILES_MALFORMED).increment(1);
         multipleOutputs.write(OUTPUT_TEXT, NullWritable.get(), value,

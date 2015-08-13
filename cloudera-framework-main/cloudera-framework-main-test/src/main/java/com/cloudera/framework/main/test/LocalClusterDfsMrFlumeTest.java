@@ -162,6 +162,8 @@ public class LocalClusterDfsMrFlumeTest extends BaseTest {
     source.start();
     for (int i = 0; i < iterations; i++) {
       source.process();
+    }
+    for (int i = 0; i < iterations; i++) {
       sink.process();
     }
     source.stop();
