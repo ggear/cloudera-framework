@@ -1,6 +1,6 @@
 #Cloudera Framework
 
-Provide a Cloudera development framework, including a unit test harness, client and runtime bill-of-materials and driver base class, with full coverage across the Cloudera stack, including:
+Provide a Cloudera development framework, including a unit test harness, clients/runtime bill-of-materials and driver base class, with full coverage across the Cloudera stack, including:
 
 * HDFS
 * YARN
@@ -34,11 +34,12 @@ Alternatively, the module can be distributed as a binary by copying the dependen
 
 ##Usage
 
-The cloudera-framework includes an archetype allowing you to stand up a simple project and get going fast:
+The cloudera-framework includes an archetype allowing you to stand up a simple, but best practices project that shows how to use the framework and get going fast:
 
 ```bash
 export CF_VERSION=1.1.0
 export CDH_VERSION=5.4.3
+export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate \
   -DarchetypeGroupId=com.cloudera.framework.main \
   -DarchetypeArtifactId=cloudera-framework-main-archetype \
@@ -48,7 +49,7 @@ mvn archetype:generate \
   -DartifactId=my-cloudera-project \
   -Dpackage="com.my.company"
 cd my-cloudera-project
-mvn eclipse:eclipse clean install
+mvn -Declipse.workspace=$ECLIPSE_WORKSPACE eclipse:configure-workspace eclipse:eclipse clean install
 ```
 
 ##Release

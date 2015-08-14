@@ -232,8 +232,10 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
   }
 
   private static final Map<String, String> FLUME_SUBSTITUTIONS = ImmutableMap.of(//
-      "HDFS_ROOT", new LocalClusterDfsMrFlumeTest().getPathDfs("/"), //
-      "ROOT_DIR_HDFS_RAW", DIR_DS_MYDATASET_RAW, "ROOT_DIR_HDFS_STAGED", DIR_DS_MYDATASET_STAGED);
+      "ROOT_HDFS", new LocalClusterDfsMrFlumeTest().getPathDfs("/"), //
+      "ROOT_DIR_HDFS_RAW", DIR_DS_MYDATASET_RAW, //
+      "ROOT_DIR_HDFS_STAGED", DIR_DS_MYDATASET_STAGED //
+  );
   private static final String FLUME_CONFIG_FILE = "cfg/flume/flume-conf.properties";
   private static final String FLUME_AGENT_NAME = "mydataset";
   private static final String FLUME_SOURCE_POLL_MS = "25";

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -13,6 +14,10 @@
 		<artifactId>cloudera-framework-main</artifactId>
 		<version>1.2.0-cdh5.4.4-SNAPSHOT</version>
 	</parent>
+
+	<properties>
+		<maven.test.skip>false</maven.test.skip>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -62,6 +67,12 @@
 				</excludes>
 			</resource>
 		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -73,6 +84,15 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>${maven.archetype-test.skip}</skipTests>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 </project>

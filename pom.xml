@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cloudera</groupId>
@@ -42,6 +43,7 @@
 	<properties>
 
 		<maven.test.skip>false</maven.test.skip>
+		<maven.archetype-test.skip>false</maven.archetype-test.skip>
 		<maven.system-test.skip>true</maven.system-test.skip>
 		<maven.integration-test.skip>true</maven.integration-test.skip>
 		<maven.data-download.skip>true</maven.data-download.skip>
@@ -73,6 +75,7 @@
 			<id>CMP</id>
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
+				<maven.archetype-test.skip>true</maven.archetype-test.skip>
 				<maven.system-test.skip>true</maven.system-test.skip>
 				<maven.data-download.skip>true</maven.data-download.skip>
 				<maven.assembly.skip>true</maven.assembly.skip>
@@ -82,6 +85,7 @@
 			<id>BLD</id>
 			<properties>
 				<maven.test.skip>false</maven.test.skip>
+				<maven.archetype-test.skip>false</maven.archetype-test.skip>
 				<maven.system-test.skip>true</maven.system-test.skip>
 				<maven.data-download.skip>true</maven.data-download.skip>
 				<maven.assembly.skip>true</maven.assembly.skip>
@@ -91,6 +95,7 @@
 			<id>PKG</id>
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
+				<maven.archetype-test.skip>true</maven.archetype-test.skip>
 				<maven.system-test.skip>true</maven.system-test.skip>
 				<maven.data-download.skip>true</maven.data-download.skip>
 				<maven.assembly.skip>false</maven.assembly.skip>
@@ -100,6 +105,7 @@
 			<id>ALL</id>
 			<properties>
 				<maven.test.skip>false</maven.test.skip>
+				<maven.archetype-test.skip>false</maven.archetype-test.skip>
 				<maven.system-test.skip>false</maven.system-test.skip>
 				<maven.data-download.skip>false</maven.data-download.skip>
 				<maven.assembly.skip>false</maven.assembly.skip>
