@@ -53,9 +53,9 @@
 			</includes>
 			<unpackOptions>
 				<includes>
-					<include>cfg/**</include>
-					<include>ddl/*</include>
-					<include>sql/**</include>
+					<include>cfg/**/*</include>
+					<include>ddl/**/*</include>
+					<include>sql/**/*</include>
 				</includes>
 			</unpackOptions>
 		</dependencySet>
