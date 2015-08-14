@@ -251,7 +251,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     @Override
     public Event intercept(Event event) {
       String timestamp = putHeader(event, HEADER_TIMESTAMP, "" + System.currentTimeMillis());
-      return getEventWithHeaders(event, timestamp, UUID.randomUUID().toString(), 1, 1, timestamp, timestamp);
+      return setEventHeaders(event, timestamp, UUID.randomUUID().toString(), 1, 1, timestamp, timestamp);
     }
 
     @Override
@@ -261,7 +261,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       String batchTimestampStart = putHeader(events.get(0), HEADER_TIMESTAMP, timestamp);
       String batchTimestampFinish = putHeader(events.get(events.size() - 1), HEADER_TIMESTAMP, timestamp);
       for (int i = 0; i < events.size(); i++) {
-        getEventWithHeaders(events.get(i), timestamp, batchId, i + 1, events.size(), batchTimestampStart,
+        setEventHeaders(events.get(i), timestamp, batchId, i + 1, events.size(), batchTimestampStart,
             batchTimestampFinish);
       }
       return events;
@@ -271,11 +271,11 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     public void close() {
     }
 
-    private Event getEventWithHeaders(Event event, String timestamp, String batchId, int batchIndex, int batchSum,
+    private Event setEventHeaders(Event event, String timestamp, String batchId, int batchIndex, int batchSum,
         String batchTimestampStart, String batchTimestampFinish) {
       putHeader(event, HEADER_TIMESTAMP, "" + timestamp);
-      putHeader(event, HEADER_BATCH_ID, batchId);
       putHeader(event, HEADER_BATCH_TYPE, recordType);
+      putHeader(event, HEADER_BATCH_ID, batchId, true);
       putHeader(event, HEADER_BATCH_INDEX, "" + batchIndex, true);
       putHeader(event, HEADER_BATCH_SUM, "" + batchSum, true);
       putHeader(event, HEADER_BATCH_TIMESTAMP_START, "" + batchTimestampStart, true);
