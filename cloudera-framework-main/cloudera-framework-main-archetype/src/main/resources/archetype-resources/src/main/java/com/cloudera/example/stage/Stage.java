@@ -187,4 +187,8 @@ public class Stage extends Driver {
 
   }
 
+  public static void main(String... arguments) throws Exception {
+    System.exit(new Stage().runner(arguments));
+  }
+
 }

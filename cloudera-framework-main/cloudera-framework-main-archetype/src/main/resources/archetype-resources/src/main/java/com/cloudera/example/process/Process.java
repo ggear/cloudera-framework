@@ -257,6 +257,11 @@ public class Process extends Driver {
                 .append(Path.SEPARATOR_CHAR).append(PARTITION_FILE).toString());
       }
     }
+
+  }
+
+  public static void main(String... arguments) throws Exception {
+    System.exit(new Process().runner(arguments));
   }
 
 }
