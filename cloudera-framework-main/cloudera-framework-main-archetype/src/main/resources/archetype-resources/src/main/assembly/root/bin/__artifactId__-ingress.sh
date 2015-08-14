@@ -18,15 +18,15 @@ KAFKA_KAFKA_BROKER_HOSTS_AND_PORTS=${9:-"$KAFKA_KAFKA_BROKER_HOSTS_AND_PORTS"}
 ZOOKEEPER_SERVER_HOSTS_AND_PORTS=${10:-"$ZOOKEEPER_SERVER_HOSTS_AND_PORTS"}
 FLUME_AGENT_HOSTS=${11:-"$FLUME_AGENT_HOSTS"}
 FLUME_AGENT_DIR_LIB=${12:-"/usr/lib/flume-ng/plugins.d/$NAME_SPACE_DATABASE"}
-FLUME_AGENT_NAME=${13:-"cyclehire"}
+FLUME_AGENT_NAME=${13:-"$NAME_SPACE_DATABASE"}
 ROOT_HDFS=${14:-"$ROOT_HDFS"}
 ROOT_DIR_HDFS_RAW=${15:-"$ROOT_DIR_HDFS_RAW"}
 ROOT_DIR_HDFS_STAGED=${16:-"$ROOT_DIR_HDFS_STAGED"}
 
-$ROOT_DIR/../../bin/cyclehire-shell-hadoop.sh "fs -mkdir -p $ROOT_DIR_HDFS_RAW"
-$ROOT_DIR/../../bin/cyclehire-shell-hadoop.sh "fs -chmod 777 $ROOT_DIR_HDFS_RAW"
-$ROOT_DIR/../../bin/cyclehire-shell-hadoop.sh "fs -mkdir -p $ROOT_DIR_HDFS_STAGED"
-$ROOT_DIR/../../bin/cyclehire-shell-hadoop.sh "fs -chmod 777 $ROOT_DIR_HDFS_STAGED"
+$ROOT_DIR/bin/*-shell-hadoop.sh "fs -mkdir -p $ROOT_DIR_HDFS_RAW"
+$ROOT_DIR/bin/*-shell-hadoop.sh "fs -chmod 777 $ROOT_DIR_HDFS_RAW"
+$ROOT_DIR/bin/*-shell-hadoop.sh "fs -mkdir -p $ROOT_DIR_HDFS_STAGED"
+$ROOT_DIR/bin/*-shell-hadoop.sh "fs -chmod 777 $ROOT_DIR_HDFS_STAGED"
 
 FLUME_AGENT_HOSTS_ARRAY=(${FLUME_AGENT_HOSTS//,/ })
 for FLUME_AGENT_HOST in "${FLUME_AGENT_HOSTS_ARRAY[@]}"; do
