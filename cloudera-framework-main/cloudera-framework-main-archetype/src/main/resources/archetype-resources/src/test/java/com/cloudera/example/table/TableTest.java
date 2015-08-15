@@ -62,7 +62,7 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
                     DDL_VAR_NAME, getTableName(DIR_DS_MYDATASET_PROCESSED_DUPLICATE_AVRO), //
                     DDL_VAR_FORMAT, org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat.class.getName(), //
                     DDL_VAR_LOCATION, DIR_DS_MYDATASET_PROCESSED_DUPLICATE, //
-                    DDL_VAR_ROWS, "332" //
+                    DDL_VAR_ROWS, "0" //
             ), //
         }, //
         }, //
