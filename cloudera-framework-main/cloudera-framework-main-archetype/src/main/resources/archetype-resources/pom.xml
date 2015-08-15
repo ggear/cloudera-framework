@@ -13,6 +13,25 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>cdh.repo</id>
+			<url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+			<name>Cloudera Repository</name>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>central.repo</id>
+			<url>https://repo1.maven.org/maven2</url>
+			<name>Central Repository</name>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.cloudera.framework.main.client</groupId>
@@ -47,6 +66,15 @@
 			<artifactId>cloudera-framework-main-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro-mapred</artifactId>
+			<version>1.7.6-cdh5.4.4</version>
+			<classifier>hadoop2</classifier>
+		</dependency>
+
+
 		<dependency>
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>

@@ -130,7 +130,6 @@ public class Process extends Driver {
       job.setMapperClass(Mapper.class);
       job.setSortComparatorClass(RecordKey.RecordKeyComparator.class);
       job.setMapOutputKeyClass(RecordKey.class);
-      job.setMapOutputValueClass(AvroValue.class);
       AvroJob.setMapOutputValueSchema(job, Record.getClassSchema());
       job.setReducerClass(Reducer.class);
       job.setNumReduceTasks(inputPaths.size());
