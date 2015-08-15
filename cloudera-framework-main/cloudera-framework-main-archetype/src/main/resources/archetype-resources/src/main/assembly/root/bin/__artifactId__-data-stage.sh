@@ -14,7 +14,7 @@ export HADOOP_CLASSPATH="$(echo -n $(ls -m $ROOT_DIR/lib/jar/dep/*.jar)|sed 's/,
 
 $ROOT_DIR/bin/*-shell-hadoop.sh "\
   jar $ROOT_DIR/lib/jar/*.jar \
-  com.cloudera.example.process.Process \
+  com.cloudera.example.stage.Stage \
   -libjars $LIBJARS \
   $CMD_LINE_ARGUMENTS \
   $ROOT_DIR_HDFS_RAW_SOURCE \
