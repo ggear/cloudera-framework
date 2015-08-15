@@ -1,6 +1,6 @@
 #Cloudera Framework
 
-Provide a Cloudera development framework, including a unit test harness, clients/runtime bill-of-materials and driver base class, with full coverage across the Cloudera stack, including:
+Provide an example organisation core Cloudera Framework, defining corporate standards on runtime components, dependencies, datasets, utility libraries, unit testing and project structure. The example includes a unit test harness, clients/runtime bill-of-materials and driver base class, with full coverage across the Cloudera stack, including:
 
 * HDFS
 * YARN
@@ -8,6 +8,8 @@ Provide a Cloudera development framework, including a unit test harness, clients
 * Hive
 * Flume
 * Kafka
+
+A Maven archetype is also included, codifying the standards and setting expectations.
 
 ##Requirements
 

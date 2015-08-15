@@ -5,7 +5,7 @@ package com.cloudera.example;
  */
 public interface Constants {
 
-  public static final String DIR_DS_MYDATASET = "/my-dataset";
+  public static final String DIR_DS_MYDATASET = "/mydataset";
   public static final String DIR_DS_MYDATASET_CLEANSED = "cleansed";
   public static final String DIR_DS_MYDATASET_DUPLICATE = "duplicate";
   public static final String DIR_DS_MYDATASET_MALFORMED = "malformed";
@@ -42,17 +42,17 @@ public interface Constants {
       + "/avro/binary/none";
 
   public static final String DDL_DIR = "/ddl/hive";
-  public static final String DDL_FILE_TEXT = "table_text.ddl";
-  public static final String DDL_FILE_AVRO = "table_avro.ddl";
-  public static final String DDL_FILE_PARQUET = "table_parquet.ddl";
-  public static final String DDL_FILE = "my.table.file";
-  public static final String DDL_ROWS = "my.table.rows";
-  public static final String DDL_TABLENAME = "my.table.name";
-  public static final String DDL_TABLEDELIM = "my.table.delim";
-  public static final String DDL_TABLEAVROSCHEMA = "my.table.avroschema";
-  public static final String DDL_TABLELOCATION = "my.table.location";
+  public static final String DDL_FILE_BATCH_NAME = "table_create_batch_name.ddl";
+  public static final String DDL_FILE_BATCH_ID_START_FINISH = "table_create_batch_id_start_finish.ddl";
+  public static final String DDL_FILE_BATCH_YEAR_MONTH = "table_create_batch_year_month.ddl";
+  public static final String DDL_VAR_FILE = "my.table.file";
+  public static final String DDL_VAR_ROWS = "my.table.rows";
+  public static final String DDL_VAR_NAME = "my.table.name";
+  public static final String DDL_VAR_FORMAT = "my.table.format";
+  public static final String DDL_VAR_SCHEMA = "my.table.schema";
+  public static final String DDL_VAR_LOCATION = "my.table.location";
 
-  public static final String MODEL_AVRO = "/cfg/avro/model.avsc";
+  public static final String MODEL_AVRO_FILE = "/cfg/avro/model.avsc";
 
   public static final String CONFIG_INPUT_PATH = "cloudera.input.dir";
   public static final String CONFIG_OUTPUT_PATH = "cloudera.output.dir";

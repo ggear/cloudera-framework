@@ -4,13 +4,12 @@
 
 CREATE EXTERNAL TABLE IF NOT EXISTS ${hivevar:my.table.name}
 PARTITIONED BY (
-  year SMALLINT,
-  month TINYINT
+  ingest_batch_name STRING
 )
 ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
-STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+STORED AS INPUTFORMAT '${hivevar:my.table.format}'
 OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
 LOCATION '${hivevar:my.table.location}'
-TBLPROPERTIES ('avro.schema.literal'='${hivevar:my.table.avroschema}');
+TBLPROPERTIES ('avro.schema.literal'='${hivevar:my.table.schema}');
 
 MSCK REPAIR TABLE ${hivevar:my.table.name};

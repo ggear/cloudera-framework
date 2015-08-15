@@ -67,7 +67,7 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
             record = new Record();
             record.setIngestTimestamp(this.key.getTimestamp());
             record.setIngestBatch(this.key.getBatch());
-            record.setIngestKey(UUID.randomUUID().toString());
+            record.setIngestId(UUID.randomUUID().toString());
             // Use static DateFormat, this is not threadsafe!
             record.setMyTimestamp(FIELD_DATE.parse(fields[0]).getTime());
             record.setMyInteger(Integer.parseInt(fields[1]));

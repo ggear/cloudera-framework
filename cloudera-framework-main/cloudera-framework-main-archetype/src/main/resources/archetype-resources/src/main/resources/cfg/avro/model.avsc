@@ -7,7 +7,7 @@
   "name":"Record",
   "fields":[
     {
-      "name":"ingest_key",
+      "name":"ingest_id",
            "type":[
         "null",
         "string"

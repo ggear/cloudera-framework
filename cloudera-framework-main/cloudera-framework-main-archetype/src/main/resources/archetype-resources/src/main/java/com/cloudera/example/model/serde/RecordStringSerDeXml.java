@@ -75,7 +75,7 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
           record = records.get(index);
           record.setIngestTimestamp(this.key.getTimestamp());
           record.setIngestBatch(this.key.getBatch());
-          record.setIngestKey(UUID.randomUUID().toString());
+          record.setIngestId(UUID.randomUUID().toString());
         } else {
           record = null;
           this.key.setSource(string);

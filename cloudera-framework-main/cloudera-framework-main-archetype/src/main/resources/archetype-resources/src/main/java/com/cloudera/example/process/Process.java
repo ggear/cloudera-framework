@@ -209,8 +209,8 @@ public class Process extends Driver {
   private static class Reducer
       extends org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>> {
 
-    private static final String PARTITION_YEAR = "ingest_year=";
-    private static final String PARTITION_MONTH = "ingest_month=";
+    private static final String PARTITION_YEAR = "ingest_batch_year=";
+    private static final String PARTITION_MONTH = "ingest_batch_month=";
     private static final String PARTITION_FILE = "mydataset-" + UUID.randomUUID().toString();
 
     private final AvroKey<Record> record = new AvroKey<Record>();

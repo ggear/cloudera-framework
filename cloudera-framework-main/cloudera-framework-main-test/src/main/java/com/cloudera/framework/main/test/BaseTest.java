@@ -320,7 +320,7 @@ public abstract class BaseTest {
       }
     }
     if (files.isEmpty()) {
-      throw new IllegalArgumentException("Cloud not find files with path [" + sourcePathGlob + "]");
+      throw new IllegalArgumentException("Could not find files with path [" + sourcePathGlob + "]");
     }
     debugMessageFooter(LOG, "copyFromLocalDir", time);
     return files.toArray(new File[files.size()]);

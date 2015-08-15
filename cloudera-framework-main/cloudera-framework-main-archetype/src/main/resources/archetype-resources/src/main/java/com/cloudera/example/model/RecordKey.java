@@ -30,7 +30,7 @@ public class RecordKey implements WritableComparable<RecordKey> {
   }
 
   private static final Pattern REGEX_PATH = Pattern.compile(
-      ".*/?(([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/ingest_batch=([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-]*)\\.([a-z]+)\\.?([a-z]*)/([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-\\.]*)\\.(.*))");
+      ".*/?(([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/ingest_batch_name=([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-]*)\\.([a-z]+)\\.?([a-z]*)/([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-\\.]*)\\.(.*))");
 
   private int hash;
   private String type;
