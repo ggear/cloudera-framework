@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>cloudera-framework-main-client-core</module>
+		<module>cloudera-framework-main-client-avro</module>
 		<module>cloudera-framework-main-client-zookeeper</module>
 		<module>cloudera-framework-main-client-kafka</module>
 		<module>cloudera-framework-main-client-flume</module>
