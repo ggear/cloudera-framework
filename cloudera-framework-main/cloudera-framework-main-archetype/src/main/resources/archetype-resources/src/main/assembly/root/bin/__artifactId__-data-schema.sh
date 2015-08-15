@@ -41,7 +41,7 @@ TABLES_DDL=( \
 #	"table_create_batch_name.ddl" \
 #	"table_create_batch_name.ddl" \
 	"table_create_batch_year_month.ddl" \
-#	"table_create_batch_year_month.ddl" \
+	"table_create_batch_year_month.ddl" \
 #	"table_create_batch_name.ddl" \
 #	"table_create_batch_name.ddl" \
 )
@@ -53,7 +53,7 @@ TABLES_NAME=( \
 #	"staged_malformed_text_xml_none" \
 #	"staged_malformed_text_csv_none" \
 	"processed_cleansed_avro_binary_none" \
-#	"processed_duplicate_avro_binary_none" \
+	"processed_duplicate_avro_binary_none" \
 #	"processed_malformed_xml_none" \
 #	"processed_malformed_csv_none" \
 )
@@ -65,7 +65,7 @@ TABLES_FORMAT=( \
 #	"com.cloudera.example.model.input.RecordTextInputFormatXml" \
 #	"com.cloudera.example.model.input.RecordTextInputFormatCsv" \
 	"org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat" \
-#	"org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat" \
+	"org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat" \
 #	"com.cloudera.example.model.input.RecordTextInputFormatXml" \
 #	"com.cloudera.example.model.input.RecordTextInputFormatCsv" \
 )
@@ -77,7 +77,7 @@ TABLES_LOCATION=( \
 #	"$ROOT_DIR_HDFS_STAGED_MALFORMED\text\xml\none" \
 #	"$ROOT_DIR_HDFS_STAGED_MALFORMED\text\csv\none" \
 	"$ROOT_DIR_HDFS_PROCESSED_CLEANSED\avro\binary\none" \
-#	"$ROOT_DIR_HDFS_PROCESSED_DUPLICATE\avro\binary\none" \
+	"$ROOT_DIR_HDFS_PROCESSED_DUPLICATE\avro\binary\none" \
 #	"$ROOT_DIR_HDFS_PROCESSED_MALFORMED\text\xml\none" \
 #	"$ROOT_DIR_HDFS_PROCESSED_MALFORMED\text\csv\none" \
 )
