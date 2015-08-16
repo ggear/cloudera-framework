@@ -49,7 +49,7 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
                 { { null }, }, //
         }, // Table DDL parameters and row count tests
             new Map[] {
-                // TODO Enable all tables, also in __artifactId__-data-schema.sh 
+                // TODO Enable all tables, also in __artifactId__-data-schema.sh
                 ImmutableMap.of(//
                     DDL_VAR_FILE, DDL_FILE_BATCH_YEAR_MONTH, //
                     DDL_VAR_NAME, getTableName(DIR_DS_MYDATASET_PROCESSED_CLEANSED_AVRO), //

@@ -124,7 +124,7 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
   }
 
   @Override
-  public void setupDatasets() throws IllegalArgumentException, IOException {
+  public void setUpDatasets() throws IllegalArgumentException, IOException {
   }
 
   private static final String DIR_SOURCE = REL_DIR_CLASSES + "/data";

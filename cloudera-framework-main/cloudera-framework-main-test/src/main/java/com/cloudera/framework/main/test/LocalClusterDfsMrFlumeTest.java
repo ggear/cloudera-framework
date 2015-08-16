@@ -111,7 +111,7 @@ public class LocalClusterDfsMrFlumeTest extends BaseTest {
   public int processSouceSinkPipeline(Map<String, String> substitutions, String configFile,
       Map<String, String> configSourceOverlay, Map<String, String> configSinkOverlay, String agentName,
       String sourceName, String sinkName, PollableSource source, Sink sink, String outputPath, int iterations)
-          throws IOException, EventDeliveryException {
+          throws IOException, EventDeliveryException, InterruptedException {
     Properties config = new Properties();
     if (configFile != null) {
       InputStream configStream = LocalClusterDfsMrFlumeTest.class.getClassLoader().getResourceAsStream(configFile);

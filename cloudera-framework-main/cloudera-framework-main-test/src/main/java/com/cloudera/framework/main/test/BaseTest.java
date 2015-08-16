@@ -22,6 +22,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -74,7 +75,7 @@ public abstract class BaseTest {
    * subsets, labels and metadata suitable for loading into an extending class
    * via
    * {@link #BaseTest(String[], String[], String[], String[][], String[][][], Map[])
-   * implementation, and later invoked via {@link #setupDatasets()},
+   * implementation, and later invoked via {@link #setUpDatasets()},
    * {@link #assertCounterEquals(Map, Map)} or manually
    *
    * @return
@@ -300,6 +301,7 @@ public abstract class BaseTest {
       throws IllegalArgumentException, IOException {
     long time = debugMessageHeader(LOG, "copyFromLocalDir");
     List<File> files = new ArrayList<File>();
+    StringBuilder filesString = new StringBuilder();
     String sourcePathGlob = ((sourcePaths.length == 0 ? "*" : sourcePaths[0]) + "/"
         + (sourcePaths.length <= 1 ? "*" : sourcePaths[1]) + "/" + (sourcePaths.length <= 2 ? "*" : sourcePaths[2]))
             .replace(ABS_DIR_WORKING, ".");
@@ -312,12 +314,16 @@ public abstract class BaseTest {
         files.addAll(FileUtils.listFiles(file, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE));
       }
       if (LOG.isDebugEnabled()) {
-        LOG.debug(
-            LOG_PREFIX + " [copyFromLocalDir] copied [" + file.getParentFile().getParentFile().getParentFile().getName()
-                + "/" + file.getParentFile().getParentFile().getName() + "/" + file.getParentFile().getName() + "/"
-                + file.getName() + (file.isDirectory() ? "/" : "") + "] of glob [" + sourcePathGlob + "/*] to ["
-                + destinationPath + "]");
+        filesString.append("\n")
+            .append(file.getParentFile().getParentFile().getParentFile().getName() + "/"
+                + file.getParentFile().getParentFile().getName() + "/" + file.getParentFile().getName() + "/"
+                + file.getName() + (file.isDirectory() ? "/" : ""))
+            .append(" -> ").append(destinationPath).append("/").append(file.getName());
       }
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(LOG_PREFIX + " [copyFromLocalDir] cp -rvf " + sourcePathGlob + "/* " + destinationPath
+          + (filesString.length() > 0 ? filesString.toString() : "\n"));
     }
     if (files.isEmpty()) {
       throw new IllegalArgumentException("Could not find files with path [" + sourcePathGlob + "]");
@@ -413,8 +419,26 @@ public abstract class BaseTest {
     debugMessageFooter(LOG, "setUpFileSystem", time);
   }
 
+  @After
+  public void tearDownFileSystem() throws Exception {
+    long time = debugMessageHeader(LOG, "tearDownFileSystem");
+    Path[] files = listFilesDfs("/");
+    Arrays.sort(files);
+    StringBuilder filesString = new StringBuilder();
+    for (Path file : files) {
+      if (!file.toString().contains(DIR_MINICLUSTER_PREFIX)) {
+        filesString.append("\n").append(file.toString());
+      }
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(LOG_PREFIX + " [tearDownFileSystem] find / -type f"
+          + (filesString.length() > 0 ? filesString.toString() : "\n"));
+    }
+    debugMessageFooter(LOG, "tearDownFileSystem", time);
+  }
+
   @Before
-  public void setupDatasets() throws IllegalArgumentException, IOException {
+  public void setUpDatasets() throws IllegalArgumentException, IOException {
     if (sources != null && destinations != null) {
       copyFromLocalDir(sources, destinations, datasets, subsets, labels);
     }

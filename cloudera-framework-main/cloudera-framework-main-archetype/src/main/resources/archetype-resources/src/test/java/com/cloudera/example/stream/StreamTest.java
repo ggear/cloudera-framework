@@ -205,7 +205,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
    */
   @Test
   @SuppressWarnings("unchecked")
-  public void testStream() throws IOException, EventDeliveryException {
+  public void testStream() throws IOException, EventDeliveryException, InterruptedException {
     Assert.assertEquals(((Integer) metadata[2].get(KEY_FLUME_PROCESS_FILE_COUNT)).intValue(),
         processSouceSinkPipeline(FLUME_SUBSTITUTIONS, FLUME_CONFIG_FILE, metadata[0], metadata[1], FLUME_AGENT_NAME,
             (String) metadata[2].get(KEY_FLUME_SOURCE_NAME), (String) metadata[2].get(KEY_FLUME_SINK_NAME),
@@ -227,7 +227,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
   }
 
   @Override
-  public void setupDatasets() throws IllegalArgumentException, IOException {
+  public void setUpDatasets() throws IllegalArgumentException, IOException {
     // no need to copy datasets, the Flume source generates them
   }
 

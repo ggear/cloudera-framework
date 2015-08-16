@@ -17,15 +17,14 @@ import com.google.common.collect.ImmutableMap;
 public class LocalClusterDfsMrFlumeTestTest extends LocalClusterDfsMrFlumeTest {
 
   @Test
-  public void testFlume() throws IOException, EventDeliveryException {
+  public void testFlume() throws IOException, EventDeliveryException, InterruptedException {
     Assert.assertEquals(1,
         processSouceSinkPipeline(ImmutableMap.of("HDFS_ROOT", getPathDfs("/")), "flume/flume-conf.properties",
             Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(), "agent1", "source1",
             "sink1", new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink1", 1));
-    Assert.assertEquals(1,
-        processSouceSinkPipeline(ImmutableMap.of("HDFS_ROOT", getPathDfs("/")), "flume/flume-conf.properties",
-            ImmutableMap.of("batchSize", "3"), Collections.<String, String> emptyMap(), "agent1", "source1", "sink2",
-            new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink2", 5));
+    Assert.assertTrue(processSouceSinkPipeline(ImmutableMap.of("HDFS_ROOT", getPathDfs("/")),
+        "flume/flume-conf.properties", ImmutableMap.of("batchSize", "3"), Collections.<String, String> emptyMap(),
+        "agent1", "source1", "sink2", new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink2", 5) >= 1);
   }
 
 }
