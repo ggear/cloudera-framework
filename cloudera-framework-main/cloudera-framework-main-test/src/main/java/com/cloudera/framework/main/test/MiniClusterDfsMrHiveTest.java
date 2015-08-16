@@ -90,7 +90,7 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
     CommandProcessor commandProcessor = CommandProcessorFactory.getForHiveCommand(
         (statement = new StrSubstitutor(parameters, "${hivevar:", "}").replace(statement.trim())).split("\\s+"), conf);
     if (LOG.isDebugEnabled()) {
-      LOG.debug(LOG_PREFIX + " [processStatement] pre-execute, statement:\n" + statement);
+      LOG.debug(LOG_PREFIX + " [processStatement] hive exec:\n" + statement);
     }
     int responseCode = (commandProcessor = commandProcessor == null ? new Driver(conf) : commandProcessor)
         .run(statement).getResponseCode();
@@ -101,7 +101,7 @@ public class MiniClusterDfsMrHiveTest extends BaseTest {
       results.add("");
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug(LOG_PREFIX + " [processStatement] post-execute, result:\n" + StringUtils.join(results.toArray(), "\n"));
+      LOG.debug(LOG_PREFIX + " [processStatement] hive result:\n" + StringUtils.join(results.toArray(), "\n"));
     }
     debugMessageFooter(LOG, "processStatement", time);
     if (responseCode != 0) {

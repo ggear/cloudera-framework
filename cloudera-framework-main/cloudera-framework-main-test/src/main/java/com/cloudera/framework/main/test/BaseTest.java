@@ -322,7 +322,7 @@ public abstract class BaseTest {
       }
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug(LOG_PREFIX + " [copyFromLocalDir] cp -rvf " + sourcePathGlob + "/* " + destinationPath
+      LOG.debug(LOG_PREFIX + " [copyFromLocalDir] cp -rvf " + sourcePathGlob + "/* " + destinationPath + ":"
           + (filesString.length() > 0 ? filesString.toString() : "\n"));
     }
     if (files.isEmpty()) {
@@ -431,7 +431,7 @@ public abstract class BaseTest {
       }
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug(LOG_PREFIX + " [tearDownFileSystem] find / -type f"
+      LOG.debug(LOG_PREFIX + " [tearDownFileSystem] find / -type f:"
           + (filesString.length() > 0 ? filesString.toString() : "\n"));
     }
     debugMessageFooter(LOG, "tearDownFileSystem", time);
