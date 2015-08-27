@@ -1,4 +1,4 @@
-package com.cloudera.example.process;
+package com.cloudera.example.partition;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -12,17 +12,16 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.TestConstants;
 import com.cloudera.example.model.RecordCounter;
-import com.cloudera.example.partition.Partition;
 import com.cloudera.example.stage.Stage;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.LocalClusterDfsMrTest;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Test dataset process
+ * Test dataset partition
  */
 @RunWith(Parameterized.class)
-public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants {
+public class PartitionTest extends LocalClusterDfsMrTest implements TestConstants {
 
   /**
    * Paramaterise the unit tests
@@ -46,7 +45,7 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
         }, // Counter equality tests
             new Map[] {
                 // First run
-                ImmutableMap.of(Process.class.getCanonicalName(),
+                ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 1L, //
                         RecordCounter.RECORDS_CANONICAL, 1L, //
@@ -54,7 +53,7 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Second run
-                ImmutableMap.of(Process.class.getCanonicalName(),
+                ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 0L, //
                         RecordCounter.RECORDS_CANONICAL, 0L, //
@@ -79,7 +78,7 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
         }, // Counter equality tests
             new Map[] {
                 // First run
-                ImmutableMap.of(Process.class.getCanonicalName(),
+                ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 1L, //
                         RecordCounter.RECORDS_CANONICAL, 1L, //
@@ -87,7 +86,7 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Second run
-                ImmutableMap.of(Process.class.getCanonicalName(),
+                ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 0L, //
                         RecordCounter.RECORDS_CANONICAL, 0L, //
@@ -114,15 +113,15 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
         }, // Counter equality tests
             new Map[] {
                 // First run
-                ImmutableMap.of(Process.class.getCanonicalName(),
+                ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 332L, //
+                        RecordCounter.RECORDS, 493L, //
                         RecordCounter.RECORDS_CANONICAL, 332L, //
-                        RecordCounter.RECORDS_DUPLICATE, 0L, //
-                        RecordCounter.RECORDS_MALFORMED, 0L//
+                        RecordCounter.RECORDS_DUPLICATE, 140L, //
+                        RecordCounter.RECORDS_MALFORMED, 21L//
             )), //
                 // Second run
-                ImmutableMap.of(Process.class.getCanonicalName(),
+                ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 0L, //
                         RecordCounter.RECORDS_CANONICAL, 0L, //
@@ -135,20 +134,20 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
   }
 
   /**
-   * Test dataset process
+   * Test dataset partition
    */
   @Test
-  public void testProcess() throws Exception {
-    Driver driver = new Process(getConf());
+  public void testPartition() throws Exception {
+    Driver driver = new Partition(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(
-        new String[] { getPathDfs(DIR_DS_MYDATASET_PARTITIONED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PARTITIONED) }));
     assertCounterEquals(metadata[0], driver.getCounters());
     Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(
-        new String[] { getPathDfs(DIR_DS_MYDATASET_PARTITIONED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PARTITIONED) }));
     assertCounterEquals(metadata[1], driver.getCounters());
   }
 
-  public ProcessTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
+  public PartitionTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
       String[][][] labels, @SuppressWarnings("rawtypes") Map[] metadata) {
     super(sources, destinations, datasets, subsets, labels, metadata);
   }
@@ -160,8 +159,6 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
   public void setupData() throws Exception {
     Assert.assertEquals(Driver.RETURN_SUCCESS, new Stage(getConf())
         .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_CANONICAL), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
-    Assert.assertEquals(Driver.RETURN_SUCCESS, new Partition(getConf()).runner(
-        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PARTITIONED) }));
   }
 
 }

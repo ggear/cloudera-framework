@@ -36,8 +36,8 @@ import com.cloudera.framework.main.common.util.DfsUtil;
  */
 public class Stage extends Driver {
 
-  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.FILES, RecordCounter.FILES_STAGED,
-      RecordCounter.FILES_MALFORMED };
+  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.FILES,
+      RecordCounter.FILES_CANONICAL, RecordCounter.FILES_DUPLICATE, RecordCounter.FILES_MALFORMED };
 
   protected static final String OUTPUT_TEXT = "text";
   protected static final String OUTPUT_SEQUENCE = "sequence";
@@ -87,12 +87,12 @@ public class Stage extends Driver {
       throw new Exception("Invalid number of arguments");
     }
     hdfs = FileSystem.newInstance(getConf());
-    inputPath = new Path(arguments[0]);
+    inputPath = hdfs.makeQualified(new Path(arguments[0]));
     if (LOG.isInfoEnabled()) {
       LOG.info("Input path [" + inputPath + "] validated");
     }
     inputPaths = DfsUtil.listDirs(hdfs, inputPath, true, true);
-    outputPath = new Path(arguments[1]);
+    outputPath = hdfs.makeQualified(new Path(arguments[1]));
     hdfs.mkdirs(outputPath.getParent());
     if (LOG.isInfoEnabled()) {
       LOG.info("Output path [" + outputPath + "] validated");
@@ -145,7 +145,7 @@ public class Stage extends Driver {
         + Path.SEPARATOR_CHAR + "ingest_batch_start=";
     private final String PARTITION_FINISH = Path.SEPARATOR_CHAR + "ingest_batch_finish=";
     private final String PARTITION_PATH_SUFFIX = Path.SEPARATOR_CHAR + "mydataset";
-    private final String PARTITION_PATH_PREFIX = Constants.DIR_DS_MYDATASET_PARTITIONED + Path.SEPARATOR_CHAR
+    private final String PARTITION_PATH_PREFIX = Constants.DIR_DS_MYDATASET_CANONICAL + Path.SEPARATOR_CHAR
         + OUTPUT_SEQUENCE + Path.SEPARATOR_CHAR;
     private final String MALFORMED_PATH_PREFIX = Constants.DIR_DS_MYDATASET_MALFORMED + Path.SEPARATOR_CHAR;
 
@@ -173,7 +173,7 @@ public class Stage extends Driver {
       string.setLength(0);
       context.getCounter(RecordCounter.FILES).increment(1);
       if (key.isValid()) {
-        context.getCounter(RecordCounter.FILES_STAGED).increment(1);
+        context.getCounter(RecordCounter.FILES_CANONICAL).increment(1);
         multipleOutputs.write(OUTPUT_SEQUENCE, key, value,
             string.append(PARTITION_PATH_PREFIX).append(key.getType()).append(Path.SEPARATOR_CHAR)
                 .append(key.getCodec()).append(PARTITION_BATCH_START).append(timestamp).append(PARTITION_FINISH)

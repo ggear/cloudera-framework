@@ -6,11 +6,12 @@ package com.cloudera.example.model;
 public enum RecordCounter {
 
   FILES, //
-  FILES_STAGED, //
+  FILES_CANONICAL, //
+  FILES_DUPLICATE, //
   FILES_MALFORMED, //
 
   RECORDS, //
-  RECORDS_CLEANSED, //
+  RECORDS_CANONICAL, //
   RECORDS_DUPLICATE, //
   RECORDS_MALFORMED; //
 

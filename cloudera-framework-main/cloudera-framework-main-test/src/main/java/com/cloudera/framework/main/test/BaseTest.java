@@ -46,6 +46,7 @@ public abstract class BaseTest {
   public static final String DIR_DATASET = "data";
   public static final String DIR_DATA = "test-data";
   public static final String DIR_CLASSES = "test-classes";
+  public static final String DIR_FS_TMP = "test-fs-tmp";
   public static final String DIR_FS_LOCAL = "test-fs-local";
   public static final String DIR_DFS_LOCAL = "test-hdfs-local";
   public static final String DIR_DFS_MINICLUSTER = "test-hdfs-minicluster";
@@ -55,6 +56,7 @@ public abstract class BaseTest {
   public static final String REL_DIR_DATA = DIR_TARGET + "/" + DIR_DATA;
   public static final String REL_DIR_CLASSES = DIR_TARGET + "/" + DIR_CLASSES;
   public static final String REL_DIR_DATASET = REL_DIR_CLASSES + "/" + DIR_DATASET;
+  public static final String REL_DIR_FS_TMP = DIR_TARGET + "/" + DIR_FS_TMP;
   public static final String REL_DIR_FS_LOCAL = DIR_TARGET + "/" + DIR_FS_LOCAL;
   public static final String REL_DIR_DFS_LOCAL = DIR_TARGET + "/" + DIR_DFS_LOCAL;
   public static final String REL_DIR_DFS_MINICLUSTER = DIR_TARGET + "/" + DIR_DFS_MINICLUSTER;
@@ -63,6 +65,7 @@ public abstract class BaseTest {
   public static final String ABS_DIR_WORKING = new File(".").getAbsolutePath();
   public static final String ABS_DIR_TARGET = ABS_DIR_WORKING + "/" + DIR_TARGET;
   public static final String ABS_DIR_DATA = ABS_DIR_TARGET + "/" + DIR_DATA;
+  public static final String ABS_DIR_FS_TMP = ABS_DIR_TARGET + "/" + DIR_FS_TMP;
   public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/" + DIR_DFS_LOCAL;
   public static final String ABS_DIR_DFS_MINICLUSTER = ABS_DIR_TARGET + "/" + DIR_DFS_MINICLUSTER;
 
@@ -314,7 +317,7 @@ public abstract class BaseTest {
         files.addAll(FileUtils.listFiles(file, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE));
       }
       if (LOG.isDebugEnabled()) {
-        filesString.append("\n")
+        filesString.append("\n").append("/")
             .append(file.getParentFile().getParentFile().getParentFile().getName() + "/"
                 + file.getParentFile().getParentFile().getName() + "/" + file.getParentFile().getName() + "/"
                 + file.getName() + (file.isDirectory() ? "/" : ""))
@@ -322,7 +325,7 @@ public abstract class BaseTest {
       }
     }
     if (LOG.isDebugEnabled()) {
-      LOG.debug(LOG_PREFIX + " [copyFromLocalDir] cp -rvf " + sourcePathGlob + "/* " + destinationPath + ":"
+      LOG.debug(LOG_PREFIX + " [copyFromLocalDir] cp -rvf /" + sourcePathGlob + "/* " + destinationPath + ":"
           + (filesString.length() > 0 ? filesString.toString() : "\n"));
     }
     if (files.isEmpty()) {
@@ -346,6 +349,7 @@ public abstract class BaseTest {
     System.setProperty("dir.working.target", ABS_DIR_TARGET);
     System.setProperty("dir.working.target.hdfs", ABS_DIR_DFS_LOCAL);
     System.setProperty("test.build.data", ABS_DIR_DFS_MINICLUSTER);
+    System.setProperty("hadoop.tmp.dir", ABS_DIR_FS_TMP);
     System.setProperty("dir.working.target.derby", ABS_DIR_WORKING + "/target/derby");
     System.setProperty("dir.working.target.derby.db", System.getProperty("dir.working.target.derby") + "/db");
     System.setProperty("derby.stream.error.file", System.getProperty("dir.working.target.derby") + "/derby.log");
@@ -427,7 +431,8 @@ public abstract class BaseTest {
     StringBuilder filesString = new StringBuilder();
     for (Path file : files) {
       if (!file.toString().contains(DIR_MINICLUSTER_PREFIX)) {
-        filesString.append("\n").append(file.toString());
+        filesString.append("\n").append(
+            Path.getPathWithoutSchemeAndAuthority(file).toString().replace(getPathLocal(REL_DIR_DFS_LOCAL), ""));
       }
     }
     if (LOG.isDebugEnabled()) {

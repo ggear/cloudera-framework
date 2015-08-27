@@ -5,6 +5,12 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.commons.io.Charsets;
+import org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat;
+import org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat;
+import org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat;
+import org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat;
+import org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe;
+import org.apache.hadoop.hive.serde2.avro.AvroSerDe;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +20,13 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.Constants;
 import com.cloudera.example.TestConstants;
+import com.cloudera.example.model.RecordPartition;
+import com.cloudera.example.partition.Partition;
 import com.cloudera.example.process.Process;
 import com.cloudera.example.stage.Stage;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.MiniClusterDfsMrHiveTest;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -36,7 +45,7 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
         {
             // All datasets metadata
             new String[] { DS_DIR, DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_SOURCE_TEXT_XML, DIR_DS_MYDATASET_RAW_SOURCE_TEXT_CSV, }, //
+            new String[] { DIR_DS_MYDATASET_RAW_CANONICAL_TEXT_XML, DIR_DS_MYDATASET_RAW_CANONICAL_TEXT_CSV, }, //
             new String[] { DS_MYDATASET, DS_MYDATASET }, //
             new String[][] {
                 // All datasets
@@ -49,21 +58,50 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
                 { { null }, }, //
         }, // Table DDL parameters and row count tests
             new Map[] {
-                // TODO Enable all tables, also in __artifactId__-data-schema.sh
-                ImmutableMap.of(//
-                    DDL_VAR_FILE, DDL_FILE_BATCH_YEAR_MONTH, //
-                    DDL_VAR_NAME, getTableName(DIR_DS_MYDATASET_PROCESSED_CLEANSED_AVRO), //
-                    DDL_VAR_FORMAT, org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat.class.getName(), //
-                    DDL_VAR_LOCATION, DIR_DS_MYDATASET_PROCESSED_CLEANSED_AVRO, //
-                    DDL_VAR_ROWS, "332" //
-            ), //
-                ImmutableMap.of(//
-                    DDL_VAR_FILE, DDL_FILE_BATCH_YEAR_MONTH, //
-                    DDL_VAR_NAME, getTableName(DIR_DS_MYDATASET_PROCESSED_DUPLICATE_AVRO), //
-                    DDL_VAR_FORMAT, org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat.class.getName(), //
-                    DDL_VAR_LOCATION, DIR_DS_MYDATASET_PROCESSED_DUPLICATE_AVRO, //
-                    DDL_VAR_ROWS, "140" //
-            ), //
+                // Table mydataset_partitioned_canonical_avro_binary_none
+                ImmutableMap.builder().//
+                    put(DDL_VAR_FILE, DDL_FILE_CREATE_AVRO). //
+                    put(DDL_VAR_NAME, getTableName(DIR_DS_MYDATASET_PARTITIONED_CANONICAL_AVRO)). //
+                    put(DDL_VAR_PARTITION, Joiner.on(", ").join(RecordPartition.RECORD_DDL_YEAR_MONTH)). //
+                    put(DDL_VAR_SERDE, AvroSerDe.class.getName()). //
+                    put(DDL_VAR_INPUT, AvroContainerInputFormat.class.getName()). //
+                    put(DDL_VAR_OUTPUT, AvroContainerOutputFormat.class.getName()). //
+                    put(DDL_VAR_LOCATION, DIR_DS_MYDATASET_PARTITIONED_CANONICAL_AVRO). //
+                    put(DDL_VAR_ROWS, "332").//
+                    build(), //
+                // Table mydataset_partitioned_duplicate_avro_binary_none
+                ImmutableMap.builder().//
+                    put(DDL_VAR_FILE, DDL_FILE_CREATE_AVRO). //
+                    put(DDL_VAR_NAME, getTableName(DIR_DS_MYDATASET_PARTITIONED_DUPLICATE_AVRO)). //
+                    put(DDL_VAR_PARTITION, Joiner.on(", ").join(RecordPartition.RECORD_DDL_YEAR_MONTH)). //
+                    put(DDL_VAR_SERDE, AvroSerDe.class.getName()). //
+                    put(DDL_VAR_INPUT, AvroContainerInputFormat.class.getName()). //
+                    put(DDL_VAR_OUTPUT, AvroContainerOutputFormat.class.getName()). //
+                    put(DDL_VAR_LOCATION, DIR_DS_MYDATASET_PARTITIONED_DUPLICATE_AVRO). //
+                    put(DDL_VAR_ROWS, "140").//
+                    build(), //
+                // Table mydataset_processed_canonical_parquet_dict_snappy
+                ImmutableMap.builder().//
+                    put(DDL_VAR_FILE, DDL_FILE_CREATE_PARQUET). //
+                    put(DDL_VAR_NAME, getTableName(DIR_DS_MYDATASET_PROCESSED_CANONICAL_PARQUET)). //
+                    put(DDL_VAR_PARTITION, Joiner.on(", ").join(RecordPartition.RECORD_DDL_YEAR_MONTH)). //
+                    put(DDL_VAR_SERDE, ParquetHiveSerDe.class.getName()). //
+                    put(DDL_VAR_INPUT, MapredParquetInputFormat.class.getName()). //
+                    put(DDL_VAR_OUTPUT, MapredParquetOutputFormat.class.getName()). //
+                    put(DDL_VAR_LOCATION, DIR_DS_MYDATASET_PROCESSED_CANONICAL_PARQUET). //
+                    put(DDL_VAR_ROWS, "332").//
+                    build(), //
+                // Table mydataset_processed_duplicate_parquet_dict_snappy
+                ImmutableMap.builder().//
+                    put(DDL_VAR_FILE, DDL_FILE_CREATE_PARQUET). //
+                    put(DDL_VAR_NAME, getTableName(DIR_DS_MYDATASET_PROCESSED_DUPLICATE_PARQUET)). //
+                    put(DDL_VAR_PARTITION, Joiner.on(", ").join(RecordPartition.RECORD_DDL_YEAR_MONTH)). //
+                    put(DDL_VAR_SERDE, ParquetHiveSerDe.class.getName()). //
+                    put(DDL_VAR_INPUT, MapredParquetInputFormat.class.getName()). //
+                    put(DDL_VAR_OUTPUT, MapredParquetOutputFormat.class.getName()). //
+                    put(DDL_VAR_LOCATION, DIR_DS_MYDATASET_PROCESSED_DUPLICATE_PARQUET). //
+                    put(DDL_VAR_ROWS, "0").//
+                    build(), //
         }, //
         }, //
     });
@@ -103,9 +141,11 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
   @Before
   public void setupData() throws Exception {
     Assert.assertEquals(Driver.RETURN_SUCCESS, new Stage(getConf())
-        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_CANONICAL), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, new Partition(getConf()).runner(
+        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PARTITIONED) }));
     Assert.assertEquals(Driver.RETURN_SUCCESS, new Process(getConf()).runner(
-        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_PARTITIONED), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+        new String[] { getPathDfs(DIR_DS_MYDATASET_PARTITIONED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
   }
 
 }

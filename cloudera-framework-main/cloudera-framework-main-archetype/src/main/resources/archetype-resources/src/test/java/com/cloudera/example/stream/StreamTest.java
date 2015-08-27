@@ -15,6 +15,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.cloudera.example.TestConstants;
 import com.cloudera.example.model.RecordCounter;
 import com.cloudera.example.model.RecordFactory;
+import com.cloudera.example.partition.Partition;
 import com.cloudera.example.process.Process;
 import com.cloudera.example.stage.Stage;
 import com.cloudera.framework.main.common.Driver;
@@ -61,14 +62,23 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 3L, //
-                        RecordCounter.FILES_STAGED, 3L, //
+                        RecordCounter.FILES_CANONICAL, 3L, //
+                        RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+                // Partition counters
+                ImmutableMap.of(Partition.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 30L, //
+                        RecordCounter.RECORDS_CANONICAL, 30L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Process counters
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 30L, //
-                        RecordCounter.RECORDS_CLEANSED, 30L, //
+                        RecordCounter.RECORDS_CANONICAL, 30L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
@@ -102,14 +112,23 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 0L, //
-                        RecordCounter.FILES_STAGED, 0L, //
+                        RecordCounter.FILES_CANONICAL, 0L, //
+                        RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+                // Partition counters
+                ImmutableMap.of(Partition.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 20L, //
+                        RecordCounter.RECORDS_CANONICAL, 20L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Process counters
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 20L, //
-                        RecordCounter.RECORDS_CLEANSED, 20L, //
+                        RecordCounter.RECORDS_CANONICAL, 20L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
@@ -143,14 +162,23 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 3L, //
-                        RecordCounter.FILES_STAGED, 3L, //
+                        RecordCounter.FILES_CANONICAL, 3L, //
+                        RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+                // Partition counters
+                ImmutableMap.of(Partition.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 30L, //
+                        RecordCounter.RECORDS_CANONICAL, 30L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Process counters
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 30L, //
-                        RecordCounter.RECORDS_CLEANSED, 30L, //
+                        RecordCounter.RECORDS_CANONICAL, 30L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
@@ -184,14 +212,23 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 0L, //
-                        RecordCounter.FILES_STAGED, 0L, //
+                        RecordCounter.FILES_CANONICAL, 0L, //
+                        RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
+            )), //
+                // Partition counters
+                ImmutableMap.of(Partition.class.getCanonicalName(),
+                    ImmutableMap.of(//
+                        RecordCounter.RECORDS, 20L, //
+                        RecordCounter.RECORDS_CANONICAL, 20L, //
+                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Process counters
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 20L, //
-                        RecordCounter.RECORDS_CLEANSED, 20L, //
+                        RecordCounter.RECORDS_CANONICAL, 20L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
@@ -213,12 +250,16 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
             (Integer) metadata[2].get(KEY_FLUME_PROCESS_ITERATIONS)));
     Driver driverStage = new Stage(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS, driverStage
-        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_SOURCE), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_CANONICAL), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
     assertCounterEquals(metadata[3], driverStage.getCounters());
+    Driver driverPartition = new Partition(getConf());
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driverPartition.runner(
+        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PARTITIONED) }));
+    assertCounterEquals(metadata[4], driverPartition.getCounters());
     Driver driverProcess = new Process(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS, driverProcess.runner(
-        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_PARTITIONED), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
-    assertCounterEquals(metadata[4], driverProcess.getCounters());
+        new String[] { getPathDfs(DIR_DS_MYDATASET_PARTITIONED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+    assertCounterEquals(metadata[5], driverProcess.getCounters());
   }
 
   public StreamTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets, String[][][] labels,
@@ -234,7 +275,8 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
   private static final Map<String, String> FLUME_SUBSTITUTIONS = ImmutableMap.of(//
       "ROOT_HDFS", new LocalClusterDfsMrFlumeTest().getPathDfs("/"), //
       "ROOT_DIR_HDFS_RAW", DIR_DS_MYDATASET_RAW, //
-      "ROOT_DIR_HDFS_STAGED", DIR_DS_MYDATASET_STAGED //
+      "ROOT_DIR_HDFS_STAGED", DIR_DS_MYDATASET_STAGED, //
+      "RECORD_FORMAT", "xml"//
   );
   private static final String FLUME_CONFIG_FILE = "cfg/flume/flume-conf.properties";
   private static final String FLUME_AGENT_NAME = "mydataset";
