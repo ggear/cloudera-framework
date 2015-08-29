@@ -55,6 +55,12 @@
 			<type>pom</type>
 		</dependency>
 		<dependency>
+			<groupId>com.cloudera.framework.main.client</groupId>
+			<artifactId>cloudera-framework-main-client-elephantbird</artifactId>
+			<version>${project.version}</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
 			<groupId>com.cloudera.framework.main</groupId>
 			<artifactId>cloudera-framework-main-common</artifactId>
 			<version>${project.version}</version>

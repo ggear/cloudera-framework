@@ -175,7 +175,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
             .setMyInteger((int) (Math.random() * 10)).setMyDouble(Math.random())
             .setMyBoolean(Math.random() < 0.5 ? true : false).setMyString(UUID.randomUUID().toString()).build());
       }
-      String record = recordStringSer.getString();
+      String record = recordStringSer.get();
       processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()),
           getEventHeader(System.currentTimeMillis())), false);
       int sleepMs = 0;

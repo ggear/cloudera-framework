@@ -3,15 +3,14 @@ package com.cloudera.example.model.input;
 import java.io.IOException;
 
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.serde2.avro.AvroGenericRecordWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.mapreduce.lib.input.CombineFileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.CombineFileRecordReader;
-import org.apache.hadoop.mapreduce.lib.input.CombineFileSplit;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
 import com.cloudera.example.model.Record;
 import com.cloudera.example.model.RecordFactory;
@@ -23,11 +22,7 @@ import com.cloudera.example.model.serde.RecordStringSerDe;
  * appropriate {@link RecordKey key} and {@link Record value} using a
  * {@link RecordStringSerDe} specified by {@link #getX()}.
  */
-public abstract class RecordTextInputFormatCsv extends CombineFileInputFormat<RecordKey, Record> {
-
-  public RecordTextInputFormatCsv() {
-    setMaxSplitSize(RecordTextInputFormat.SPLIT_SIZE_BYTES_MAX);
-  }
+public class RecordTextInputFormatCsv extends FileInputFormat<RecordKey, AvroGenericRecordWritable> {
 
   @Override
   protected boolean isSplitable(JobContext context, Path filename) {
@@ -35,21 +30,21 @@ public abstract class RecordTextInputFormatCsv extends CombineFileInputFormat<Re
   }
 
   @Override
-  public RecordReader<RecordKey, Record> createRecordReader(InputSplit split, TaskAttemptContext context)
-      throws IOException {
-    return new CombineFileRecordReader<RecordKey, Record>((CombineFileSplit) split, context, RecordReaderTextCsv.class);
+  public RecordReader<RecordKey, AvroGenericRecordWritable> createRecordReader(InputSplit split,
+      TaskAttemptContext context) throws IOException {
+    return new RecordReaderTextCsv(split, context);
   }
 
   public static class RecordReaderTextCsv extends RecordTextReader {
 
-    public RecordReaderTextCsv(CombineFileSplit split, TaskAttemptContext context, Integer index) throws IOException {
-      super();
+    public RecordReaderTextCsv(InputSplit split, TaskAttemptContext context) throws IOException {
+      super(split, context);
     }
 
     @Override
-    public RecordReader<RecordKey, Text> getRecordReader(CombineFileSplit split, TaskAttemptContext context,
-        Integer index) throws IOException {
-      return new RecordTextInputFormat.RecordReaderText(split, context, index);
+    public RecordReader<RecordKey, Text> getRecordReader(InputSplit split, TaskAttemptContext context, Integer index)
+        throws IOException {
+      return new RecordTextCombineInputFormat.RecordReaderText(split, context, index);
     }
 
     @Override

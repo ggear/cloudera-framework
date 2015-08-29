@@ -5,67 +5,68 @@ package com.cloudera.example;
  */
 public interface Constants {
 
-  public static final String DIR_DS_MYDATASET = "/mydataset";
-  public static final String DIR_DS_MYDATASET_CANONICAL = "canonical";
-  public static final String DIR_DS_MYDATASET_DUPLICATE = "duplicate";
-  public static final String DIR_DS_MYDATASET_MALFORMED = "malformed";
-  public static final String DIR_DS_MYDATASET_REWRITTEN = "rewritten";
+  public static final String DIR_REL_MYDS = "mydataset";
+  public static final String DIR_ABS_MYDS = "/mydataset";
 
-  public static final String DIR_DS_MYDATASET_RAW = DIR_DS_MYDATASET + "/raw";
-  public static final String DIR_DS_MYDATASET_RAW_CANONICAL = DIR_DS_MYDATASET_RAW + "/canonical";
-  public static final String DIR_DS_MYDATASET_RAW_CANONICAL_TEXT = DIR_DS_MYDATASET_RAW_CANONICAL + "/text";
-  public static final String DIR_DS_MYDATASET_RAW_CANONICAL_TEXT_XML = DIR_DS_MYDATASET_RAW_CANONICAL_TEXT
-      + "/xml/none";
-  public static final String DIR_DS_MYDATASET_RAW_CANONICAL_TEXT_CSV = DIR_DS_MYDATASET_RAW_CANONICAL_TEXT
-      + "/csv/none";
+  public static final String DIR_REL_MYDS_RAW = "raw";
+  public static final String DIR_REL_MYDS_STAGED = "staged";
+  public static final String DIR_REL_MYDS_PARTITIONED = "partitioned";
+  public static final String DIR_REL_MYDS_PROCESSED = "processed";
 
-  public static final String DIR_DS_MYDATASET_STAGED = DIR_DS_MYDATASET + "/staged";
-  public static final String DIR_DS_MYDATASET_STAGED_CANONICAL = DIR_DS_MYDATASET_STAGED + "/"
-      + DIR_DS_MYDATASET_CANONICAL;
-  public static final String DIR_DS_MYDATASET_STAGED_MALFORMED = DIR_DS_MYDATASET_STAGED + "/"
-      + DIR_DS_MYDATASET_MALFORMED;
+  public static final String DIR_REL_MYDS_CANONICAL = "canonical";
+  public static final String DIR_REL_MYDS_REWRITTEN = "rewritten";
+  public static final String DIR_REL_MYDS_DUPLICATE = "duplicate";
+  public static final String DIR_REL_MYDS_MALFORMED = "malformed";
 
-  public static final String DIR_DS_MYDATASET_PARTITIONED = DIR_DS_MYDATASET + "/partitioned";
-  public static final String DIR_DS_MYDATASET_PARTITIONED_CANONICAL = DIR_DS_MYDATASET_PARTITIONED + "/"
-      + DIR_DS_MYDATASET_CANONICAL;
-  public static final String DIR_DS_MYDATASET_PARTITIONED_CANONICAL_AVRO_RELATIVE = DIR_DS_MYDATASET_CANONICAL
-      + "/avro/binary/none";
-  public static final String DIR_DS_MYDATASET_PARTITIONED_CANONICAL_AVRO = DIR_DS_MYDATASET_PARTITIONED + "/"
-      + DIR_DS_MYDATASET_PARTITIONED_CANONICAL_AVRO_RELATIVE;
-  public static final String DIR_DS_MYDATASET_PARTITIONED_DUPLICATE = DIR_DS_MYDATASET_PARTITIONED + "/"
-      + DIR_DS_MYDATASET_DUPLICATE;
-  public static final String DIR_DS_MYDATASET_PARTITIONED_DUPLICATE_AVRO_RELATIVE = DIR_DS_MYDATASET_DUPLICATE
-      + "/avro/binary/none";
-  public static final String DIR_DS_MYDATASET_PARTITIONED_DUPLICATE_AVRO = DIR_DS_MYDATASET_PARTITIONED + "/"
-      + DIR_DS_MYDATASET_PARTITIONED_DUPLICATE_AVRO_RELATIVE;
-  public static final String DIR_DS_MYDATASET_PARTITIONED_MALFORMED = DIR_DS_MYDATASET_PARTITIONED + "/"
-      + DIR_DS_MYDATASET_MALFORMED;
-  public static final String DIR_DS_MYDATASET_PARTITIONED_MALFORMED_RELATIVE = DIR_DS_MYDATASET_MALFORMED
-      + "/sequence/text/none";
+  public static final String DIR_ABS_MYDS_RAW = "/mydataset/raw";
+  public static final String DIR_ABS_MYDS_RAW_CANONICAL = "/mydataset/raw/canonical";
+  public static final String DIR_REL_MYDS_RAW_CANONICAL_CSV = "canonical/text/csv/none";
+  public static final String DIR_ABS_MYDS_RAW_CANONICAL_CSV = "/mydataset/raw/canonical/text/csv/none";
+  public static final String DIR_REL_MYDS_RAW_CANONICAL_XML = "canonical/text/xml/none";
+  public static final String DIR_ABS_MYDS_RAW_CANONICAL_XML = "/mydataset/raw/canonical/text/xml/none";
 
-  public static final String DIR_DS_MYDATASET_PROCESSED = DIR_DS_MYDATASET + "/processed";
-  public static final String DIR_DS_MYDATASET_PROCESSED_CANONICAL = DIR_DS_MYDATASET_PROCESSED + "/"
-      + DIR_DS_MYDATASET_CANONICAL;
-  public static final String DIR_DS_MYDATASET_PROCESSED_CANONICAL_PARQUET_RELATIVE = DIR_DS_MYDATASET_CANONICAL
-      + "/parquet/dict/snappy";
-  public static final String DIR_DS_MYDATASET_PROCESSED_CANONICAL_PARQUET = DIR_DS_MYDATASET_PROCESSED + "/"
-      + DIR_DS_MYDATASET_PROCESSED_CANONICAL_PARQUET_RELATIVE;
-  public static final String DIR_DS_MYDATASET_PROCESSED_DUPLICATE = DIR_DS_MYDATASET_PROCESSED + "/"
-      + DIR_DS_MYDATASET_DUPLICATE;
-  public static final String DIR_DS_MYDATASET_PROCESSED_DUPLICATE_PARQUET_RELATIVE = DIR_DS_MYDATASET_DUPLICATE
-      + "/parquet/dict/snappy";
-  public static final String DIR_DS_MYDATASET_PROCESSED_DUPLICATE_PARQUET = DIR_DS_MYDATASET_PROCESSED + "/"
-      + DIR_DS_MYDATASET_PROCESSED_DUPLICATE_PARQUET_RELATIVE;
-  public static final String DIR_DS_MYDATASET_PROCESSED_MALFORMED = DIR_DS_MYDATASET_PROCESSED + "/"
-      + DIR_DS_MYDATASET_MALFORMED;
-  public static final String DIR_DS_MYDATASET_PROCESSED_MALFORMED_RELATIVE = DIR_DS_MYDATASET_MALFORMED
-      + "/avro/binary/none";
+  public static final String DIR_ABS_MYDS_STAGED = "/mydataset/staged";
+  public static final String DIR_ABS_MYDS_STAGED_CANONICAL = "/mydataset/staged/canonical";
+  public static final String DIR_REL_MYDS_STAGED_CANONICAL_CSV = "canonical/sequence/csv/none";
+  public static final String DIR_ABS_MYDS_STAGED_CANONICAL_CSV = "/mydataset/staged/canonical/sequence/csv/none";
+  public static final String DIR_REL_MYDS_STAGED_CANONICAL_XML = "canonical/sequence/xml/none";
+  public static final String DIR_ABS_MYDS_STAGED_CANONICAL_XML = "/mydataset/staged/canonical/sequence/xml/none";
+  public static final String DIR_ABS_MYDS_STAGED_MALFORMED = "/mydataset/staged/malformed";
+  public static final String DIR_REL_MYDS_STAGED_MALFORMED_CSV = "malformed/text/csv/none";
+  public static final String DIR_ABS_MYDS_STAGED_MALFORMED_CSV = "/mydataset/staged/malformed/text/csv/none";
+  public static final String DIR_REL_MYDS_STAGED_MALFORMED_XML = "malformed/text/xml/none";
+  public static final String DIR_ABS_MYDS_STAGED_MALFORMED_XML = "/mydataset/staged/malformed/text/xml/none";
+
+  public static final String DIR_ABS_MYDS_PARTITIONED = "/mydataset/partitioned";
+  public static final String DIR_ABS_MYDS_PARTITIONED_CANONICAL = "/mydataset/partitioned/canonical";
+  public static final String DIR_REL_MYDS_PARTITIONED_CANONICAL_AVRO = "canonical/avro/binary/none";
+  public static final String DIR_ABS_MYDS_PARTITIONED_CANONICAL_AVRO = "/mydataset/partitioned/canonical/avro/binary/none";
+  public static final String DIR_ABS_MYDS_PARTITIONED_DUPLICATE = "/mydataset/partitioned/duplicate";
+  public static final String DIR_REL_MYDS_PARTITIONED_DUPLICATE_AVRO = "duplicate/avro/binary/none";
+  public static final String DIR_ABS_MYDS_PARTITIONED_DUPLICATE_AVRO = "/mydataset/partitioned/duplicate/avro/binary/none";
+  public static final String DIR_ABS_MYDS_PARTITIONED_MALFORMED = "/mydataset/partitioned/malformed";
+  public static final String DIR_REL_MYDS_PARTITIONED_MALFORMED_CSV = "malformed/text/csv/none";
+  public static final String DIR_ABS_MYDS_PARTITIONED_MALFORMED_CSV = "/mydataset/partitioned/malformed/text/csv/none";
+  public static final String DIR_REL_MYDS_PARTITIONED_MALFORMED_XML = "malformed/text/xml/none";
+  public static final String DIR_ABS_MYDS_PARTITIONED_MALFORMED_XML = "/mydataset/partitioned/malformed/text/xml/none";
+
+  public static final String DIR_ABS_MYDS_PROCESSED = "/mydataset/processed";
+  public static final String DIR_ABS_MYDS_PROCESSED_CANONICAL = "/mydataset/processed/canonical";
+  public static final String DIR_REL_MYDS_PROCESSED_CANONICAL_PARQUET = "canonical/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_PROCESSED_CANONICAL_PARQUET = "/mydataset/processed/canonical/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_PROCESSED_REWRITTEN = "/mydataset/processed/rewritten";
+  public static final String DIR_REL_MYDS_PROCESSED_REWRITTEN_PARQUET = "rewritten/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_PROCESSED_REWRITTEN_PARQUET = "/mydataset/processed/rewritten/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_PROCESSED_DUPLICATE = "/mydataset/processed/duplicate";
+  public static final String DIR_REL_MYDS_PROCESSED_DUPLICATE_PARQUET = "duplicate/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_PROCESSED_DUPLICATE_PARQUET = "/mydataset/processed/duplicate/parquet/dict/snappy";
 
   public static final String DDL_DIR = "/ddl/hive";
 
   public static final String DDL_FILE_BATCH_NAME = "table_create_batch_name.ddl";
   public static final String DDL_FILE_BATCH_ID_START_FINISH = "table_create_batch_id_start_finish.ddl";
 
+  public static final String DDL_FILE_CREATE_TEXT = "table_create_text.ddl";
   public static final String DDL_FILE_CREATE_AVRO = "table_create_avro.ddl";
   public static final String DDL_FILE_CREATE_PARQUET = "table_create_parquet.ddl";
 
@@ -76,6 +77,7 @@ public interface Constants {
   public static final String DDL_VAR_INPUT = "my.table.input";
   public static final String DDL_VAR_OUTPUT = "my.table.output";
   public static final String DDL_VAR_SCHEMA = "my.table.schema";
+  public static final String DDL_VAR_ROOT = "my.table.root";
   public static final String DDL_VAR_LOCATION = "my.table.location";
   public static final String DDL_VAR_PARTITION = "my.table.partition";
 

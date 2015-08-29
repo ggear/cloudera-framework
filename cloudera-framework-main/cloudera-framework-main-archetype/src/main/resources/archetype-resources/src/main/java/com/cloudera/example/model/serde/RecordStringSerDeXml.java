@@ -39,11 +39,9 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
   }
 
   @Override
-  public RecordStringDe getDeserialiser(final String string) {
+  public RecordStringDe getDeserialiser(final RecordKey recordKey, final Record record, final String string) {
     return new RecordStringDe() {
 
-      private RecordKey key;
-      private Record record;
       private int index = -1;
       private boolean corrupt;
       private List<Record> records;
@@ -66,31 +64,24 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
       }
 
       @Override
-      public boolean next(RecordKey key) throws IOException {
+      public boolean next(RecordKey recordsKey) throws IOException {
         initialise();
-        this.key = new RecordKey(key);
-        this.key.setValid(this.key.isValid() && records != null && !corrupt);
+        recordKey.set(recordsKey);
+        recordKey.setValid(recordKey.isValid() && records != null && !corrupt);
         index++;
-        if (this.key.isValid()) {
-          record = records.get(index);
-          record.setIngestTimestamp(this.key.getTimestamp());
-          record.setIngestBatch(this.key.getBatch());
+        if (recordKey.isValid()) {
           record.setIngestId(UUID.randomUUID().toString());
+          record.setIngestTimestamp(recordKey.getTimestamp());
+          record.setIngestBatch(recordKey.getBatch());
+          record.setMyTimestamp(records.get(index).getMyTimestamp());
+          record.setMyInteger(records.get(index).getMyInteger());
+          record.setMyDouble(records.get(index).getMyDouble());
+          record.setMyBoolean(records.get(index).getMyBoolean());
+          record.setMyString(records.get(index).getMyString());
         } else {
-          record = null;
-          this.key.setSource(string);
+          recordKey.setSource(string);
         }
-        return this.key.isValid();
-      }
-
-      @Override
-      public RecordKey getKey() {
-        return key;
-      }
-
-      @Override
-      public Record getRecord() {
-        return record;
+        return recordKey.isValid();
       }
 
     };
@@ -123,7 +114,7 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
       }
 
       @Override
-      public String getString() throws IOException {
+      public String get() throws IOException {
         initialise();
         StringWriter string = new StringWriter(size * RECORD_TYPICAL_SIZE);
         try {

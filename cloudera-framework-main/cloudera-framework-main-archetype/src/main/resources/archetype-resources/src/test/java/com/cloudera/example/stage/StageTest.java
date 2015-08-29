@@ -31,7 +31,7 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
         {
             // CSV dataset metadata
             new String[] { DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_CANONICAL_TEXT_CSV, }, //
+            new String[] { DIR_ABS_MYDS_RAW_CANONICAL_CSV, }, //
             new String[] { DS_MYDATASET, }, //
             new String[][] {
                 // CSV dataset
@@ -64,7 +64,7 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
         {
             // XML dataset metadata
             new String[] { DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_CANONICAL_TEXT_XML, }, //
+            new String[] { DIR_ABS_MYDS_RAW_CANONICAL_XML, }, //
             new String[] { DS_MYDATASET, }, //
             new String[][] {
                 // XML dataset
@@ -97,7 +97,7 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
         {
             // All datasets metadata
             new String[] { DS_DIR, DS_DIR, }, //
-            new String[] { DIR_DS_MYDATASET_RAW_CANONICAL_TEXT_XML, DIR_DS_MYDATASET_RAW_CANONICAL_TEXT_CSV, }, //
+            new String[] { DIR_ABS_MYDS_RAW_CANONICAL_XML, DIR_ABS_MYDS_RAW_CANONICAL_CSV, }, //
             new String[] { DS_MYDATASET, DS_MYDATASET }, //
             new String[][] {
                 // All datasets
@@ -137,11 +137,11 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
   @Test
   public void testStage() throws Exception {
     Driver driver = new Stage(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driver
-        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_CANONICAL), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS,
+        driver.runner(new String[] { getPathDfs(DIR_ABS_MYDS_RAW_CANONICAL), getPathDfs(DIR_ABS_MYDS_STAGED) }));
     assertCounterEquals(metadata[0], driver.getCounters());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driver
-        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_CANONICAL), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS,
+        driver.runner(new String[] { getPathDfs(DIR_ABS_MYDS_RAW_CANONICAL), getPathDfs(DIR_ABS_MYDS_STAGED) }));
     assertCounterEquals(metadata[1], driver.getCounters());
   }
 

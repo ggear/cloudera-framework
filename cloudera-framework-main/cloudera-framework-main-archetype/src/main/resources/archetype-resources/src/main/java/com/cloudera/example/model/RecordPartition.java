@@ -1,5 +1,7 @@
 package com.cloudera.example.model;
 
+import org.apache.hadoop.fs.Path;
+
 /**
  * Define a {@link Record} partition
  */
@@ -31,5 +33,20 @@ public class RecordPartition {
       BATCH_COL_ID_START_FINISH[1] + " STRING", //
       BATCH_COL_ID_START_FINISH[2] + " STRING" //
   };
+
+  public static String getPartitionPathString(Path path, String[] partition, int index) {
+    String partitionPathString = path.getName();
+    for (int i = 1; i < partition.length + index; i++) {
+      partitionPathString = (path = path.getParent()).getName() + Path.SEPARATOR_CHAR + partitionPathString;
+    }
+    return partitionPathString;
+  }
+
+  public static String getPartitionPathName(Path path, String[] partition, int index) {
+    for (int i = 1; i < partition.length + index; i++) {
+      path = path.getParent();
+    }
+    return path.getName();
+  }
 
 }

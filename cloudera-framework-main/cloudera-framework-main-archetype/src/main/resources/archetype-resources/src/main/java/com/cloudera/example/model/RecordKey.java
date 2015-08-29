@@ -65,7 +65,7 @@ public class RecordKey implements WritableComparable<RecordKey> {
     }
   }
 
-  public RecordKey(RecordKey that) {
+  public void set(RecordKey that) {
     this.hash = that.hash;
     this.type = that.type;
     this.codec = that.codec;
@@ -74,18 +74,6 @@ public class RecordKey implements WritableComparable<RecordKey> {
     this.batch = that.batch;
     this.source = that.source;
     this.valid = that.valid;
-  }
-
-  public RecordKey(int hash, String type, String codec, String container, long timestamp, String batch, String source,
-      boolean valid) {
-    this.hash = hash;
-    this.type = type;
-    this.codec = codec;
-    this.container = container;
-    this.timestamp = timestamp;
-    this.batch = batch;
-    this.source = source;
-    this.valid = valid;
   }
 
   public int getHash() {

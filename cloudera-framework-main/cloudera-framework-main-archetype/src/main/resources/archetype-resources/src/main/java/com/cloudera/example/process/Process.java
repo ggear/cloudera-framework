@@ -104,12 +104,8 @@ public class Process extends Driver {
     boolean jobSuccess = true;
     List<Job> jobs = new ArrayList<Job>();
     for (Path inputPath : inputPaths) {
-      String outputPathString = inputPath.getName();
-      Path inputPathParent = inputPath;
-      for (int i = 1; i < RecordPartition.RECORD_COL_YEAR_MONTH.length; i++) {
-        outputPathString = (inputPathParent = inputPathParent.getParent()).getName() + Path.SEPARATOR_CHAR
-            + outputPathString;
-      }
+      String outputPathString = RecordPartition.getPartitionPathString(inputPath, RecordPartition.RECORD_COL_YEAR_MONTH,
+          0);
       Job job = Job.getInstance(getConf());
       job.setJobName(getClass().getSimpleName());
       job.setJarByClass(Process.class);
@@ -117,7 +113,7 @@ public class Process extends Driver {
       job.setInputFormatClass(AvroKeyInputFormat.class);
       job.setOutputFormatClass(AvroParquetOutputFormat.class);
       FileOutputFormat.setOutputPath(job, new Path(this.outputPath,
-          Constants.DIR_DS_MYDATASET_PROCESSED_CANONICAL_PARQUET_RELATIVE + Path.SEPARATOR_CHAR + outputPathString));
+          Constants.DIR_REL_MYDS_PROCESSED_CANONICAL_PARQUET + Path.SEPARATOR_CHAR + outputPathString));
       AvroJob.setInputKeySchema(job, Record.getClassSchema());
       AvroParquetOutputFormat.setSchema(job, Record.getClassSchema());
       ParquetOutputFormat.setCompression(job, CompressionCodecName.SNAPPY);

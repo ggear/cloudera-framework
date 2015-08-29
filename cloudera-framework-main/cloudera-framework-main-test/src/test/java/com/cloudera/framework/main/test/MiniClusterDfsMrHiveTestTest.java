@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collections;
 
 import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
@@ -33,11 +34,13 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
     writer.close();
     Assert.assertEquals(2, processStatement("/ddl", "create.sql", new ImmutableMap.Builder<String, String>()
         .put("test.table.name", "somedata").put("test.table.field.delim", ",").build()).size());
-    Assert.assertEquals(1,
+    Assert.assertEquals(0,
         processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata")
             .size());
     Assert.assertEquals("3", processStatement("SELECT count(1) AS cnt FROM somedata").get(0));
     Assert.assertEquals("2", processStatement("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
+    Assert.assertEquals(2, processStatement("SELECT * FROM somedata", Collections.<String, String> emptyMap(),
+        Collections.<String, String> emptyMap(), 2).size());
     Assert.assertEquals(1, processStatement("SHOW TABLES").size());
   }
 
@@ -57,7 +60,7 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
     writer.close();
     Assert.assertEquals(2, processStatement("/ddl", "create.sql", new ImmutableMap.Builder<String, String>()
         .put("test.table.name", "somedata").put("test.table.field.delim", ",").build()).size());
-    Assert.assertEquals(1,
+    Assert.assertEquals(0,
         processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata")
             .size());
     Assert.assertEquals("3", processStatement("SELECT count(1) AS cnt FROM somedata").get(0));
@@ -72,7 +75,7 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
    */
   @Test
   public void testHiveClean() throws Exception {
-    Assert.assertEquals(1, processStatement("SHOW TABLES").size());
+    Assert.assertEquals(0, processStatement("SHOW TABLES").size());
   }
 
   /**

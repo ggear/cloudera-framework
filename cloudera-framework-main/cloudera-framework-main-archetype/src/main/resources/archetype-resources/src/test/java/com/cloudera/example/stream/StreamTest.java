@@ -54,7 +54,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(//
                     KEY_FLUME_SOURCE_NAME, "source_single", //
                     KEY_FLUME_SINK_NAME, "sink_single_hdfs", //
-                    KEY_FLUME_OUTPUT_DIR, DIR_DS_MYDATASET_RAW, //
+                    KEY_FLUME_OUTPUT_DIR, DIR_ABS_MYDS_RAW, //
                     KEY_FLUME_PROCESS_ITERATIONS, 3, //
                     KEY_FLUME_PROCESS_FILE_COUNT, 3//
             ), //
@@ -104,7 +104,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(//
                     KEY_FLUME_SOURCE_NAME, "source_single", //
                     KEY_FLUME_SINK_NAME, "sink_batch_hdfs", //
-                    KEY_FLUME_OUTPUT_DIR, DIR_DS_MYDATASET_STAGED, //
+                    KEY_FLUME_OUTPUT_DIR, DIR_ABS_MYDS_STAGED, //
                     KEY_FLUME_PROCESS_ITERATIONS, 3, //
                     KEY_FLUME_PROCESS_FILE_COUNT, 1//
             ), //
@@ -154,7 +154,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(//
                     KEY_FLUME_SOURCE_NAME, "source_single", //
                     KEY_FLUME_SINK_NAME, "sink_single_hdfs", //
-                    KEY_FLUME_OUTPUT_DIR, DIR_DS_MYDATASET_RAW, //
+                    KEY_FLUME_OUTPUT_DIR, DIR_ABS_MYDS_RAW, //
                     KEY_FLUME_PROCESS_ITERATIONS, 3, //
                     KEY_FLUME_PROCESS_FILE_COUNT, 3//
             ), //
@@ -204,7 +204,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 ImmutableMap.of(//
                     KEY_FLUME_SOURCE_NAME, "source_single", //
                     KEY_FLUME_SINK_NAME, "sink_batch_hdfs", //
-                    KEY_FLUME_OUTPUT_DIR, DIR_DS_MYDATASET_STAGED, //
+                    KEY_FLUME_OUTPUT_DIR, DIR_ABS_MYDS_STAGED, //
                     KEY_FLUME_PROCESS_ITERATIONS, 3, //
                     KEY_FLUME_PROCESS_FILE_COUNT, 1//
             ), //
@@ -249,16 +249,16 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
             new Stream(), new HDFSEventSink(), (String) metadata[2].get(KEY_FLUME_OUTPUT_DIR),
             (Integer) metadata[2].get(KEY_FLUME_PROCESS_ITERATIONS)));
     Driver driverStage = new Stage(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driverStage
-        .runner(new String[] { getPathDfs(DIR_DS_MYDATASET_RAW_CANONICAL), getPathDfs(DIR_DS_MYDATASET_STAGED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS,
+        driverStage.runner(new String[] { getPathDfs(DIR_ABS_MYDS_RAW_CANONICAL), getPathDfs(DIR_ABS_MYDS_STAGED) }));
     assertCounterEquals(metadata[3], driverStage.getCounters());
     Driver driverPartition = new Partition(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driverPartition.runner(
-        new String[] { getPathDfs(DIR_DS_MYDATASET_STAGED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PARTITIONED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driverPartition
+        .runner(new String[] { getPathDfs(DIR_ABS_MYDS_STAGED_CANONICAL), getPathDfs(DIR_ABS_MYDS_PARTITIONED) }));
     assertCounterEquals(metadata[4], driverPartition.getCounters());
     Driver driverProcess = new Process(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driverProcess.runner(
-        new String[] { getPathDfs(DIR_DS_MYDATASET_PARTITIONED_CANONICAL), getPathDfs(DIR_DS_MYDATASET_PROCESSED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driverProcess
+        .runner(new String[] { getPathDfs(DIR_ABS_MYDS_PARTITIONED_CANONICAL), getPathDfs(DIR_ABS_MYDS_PROCESSED) }));
     assertCounterEquals(metadata[5], driverProcess.getCounters());
   }
 
@@ -274,8 +274,8 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
 
   private static final Map<String, String> FLUME_SUBSTITUTIONS = ImmutableMap.of(//
       "ROOT_HDFS", new LocalClusterDfsMrFlumeTest().getPathDfs("/"), //
-      "ROOT_DIR_HDFS_RAW", DIR_DS_MYDATASET_RAW, //
-      "ROOT_DIR_HDFS_STAGED", DIR_DS_MYDATASET_STAGED, //
+      "ROOT_DIR_HDFS_RAW", DIR_ABS_MYDS_RAW, //
+      "ROOT_DIR_HDFS_STAGED", DIR_ABS_MYDS_STAGED, //
       "RECORD_FORMAT", "xml"//
   );
   private static final String FLUME_CONFIG_FILE = "cfg/flume/flume-conf.properties";

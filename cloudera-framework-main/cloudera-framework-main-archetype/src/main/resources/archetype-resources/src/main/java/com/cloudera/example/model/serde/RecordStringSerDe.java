@@ -7,7 +7,7 @@ import com.cloudera.example.model.RecordKey;
 
 public abstract class RecordStringSerDe {
 
-  public abstract RecordStringDe getDeserialiser(final String string);
+  public abstract RecordStringDe getDeserialiser(final RecordKey recordKey, final Record record, final String string);
 
   public abstract RecordStringSer getSerialiser(final int size);
 
@@ -20,11 +20,7 @@ public abstract class RecordStringSerDe {
 
     public boolean hasNext() throws IOException;
 
-    public boolean next(RecordKey key) throws IOException;
-
-    public RecordKey getKey() throws IOException;
-
-    public Record getRecord() throws IOException;
+    public boolean next(RecordKey recordsKey) throws IOException;
 
   }
 
@@ -37,7 +33,7 @@ public abstract class RecordStringSerDe {
 
     public void add(Record record) throws IOException;
 
-    public String getString() throws IOException;
+    public String get() throws IOException;
 
   }
 

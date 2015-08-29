@@ -3,6 +3,7 @@ package com.cloudera.example.model;
 import java.io.IOException;
 import java.util.Map;
 
+import org.apache.hadoop.hive.serde2.avro.AvroGenericRecordWritable;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 
 import com.cloudera.example.model.input.RecordSequenceInputFormatCsv;
@@ -23,7 +24,7 @@ public class RecordFactory {
   private static final Map<String, ? extends RecordStringSerDe> RECORD_STRING_SERDES = ImmutableMap
       .of(RECORD_STRING_SERDE_CSV, new RecordStringSerDeCsv(), RECORD_STRING_SERDE_XML, new RecordStringSerDeXml());
 
-  private static final Map<String, Class<? extends SequenceFileInputFormat<RecordKey, Record>>> RECORD_INPUT_FORMATS = ImmutableMap
+  private static final Map<String, Class<? extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable>>> RECORD_INPUT_FORMATS = ImmutableMap
       .of(RECORD_STRING_SERDE_CSV, RecordSequenceInputFormatCsv.class, RECORD_STRING_SERDE_XML,
           RecordSequenceInputFormatXml.class);
 
@@ -41,8 +42,8 @@ public class RecordFactory {
     return RECORD_STRING_SERDES.get(type);
   }
 
-  public static Class<? extends SequenceFileInputFormat<RecordKey, Record>> getRecordSequenceInputFormat(String type)
-      throws IOException {
+  public static Class<? extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable>> getRecordSequenceInputFormat(
+      String type) throws IOException {
     if (!RECORD_INPUT_FORMATS.containsKey(type)) {
       throw new IOException("Could not find [RecordSequenceInputFormat] for type [" + type + "]");
     }

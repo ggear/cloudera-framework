@@ -49,7 +49,6 @@
 		<maven.data-download.skip>true</maven.data-download.skip>
 		<maven.assembly.skip>false</maven.assembly.skip>
 
-		<hadoop-cdh.version>5</hadoop-cdh.version>
 		<hadoop.version>2.6.0-cdh5.4.4</hadoop.version>
 		<hadoop-hive.version>1.1.0-cdh5.4.4</hadoop-hive.version>
 		<hadoop-flume.version>1.5.0-cdh5.4.4</hadoop-flume.version>
@@ -57,6 +56,7 @@
 		<hadoop-parquet.version>1.5.0-cdh5.4.4</hadoop-parquet.version>
 		<hadoop-zookeeper.version>3.4.5-cdh5.4.4</hadoop-zookeeper.version>
 		<hadoop-kafka.version>0.8.2.0-kafka-1.3.1</hadoop-kafka.version>
+		<hadoop-elephantbird.version>4.9</hadoop-elephantbird.version>
 
 		<slf4j.version>1.7.5</slf4j.version>
 		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>

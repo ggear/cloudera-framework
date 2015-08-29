@@ -32,11 +32,9 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
       true);
 
   @Override
-  public RecordStringDe getDeserialiser(final String string) {
+  public RecordStringDe getDeserialiser(final RecordKey recordKey, final Record record, final String string) {
     return new RecordStringDe() {
 
-      private RecordKey key;
-      private Record record;
       private int index = -1;
       private String[] records;
 
@@ -57,43 +55,45 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
       }
 
       @Override
-      public boolean next(RecordKey key) throws IOException {
+      public boolean next(RecordKey recordsKey) throws IOException {
         initialise();
-        this.key = new RecordKey(key);
+        recordKey.set(recordsKey);
         String[] fields = FIELD_DESERIALISER.parseLine(records[++index]);
-        this.key.setValid(this.key.isValid() && fields != null && fields.length == RecordKey.FIELDS_NUMBER);
-        if (this.key.isValid()) {
+        recordKey.setValid(recordKey.isValid() && fields != null && fields.length == RecordKey.FIELDS_NUMBER);
+        if (recordKey.isValid()) {
+          record.setIngestId(UUID.randomUUID().toString());
+          record.setIngestTimestamp(recordKey.getTimestamp());
+          record.setIngestBatch(recordKey.getBatch());
           try {
-            record = new Record();
-            record.setIngestTimestamp(this.key.getTimestamp());
-            record.setIngestBatch(this.key.getBatch());
-            record.setIngestId(UUID.randomUUID().toString());
-            // Use static DateFormat, this is not threadsafe!
             record.setMyTimestamp(FIELD_DATE.parse(fields[0]).getTime());
-            record.setMyInteger(Integer.parseInt(fields[1]));
-            record.setMyDouble(Double.parseDouble(fields[2]));
-            record.setMyBoolean(Boolean.parseBoolean(fields[3]));
-            record.setMyString(fields[4]);
           } catch (Exception exception) {
-            // Exception branch is expensive, but OK since it should be rare
-            this.key.setValid(false);
+            recordKey.setValid(false);
+            record.setMyTimestamp(null);
           }
+          try {
+            record.setMyInteger(Integer.parseInt(fields[1]));
+          } catch (Exception exception) {
+            recordKey.setValid(false);
+            record.setMyInteger(null);
+          }
+          try {
+            record.setMyDouble(Double.parseDouble(fields[2]));
+          } catch (Exception exception) {
+            recordKey.setValid(false);
+            record.setMyDouble(null);
+          }
+          try {
+            record.setMyBoolean(Boolean.parseBoolean(fields[3]));
+          } catch (Exception exception) {
+            recordKey.setValid(false);
+            record.setMyBoolean(null);
+          }
+          record.setMyString(fields[4]);
         }
-        if (!this.key.isValid()) {
-          record = null;
-          this.key.setSource(records[index]);
+        if (!recordKey.isValid()) {
+          recordKey.setSource(records[index]);
         }
-        return this.key.isValid();
-      }
-
-      @Override
-      public RecordKey getKey() {
-        return key;
-      }
-
-      @Override
-      public Record getRecord() {
-        return record;
+        return recordKey.isValid();
       }
 
     };
@@ -124,7 +124,7 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
       }
 
       @Override
-      public String getString() {
+      public String get() {
         initialise();
         return string.toString();
       }

@@ -23,7 +23,8 @@ import org.slf4j.LoggerFactory;
 import com.cloudera.example.Constants;
 import com.cloudera.example.model.RecordCounter;
 import com.cloudera.example.model.RecordKey;
-import com.cloudera.example.model.input.RecordTextInputFormat;
+import com.cloudera.example.model.RecordPartition;
+import com.cloudera.example.model.input.RecordTextCombineInputFormat;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.common.util.DfsUtil;
 
@@ -110,7 +111,7 @@ public class Stage extends Driver {
       job.getConfiguration().set(Constants.CONFIG_INPUT_PATH, inputPath.toString());
       job.getConfiguration().set(Constants.CONFIG_OUTPUT_PATH, outputPath.toString());
       job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
-      job.setInputFormatClass(RecordTextInputFormat.class);
+      job.setInputFormatClass(RecordTextCombineInputFormat.class);
       for (Path inputPath : inputPaths) {
         FileInputFormat.addInputPath(job, inputPath);
       }
@@ -141,13 +142,13 @@ public class Stage extends Driver {
    */
   private static class Mapper extends org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, Text> {
 
-    private final String PARTITION_BATCH_START = Path.SEPARATOR_CHAR + "ingest_batch_id=" + UUID.randomUUID()
-        + Path.SEPARATOR_CHAR + "ingest_batch_start=";
-    private final String PARTITION_FINISH = Path.SEPARATOR_CHAR + "ingest_batch_finish=";
-    private final String PARTITION_PATH_SUFFIX = Path.SEPARATOR_CHAR + "mydataset";
-    private final String PARTITION_PATH_PREFIX = Constants.DIR_DS_MYDATASET_CANONICAL + Path.SEPARATOR_CHAR
+    private final String PARTITION_BATCH_START = Path.SEPARATOR_CHAR + RecordPartition.BATCH_COL_ID_START_FINISH[0]
+        + "=" + UUID.randomUUID() + Path.SEPARATOR_CHAR + RecordPartition.BATCH_COL_ID_START_FINISH[1] + "=";
+    private final String PARTITION_FINISH = Path.SEPARATOR_CHAR + RecordPartition.BATCH_COL_ID_START_FINISH[2] + "=";
+    private final String PARTITION_PATH_SUFFIX = Constants.DIR_ABS_MYDS;
+    private final String PARTITION_PATH_PREFIX = Constants.DIR_REL_MYDS_CANONICAL + Path.SEPARATOR_CHAR
         + OUTPUT_SEQUENCE + Path.SEPARATOR_CHAR;
-    private final String MALFORMED_PATH_PREFIX = Constants.DIR_DS_MYDATASET_MALFORMED + Path.SEPARATOR_CHAR;
+    private final String MALFORMED_PATH_PREFIX = Constants.DIR_REL_MYDS_MALFORMED + Path.SEPARATOR_CHAR;
 
     private final String timestamp = "" + System.currentTimeMillis();
     private final StringBuilder string = new StringBuilder(512);

@@ -1,27 +1,31 @@
 package com.cloudera.example.model.input;
 
 import java.io.IOException;
+import java.rmi.server.UID;
 
+import org.apache.hadoop.hive.serde2.avro.AvroGenericRecordWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.mapreduce.lib.input.CombineFileSplit;
 
 import com.cloudera.example.model.Record;
 import com.cloudera.example.model.RecordKey;
 import com.cloudera.example.model.serde.RecordStringSerDe;
 import com.cloudera.example.model.serde.RecordStringSerDe.RecordStringDe;
 
-public abstract class RecordTextReader extends RecordReader<RecordKey, Record> {
+public abstract class RecordTextReader extends RecordReader<RecordKey, AvroGenericRecordWritable> {
 
-  public abstract RecordReader<RecordKey, Text> getRecordReader(CombineFileSplit split, TaskAttemptContext context,
+  public abstract RecordReader<RecordKey, Text> getRecordReader(InputSplit split, TaskAttemptContext context,
       Integer index) throws IOException;
 
   public abstract RecordStringSerDe getRecordStringSerDe() throws IOException;
 
-  private Record record;
-  private RecordKey recordKey;
+  private Record record = new Record();
+  private RecordKey recordKey = new RecordKey();;
+  private AvroGenericRecordWritable recordWriteable = new AvroGenericRecordWritable(record);
+  private UID recordReaderID = new UID();
+
   private RecordKey recordsKey;
   private RecordStringDe recordStringDe;
   private RecordReader<RecordKey, Text> recordReader;
@@ -30,26 +34,31 @@ public abstract class RecordTextReader extends RecordReader<RecordKey, Record> {
     recordReader = getRecordReader(null, null, null);
   }
 
-  public RecordTextReader(CombineFileSplit split, TaskAttemptContext context, Integer index) throws IOException {
+  public RecordTextReader(InputSplit split, TaskAttemptContext context) throws IOException {
+    recordReader = getRecordReader(split, context, null);
+  }
+
+  public RecordTextReader(InputSplit split, TaskAttemptContext context, Integer index) throws IOException {
     recordReader = getRecordReader(split, context, index);
   }
 
   @Override
   public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
     recordReader.initialize(split, context);
+    recordWriteable.setFileSchema(Record.getClassSchema());
+    recordWriteable.setRecordReaderID(recordReaderID);
   }
 
   @Override
   public boolean nextKeyValue() throws IOException, InterruptedException {
     if (recordStringDe != null && recordStringDe.hasNext()) {
       recordStringDe.next(recordsKey);
-      recordKey = recordStringDe.getKey();
-      record = recordStringDe.getRecord();
       return true;
     }
     if (recordReader.nextKeyValue()) {
       recordsKey = recordReader.getCurrentKey();
-      recordStringDe = getRecordStringSerDe().getDeserialiser(recordReader.getCurrentValue().toString());
+      recordStringDe = getRecordStringSerDe().getDeserialiser(recordKey, record,
+          recordReader.getCurrentValue().toString());
       return nextKeyValue();
     }
     return false;
@@ -61,8 +70,8 @@ public abstract class RecordTextReader extends RecordReader<RecordKey, Record> {
   }
 
   @Override
-  public Record getCurrentValue() throws IOException, InterruptedException {
-    return record;
+  public AvroGenericRecordWritable getCurrentValue() throws IOException, InterruptedException {
+    return recordWriteable;
   }
 
   @Override

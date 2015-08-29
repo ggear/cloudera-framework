@@ -16,6 +16,7 @@ import org.apache.avro.mapreduce.AvroMultipleOutputs;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.serde2.avro.AvroGenericRecordWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -24,7 +25,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormatNoCheck;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
-import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +50,8 @@ public class Partition extends Driver {
   public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS,
       RecordCounter.RECORDS_CANONICAL, RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
 
+  protected static final String OUTPUT_TEXT = "text";
   protected static final String OUTPUT_AVRO = "avro";
-  protected static final String OUTPUT_SEQUENCE = "sequence";
 
   private static final Logger LOG = LoggerFactory.getLogger(Partition.class);
 
@@ -122,8 +122,8 @@ public class Partition extends Driver {
       job.getConfiguration().set(Constants.CONFIG_OUTPUT_PATH, outputPath.toString());
       job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
       for (Path inputPath : inputPaths) {
-        MultipleInputs.addInputPath(job, inputPath, RecordFactory
-            .getRecordSequenceInputFormat(inputPath.getParent().getParent().getParent().getParent().getName()));
+        MultipleInputs.addInputPath(job, inputPath, RecordFactory.getRecordSequenceInputFormat(
+            RecordPartition.getPartitionPathName(inputPath, RecordPartition.BATCH_COL_ID_START_FINISH, 2)));
       }
       job.setMapperClass(Mapper.class);
       job.setSortComparatorClass(RecordKey.RecordKeyComparator.class);
@@ -133,7 +133,7 @@ public class Partition extends Driver {
       job.setNumReduceTasks(inputPaths.size());
       FileOutputFormat.setOutputPath(job, outputPath);
       LazyOutputFormatNoCheck.setOutputFormatClass(job, TextOutputFormat.class);
-      MultipleOutputs.addNamedOutput(job, OUTPUT_SEQUENCE, SequenceFileOutputFormat.class, RecordKey.class, Text.class);
+      MultipleOutputs.addNamedOutput(job, OUTPUT_TEXT, TextOutputFormat.class, RecordKey.class, Text.class);
       AvroMultipleOutputs.addNamedOutput(job, OUTPUT_AVRO, AvroKeyOutputFormat.class, Record.getClassSchema());
       jobSuccess = job.waitForCompletion(LOG.isInfoEnabled());
       for (Path path : inputPaths) {
@@ -151,46 +151,48 @@ public class Partition extends Driver {
    * where possible.
    */
   private static class Mapper
-      extends org.apache.hadoop.mapreduce.Mapper<RecordKey, Record, RecordKey, AvroValue<Record>> {
+      extends org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>> {
 
     private final RecordKey recordKey = new RecordKey();
     private final Record recordValue = new Record();
     private final Text textValue = new Text();
     private final StringBuilder string = new StringBuilder(512);
     private final AvroValue<Record> recordWrapped = new AvroValue<Record>();
+    private final String MALFORMED_PATH_PREFIX = Constants.DIR_REL_MYDS_MALFORMED + Path.SEPARATOR_CHAR + OUTPUT_TEXT
+        + Path.SEPARATOR_CHAR;
 
     private MultipleOutputs<RecordKey, Text> multipleOutputs;
 
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void setup(
-        org.apache.hadoop.mapreduce.Mapper<RecordKey, Record, RecordKey, AvroValue<Record>>.Context context)
+        org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
       multipleOutputs = new MultipleOutputs(context);
     }
 
     @Override
     protected void cleanup(
-        org.apache.hadoop.mapreduce.Mapper<RecordKey, Record, RecordKey, AvroValue<Record>>.Context context)
+        org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
       multipleOutputs.close();
     }
 
     @Override
-    protected void map(RecordKey key, Record value,
-        org.apache.hadoop.mapreduce.Mapper<RecordKey, Record, RecordKey, AvroValue<Record>>.Context context)
+    protected void map(RecordKey key, AvroGenericRecordWritable value,
+        org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
             throws IOException, InterruptedException {
       if (key.isValid()) {
         key.setHash(recordValue.hashCode());
-        recordWrapped.datum(value);
+        recordWrapped.datum((Record) value.getRecord());
         context.write(recordKey, recordWrapped);
       } else {
         context.getCounter(RecordCounter.RECORDS).increment(1);
         context.getCounter(RecordCounter.RECORDS_MALFORMED).increment(1);
         textValue.set(key.getSource());
         string.setLength(0);
-        multipleOutputs.write(OUTPUT_SEQUENCE, key, textValue, string.append(Constants.DIR_DS_MYDATASET_MALFORMED)
-            .append(Path.SEPARATOR_CHAR).append(key.getBatch()).toString());
+        multipleOutputs.write(OUTPUT_TEXT, NullWritable.get(), textValue,
+            string.append(MALFORMED_PATH_PREFIX).append(key.getBatch()).toString());
       }
     }
 
@@ -251,9 +253,8 @@ public class Partition extends Driver {
         calendar.setTimeInMillis(record.datum().getMyTimestamp());
         string.setLength(0);
         string
-            .append(counter.equals(RecordCounter.RECORDS_CANONICAL)
-                ? Constants.DIR_DS_MYDATASET_PARTITIONED_CANONICAL_AVRO_RELATIVE
-                : Constants.DIR_DS_MYDATASET_PARTITIONED_DUPLICATE_AVRO_RELATIVE)
+            .append(counter.equals(RecordCounter.RECORDS_CANONICAL) ? Constants.DIR_REL_MYDS_PARTITIONED_CANONICAL_AVRO
+                : Constants.DIR_REL_MYDS_PARTITIONED_DUPLICATE_AVRO)
             .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR))
             .append(Path.SEPARATOR_CHAR).append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1)
             .append(Path.SEPARATOR_CHAR);
