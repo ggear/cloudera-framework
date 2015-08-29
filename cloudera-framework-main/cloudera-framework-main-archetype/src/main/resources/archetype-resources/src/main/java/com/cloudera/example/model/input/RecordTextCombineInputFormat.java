@@ -10,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
@@ -24,8 +23,8 @@ import com.cloudera.example.Constants;
 import com.cloudera.example.model.RecordKey;
 
 /**
- * An {@link InputFormat} to act on multiple text files, forming the appropriate
- * {@link RecordKey key} and UTF8 parsed {@link Text value}.
+ * An {@link CombineFileInputFormat} to act on text files, forming the
+ * {@link RecordKey RecordKeys} and {@link Text} values
  */
 public class RecordTextCombineInputFormat extends CombineFileInputFormat<RecordKey, Text> {
 

@@ -22,7 +22,7 @@ import com.cloudera.example.model.Record;
 import com.cloudera.example.model.RecordKey;
 
 /**
- * XML {@link RecordStringSerDe} implementation.
+ * An XML {@link RecordStringSerDe} implementation.
  */
 public class RecordStringSerDeXml extends RecordStringSerDe {
 

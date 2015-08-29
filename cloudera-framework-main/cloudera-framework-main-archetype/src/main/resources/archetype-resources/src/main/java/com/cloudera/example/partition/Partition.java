@@ -41,9 +41,10 @@ import com.cloudera.framework.main.common.util.DfsUtil;
 /**
  * Partition driver, take a set of staged sequence files and rewrite them into
  * consolidated, schema partitioned, row order Avro
- * {@link Record#getClassSchema() files}. Malformed files are annexed off and
- * written in the staging sequence file format with {@link RecordKey key} and
- * original String value.
+ * {@link Record#getClassSchema() files}. Malformed and duplicate records are
+ * annexed off and written in the source text file format with {@link RecordKey
+ * key} and original {@link Text} value with originating source directory,
+ * partition and file name.
  */
 public class Partition extends Driver {
 

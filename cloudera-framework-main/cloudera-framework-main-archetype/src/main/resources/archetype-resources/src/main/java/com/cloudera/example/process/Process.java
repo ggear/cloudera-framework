@@ -12,6 +12,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.cloudera.example.Constants;
 import com.cloudera.example.model.Record;
 import com.cloudera.example.model.RecordCounter;
+import com.cloudera.example.model.RecordKey;
 import com.cloudera.example.model.RecordPartition;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.common.util.DfsUtil;
@@ -32,9 +34,12 @@ import parquet.hadoop.metadata.CompressionCodecName;
 
 /**
  * Process driver, take a set of partitioned Avro files and rewrite them into
- * consolidated, schema partitioned, column order Parquet. The driver can be
+ * consolidated, schema partitioned, column order Parquet format with an
+ * equivalent {@link Record#getClassSchema() schema}. The driver can be
  * configured as a pass-through, de-depulication and most-recent filter.
- * Malformed files are annexed off and written in the staging Avro file format.
+ * Duplicate records are annexed off and written in the source text file format
+ * with {@link RecordKey key} and original {@link Text} value with originating
+ * source directory, partition and file name.
  */
 public class Process extends Driver {
 

@@ -18,9 +18,9 @@ import com.cloudera.example.model.RecordKey;
 import com.cloudera.example.model.serde.RecordStringSerDe;
 
 /**
- * An abstract {@link InputFormat} to act on multiple text files, forming the
- * appropriate {@link RecordKey key} and {@link Record value} using a
- * {@link RecordStringSerDe} specified by {@link #getX()}.
+ * An {@link InputFormat} to act on text files of {@link RecordKey RecordKeys}
+ * and CSV {@link Text Texts}, presented upstream as
+ * {@link AvroGenericRecordWritable} wrapped {@link Record Records}
  */
 public class RecordTextInputFormatCsv extends FileInputFormat<RecordKey, AvroGenericRecordWritable> {
 

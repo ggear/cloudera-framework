@@ -4,16 +4,23 @@ import java.io.IOException;
 
 import org.apache.hadoop.hive.serde2.avro.AvroGenericRecordWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileRecordReader;
 
+import com.cloudera.example.model.Record;
 import com.cloudera.example.model.RecordFactory;
 import com.cloudera.example.model.RecordKey;
 import com.cloudera.example.model.serde.RecordStringSerDe;
 
+/**
+ * An {@link InputFormat} to act on sequence files of {@link RecordKey
+ * RecordKeys} and CSV {@link Text Texts}, presented upstream as
+ * {@link AvroGenericRecordWritable} wrapped {@link Record Records}
+ */
 public class RecordSequenceInputFormatCsv extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable> {
 
   @Override

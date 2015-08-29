@@ -14,7 +14,7 @@ import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
- * CSV {@link RecordStringSerDe} implementation.<br>
+ * A CSV {@link RecordStringSerDe} implementation.<br>
  * <br>
  * This class is not thread-safe.
  */

@@ -14,6 +14,11 @@ import com.cloudera.example.model.RecordKey;
 import com.cloudera.example.model.serde.RecordStringSerDe;
 import com.cloudera.example.model.serde.RecordStringSerDe.RecordStringDe;
 
+/**
+ * A paramaterised {@link RecordReader} that can take in {@link Text} and form
+ * {@link AvroGenericRecordWritable} wrapped {@link Record Records} based on the
+ * {@link #getRecordReader} implementation
+ */
 public abstract class RecordTextReader extends RecordReader<RecordKey, AvroGenericRecordWritable> {
 
   public abstract RecordReader<RecordKey, Text> getRecordReader(InputSplit split, TaskAttemptContext context,

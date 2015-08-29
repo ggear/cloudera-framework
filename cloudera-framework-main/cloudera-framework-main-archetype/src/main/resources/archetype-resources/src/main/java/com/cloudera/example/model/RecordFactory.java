@@ -29,7 +29,7 @@ public class RecordFactory {
           RecordSequenceInputFormatXml.class);
 
   /**
-   * Get a {@link RecordStringSerDe} from a <code>type</code> designator
+   * Get a {@link RecordStringSerDe} from a <code>type</code>
    *
    * @param type
    *          the type to lookup
@@ -42,6 +42,13 @@ public class RecordFactory {
     return RECORD_STRING_SERDES.get(type);
   }
 
+  /**
+   * Get a {@link SequenceFileInputFormat} from a <code>type</code>
+   *
+   * @param type
+   *          the type to lookup
+   * @return the {@link SequenceFileInputFormat} instance
+   */
   public static Class<? extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable>> getRecordSequenceInputFormat(
       String type) throws IOException {
     if (!RECORD_INPUT_FORMATS.containsKey(type)) {

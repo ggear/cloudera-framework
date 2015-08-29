@@ -2,6 +2,9 @@ package com.cloudera.example.model;
 
 import com.twitter.elephantbird.mapred.input.DeprecatedInputFormatValueCopier;
 
+/**
+ * A class to provide copy and clone methods for {@link Record records}
+ */
 public class RecordCopier implements DeprecatedInputFormatValueCopier<Record> {
 
   @Override
