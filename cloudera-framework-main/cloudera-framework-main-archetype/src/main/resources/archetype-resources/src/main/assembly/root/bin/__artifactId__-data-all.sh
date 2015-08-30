@@ -11,3 +11,4 @@ $ROOT_DIR/bin/*-data-stream.sh
 $ROOT_DIR/bin/*-data-stage.sh
 $ROOT_DIR/bin/*-data-partition.sh
 $ROOT_DIR/bin/*-data-process.sh
+$ROOT_DIR/bin/*-data-table.sh
