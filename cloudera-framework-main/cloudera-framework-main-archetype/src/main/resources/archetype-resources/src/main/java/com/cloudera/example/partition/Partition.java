@@ -33,6 +33,7 @@ import com.cloudera.example.Constants;
 import com.cloudera.example.model.Record;
 import com.cloudera.example.model.RecordCounter;
 import com.cloudera.example.model.RecordFactory;
+import com.cloudera.example.model.RecordFilter;
 import com.cloudera.example.model.RecordKey;
 import com.cloudera.example.model.RecordPartition;
 import com.cloudera.framework.main.common.Driver;
@@ -41,12 +42,15 @@ import com.cloudera.framework.main.common.util.DfsUtil;
 /**
  * Partition driver, take a set of staged sequence files and rewrite them into
  * consolidated, schema partitioned, row order Avro
- * {@link Record#getClassSchema() files}. Malformed and duplicate records are
+ * {@link Record#getClassSchema() files}. The driver can be configured as a
+ * pass-through or de-duplication filter. Malformed and duplicate records are
  * annexed off and written in the source text file format with {@link RecordKey
  * key} and original {@link Text} value into the originating source directory,
  * partition and file name.
  */
 public class Partition extends Driver {
+
+  public static final String CONF_RECORD_FILTER_DEFAULT = RecordFilter.CONF_RECORD_FILTER_PASS_THROUGH;
 
   public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS,
       RecordCounter.RECORDS_CANONICAL, RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
@@ -77,7 +81,8 @@ public class Partition extends Driver {
 
   @Override
   public String[] options() {
-    return new String[] {};
+    return new String[] { RecordFilter.CONF_RECORD_FILTER + "=" + RecordFilter.CONF_RECORD_FILTER_PASS_THROUGH + "|"
+        + RecordFilter.CONF_RECORD_FILTER_DE_DUPE };
   }
 
   @Override
@@ -114,6 +119,10 @@ public class Partition extends Driver {
 
   @Override
   public int execute() throws Exception {
+
+    // TODO Implement filters
+    getConf().get(RecordFilter.CONF_RECORD_FILTER, CONF_RECORD_FILTER_DEFAULT);
+
     boolean jobSuccess = true;
     if (inputPaths.size() > 0) {
       Job job = Job.getInstance(getConf());

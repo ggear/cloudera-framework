@@ -43,6 +43,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Source overlay properties
                 ImmutableMap.of(//
                     Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
+                    Stream.PROPERTY_POLL_TICKS, "0", //
                     Stream.PROPERTY_BATCH_SIZE, "1", //
                     Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_CSV//
             ), //
@@ -69,16 +70,16 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Partition counters
                 ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 30L, //
-                        RecordCounter.RECORDS_CANONICAL, 30L, //
+                        RecordCounter.RECORDS, 3000L, //
+                        RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Process counters
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 30L, //
-                        RecordCounter.RECORDS_CANONICAL, 30L, //
+                        RecordCounter.RECORDS, 3000L, //
+                        RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
@@ -93,12 +94,13 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Source overlay properties
                 ImmutableMap.of(//
                     Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
-                    Stream.PROPERTY_BATCH_SIZE, "2", //
+                    Stream.PROPERTY_POLL_TICKS, "1", //
+                    Stream.PROPERTY_BATCH_SIZE, "5", //
                     Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_CSV//
             ), //
                // Sink overlay properties
                 ImmutableMap.of(//
-                    Stream.PROPERTY_BATCH_SIZE, "2"//
+                    Stream.PROPERTY_BATCH_SIZE, "5"//
             ), //
                // Pipeline properties
                 ImmutableMap.of(//
@@ -119,16 +121,16 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Partition counters
                 ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 20L, //
-                        RecordCounter.RECORDS_CANONICAL, 20L, //
-                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS, 5000L, //
+                        RecordCounter.RECORDS_CANONICAL, 3000L, //
+                        RecordCounter.RECORDS_DUPLICATE, 2000L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Process counters
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 20L, //
-                        RecordCounter.RECORDS_CANONICAL, 20L, //
+                        RecordCounter.RECORDS, 3000L, //
+                        RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
@@ -143,6 +145,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Source overlay properties
                 ImmutableMap.of(//
                     Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
+                    Stream.PROPERTY_POLL_TICKS, "0", //
                     Stream.PROPERTY_BATCH_SIZE, "1", //
                     Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_XML//
             ), //
@@ -169,16 +172,16 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Partition counters
                 ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 30L, //
-                        RecordCounter.RECORDS_CANONICAL, 30L, //
+                        RecordCounter.RECORDS, 3000L, //
+                        RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Process counters
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 30L, //
-                        RecordCounter.RECORDS_CANONICAL, 30L, //
+                        RecordCounter.RECORDS, 3000L, //
+                        RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
@@ -193,12 +196,13 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Source overlay properties
                 ImmutableMap.of(//
                     Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
-                    Stream.PROPERTY_BATCH_SIZE, "2", //
+                    Stream.PROPERTY_POLL_TICKS, "1", //
+                    Stream.PROPERTY_BATCH_SIZE, "5", //
                     Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_XML//
             ), //
                // Sink overlay properties
                 ImmutableMap.of(//
-                    Stream.PROPERTY_BATCH_SIZE, "2"//
+                    Stream.PROPERTY_BATCH_SIZE, "5"//
             ), //
                // Pipeline properties
                 ImmutableMap.of(//
@@ -219,16 +223,16 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                 // Partition counters
                 ImmutableMap.of(Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 20L, //
-                        RecordCounter.RECORDS_CANONICAL, 20L, //
-                        RecordCounter.RECORDS_DUPLICATE, 0L, //
+                        RecordCounter.RECORDS, 5000L, //
+                        RecordCounter.RECORDS_CANONICAL, 3000L, //
+                        RecordCounter.RECORDS_DUPLICATE, 2000L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //
                 // Process counters
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
-                        RecordCounter.RECORDS, 20L, //
-                        RecordCounter.RECORDS_CANONICAL, 20L, //
+                        RecordCounter.RECORDS, 3000L, //
+                        RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )), //

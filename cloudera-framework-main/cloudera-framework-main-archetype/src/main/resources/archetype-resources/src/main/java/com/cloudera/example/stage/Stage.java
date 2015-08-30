@@ -32,8 +32,7 @@ import com.cloudera.framework.main.common.util.DfsUtil;
  * Stage driver, take a set of text files with a known naming scheme and stage
  * their records into a consolidated ingest partitioned staging set, written as
  * file order, sequence files with {@link RecordKey keys} and original
- * {@link Text} values. The driver can be configured as a pass-through or
- * de-duplication filter. Files not meeting the naming scheme are annexed off
+ * {@link Text} values. Files not meeting the naming scheme are annexed off
  * and written in the source text file format with {@link RecordKey key} and
  * original {@link Text} value into the originating source directory, partition
  * and file name.

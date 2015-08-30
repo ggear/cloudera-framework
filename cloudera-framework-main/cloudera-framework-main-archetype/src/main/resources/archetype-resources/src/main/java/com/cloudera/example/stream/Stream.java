@@ -179,16 +179,11 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()),
           getEventHeader(System.currentTimeMillis())), false);
       int sleepMs = 0;
-      boolean tickRequired = false;
       int tickMs = pollMs / (pollTicks + 1);
       for (int i = 0; i <= pollTicks; i++) {
         if (pollTicks > 0 && i < pollTicks) {
-          if (tickRequired) {
-            processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()),
-                getEventHeader(System.currentTimeMillis())), false);
-          } else {
-            tickRequired = true;
-          }
+          processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()),
+              getEventHeader(System.currentTimeMillis())), false);
           if (i < pollTicks - 1) {
             if (LOG.isDebugEnabled()) {
               LOG.debug("Source [" + getName() + "] sleeping for next tick, ms [" + tickMs + "]");
@@ -291,8 +286,8 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       String valuePrevious = event.getHeaders().get(key);
       if (force || valuePrevious == null) {
         event.getHeaders().put(key, value);
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Adding event header [" + key + "] with value [" + value + "]"
+        if (LOG.isTraceEnabled()) {
+          LOG.trace("Adding event header [" + key + "] with value [" + value + "]"
               + (valuePrevious == null ? "" : " overwriting previous value [" + valuePrevious + "]"));
         }
       }
