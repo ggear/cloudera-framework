@@ -6,7 +6,7 @@
 	<groupId>com.cloudera</groupId>
 	<artifactId>cloudera-framework</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.0-cdh5.4.4-SNAPSHOT</version>
+	<version>1.2.0-cdh5.4.3-SNAPSHOT</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:ggear/cloudera-framework.git</connection>
