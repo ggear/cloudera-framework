@@ -61,7 +61,7 @@ END
     --hivevar my.server.name=$NAME_SPACE_SERVER \
     --hivevar my.database.name=$NAME_SPACE_DATABASE \
     --hivevar my.database.location=$ROOT_DIR_HDFS \
-    -f $ROOT_DIR/lib/ddl/hive/database.ddl
+    -f $ROOT_DIR/lib/ddl/hive/database_create.ddl
   until $ROOT_DIR/bin/*-shell-impala.sh -r -q "SHOW TABLES"; do
   	echo "Sleeping while waiting for database and roles to sync ... "
     sleep 5
