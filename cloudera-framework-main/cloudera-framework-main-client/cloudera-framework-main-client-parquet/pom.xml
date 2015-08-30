@@ -99,7 +99,7 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>../../cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</directory>
+							<directory>../../../cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</directory>
 							<includes>
 								<include>**/${project.artifactId}/**</include>
 							</includes>
