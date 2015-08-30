@@ -108,17 +108,19 @@ public class Process extends Driver {
   public int execute() throws Exception {
     boolean jobSuccess = true;
     List<Job> jobs = new ArrayList<Job>();
+    FileSystem hdfs = FileSystem.newInstance(getConf());
     for (Path inputPath : inputPaths) {
-      String outputPathString = RecordPartition.getPartitionPathString(inputPath, RecordPartition.RECORD_COL_YEAR_MONTH,
-          0);
+      Path outputPath = new Path(this.outputPath,
+          Constants.DIR_REL_MYDS_PROCESSED_CANONICAL_PARQUET + Path.SEPARATOR_CHAR
+              + RecordPartition.getPartitionPathString(inputPath, RecordPartition.RECORD_COL_YEAR_MONTH, 0));
+      hdfs.delete(outputPath, true);
       Job job = Job.getInstance(getConf());
       job.setJobName(getClass().getSimpleName());
       job.setJarByClass(Process.class);
       FileInputFormat.addInputPath(job, inputPath);
       job.setInputFormatClass(AvroKeyInputFormat.class);
       job.setOutputFormatClass(AvroParquetOutputFormat.class);
-      FileOutputFormat.setOutputPath(job, new Path(this.outputPath,
-          Constants.DIR_REL_MYDS_PROCESSED_CANONICAL_PARQUET + Path.SEPARATOR_CHAR + outputPathString));
+      FileOutputFormat.setOutputPath(job, outputPath);
       AvroJob.setInputKeySchema(job, Record.getClassSchema());
       AvroParquetOutputFormat.setSchema(job, Record.getClassSchema());
       ParquetOutputFormat.setCompression(job, CompressionCodecName.SNAPPY);
