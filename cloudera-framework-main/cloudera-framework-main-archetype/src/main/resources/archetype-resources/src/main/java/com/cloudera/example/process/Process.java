@@ -38,8 +38,8 @@ import parquet.hadoop.metadata.CompressionCodecName;
  * equivalent {@link Record#getClassSchema() schema}. The driver can be
  * configured as a pass-through, de-depulication and most-recent filter.
  * Duplicate records are annexed off and written in the source text file format
- * with {@link RecordKey key} and original {@link Text} value with originating
- * source directory, partition and file name.
+ * with {@link RecordKey key} and original {@link Text} value into the
+ * originating source directory, partition and file name.
  */
 public class Process extends Driver {
 

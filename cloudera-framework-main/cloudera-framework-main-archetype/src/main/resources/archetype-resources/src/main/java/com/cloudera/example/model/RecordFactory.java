@@ -14,7 +14,7 @@ import com.cloudera.example.model.serde.RecordStringSerDeXml;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Factory to create {@link Record} related instances
+ * Factory to access {@link Record} related instances
  */
 public class RecordFactory {
 

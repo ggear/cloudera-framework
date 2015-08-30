@@ -34,8 +34,8 @@ import com.cloudera.framework.main.common.util.DfsUtil;
  * file order, sequence files with {@link RecordKey keys} and original
  * {@link Text} values. Files not meeting the naming scheme are annexed off and
  * written in the source text file format with {@link RecordKey key} and
- * original {@link Text} value with originating source directory, partition and
- * file name.
+ * original {@link Text} value into the originating source directory, partition
+ * and file name.
  */
 public class Stage extends Driver {
 
