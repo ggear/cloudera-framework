@@ -36,7 +36,7 @@ import parquet.hadoop.metadata.CompressionCodecName;
  * Process driver, take a set of partitioned Avro files and rewrite them into
  * consolidated, schema partitioned, column order Parquet format with an
  * equivalent {@link Record#getClassSchema() schema}. The driver can be
- * configured as a pass-through, de-depulication and most-recent filter.
+ * configured as a pass-through, de-duplication and most-recent filter.
  * Duplicate records are annexed off and written in the source text file format
  * with {@link RecordKey key} and original {@link Text} value into the
  * originating source directory, partition and file name.

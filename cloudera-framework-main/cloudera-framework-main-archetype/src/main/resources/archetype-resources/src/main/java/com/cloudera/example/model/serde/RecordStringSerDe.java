@@ -11,6 +11,10 @@ import com.cloudera.example.model.RecordKey;
  */
 public abstract class RecordStringSerDe {
 
+  // TODO: Implement in a stream orientated fashion, to allow for efficient
+  // large (>100MB) serilisation/de-serialisation jobs, the current interface
+  // is optimised for small (<100MB) jobs.
+
   /**
    * Get a de-serialiser
    *
