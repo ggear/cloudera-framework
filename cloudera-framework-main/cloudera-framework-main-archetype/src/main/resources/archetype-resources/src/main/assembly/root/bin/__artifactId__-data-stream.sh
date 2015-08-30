@@ -51,11 +51,9 @@ FLUME_AGENT_CONFIG=$(cat $ROOT_DIR/lib/cfg/flume/flume-conf.properties | \
 )
 
 python - "$MANAGER_SERVER_USER" "$MANAGER_SERVER_PWORD" "$MANAGER_SERVER_HOST" "$MANAGER_SERVER_PORT" "$FLUME_AGENT_NAME" "$FLUME_AGENT_CONFIG" << END
-
 import sys
 from cm_api import api_client
 from cm_api.api_client import ApiResource
-
 def main(argv):
   print ''
   api = ApiResource(argv[3], argv[4], argv[1], argv[2], False, 10);
@@ -64,14 +62,12 @@ def main(argv):
       if service.type == 'FLUME':
         for group in service.get_all_role_config_groups():
           if group.roleType == 'AGENT':
-            print 'Updating flume config ...'
+            print 'Updating Flume config ...'
             group.update_config({'agent_name': argv[5]})
             group.update_config({'agent_config_file': argv[6]})
-        print 'Restarting flume service ...'
+        print 'Restarting Flume service ...'
         service.restart().wait()
   return 0
-
 if __name__ == '__main__':
   sys.exit(main(sys.argv))
-
 END
