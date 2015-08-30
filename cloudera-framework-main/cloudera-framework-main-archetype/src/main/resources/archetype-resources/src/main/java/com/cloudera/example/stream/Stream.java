@@ -172,7 +172,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       RecordStringSer recordStringSer = recordStringSerDe.getSerialiser(recordNumber);
       for (int i = 0; i < recordNumber; i++) {
         recordStringSer.add(Record.newBuilder().setMyTimestamp(System.currentTimeMillis())
-            .setMyInteger((int) (Math.random() * 10)).setMyDouble(Math.random())
+            .setMyInteger((int) (Math.random() * 10)).setMyDouble(Math.round(Math.random() * 10000000) / 100D)
             .setMyBoolean(Math.random() < 0.5 ? true : false).setMyString(UUID.randomUUID().toString()).build());
       }
       String record = recordStringSer.get();
