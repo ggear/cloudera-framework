@@ -63,9 +63,8 @@ export CF_VERSION_RELEASE=1.2.0
 export CDH_VERSION_RELEASE=5.4.4
 export CF_VERSION_HEAD=1.2.0
 export CDH_VERSION_HEAD=5.4.5
-mvn clean install -PCMP
 mvn clean
-mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT -PPKG
+mvn release:prepare -B -DreleaseVersion="$CF_VERSION_RELEASE"-cdh"$CDH_VERSION_RELEASE" -DdevelopmentVersion="$CF_VERSION_HEAD"-cdh"$CDH_VERSION_HEAD-SNAPSHOT" -PCMP
 mvn release:clean
 git checkout -b cloudera-framework-$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE cloudera-framework-$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE
 mvn clean install -PCMP
