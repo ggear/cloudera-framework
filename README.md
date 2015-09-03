@@ -1,6 +1,6 @@
 #Cloudera Framework
 
-Provide an example organisation core Cloudera Framework, defining corporate standards on runtime components, dependencies, datasets, utility libraries, unit testing and project structure. The example includes a unit test harness, clients/runtime bill-of-materials and driver base class, with full coverage across the Cloudera stack, including:
+Provide an example organisation core Cloudera Framework, defining corporate standards on runtime components, datasets, libraries, testing and project structure. The example includes client/runtime bill-of-materials, utlitiy libraries, driver base class and a unit test harness with full coverage against a Cloudera stack, including:
 
 * HDFS
 * YARN
@@ -9,7 +9,7 @@ Provide an example organisation core Cloudera Framework, defining corporate stan
 * Flume
 * Kafka
 
-A Maven archetype is also included, codifying the standards and setting expectations.
+A Maven archetype is also included, codifying the standards, providing an example end to end ingest and processing pipeline and synthetic data to exercise the codebase.
 
 ##Requirements
 
