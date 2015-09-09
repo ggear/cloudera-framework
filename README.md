@@ -27,7 +27,7 @@ export CF_VERSION=1.2.0
 export CDH_VERSION=5.4.5
 git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
-git branch --all
+git branch
 git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
 mvn clean install -PCMP
 ```
