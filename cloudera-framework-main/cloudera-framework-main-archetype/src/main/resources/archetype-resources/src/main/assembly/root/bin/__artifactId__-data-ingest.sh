@@ -11,8 +11,6 @@ ROOT_DIR_HDFS_RAW=${3:-"$ROOT_DIR_HDFS_RAW"}
 ROOT_DIR_HDFS_STAGED=${3:-"$ROOT_DIR_HDFS_STAGED"}
 ROOT_DIR_HDFS_PARTITIONED=${3:-"$ROOT_DIR_HDFS_PARTITIONED"}
 ROOT_DIR_HDFS_PROCESSED=${3:-"$ROOT_DIR_HDFS_PROCESSED"}
-LIBJARS="$(echo -n $(ls -m $ROOT_DIR/lib/jar/dep/*.jar)|sed 's/, /,/g')"
-export HADOOP_CLASSPATH="$(echo -n $(ls -m $ROOT_DIR/lib/jar/dep/*.jar)|sed 's/, /:/g')"
 
 $ROOT_DIR/bin/*-shell-hadoop.sh "\
   jar $ROOT_DIR/lib/jar/*.jar \

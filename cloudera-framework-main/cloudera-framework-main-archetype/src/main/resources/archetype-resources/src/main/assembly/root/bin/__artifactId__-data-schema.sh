@@ -7,7 +7,7 @@ source $ROOT_DIR/bin/*.env
 set -x
 
 CMD_LINE_ARGUMENTS="$1"
-DROP_SCHEMA=${3:-false}
+DROP_SCHEMA=${2:-false}
 USER_ADMIN=${3:-"$USER_ADMIN"}
 NAME_SPACE_SERVER=${4:-"$NAME_SPACE_SERVER"}
 NAME_SPACE_DATABASE=${5:-"$NAME_SPACE_DATABASE"}
@@ -136,12 +136,10 @@ TABLES_LOCATION=( \
 	"$ROOT_DIR_HDFS_PROCESSED_DUPLICATE/parquet/dict/snappy" \
 )
 
-if [ $DROP_SCHEMA ]; then
+if $DROP_SCHEMA && [ $($ROOT_DIR/bin/*-shell-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 1 ]; then
 
-  if [ $($ROOT_DIR/bin/*-shell-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 0 ]; then
-    $ROOT_DIR/bin/*-shell-hive.sh --outputformat=vertical -e "SHOW TABLES" | grep tab_name | awk '{print $2}' | xargs -I £ $ROOT_DIR/bin/*-shell-hive.sh -e "DROP TABLE £"
-    $ROOT_DIR/bin/*-shell-impala.sh -r -q "USE default; DROP DATABASE $NAME_SPACE_DATABASE; DROP ROLE $USER_ADMIN;"
-  fi
+  $ROOT_DIR/bin/*-shell-hive.sh --outputformat=vertical -e "SHOW TABLES" | grep tab_name | awk '{print $2}' | xargs -I £ $ROOT_DIR/bin/*-shell-hive.sh -e "DROP TABLE £"
+  $ROOT_DIR/bin/*-shell-impala.sh -r -q "USE default; DROP DATABASE $NAME_SPACE_DATABASE; DROP ROLE $USER_ADMIN;"
 
 fi
 
@@ -208,5 +206,5 @@ for((i=0;i<${#TABLES_NAME[@]};i++)); do
   TABLES_REFRESH_HIVE="$TABLES_REFRESH_HIVE"" MSCK REPAIR TABLE ""${TABLES_NAME[$i]}""; "
   TABLES_REFRESH_IMPALA="$TABLES_REFRESH_IMPALA"" REFRESH ""${TABLES_NAME[$i]}""; "
 done
-$ROOT_DIR/bin/*-shell-hive.sh -q "$TABLES_REFRESH_HIVE"
+$ROOT_DIR/bin/*-shell-hive.sh -e "$TABLES_REFRESH_HIVE"
 $ROOT_DIR/bin/*-shell-impala.sh -q "$TABLES_REFRESH_IMPALA"
