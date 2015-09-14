@@ -27,15 +27,13 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.Constants;
 import com.cloudera.example.TestConstants;
+import com.cloudera.example.ingest.Ingest;
 import com.cloudera.example.model.RecordPartition;
 import com.cloudera.example.model.input.hive.RecordSequenceInputFormatCsv;
 import com.cloudera.example.model.input.hive.RecordSequenceInputFormatXml;
 import com.cloudera.example.model.input.hive.RecordTextInputFormat;
 import com.cloudera.example.model.input.hive.RecordTextInputFormatCsv;
 import com.cloudera.example.model.input.hive.RecordTextInputFormatXml;
-import com.cloudera.example.partition.Partition;
-import com.cloudera.example.process.Process;
-import com.cloudera.example.stage.Stage;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.MiniClusterDfsMrHiveTest;
 import com.google.common.base.Joiner;
@@ -272,12 +270,9 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
    */
   @Before
   public void setupData() throws Exception {
-    Assert.assertEquals(Driver.RETURN_SUCCESS, new Stage(getConf())
-        .runner(new String[] { getPathDfs(DIR_ABS_MYDS_RAW_CANONICAL), getPathDfs(DIR_ABS_MYDS_STAGED) }));
-    Assert.assertEquals(Driver.RETURN_SUCCESS, new Partition(getConf())
-        .runner(new String[] { getPathDfs(DIR_ABS_MYDS_STAGED_CANONICAL), getPathDfs(DIR_ABS_MYDS_PARTITIONED) }));
-    Assert.assertEquals(Driver.RETURN_SUCCESS, new Process(getConf())
-        .runner(new String[] { getPathDfs(DIR_ABS_MYDS_PARTITIONED_CANONICAL), getPathDfs(DIR_ABS_MYDS_PROCESSED) }));
+    Driver driver = new Ingest(getConf());
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { getPathDfs(DIR_ABS_MYDS_RAW),
+        getPathDfs(DIR_ABS_MYDS_STAGED), getPathDfs(DIR_ABS_MYDS_PARTITIONED), getPathDfs(DIR_ABS_MYDS_PROCESSED) }));
   }
 
 }

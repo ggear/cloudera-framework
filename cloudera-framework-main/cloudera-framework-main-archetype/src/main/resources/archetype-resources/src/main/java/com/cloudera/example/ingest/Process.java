@@ -1,4 +1,4 @@
-package com.cloudera.example.process;
+package com.cloudera.example.ingest;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.cloudera.example.stage;
+package com.cloudera.example.ingest;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -43,21 +43,25 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
         }, // Counter equality tests
             new Map[] {
                 // First run
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 1L, //
                         RecordCounter.FILES_CANONICAL, 1L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
-            )), //
-                // Second run
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+            )//
+            ), //
+               // Second run
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 0L, //
                         RecordCounter.FILES_CANONICAL, 0L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
-            )), //
+            )//
+            ), //
         }, //
         }, //
         // XML dataset, pristine subset
@@ -76,21 +80,25 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
         }, // Counter equality tests
             new Map[] {
                 // First run
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 1L, //
                         RecordCounter.FILES_CANONICAL, 1L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
-            )), //
-                // Second run
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+            )//
+            ), //
+               // Second run
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 0L, //
                         RecordCounter.FILES_CANONICAL, 0L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
-            )), //
+            )//
+            ), //
         }, //
         }, //
         // All datasets, all subsets
@@ -111,21 +119,25 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
         }, // Counter equality tests
             new Map[] {
                 // First run
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 93L, //
                         RecordCounter.FILES_CANONICAL, 56L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 37L //
-            )), //
-                // Second run
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+            )//
+            ), //
+               // Second run
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 0L, //
                         RecordCounter.FILES_CANONICAL, 0L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
-            )), //
+            )//
+            ), //
         }, //
         }, //
     });

@@ -1,4 +1,4 @@
-package com.cloudera.example.partition;
+package com.cloudera.example.ingest;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -12,7 +12,6 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.TestConstants;
 import com.cloudera.example.model.RecordCounter;
-import com.cloudera.example.stage.Stage;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.LocalClusterDfsMrTest;
 import com.google.common.collect.ImmutableMap;
@@ -45,21 +44,25 @@ public class PartitionTest extends LocalClusterDfsMrTest implements TestConstant
         }, // Counter equality tests
             new Map[] {
                 // First run
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 1L, //
                         RecordCounter.RECORDS_CANONICAL, 1L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
-                // Second run
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+            )//
+            ), //
+               // Second run
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 0L, //
                         RecordCounter.RECORDS_CANONICAL, 0L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
+            )//
+            ), //
         }, //
         }, //
         // XML dataset, pristine subset
@@ -78,21 +81,25 @@ public class PartitionTest extends LocalClusterDfsMrTest implements TestConstant
         }, // Counter equality tests
             new Map[] {
                 // First run
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 1L, //
                         RecordCounter.RECORDS_CANONICAL, 1L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
-                // Second run
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+            )//
+            ), //
+               // Second run
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 0L, //
                         RecordCounter.RECORDS_CANONICAL, 0L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
+            )//
+            ), //
         }, //
         }, //
         // All datasets, all subsets
@@ -113,21 +120,25 @@ public class PartitionTest extends LocalClusterDfsMrTest implements TestConstant
         }, // Counter equality tests
             new Map[] {
                 // First run
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 493L, //
                         RecordCounter.RECORDS_CANONICAL, 332L, //
                         RecordCounter.RECORDS_DUPLICATE, 140L, //
                         RecordCounter.RECORDS_MALFORMED, 21L//
-            )), //
-                // Second run
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+            )//
+            ), //
+               // Second run
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 0L, //
                         RecordCounter.RECORDS_CANONICAL, 0L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
+            )//
+            ), //
         }, //
         }, //
     });

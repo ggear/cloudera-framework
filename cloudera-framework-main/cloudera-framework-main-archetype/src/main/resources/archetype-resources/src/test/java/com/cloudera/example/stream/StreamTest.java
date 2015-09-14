@@ -13,11 +13,11 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.cloudera.example.TestConstants;
+import com.cloudera.example.ingest.Partition;
+import com.cloudera.example.ingest.Process;
+import com.cloudera.example.ingest.Stage;
 import com.cloudera.example.model.RecordCounter;
 import com.cloudera.example.model.RecordFactory;
-import com.cloudera.example.partition.Partition;
-import com.cloudera.example.process.Process;
-import com.cloudera.example.stage.Stage;
 import com.cloudera.framework.main.common.Driver;
 import com.cloudera.framework.main.test.LocalClusterDfsMrFlumeTest;
 import com.google.common.collect.ImmutableMap;
@@ -60,29 +60,34 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                     KEY_FLUME_PROCESS_FILE_COUNT, 3//
             ), //
                // Stage counters
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 3L, //
                         RecordCounter.FILES_CANONICAL, 3L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
-            )), //
-                // Partition counters
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+            )//
+            ), //
+               // Partition counters
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 3000L, //
                         RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
-                // Process counters
+            )//
+            ), //
+               // Process counters
                 ImmutableMap.of(Process.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 3000L, //
                         RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
+            )//
+            ), //
         }, //
         }, //
         // Batch flume pipeline, CSV
@@ -111,29 +116,35 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                     KEY_FLUME_PROCESS_FILE_COUNT, 1//
             ), //
                // Stage counters
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 0L, //
                         RecordCounter.FILES_CANONICAL, 0L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
-            )), //
-                // Partition counters
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+            )//
+            ), //
+               // Partition counters
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 5000L, //
                         RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 2000L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
-                // Process counters
-                ImmutableMap.of(Process.class.getCanonicalName(),
+            )//
+            ), //
+               // Process counters
+                ImmutableMap.of(//
+                    Process.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 3000L, //
                         RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
+            )//
+            ), //
         }, //
         }, //
         // Single flume pipeline, XML
@@ -162,29 +173,35 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                     KEY_FLUME_PROCESS_FILE_COUNT, 3//
             ), //
                // Stage counters
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 3L, //
                         RecordCounter.FILES_CANONICAL, 3L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
-            )), //
-                // Partition counters
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+            )//
+            ), //
+               // Partition counters
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 3000L, //
                         RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
-                // Process counters
-                ImmutableMap.of(Process.class.getCanonicalName(),
+            )//
+            ), //
+               // Process counters
+                ImmutableMap.of(//
+                    Process.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 3000L, //
                         RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
+            )//
+            ), //
         }, //
         }, //
         // Batch flume pipeline, XML
@@ -213,29 +230,35 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                     KEY_FLUME_PROCESS_FILE_COUNT, 1//
             ), //
                // Stage counters
-                ImmutableMap.of(Stage.class.getCanonicalName(),
+                ImmutableMap.of(//
+                    Stage.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.FILES, 0L, //
                         RecordCounter.FILES_CANONICAL, 0L, //
                         RecordCounter.FILES_DUPLICATE, 0L, //
                         RecordCounter.FILES_MALFORMED, 0L //
-            )), //
-                // Partition counters
-                ImmutableMap.of(Partition.class.getCanonicalName(),
+            )//
+            ), //
+               // Partition counters
+                ImmutableMap.of(//
+                    Partition.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 5000L, //
                         RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 2000L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
-                // Process counters
-                ImmutableMap.of(Process.class.getCanonicalName(),
+            )//
+            ), //
+               // Process counters
+                ImmutableMap.of(//
+                    Process.class.getCanonicalName(),
                     ImmutableMap.of(//
                         RecordCounter.RECORDS, 3000L, //
                         RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
-            )), //
+            )//
+            ), //
         }, //
         }, //
     });
