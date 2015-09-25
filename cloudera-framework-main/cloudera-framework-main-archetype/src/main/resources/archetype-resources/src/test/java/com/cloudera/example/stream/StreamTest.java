@@ -34,62 +34,6 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
   @Parameters
   public static Iterable<Object[]> parameters() {
     return Arrays.asList(new Object[][] {
-        // Single flume pipeline, CSV
-        {
-            // No datasets
-            null, null, null, null, null,
-            // Flume pipeline
-            new Map[] {
-                // Source overlay properties
-                ImmutableMap.of(//
-                    Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
-                    Stream.PROPERTY_POLL_TICKS, "0", //
-                    Stream.PROPERTY_BATCH_SIZE, "1", //
-                    Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_CSV//
-            ), //
-               // Sink overlay properties
-                ImmutableMap.of(//
-                    Stream.PROPERTY_BATCH_SIZE, "1"//
-            ), //
-               // Pipeline properties
-                ImmutableMap.of(//
-                    KEY_FLUME_SOURCE_NAME, "source_single", //
-                    KEY_FLUME_SINK_NAME, "sink_single_hdfs", //
-                    KEY_FLUME_OUTPUT_DIR, DIR_ABS_MYDS_RAW, //
-                    KEY_FLUME_PROCESS_ITERATIONS, 3, //
-                    KEY_FLUME_PROCESS_FILE_COUNT, 3//
-            ), //
-               // Stage counters
-                ImmutableMap.of(//
-                    Stage.class.getCanonicalName(),
-                    ImmutableMap.of(//
-                        RecordCounter.FILES, 3L, //
-                        RecordCounter.FILES_CANONICAL, 3L, //
-                        RecordCounter.FILES_DUPLICATE, 0L, //
-                        RecordCounter.FILES_MALFORMED, 0L //
-            )//
-            ), //
-               // Partition counters
-                ImmutableMap.of(//
-                    Partition.class.getCanonicalName(),
-                    ImmutableMap.of(//
-                        RecordCounter.RECORDS, 3000L, //
-                        RecordCounter.RECORDS_CANONICAL, 3000L, //
-                        RecordCounter.RECORDS_DUPLICATE, 0L, //
-                        RecordCounter.RECORDS_MALFORMED, 0L//
-            )//
-            ), //
-               // Process counters
-                ImmutableMap.of(Process.class.getCanonicalName(),
-                    ImmutableMap.of(//
-                        RecordCounter.RECORDS, 3000L, //
-                        RecordCounter.RECORDS_CANONICAL, 3000L, //
-                        RecordCounter.RECORDS_DUPLICATE, 0L, //
-                        RecordCounter.RECORDS_MALFORMED, 0L//
-            )//
-            ), //
-        }, //
-        }, //
         // Batch flume pipeline, CSV
         {
             // No datasets
@@ -132,63 +76,6 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
                         RecordCounter.RECORDS, 5000L, //
                         RecordCounter.RECORDS_CANONICAL, 3000L, //
                         RecordCounter.RECORDS_DUPLICATE, 2000L, //
-                        RecordCounter.RECORDS_MALFORMED, 0L//
-            )//
-            ), //
-               // Process counters
-                ImmutableMap.of(//
-                    Process.class.getCanonicalName(),
-                    ImmutableMap.of(//
-                        RecordCounter.RECORDS, 3000L, //
-                        RecordCounter.RECORDS_CANONICAL, 3000L, //
-                        RecordCounter.RECORDS_DUPLICATE, 0L, //
-                        RecordCounter.RECORDS_MALFORMED, 0L//
-            )//
-            ), //
-        }, //
-        }, //
-        // Single flume pipeline, XML
-        {
-            // No datasets
-            null, null, null, null, null,
-            // Flume pipeline
-            new Map[] {
-                // Source overlay properties
-                ImmutableMap.of(//
-                    Stream.PROPERTY_POLL_MS, FLUME_SOURCE_POLL_MS, //
-                    Stream.PROPERTY_POLL_TICKS, "0", //
-                    Stream.PROPERTY_BATCH_SIZE, "1", //
-                    Stream.PROPERTY_RECORD_TYPE, RecordFactory.RECORD_STRING_SERDE_XML//
-            ), //
-               // Sink overlay properties
-                ImmutableMap.of(//
-                    Stream.PROPERTY_BATCH_SIZE, "1"//
-            ), //
-               // Pipeline properties
-                ImmutableMap.of(//
-                    KEY_FLUME_SOURCE_NAME, "source_single", //
-                    KEY_FLUME_SINK_NAME, "sink_single_hdfs", //
-                    KEY_FLUME_OUTPUT_DIR, DIR_ABS_MYDS_RAW, //
-                    KEY_FLUME_PROCESS_ITERATIONS, 3, //
-                    KEY_FLUME_PROCESS_FILE_COUNT, 3//
-            ), //
-               // Stage counters
-                ImmutableMap.of(//
-                    Stage.class.getCanonicalName(),
-                    ImmutableMap.of(//
-                        RecordCounter.FILES, 3L, //
-                        RecordCounter.FILES_CANONICAL, 3L, //
-                        RecordCounter.FILES_DUPLICATE, 0L, //
-                        RecordCounter.FILES_MALFORMED, 0L //
-            )//
-            ), //
-               // Partition counters
-                ImmutableMap.of(//
-                    Partition.class.getCanonicalName(),
-                    ImmutableMap.of(//
-                        RecordCounter.RECORDS, 3000L, //
-                        RecordCounter.RECORDS_CANONICAL, 3000L, //
-                        RecordCounter.RECORDS_DUPLICATE, 0L, //
                         RecordCounter.RECORDS_MALFORMED, 0L//
             )//
             ), //
@@ -301,8 +188,7 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
 
   private static final Map<String, String> FLUME_SUBSTITUTIONS = ImmutableMap.of(//
       "ROOT_HDFS", new LocalClusterDfsMrFlumeTest().getPathDfs("/"), //
-      "ROOT_DIR_HDFS_RAW", DIR_ABS_MYDS_RAW, //
-      "ROOT_DIR_HDFS_STAGED", DIR_ABS_MYDS_STAGED, //
+      "ROOT_DIR_HDFS_STAGED_CANONICAL", DIR_ABS_MYDS_STAGED_CANONICAL, //
       "RECORD_FORMAT", "xml"//
   );
   private static final String FLUME_CONFIG_FILE = "cfg/flume/flume-conf.properties";
