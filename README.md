@@ -61,7 +61,7 @@ To perform a release:
 ```bash
 export CF_VERSION_RELEASE=1.2.0
 export CDH_VERSION_RELEASE=5.4.5
-export CF_VERSION_HEAD=1.2.1
+export CF_VERSION_HEAD=1.2.2
 export CDH_VERSION_HEAD=5.4.5
 mvn clean
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
