@@ -5,12 +5,12 @@
 	<groupId>com.cloudera.framework.main.client</groupId>
 	<artifactId>cloudera-framework-main-client-flume</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.1-cdh5.4.7-SNAPSHOT</version>
+	<version>1.2.1-cdh5.4.7</version>
 
 	<parent>
 		<groupId>com.cloudera.framework.main</groupId>
 		<artifactId>cloudera-framework-main-client</artifactId>
-		<version>1.2.1-cdh5.4.7-SNAPSHOT</version>
+		<version>1.2.1-cdh5.4.7</version>
 	</parent>
 
 	<dependencies>
