@@ -74,6 +74,6 @@ git commit -m "Add binaries for cloudera-framework-$CF_VERSION_RELEASE-cdh$CDH_V
 git checkout master
 mvn clean
 git push --all
-git tag --all
-git branch --all
+git tag
+git branch
 ```
