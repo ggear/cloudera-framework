@@ -5,12 +5,12 @@
 	<groupId>com.cloudera.framework.main.client</groupId>
 	<artifactId>cloudera-framework-main-client-zookeeper</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.0-cdh5.4.5</version>
+	<version>1.2.1-cdh5.4.5</version>
 
 	<parent>
 		<groupId>com.cloudera.framework.main</groupId>
 		<artifactId>cloudera-framework-main-client</artifactId>
-		<version>1.2.0-cdh5.4.5</version>
+		<version>1.2.1-cdh5.4.5</version>
 	</parent>
 
 	<dependencies>
