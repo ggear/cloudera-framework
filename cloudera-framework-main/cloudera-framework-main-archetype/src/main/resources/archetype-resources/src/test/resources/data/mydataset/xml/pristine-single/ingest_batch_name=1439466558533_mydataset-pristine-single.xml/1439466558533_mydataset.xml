@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <records>
-    <record>
-        <my_timestamp>1439466558530</my_timestamp>
-        <my_integer>1</my_integer>
-        <my_double>0.40806169308961404</my_double>
-        <my_boolean>false</my_boolean>
-        <my_string>8b3fe2e8-52d9-488c-a465-e77ff2499212</my_string>
-    </record>
+	<record>
+		<my_timestamp>1439466558530</my_timestamp>
+		<my_integer>1</my_integer>
+		<my_double>0.40806169308961404</my_double>
+		<my_boolean>false</my_boolean>
+		<my_string>8b3fe2e8-52d9-488c-a465-e77ff2499212</my_string>
+	</record>
 </records>
 
