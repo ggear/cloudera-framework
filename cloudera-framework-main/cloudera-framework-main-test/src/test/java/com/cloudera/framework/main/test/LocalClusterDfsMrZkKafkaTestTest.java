@@ -60,7 +60,7 @@ public class LocalClusterDfsMrZkKafkaTestTest extends LocalClusterDfsMrZkKafkaTe
     kafka.create(topic);
     kafka.send(topic, "my-key", "my-value");
 
-    // TODO Add new consumer due with Kafka 0.8.3
+    // TODO Add new consumer due with Kafka 0.9.0
 
     kafka.delete(topic);
   }

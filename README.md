@@ -9,7 +9,7 @@ Provide an example organisation core Cloudera Framework, defining corporate stan
 * Flume
 * Kafka
 
-A Maven archetype is also included, codifying the standards, providing an example end to end ingest and processing pipeline and synthetic data to exercise the codebase.
+A Maven archetype is also included, codifying the standards, providing an example end to end ingest, processing pipeline and synthetic data to exercise the codebase.
 
 ##Requirements
 
