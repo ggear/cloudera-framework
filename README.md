@@ -24,7 +24,7 @@ This project can be installed to a local repository as per:
 
 ```bash
 export CF_VERSION=1.2.2
-export CDH_VERSION=5.4.7
+export CDH_VERSION=5.4.8
 git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
 git branch -all
@@ -32,7 +32,7 @@ git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
 mvn clean install -PCMP
 ```
 
-Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.2.2-cdh5.4.7](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.2.2-cdh5.4.7/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
+Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.2.2-cdh5.4.8](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.2.2-cdh5.4.8/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
 
 ##Usage
 
@@ -40,7 +40,7 @@ The cloudera-framework includes an archetype allowing you to stand up a simple, 
 
 ```bash
 export CF_VERSION=1.2.2
-export CDH_VERSION=5.4.7
+export CDH_VERSION=5.4.8
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate \
   -DarchetypeGroupId=com.cloudera.framework.main \
@@ -60,8 +60,8 @@ To perform a release:
 
 ```bash
 export CF_VERSION_RELEASE=1.2.2
-export CDH_VERSION_RELEASE=5.4.7
-export CF_VERSION_HEAD=1.2.2
+export CDH_VERSION_RELEASE=5.4.8
+export CF_VERSION_HEAD=1.2.3
 export CDH_VERSION_HEAD=5.4.8
 mvn clean
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
