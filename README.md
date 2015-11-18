@@ -23,6 +23,7 @@ To compile, build and package from source, this project requires:
 This project can be installed to a local repository as per:
 
 ```bash
+# Change the following variables to appropriate values for your target environment
 export CF_VERSION=1.2.2
 export CDH_VERSION=5.4.8
 git clone git@github.com:ggear/cloudera-framework.git
@@ -39,6 +40,7 @@ Alternatively, the module can be distributed as a binary by copying the dependen
 The cloudera-framework includes an archetype allowing you to stand up a simple, but best practices project that shows how to use the framework and get going fast:
 
 ```bash
+# Change the following variables to appropriate values for your target environment
 export CF_VERSION=1.2.2
 export CDH_VERSION=5.4.8
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
@@ -59,6 +61,7 @@ mvn -Declipse.workspace=$ECLIPSE_WORKSPACE eclipse:configure-workspace eclipse:e
 To perform a release:
 
 ```bash
+# Change the following variables to appropriate values for your target environment
 export CF_VERSION_RELEASE=1.2.2
 export CDH_VERSION_RELEASE=5.4.8
 export CF_VERSION_HEAD=1.2.3
