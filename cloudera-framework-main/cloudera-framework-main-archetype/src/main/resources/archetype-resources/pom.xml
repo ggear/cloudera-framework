@@ -4,9 +4,9 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>${groupId}</groupId>
-	<artifactId>${artifactId}</artifactId>
-	<version>${version}</version>
+	<groupId>\${groupId}</groupId>
+	<artifactId>\${artifactId}</artifactId>
+	<version>\${version}</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -139,12 +139,12 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>${project.artifactId}</artifactId>
-									<version>${project.version}</version>
+									<groupId>\${project.groupId}</groupId>
+									<artifactId>\${project.artifactId}</artifactId>
+									<version>\${project.version}</version>
 									<classifier>assembly</classifier>
 									<type>tar.gz</type>
-									<outputDirectory>${project.build.directory}/assembly</outputDirectory>
+									<outputDirectory>\${project.build.directory}/assembly</outputDirectory>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
