@@ -114,6 +114,16 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
   }
 
   @Override
+  public long getBackOffSleepIncrement() {
+    return 50;
+  }
+
+  @Override
+  public long getMaxBackOffSleepInterval() {
+    return 200;
+  }
+
+  @Override
   public synchronized void stop() {
     processEvent(null, true);
     sourceCounter.stop();
