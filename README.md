@@ -1,15 +1,16 @@
 #Cloudera Framework
 
-Provide an example organisation core Cloudera Framework, defining corporate standards on runtime components, datasets, libraries, testing and project structure. The example includes client/runtime bill-of-materials, utlitiy libraries, driver base class and a unit test harness with full coverage against a Cloudera stack, including:
+Provide an example organisation core Cloudera Framework, defining corporate standards on runtime components, datasets, libraries, testing and project structure. This example includes client/runtime bill-of-materials, utlitiy libraries, driver base class and a unit test harness with full coverage against CDH, including:
 
 * HDFS
 * YARN
+* Spark
 * MR2
 * Hive
 * Flume
 * Kafka
 
-A Maven archetype is also included, codifying the standards, providing an example end to end ingest, processing pipeline and synthetic data to exercise the codebase.
+A Maven archetype is also included, codifying the standards, providing an example end to end data ingest and processing pipeline, including synthetic datasets to exercise the codebase.
 
 ##Requirements
 
@@ -37,7 +38,7 @@ Alternatively, the module can be distributed as a binary by copying the dependen
 
 ##Usage
 
-The cloudera-framework includes an archetype allowing you to stand up a simple, but best practices project that shows how to use the framework and get going fast:
+The cloudera-framework includes an archetype allowing you to stand up a simple, best practices project that shows how to use the framework and get going fast:
 
 ```bash
 # Change the following variables to appropriate values for your target environment
@@ -78,5 +79,5 @@ git checkout master
 mvn clean
 git push --all
 git tag
-git branch
+git branch -all
 ```

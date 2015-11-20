@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableMap;
  * Test dataset stream
  */
 @RunWith(Parameterized.class)
+@SuppressWarnings("unchecked")
 public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConstants {
 
   /**
@@ -155,7 +156,6 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
    * Test dataset stream
    */
   @Test
-  @SuppressWarnings("unchecked")
   public void testStream() throws IOException, EventDeliveryException, InterruptedException {
     Assert.assertEquals(((Integer) metadata[2].get(KEY_FLUME_PROCESS_FILE_COUNT)).intValue(),
         processSouceSinkPipeline(FLUME_SUBSTITUTIONS, FLUME_CONFIG_FILE, metadata[0], metadata[1], FLUME_AGENT_NAME,

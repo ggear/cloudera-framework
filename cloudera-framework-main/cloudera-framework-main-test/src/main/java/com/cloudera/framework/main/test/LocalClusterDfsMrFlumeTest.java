@@ -35,7 +35,7 @@ import com.sun.jersey.api.model.Parameter.Source;
 /**
  * Base class for all local-cluster DFS, MR and Flume tests, single-process,
  * multi-threaded DFS facade over local file system and local MR job runner,
- * provides fast, functional read/write API compatibility, isolated and
+ * providing fast, functional read/write API compatibility, isolated and
  * idempotent runtime
  */
 public class LocalClusterDfsMrFlumeTest extends BaseTest {

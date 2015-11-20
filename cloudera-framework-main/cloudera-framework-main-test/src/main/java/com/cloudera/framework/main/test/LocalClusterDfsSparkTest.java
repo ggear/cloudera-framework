@@ -13,23 +13,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Base class for all local-cluster DFS and MR tests, single-process,
- * multi-threaded DFS facade over local file system and local MR job runner,
+ * Base class for all local-cluster DFS and Spark tests, single-process,
+ * multi-threaded DFS facade over local file system and local mode Spark,
  * providing fast, functional read/write API compatibility, isolated and
  * idempotent runtime
  */
-public class LocalClusterDfsMrTest extends BaseTest {
+public class LocalClusterDfsSparkTest extends BaseTest {
 
-  private static Logger LOG = LoggerFactory.getLogger(LocalClusterDfsMrTest.class);
+  private static Logger LOG = LoggerFactory.getLogger(LocalClusterDfsSparkTest.class);
 
   private static JobConf conf;
   private static FileSystem fileSystem;
+  
+  // TODO: Provide spark impl
 
-  public LocalClusterDfsMrTest() {
+  public LocalClusterDfsSparkTest() {
     super();
   }
 
-  public LocalClusterDfsMrTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
+  public LocalClusterDfsSparkTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
       String[][][] labels, @SuppressWarnings("rawtypes") Map[] metadata) {
     super(sources, destinations, datasets, subsets, labels, metadata);
   }

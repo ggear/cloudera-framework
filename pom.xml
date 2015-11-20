@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cloudera</groupId>
@@ -52,20 +53,22 @@
 		<maven.data-download.skip>true</maven.data-download.skip>
 		<maven.assembly.skip>false</maven.assembly.skip>
 
-		<hadoop.version>2.6.0-cdh5.4.8</hadoop.version>
-		<hadoop-hive.version>1.1.0-cdh5.4.8</hadoop-hive.version>
-		<hadoop-flume.version>1.5.0-cdh5.4.8</hadoop-flume.version>
-		<hadoop-avro.version>1.7.6-cdh5.4.8</hadoop-avro.version>
-		<hadoop-parquet.version>1.5.0-cdh5.4.8</hadoop-parquet.version>
-		<hadoop-zookeeper.version>3.4.5-cdh5.4.8</hadoop-zookeeper.version>
-		<hadoop-kafka.version>0.8.2.0-kafka-1.3.2</hadoop-kafka.version>
-		<hadoop-elephantbird.version>4.9</hadoop-elephantbird.version>
+		<cdh-hadoop.version>2.6.0-cdh5.4.8</cdh-hadoop.version>
+		<cdh-spark.version>1.3.0-cdh5.4.8</cdh-spark.version>
+		<cdh-hive.version>1.1.0-cdh5.4.8</cdh-hive.version>
+		<cdh-flume.version>1.5.0-cdh5.4.8</cdh-flume.version>
+		<cdh-avro.version>1.7.6-cdh5.4.8</cdh-avro.version>
+		<cdh-parquet.version>1.5.0-cdh5.4.8</cdh-parquet.version>
+		<cdh-zookeeper.version>3.4.5-cdh5.4.8</cdh-zookeeper.version>
+		<cdh-kafka.version>0.8.2.0-kafka-1.3.2</cdh-kafka.version>
 
+		<elephantbird.version>4.9</elephantbird.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
 		<junit.version>4.12</junit.version>
 
 		<java.version>1.7</java.version>
+		<scala.version>2.10</scala.version>
 
 		<project.runtime.heap.max>1024</project.runtime.heap.max>
 		<project.runtime.perm.heap.max>256</project.runtime.perm.heap.max>
