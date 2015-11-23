@@ -115,11 +115,13 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
 
   @Override
   public long getBackOffSleepIncrement() {
+    // TODO: Drive by configuration
     return 50;
   }
 
   @Override
   public long getMaxBackOffSleepInterval() {
+    // TODO: Drive by configuration
     return 200;
   }
 
