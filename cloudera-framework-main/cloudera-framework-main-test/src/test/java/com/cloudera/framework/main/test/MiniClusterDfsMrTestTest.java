@@ -38,8 +38,8 @@ public class MiniClusterDfsMrTestTest extends MiniClusterDfsMrTest {
   public void testMr() throws Exception {
     Path dirInput = new Path(getPathDfs("/tmp/wordcount/input"));
     Path dirOutput = new Path(getPathDfs("/tmp/wordcount/output"));
-    Path hdfsFile = new Path(dirInput, "file1.txt");
-    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.getFileSystem().create(hdfsFile)));
+    Path fileInput = new Path(dirInput, "file1.txt");
+    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(this.getFileSystem().create(fileInput)));
     writer.write("a a a a a\n");
     writer.write("b b\n");
     writer.close();

@@ -7,10 +7,16 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.MRConfig;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import scala.Serializable;
 
 /**
  * Base class for all local-cluster DFS and Spark tests, single-process,
@@ -18,14 +24,14 @@ import org.slf4j.LoggerFactory;
  * providing fast, functional read/write API compatibility, isolated and
  * idempotent runtime
  */
-public class LocalClusterDfsSparkTest extends BaseTest {
+@SuppressWarnings("serial")
+public class LocalClusterDfsSparkTest extends BaseTest implements Serializable {
 
   private static Logger LOG = LoggerFactory.getLogger(LocalClusterDfsSparkTest.class);
 
   private static JobConf conf;
   private static FileSystem fileSystem;
-  
-  // TODO: Provide spark impl
+  private static JavaSparkContext context;
 
   public LocalClusterDfsSparkTest() {
     super();
@@ -46,6 +52,10 @@ public class LocalClusterDfsSparkTest extends BaseTest {
     return fileSystem;
   }
 
+  public JavaSparkContext getContext() {
+    return context;
+  }
+
   @Override
   public String getPathDfs(String path) {
     String pathRelativeToDfsRootSansLeadingSlashes = stripLeadingSlashes(path);
@@ -59,6 +69,22 @@ public class LocalClusterDfsSparkTest extends BaseTest {
     fileSystem = FileSystem.getLocal(conf = new JobConf());
     conf.set(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
     debugMessageFooter(LOG, "setUpRuntime", time);
+  }
+
+  @Before
+  public void setUpSparkContext() {
+    long time = debugMessageHeader(LOG, "setUpSparkContext");
+    context = new JavaSparkContext("local", "unit-test", new SparkConf().setAppName("Spark Unit-Test"));
+    debugMessageFooter(LOG, "setUpSparkContext", time);
+  }
+
+  @After
+  public void tearDownSparkContext() {
+    long time = debugMessageHeader(LOG, "tearDownSparkContext");
+    if (context != null) {
+      context.close();
+    }
+    debugMessageFooter(LOG, "tearDownSparkContext", time);
   }
 
   @AfterClass

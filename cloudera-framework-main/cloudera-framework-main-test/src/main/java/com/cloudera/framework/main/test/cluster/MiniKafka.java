@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cloudera.framework.main.test.BaseTest;
+import com.cloudera.framework.main.test.util.ClusterUtil;
 
 import kafka.admin.AdminUtils;
 import kafka.common.TopicExistsException;
@@ -71,7 +72,7 @@ public class MiniKafka {
     if (kafka == null) {
       throw new IOException("Kafka not started yet, port not allocated");
     }
-    return HostNetwork.SERVER_BIND_IP + ":" + kafka.serverConfig().port();
+    return ClusterUtil.SERVER_BIND_IP + ":" + kafka.serverConfig().port();
   }
 
   public void create(String topic) throws InterruptedException {

@@ -1,4 +1,4 @@
-package com.cloudera.framework.main.test.cluster;
+package com.cloudera.framework.main.test.util;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Provide host network utilities
  */
-public class HostNetwork {
+public class ClusterUtil {
 
   public static final String SERVER_BIND_IP = "127.0.0.1";
   public static final AtomicInteger SERVER_BIND_PORT_START = new AtomicInteger(25000);

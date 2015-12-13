@@ -15,6 +15,7 @@ import org.apache.zookeeper.server.NIOServerCnxnFactory;
 import org.apache.zookeeper.server.ZooKeeperServer;
 
 import com.cloudera.framework.main.test.BaseTest;
+import com.cloudera.framework.main.test.util.ClusterUtil;
 
 /**
  * Provide a mini-ZooKeeper cluster
@@ -31,14 +32,14 @@ public class MiniZooKeeper {
   private NIOServerCnxnFactory factory;
 
   public MiniZooKeeper() throws IOException, InterruptedException {
-    port = HostNetwork.getNextAvailablePort();
+    port = ClusterUtil.getNextAvailablePort();
   }
 
   public void start() throws IOException, InterruptedException {
     FileUtils.deleteDirectory(DIR_DATA);
     zooKeeper = new ZooKeeperServer(DIR_DATA, DIR_DATA, ZOOKEEPER_TICK_MS);
     factory = new NIOServerCnxnFactory();
-    factory.configure(new InetSocketAddress(HostNetwork.SERVER_BIND_IP, port), 0);
+    factory.configure(new InetSocketAddress(ClusterUtil.SERVER_BIND_IP, port), 0);
     factory.startup(zooKeeper);
     final CountDownLatch connected = new CountDownLatch(1);
     ZooKeeper zookeeper = new ZooKeeper(getConnectString(), ZOOKEEPER_TIMEOUT_MS, new Watcher() {
@@ -64,7 +65,7 @@ public class MiniZooKeeper {
   }
 
   public String getConnectString() {
-    return HostNetwork.SERVER_BIND_IP + ":" + port;
+    return ClusterUtil.SERVER_BIND_IP + ":" + port;
   }
 
 }

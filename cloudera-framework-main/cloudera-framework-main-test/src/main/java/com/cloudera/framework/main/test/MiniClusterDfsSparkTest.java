@@ -8,17 +8,24 @@ import org.apache.hadoop.hive.shims.HadoopShims.MiniDFSShim;
 import org.apache.hadoop.hive.shims.HadoopShims.MiniMrShim;
 import org.apache.hadoop.hive.shims.ShimLoader;
 import org.apache.hadoop.mapred.JobConf;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import scala.Serializable;
 
 /**
  * Base class for all local-cluster DFS and Spark tests, single-process,
  * multi-threaded DFS and Spark daemons, exercises the full read/write path of
  * the stack providing isolated and idempotent runtime
  */
-public class MiniClusterDfsSparkTest extends BaseTest {
+@SuppressWarnings("serial")
+public class MiniClusterDfsSparkTest extends BaseTest implements Serializable {
 
   private static Logger LOG = LoggerFactory.getLogger(MiniClusterDfsSparkTest.class);
 
@@ -26,8 +33,7 @@ public class MiniClusterDfsSparkTest extends BaseTest {
   private static MiniDFSShim miniDfs;
   private static MiniMrShim miniSpark;
   private static FileSystem fileSystem;
-
-  // TODO: Provide spark impl
+  private static JavaSparkContext context;
 
   public MiniClusterDfsSparkTest() {
     super();
@@ -48,6 +54,10 @@ public class MiniClusterDfsSparkTest extends BaseTest {
     return fileSystem;
   }
 
+  public JavaSparkContext getContext() {
+    return context;
+  }
+
   @BeforeClass
   public static void setUpRuntime() throws Exception {
     long time = debugMessageHeader(LOG, "setUpRuntime");
@@ -56,6 +66,22 @@ public class MiniClusterDfsSparkTest extends BaseTest {
     miniSpark = ShimLoader.getHadoopShims().getMiniSparkCluster(jobConf, 1, fileSystem.getUri().toString(), 1);
     conf = fileSystem.getConf();
     debugMessageFooter(LOG, "setUpRuntime", time);
+  }
+
+  @Before
+  public void setUpSparkContext() {
+    long time = debugMessageHeader(LOG, "setUpSparkContext");
+    context = new JavaSparkContext("local", "unit-test", new SparkConf().setAppName("Spark Unit-Test"));
+    debugMessageFooter(LOG, "setUpSparkContext", time);
+  }
+
+  @After
+  public void tearDownSparkContext() {
+    long time = debugMessageHeader(LOG, "tearDownSparkContext");
+    if (context != null) {
+      context.close();
+    }
+    debugMessageFooter(LOG, "tearDownSparkContext", time);
   }
 
   @AfterClass

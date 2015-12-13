@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cloudera</groupId>
@@ -61,6 +62,7 @@
 		<cdh-zookeeper.version>3.4.5-cdh5.5.0</cdh-zookeeper.version>
 		<cdh-kafka.version>0.8.2.0-kafka-1.4.0</cdh-kafka.version>
 
+		<snappy.version>1.1.1.7</snappy.version>
 		<elephantbird.version>4.9</elephantbird.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
