@@ -4,8 +4,9 @@ Provide an example organisation core Cloudera Framework, defining corporate stan
 
 * HDFS
 * YARN
-* Spark
 * Kudu
+* Impala
+* Spark
 * MR2
 * Hive
 * Flume
