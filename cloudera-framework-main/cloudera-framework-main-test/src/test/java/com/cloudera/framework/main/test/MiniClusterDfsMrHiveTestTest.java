@@ -51,21 +51,7 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
    */
   @Test
   public void testHiveCreateSelectAgain() throws Exception {
-    new File(BaseTest.REL_DIR_FS_LOCAL).mkdirs();
-    File localDataFile = new File(BaseTest.REL_DIR_FS_LOCAL + "/somedata.csv");
-    BufferedWriter writer = new BufferedWriter(new FileWriter(localDataFile));
-    writer.write("1,1\n");
-    writer.write("2,2\n");
-    writer.write("3,3\n");
-    writer.close();
-    Assert.assertEquals(2, processStatement("/ddl", "create.sql", new ImmutableMap.Builder<String, String>()
-        .put("test.table.name", "somedata").put("test.table.field.delim", ",").build()).size());
-    Assert.assertEquals(0,
-        processStatement("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata")
-            .size());
-    Assert.assertEquals("3", processStatement("SELECT count(1) AS cnt FROM somedata").get(0));
-    Assert.assertEquals("2", processStatement("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
-    Assert.assertEquals(1, processStatement("SHOW TABLES").size());
+    testHiveCreateSelect();
   }
 
   /**
@@ -95,10 +81,10 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
    */
   @Test
   public void testDfsMkDir() throws Exception {
-    Assert.assertFalse(getFileSystem().exists(new Path(getPathDfs("/some_dir/some_file"))));
-    Assert.assertTrue(getFileSystem().mkdirs(new Path(getPathDfs("/some_dir"))));
-    Assert.assertTrue(getFileSystem().createNewFile(new Path(getPathDfs("/some_dir/some_file"))));
-    Assert.assertTrue(getFileSystem().exists(new Path(getPathDfs("/some_dir/some_file"))));
+    Assert.assertFalse(getFileSystem().exists(new Path(getPathString("/some_dir/some_file"))));
+    Assert.assertTrue(getFileSystem().mkdirs(new Path(getPathString("/some_dir"))));
+    Assert.assertTrue(getFileSystem().createNewFile(new Path(getPathString("/some_dir/some_file"))));
+    Assert.assertTrue(getFileSystem().exists(new Path(getPathString("/some_dir/some_file"))));
   }
 
   /**
@@ -108,43 +94,41 @@ public class MiniClusterDfsMrHiveTestTest extends MiniClusterDfsMrHiveTest {
    */
   @Test
   public void testDfsClean() throws Exception {
-    Assert.assertFalse(getFileSystem().exists(new Path(getPathDfs("/some_dir/some_file"))));
+    Assert.assertFalse(getFileSystem().exists(new Path(getPathString("/some_dir/some_file"))));
   }
 
   /**
-   * Test path generation relative to DFS root
+   * Test DFS path generation
    *
    * @throws Exception
    */
   @Test
-  public void testPathDfs() throws Exception {
-    Assert.assertEquals("", getPathDfs(""));
-    Assert.assertEquals("/", getPathDfs("/"));
-    Assert.assertEquals("//", getPathDfs("//"));
-    Assert.assertEquals("tmp", getPathDfs("tmp"));
-    Assert.assertEquals("/tmp", getPathDfs("/tmp"));
-    Assert.assertEquals("//tmp", getPathDfs("//tmp"));
-    Assert.assertEquals("///tmp", getPathDfs("///tmp"));
-    Assert.assertEquals("///tmp//tmp", getPathDfs("///tmp//tmp"));
+  public void testDfsGetPath() throws Exception {
+    Assert.assertEquals("/", getPathString(""));
+    Assert.assertEquals("/", getPathString("/"));
+    Assert.assertEquals("/", getPathString("//"));
+    Assert.assertEquals("/tmp", getPathString("tmp"));
+    Assert.assertEquals("/tmp", getPathString("/tmp"));
+    Assert.assertEquals("/tmp", getPathString("//tmp"));
+    Assert.assertEquals("/tmp", getPathString("///tmp"));
+    Assert.assertEquals("/tmp//tmp", getPathString("///tmp//tmp"));
   }
 
   /**
-   * Test path generation relative to module root
+   * Test DFS path URI generation
    *
    * @throws Exception
    */
   @Test
-  public void testPathLocal() throws Exception {
-    String localDir = new File(".").getAbsolutePath();
-    localDir = localDir.substring(0, localDir.length() - 2);
-    Assert.assertEquals(localDir, getPathLocal(""));
-    Assert.assertEquals(localDir, getPathLocal("/"));
-    Assert.assertEquals(localDir, getPathLocal("//"));
-    Assert.assertEquals(localDir + "/tmp", getPathLocal("tmp"));
-    Assert.assertEquals(localDir + "/tmp", getPathLocal("/tmp"));
-    Assert.assertEquals(localDir + "/tmp", getPathLocal("//tmp"));
-    Assert.assertEquals(localDir + "/tmp", getPathLocal("///tmp"));
-    Assert.assertEquals(localDir + "/tmp/tmp", getPathLocal("///tmp//tmp"));
+  public void testDfsGetPathUri() throws Exception {
+    Assert.assertTrue(getPathUri("").matches("hdfs://localhost:[0-9]+/"));
+    Assert.assertTrue(getPathUri("/").matches("hdfs://localhost:[0-9]+/"));
+    Assert.assertTrue(getPathUri("//").matches("hdfs://localhost:[0-9]+/"));
+    Assert.assertTrue(getPathUri("tmp").matches("hdfs://localhost:[0-9]+/tmp"));
+    Assert.assertTrue(getPathUri("/tmp").matches("hdfs://localhost:[0-9]+/tmp"));
+    Assert.assertTrue(getPathUri("//tmp").matches("hdfs://localhost:[0-9]+/tmp"));
+    Assert.assertTrue(getPathUri("///tmp").matches("hdfs://localhost:[0-9]+/tmp"));
+    Assert.assertTrue(getPathUri("///tmp//tmp").matches("hdfs://localhost:[0-9]+/tmp/tmp"));
   }
 
 }

@@ -45,10 +45,16 @@ public class LocalClusterDfsMrTest extends BaseTest {
   }
 
   @Override
-  public String getPathDfs(String path) {
+  public String getPathString(String path) {
     String pathRelativeToDfsRootSansLeadingSlashes = stripLeadingSlashes(path);
     return pathRelativeToDfsRootSansLeadingSlashes.equals("") ? REL_DIR_DFS_LOCAL
         : new Path(REL_DIR_DFS_LOCAL, pathRelativeToDfsRootSansLeadingSlashes).toUri().toString();
+  }
+
+  @Override
+  public String getPathUri(String path) {
+    return new Path(ABS_DIR_DFS_LOCAL, (path = stripLeadingSlashes(path)).equals("") ? "." : path)
+        .makeQualified(getFileSystem().getUri(), PATH_ROOT).toString();
   }
 
   @BeforeClass

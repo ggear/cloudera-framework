@@ -65,7 +65,7 @@ public class LocalClusterDfsMrZkKafkaTest extends BaseTest {
   }
 
   @Override
-  public String getPathDfs(String path) {
+  public String getPathString(String path) {
     String pathRelativeToDfsRootSansLeadingSlashes = stripLeadingSlashes(path);
     return pathRelativeToDfsRootSansLeadingSlashes.equals("") ? REL_DIR_DFS_LOCAL
         : new Path(REL_DIR_DFS_LOCAL, pathRelativeToDfsRootSansLeadingSlashes).toUri().toString();

@@ -150,10 +150,10 @@ public class StageTest extends LocalClusterDfsMrTest implements TestConstants {
   public void testStage() throws Exception {
     Driver driver = new Stage(getConf());
     Assert.assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { getPathDfs(DIR_ABS_MYDS_RAW_CANONICAL), getPathDfs(DIR_ABS_MYDS_STAGED) }));
+        driver.runner(new String[] { getPathString(DIR_ABS_MYDS_RAW_CANONICAL), getPathString(DIR_ABS_MYDS_STAGED) }));
     assertCounterEquals(metadata[0], driver.getCounters());
     Assert.assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { getPathDfs(DIR_ABS_MYDS_RAW_CANONICAL), getPathDfs(DIR_ABS_MYDS_STAGED) }));
+        driver.runner(new String[] { getPathString(DIR_ABS_MYDS_RAW_CANONICAL), getPathString(DIR_ABS_MYDS_STAGED) }));
     assertCounterEquals(metadata[1], driver.getCounters());
   }
 

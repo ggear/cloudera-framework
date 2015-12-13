@@ -65,7 +65,7 @@ public class LocalClusterDfsMrFlumeTest extends BaseTest {
   }
 
   @Override
-  public String getPathDfs(String path) {
+  public String getPathString(String path) {
     String pathRelativeToDfsRootSansLeadingSlashes = stripLeadingSlashes(path);
     return pathRelativeToDfsRootSansLeadingSlashes.equals("") ? REL_DIR_DFS_LOCAL
         : new Path(REL_DIR_DFS_LOCAL, pathRelativeToDfsRootSansLeadingSlashes).toUri().toString();
@@ -140,7 +140,7 @@ public class LocalClusterDfsMrFlumeTest extends BaseTest {
     sinkConfig.putAll(configSinkOverlay);
     sourceConfig.putAll(configSourceOverlay);
     if (outputPath != null) {
-      getFileSystem().mkdirs(new Path(getPathDfs(outputPath)));
+      getFileSystem().mkdirs(new Path(getPathString(outputPath)));
     }
     Channel channel = new MemoryChannel();
     channel.setName(sourceName + "-" + sinkName + "-channel");

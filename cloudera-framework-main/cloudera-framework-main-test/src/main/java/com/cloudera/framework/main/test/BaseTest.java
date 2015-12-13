@@ -71,6 +71,8 @@ public abstract class BaseTest {
 
   protected static String LOG_PREFIX = "Test harness";
 
+  protected static final Path PATH_ROOT = new Path("/");
+
   private static Logger LOG = LoggerFactory.getLogger(BaseTest.class);
 
   /**
@@ -134,21 +136,6 @@ public abstract class BaseTest {
   public abstract FileSystem getFileSystem();
 
   /**
-   * Get a local file system path from a local file system <code>path</code>
-   *
-   * @param path
-   *          the path relative to the module root, can be with or without '/'
-   *          prefix
-   * @return the local path
-   */
-  public static String getPathLocal(String path) {
-    String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(path);
-    return pathRelativeToModuleRootSansLeadingSlashes.equals("")
-        ? ABS_DIR_WORKING.length() < 2 ? "/" : ABS_DIR_WORKING.substring(0, ABS_DIR_WORKING.length() - 2)
-        : new Path(ABS_DIR_WORKING, pathRelativeToModuleRootSansLeadingSlashes).toUri().toString();
-  }
-
-  /**
    * Get a DFS path from a local file system <code>path</code>
    *
    * @param path
@@ -156,8 +143,49 @@ public abstract class BaseTest {
    *          prefix
    * @return the DFS path
    */
-  public String getPathDfs(String path) {
-    return path;
+  public Path getPath(String path) {
+    return new Path(getPathString(path));
+  }
+
+  /**
+   * Get a DFS path {@link String} from a local file system <code>path</code>
+   *
+   * @param path
+   *          the path relative to the DFS root, can be with or without '/'
+   *          prefix
+   * @return the DFS path {@link String}
+   */
+  public String getPathString(String path) {
+    return "/" + stripLeadingSlashes(path);
+  }
+
+  /**
+   * Get a DFS path URI {@link String} from a local file system
+   * <code>path</code>
+   *
+   * @param path
+   *          the path relative to the DFS root, can be with or without '/'
+   *          prefix
+   * @return the DFS path URI {@link String}
+   */
+  public String getPathUri(String path) {
+    return new Path("/", (path = stripLeadingSlashes(path)).equals("") ? "." : path)
+        .makeQualified(getFileSystem().getUri(), PATH_ROOT).toString();
+  }
+
+  /**
+   * Get a local file system path from a local file system <code>path</code>
+   *
+   * @param path
+   *          the path relative to the module root, can be with or without '/'
+   *          prefix
+   * @return the local path
+   */
+  protected static String getPathLocal(String path) {
+    String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(path);
+    return pathRelativeToModuleRootSansLeadingSlashes.equals("")
+        ? ABS_DIR_WORKING.length() < 2 ? "/" : ABS_DIR_WORKING.substring(0, ABS_DIR_WORKING.length() - 2)
+        : new Path(ABS_DIR_WORKING, pathRelativeToModuleRootSansLeadingSlashes).toUri().toString();
   }
 
   /**
@@ -187,7 +215,7 @@ public abstract class BaseTest {
   public Path[] listFilesDfs(String path) throws IllegalArgumentException, IOException {
     List<Path> paths = new ArrayList<Path>();
     try {
-      RemoteIterator<LocatedFileStatus> locatedFileStatuses = getFileSystem().listFiles(new Path(getPathDfs(path)),
+      RemoteIterator<LocatedFileStatus> locatedFileStatuses = getFileSystem().listFiles(new Path(getPathString(path)),
           true);
       while (locatedFileStatuses.hasNext()) {
         paths.add(locatedFileStatuses.next().getPath());
@@ -308,9 +336,9 @@ public abstract class BaseTest {
     String sourcePathGlob = ((sourcePaths.length == 0 ? "*" : sourcePaths[0]) + "/"
         + (sourcePaths.length <= 1 ? "*" : sourcePaths[1]) + "/" + (sourcePaths.length <= 2 ? "*" : sourcePaths[2]))
             .replace(ABS_DIR_WORKING, ".");
-    getFileSystem().mkdirs(new Path(getPathDfs(destinationPath)));
+    getFileSystem().mkdirs(new Path(getPathString(destinationPath)));
     for (File file : listFilesLocal(sourcePath, false, sourcePaths)) {
-      copyFromLocalFile(Arrays.asList(new Path(file.getPath())), new Path(getPathDfs(destinationPath)));
+      copyFromLocalFile(Arrays.asList(new Path(file.getPath())), new Path(getPathString(destinationPath)));
       if (file.isFile()) {
         files.add(file);
       } else {
@@ -382,12 +410,12 @@ public abstract class BaseTest {
       String userIdDir = userDir + "/" + System.getProperty("user.name");
       String userIdWorkingDir = userIdDir + "/target";
       String userIdWorkingDirPrefix = DIR_MINICLUSTER_PREFIX;
-      Path rootPath = new Path(getPathDfs(rootDir));
-      Path tmpPath = new Path(getPathDfs(tmpDir));
-      Path userPath = new Path(getPathDfs(userDir));
-      Path userHivePath = new Path(getPathDfs(userHiveDir));
-      Path userIdPath = new Path(getPathDfs(userIdDir));
-      Path userIdWorkingPath = new Path(getPathDfs(userIdWorkingDir));
+      Path rootPath = new Path(getPathString(rootDir));
+      Path tmpPath = new Path(getPathString(tmpDir));
+      Path userPath = new Path(getPathString(userDir));
+      Path userHivePath = new Path(getPathString(userHiveDir));
+      Path userIdPath = new Path(getPathString(userIdDir));
+      Path userIdWorkingPath = new Path(getPathString(userIdWorkingDir));
       if (fileSystem.exists(rootPath)) {
         for (FileStatus fileStatus : fileSystem.listStatus(rootPath)) {
           if (!fileStatus.getPath().getName().equals(userPath.getName())) {

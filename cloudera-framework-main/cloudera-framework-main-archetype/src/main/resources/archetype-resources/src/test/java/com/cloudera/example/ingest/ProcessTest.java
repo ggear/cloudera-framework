@@ -150,11 +150,11 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
   @Test
   public void testProcess() throws Exception {
     Driver driver = new Process(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driver
-        .runner(new String[] { getPathDfs(DIR_ABS_MYDS_PARTITIONED_CANONICAL), getPathDfs(DIR_ABS_MYDS_PROCESSED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS,
+        driver.runner(new String[] { getPathString(DIR_ABS_MYDS_PARTITIONED_CANONICAL), getPathString(DIR_ABS_MYDS_PROCESSED) }));
     assertCounterEquals(metadata[0], driver.getCounters());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driver
-        .runner(new String[] { getPathDfs(DIR_ABS_MYDS_PARTITIONED_CANONICAL), getPathDfs(DIR_ABS_MYDS_PROCESSED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS,
+        driver.runner(new String[] { getPathString(DIR_ABS_MYDS_PARTITIONED_CANONICAL), getPathString(DIR_ABS_MYDS_PROCESSED) }));
     assertCounterEquals(metadata[1], driver.getCounters());
   }
 
@@ -169,9 +169,9 @@ public class ProcessTest extends LocalClusterDfsMrTest implements TestConstants 
   @Before
   public void setupData() throws Exception {
     Assert.assertEquals(Driver.RETURN_SUCCESS, new Stage(getConf())
-        .runner(new String[] { getPathDfs(DIR_ABS_MYDS_RAW_CANONICAL), getPathDfs(DIR_ABS_MYDS_STAGED) }));
+        .runner(new String[] { getPathString(DIR_ABS_MYDS_RAW_CANONICAL), getPathString(DIR_ABS_MYDS_STAGED) }));
     Assert.assertEquals(Driver.RETURN_SUCCESS, new Partition(getConf())
-        .runner(new String[] { getPathDfs(DIR_ABS_MYDS_STAGED_CANONICAL), getPathDfs(DIR_ABS_MYDS_PARTITIONED) }));
+        .runner(new String[] { getPathString(DIR_ABS_MYDS_STAGED_CANONICAL), getPathString(DIR_ABS_MYDS_PARTITIONED) }));
   }
 
 }
