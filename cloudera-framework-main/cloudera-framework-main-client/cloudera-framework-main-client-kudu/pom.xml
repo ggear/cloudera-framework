@@ -2,28 +2,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.cloudera.framework.main</groupId>
-	<artifactId>cloudera-framework-main-client</artifactId>
+	<groupId>com.cloudera.framework.main.client</groupId>
+	<artifactId>cloudera-framework-main-client-kudu</artifactId>
 	<packaging>pom</packaging>
 	<version>1.2.5-cdh5.5.1-SNAPSHOT</version>
 
 	<parent>
-		<groupId>com.cloudera.framework</groupId>
-		<artifactId>cloudera-framework-main</artifactId>
+		<groupId>com.cloudera.framework.main</groupId>
+		<artifactId>cloudera-framework-main-client</artifactId>
 		<version>1.2.5-cdh5.5.1-SNAPSHOT</version>
 	</parent>
 
-	<modules>
-		<module>cloudera-framework-main-client-core</module>
-		<module>cloudera-framework-main-client-kudu</module>
-		<module>cloudera-framework-main-client-spark</module>
-		<module>cloudera-framework-main-client-avro</module>
-		<module>cloudera-framework-main-client-parquet</module>
-		<module>cloudera-framework-main-client-elephantbird</module>
-		<module>cloudera-framework-main-client-zookeeper</module>
-		<module>cloudera-framework-main-client-kafka</module>
-		<module>cloudera-framework-main-client-flume</module>
-	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
+			<version>${cdh-kafka.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.xerial.snappy</groupId>
+					<artifactId>snappy-java</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -33,7 +35,7 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>../../cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</directory>
+							<directory>../../../cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</directory>
 							<includes>
 								<include>**/${project.artifactId}/**</include>
 							</includes>
@@ -44,7 +46,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
-				<inherited>false</inherited>
 				<executions>
 					<execution>
 						<id>install-artifact</id>
@@ -55,7 +56,7 @@
 						<configuration>
 							<pomFile>pom.xml</pomFile>
 							<file>pom.xml</file>
-							<localRepositoryPath>../../cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</localRepositoryPath>
+							<localRepositoryPath>../../../cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</localRepositoryPath>
 						</configuration>
 					</execution>
 				</executions>

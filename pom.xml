@@ -60,6 +60,7 @@
 		<cdh-parquet.version>1.5.0-cdh5.5.1</cdh-parquet.version>
 		<cdh-zookeeper.version>3.4.5-cdh5.5.1</cdh-zookeeper.version>
 		<cdh-kafka.version>0.8.2.0-kafka-1.4.0</cdh-kafka.version>
+		<cdh-kudu.version>0.6.0</cdh-kudu.version>
 
 		<snappy.version>1.1.1.7</snappy.version>
 		<elephantbird.version>4.9</elephantbird.version>
