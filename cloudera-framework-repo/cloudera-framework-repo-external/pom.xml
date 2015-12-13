@@ -5,12 +5,12 @@
 	<groupId>com.cloudera.framework.repo</groupId>
 	<artifactId>cloudera-framework-repo-external</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.4-cdh5.5.1-SNAPSHOT</version>
+	<version>1.2.4-cdh5.5.1</version>
 
 	<parent>
 		<groupId>com.cloudera.framework</groupId>
 		<artifactId>cloudera-framework-repo</artifactId>
-		<version>1.2.4-cdh5.5.1-SNAPSHOT</version>
+		<version>1.2.4-cdh5.5.1</version>
 	</parent>
 
 	<build>

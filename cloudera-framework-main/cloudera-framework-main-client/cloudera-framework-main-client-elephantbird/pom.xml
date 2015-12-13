@@ -5,12 +5,12 @@
 	<groupId>com.cloudera.framework.main.client</groupId>
 	<artifactId>cloudera-framework-main-client-elephantbird</artifactId>
 	<packaging>pom</packaging>
-	<version>1.2.4-cdh5.5.1-SNAPSHOT</version>
+	<version>1.2.4-cdh5.5.1</version>
 
 	<parent>
 		<groupId>com.cloudera.framework.main</groupId>
 		<artifactId>cloudera-framework-main-client</artifactId>
-		<version>1.2.4-cdh5.5.1-SNAPSHOT</version>
+		<version>1.2.4-cdh5.5.1</version>
 	</parent>
 
 	<dependencies>
