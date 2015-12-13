@@ -163,16 +163,16 @@ public class StreamTest extends LocalClusterDfsMrFlumeTest implements TestConsta
             new Stream(), new HDFSEventSink(), (String) metadata[2].get(KEY_FLUME_OUTPUT_DIR),
             (Integer) metadata[2].get(KEY_FLUME_PROCESS_ITERATIONS)));
     Driver driverStage = new Stage(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS,
-        driverStage.runner(new String[] { getPathString(DIR_ABS_MYDS_RAW_CANONICAL), getPathString(DIR_ABS_MYDS_STAGED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driverStage
+        .runner(new String[] { getPathString(DIR_ABS_MYDS_RAW_CANONICAL), getPathString(DIR_ABS_MYDS_STAGED) }));
     assertCounterEquals(metadata[3], driverStage.getCounters());
     Driver driverPartition = new Partition(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driverPartition
-        .runner(new String[] { getPathString(DIR_ABS_MYDS_STAGED_CANONICAL), getPathString(DIR_ABS_MYDS_PARTITIONED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driverPartition.runner(
+        new String[] { getPathString(DIR_ABS_MYDS_STAGED_CANONICAL), getPathString(DIR_ABS_MYDS_PARTITIONED) }));
     assertCounterEquals(metadata[4], driverPartition.getCounters());
     Driver driverProcess = new Process(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driverProcess
-        .runner(new String[] { getPathString(DIR_ABS_MYDS_PARTITIONED_CANONICAL), getPathString(DIR_ABS_MYDS_PROCESSED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS, driverProcess.runner(
+        new String[] { getPathString(DIR_ABS_MYDS_PARTITIONED_CANONICAL), getPathString(DIR_ABS_MYDS_PROCESSED) }));
     assertCounterEquals(metadata[5], driverProcess.getCounters());
   }
 

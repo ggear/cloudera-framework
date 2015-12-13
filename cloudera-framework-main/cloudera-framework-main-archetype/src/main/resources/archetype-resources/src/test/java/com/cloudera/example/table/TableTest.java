@@ -271,8 +271,9 @@ public class TableTest extends MiniClusterDfsMrHiveTest implements TestConstants
   @Before
   public void setupData() throws Exception {
     Driver driver = new Ingest(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { getPathString(DIR_ABS_MYDS_RAW),
-        getPathString(DIR_ABS_MYDS_STAGED), getPathString(DIR_ABS_MYDS_PARTITIONED), getPathString(DIR_ABS_MYDS_PROCESSED) }));
+    Assert.assertEquals(Driver.RETURN_SUCCESS,
+        driver.runner(new String[] { getPathString(DIR_ABS_MYDS_RAW), getPathString(DIR_ABS_MYDS_STAGED),
+            getPathString(DIR_ABS_MYDS_PARTITIONED), getPathString(DIR_ABS_MYDS_PROCESSED) }));
   }
 
 }
