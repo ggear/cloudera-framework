@@ -52,13 +52,13 @@
 		<maven.data-download.skip>true</maven.data-download.skip>
 		<maven.assembly.skip>false</maven.assembly.skip>
 
-		<cdh-hadoop.version>2.6.0-cdh5.5.0</cdh-hadoop.version>
-		<cdh-spark.version>1.5.0-cdh5.5.0</cdh-spark.version>
-		<cdh-hive.version>1.1.0-cdh5.5.0</cdh-hive.version>
-		<cdh-flume.version>1.6.0-cdh5.5.0</cdh-flume.version>
-		<cdh-avro.version>1.7.6-cdh5.5.0</cdh-avro.version>
-		<cdh-parquet.version>1.5.0-cdh5.5.0</cdh-parquet.version>
-		<cdh-zookeeper.version>3.4.5-cdh5.5.0</cdh-zookeeper.version>
+		<cdh-hadoop.version>2.6.0-cdh5.5.1</cdh-hadoop.version>
+		<cdh-spark.version>1.5.0-cdh5.5.1</cdh-spark.version>
+		<cdh-hive.version>1.1.0-cdh5.5.1</cdh-hive.version>
+		<cdh-flume.version>1.6.0-cdh5.5.1</cdh-flume.version>
+		<cdh-avro.version>1.7.6-cdh5.5.1</cdh-avro.version>
+		<cdh-parquet.version>1.5.0-cdh5.5.1</cdh-parquet.version>
+		<cdh-zookeeper.version>3.4.5-cdh5.5.1</cdh-zookeeper.version>
 		<cdh-kafka.version>0.8.2.0-kafka-1.4.0</cdh-kafka.version>
 
 		<snappy.version>1.1.1.7</snappy.version>
