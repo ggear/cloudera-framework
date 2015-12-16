@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.cloudera.framework</groupId>
+	<artifactId>cloudera-framework-client</artifactId>
+	<packaging>pom</packaging>
+	<version>1.3.0-cdh5.5.1-SNAPSHOT</version>
+
+	<parent>
+		<groupId>com.cloudera</groupId>
+		<artifactId>cloudera-framework</artifactId>
+		<version>1.3.0-cdh5.5.1-SNAPSHOT</version>
+	</parent>
+
+	<modules>
+		<module>cloudera-framework-client-core</module>
+		<module>cloudera-framework-client-kudu</module>
+		<module>cloudera-framework-client-avro</module>
+		<module>cloudera-framework-client-parquet</module>
+		<module>cloudera-framework-client-zookeeper</module>
+		<module>cloudera-framework-client-impala</module>
+		<module>cloudera-framework-client-spark</module>
+		<module>cloudera-framework-client-kafka</module>
+		<module>cloudera-framework-client-flume</module>
+		<module>cloudera-framework-client-elephantbird</module>
+	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.cloudera.framework</groupId>
+			<artifactId>cloudera-framework-thirdparty</artifactId>
+			<version>${project.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>../cloudera-framework-thirdparty/src/main/repository</directory>
+							<includes>
+								<include>**/${project.artifactId}/**</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>install-artifact</id>
+						<phase>install</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<pomFile>pom.xml</pomFile>
+							<file>pom.xml</file>
+							<localRepositoryPath>../cloudera-framework-thirdparty/src/main/repository</localRepositoryPath>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cloudera</groupId>
@@ -121,8 +122,12 @@
 	</profiles>
 
 	<modules>
-		<module>cloudera-framework-repo</module>
-		<module>cloudera-framework-main</module>
+		<module>cloudera-framework-thirdparty</module>
+		<module>cloudera-framework-client</module>
+		<module>cloudera-framework-runtime</module>
+		<module>cloudera-framework-testing</module>
+		<module>cloudera-framework-common</module>
+		<module>cloudera-framework-archetype</module>
 	</modules>
 
 	<build>
@@ -245,7 +250,7 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</directory>
+							<directory>cloudera-framework-thirdparty/src/main/repository</directory>
 							<includes>
 								<include>**/${project.artifactId}/**</include>
 							</includes>
@@ -267,7 +272,7 @@
 						<configuration>
 							<pomFile>pom.xml</pomFile>
 							<file>pom.xml</file>
-							<localRepositoryPath>cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository</localRepositoryPath>
+							<localRepositoryPath>cloudera-framework-thirdparty/src/main/repository</localRepositoryPath>
 						</configuration>
 					</execution>
 				</executions>
