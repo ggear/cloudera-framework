@@ -10,7 +10,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cloudera.framework.common.util.DfsUtil;
 import com.cloudera.framework.testing.LocalClusterDfsMrTest;
 
 public class DfsUtilTest extends LocalClusterDfsMrTest {

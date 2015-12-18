@@ -47,8 +47,7 @@
 	<properties>
 
 		<maven.test.skip>false</maven.test.skip>
-		<maven.archetype-test.skip>false</maven.archetype-test.skip>
-		<maven.system-test.skip>true</maven.system-test.skip>
+		<maven.system-test.skip>false</maven.system-test.skip>
 		<maven.integration-test.skip>true</maven.integration-test.skip>
 		<maven.data-download.skip>true</maven.data-download.skip>
 		<maven.assembly.skip>false</maven.assembly.skip>
@@ -65,6 +64,13 @@
 
 		<snappy.version>1.1.1.7</snappy.version>
 		<elephantbird.version>4.9</elephantbird.version>
+		<commons-io.version>2.4</commons-io.version>
+		<google-http.version>1.21.0</google-http.version>
+		<maven-plugin-api.version>3.3.3</maven-plugin-api.version>
+		<maven-plugin-annotations.version>3.3</maven-plugin-annotations.version>
+		<maven-project.version>2.2.1</maven-project.version>
+		<plexus-utils.version>3.0.9</plexus-utils.version>
+		<plexus-archiver.version>3.0.1</plexus-archiver.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
 		<junit.version>4.12</junit.version>
@@ -83,7 +89,6 @@
 			<id>CMP</id>
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
-				<maven.archetype-test.skip>true</maven.archetype-test.skip>
 				<maven.system-test.skip>true</maven.system-test.skip>
 				<maven.data-download.skip>true</maven.data-download.skip>
 				<maven.assembly.skip>true</maven.assembly.skip>
@@ -93,17 +98,18 @@
 			<id>BLD</id>
 			<properties>
 				<maven.test.skip>false</maven.test.skip>
-				<maven.archetype-test.skip>false</maven.archetype-test.skip>
-				<maven.system-test.skip>true</maven.system-test.skip>
+				<maven.system-test.skip>false</maven.system-test.skip>
 				<maven.data-download.skip>true</maven.data-download.skip>
 				<maven.assembly.skip>true</maven.assembly.skip>
 			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 		<profile>
 			<id>PKG</id>
 			<properties>
 				<maven.test.skip>true</maven.test.skip>
-				<maven.archetype-test.skip>true</maven.archetype-test.skip>
 				<maven.system-test.skip>true</maven.system-test.skip>
 				<maven.data-download.skip>true</maven.data-download.skip>
 				<maven.assembly.skip>false</maven.assembly.skip>
@@ -113,22 +119,33 @@
 			<id>ALL</id>
 			<properties>
 				<maven.test.skip>false</maven.test.skip>
-				<maven.archetype-test.skip>false</maven.archetype-test.skip>
 				<maven.system-test.skip>false</maven.system-test.skip>
 				<maven.data-download.skip>false</maven.data-download.skip>
 				<maven.assembly.skip>false</maven.assembly.skip>
 			</properties>
 		</profile>
+		<profile>
+			<id>STG1</id>
+			<modules>
+				<module>cloudera-framework-thirdparty</module>
+				<module>cloudera-framework-plugin</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>STG2</id>
+			<modules>
+				<module>cloudera-framework-parcel</module>
+				<module>cloudera-framework-client</module>
+				<module>cloudera-framework-runtime</module>
+				<module>cloudera-framework-testing</module>
+				<module>cloudera-framework-common</module>
+				<module>cloudera-framework-archetype</module>
+			</modules>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
 	</profiles>
-
-	<modules>
-		<module>cloudera-framework-thirdparty</module>
-		<module>cloudera-framework-client</module>
-		<module>cloudera-framework-runtime</module>
-		<module>cloudera-framework-testing</module>
-		<module>cloudera-framework-common</module>
-		<module>cloudera-framework-archetype</module>
-	</modules>
 
 	<build>
 		<pluginManagement>

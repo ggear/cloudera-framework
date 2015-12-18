@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-set>
+	<components>
+		<component>
+			<role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+			<role-hint>parcel</role-hint>
+			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+			<configuration>
+				<phases>
+					<process-resources>org.apache.maven.plugins:maven-resources-plugin:resources</process-resources>
+					<package>com.cloudera.framework:cloudera-framework-plugin:build</package>
+					<install>com.cloudera.framework:cloudera-framework-plugin:install</install>
+					<deploy>com.cloudera.framework:cloudera-framework-plugin:deploy</deploy>
+				</phases>
+			</configuration>
+		</component>
+		<component>
+			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+			<role-hint>parcel</role-hint>
+			<implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
+			<configuration>
+				<extension>parcel</extension>
+				<type>parcel</type>
+				<packaging>parcel</packaging>
+			</configuration>
+		</component>
+	</components>
+</component-set>

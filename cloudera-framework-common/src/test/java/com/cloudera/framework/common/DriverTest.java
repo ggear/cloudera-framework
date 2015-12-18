@@ -10,7 +10,6 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.testing.MiniClusterDfsMrTest;
 
 public class DriverTest extends MiniClusterDfsMrTest {

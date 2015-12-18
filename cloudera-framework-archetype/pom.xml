@@ -89,7 +89,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<skipTests>${maven.archetype-test.skip}</skipTests>
+					<skipTests>${maven.system-test.skip}</skipTests>
 				</configuration>
 			</plugin>
 			<plugin>

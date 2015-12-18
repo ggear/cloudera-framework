@@ -8,7 +8,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.cloudera.framework.common.util.MrUtil;
 import com.cloudera.framework.testing.LocalClusterDfsMrTest;
 
 public class MrUtilTest extends LocalClusterDfsMrTest {

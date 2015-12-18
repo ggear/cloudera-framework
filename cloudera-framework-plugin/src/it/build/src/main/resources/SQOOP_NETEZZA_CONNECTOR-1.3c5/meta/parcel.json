@@ -1,0 +1,27 @@
+{
+  "schema_version":     1,
+  "name":               "SQOOP_NETEZZA_CONNECTOR",
+  "version":            "1.3c5",
+  "extraVersionInfo": {
+    "fullVersion":        "1.3c5-el6",
+    "baseVersion":        "1.3c5",
+    "patchCount":         "0"
+  },
+
+  "setActiveSymlink":   true,
+
+  "scripts": {
+    "defines": "sqoop_env.sh"
+  },
+
+  "packages": [],
+  "components": [],
+ 
+  "provides": [
+    "sqoop-plugin"
+  ],
+
+  "users": {},
+
+  "groups" : []
+}

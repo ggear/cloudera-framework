@@ -1,0 +1,193 @@
+                       BETA SUBSCRIPTION AGREEMENT
+
+THIS BETA SUBSCRIPTION AGREEMENT (THIS “AGREEMENT”) IS BETWEEN CLOUDERA, INC.
+(“CLOUDERA”) AND YOU. IF YOU ARE ENTERING INTO THIS AGREEMENT ON BEHALF OF A
+COMPANY OR OTHER ENTITY, YOU REPRESENT THAT YOU ARE THE EMPLOYEE OR AGENT OF
+SUCH COMPANY (OR OTHER ENTITY) AND YOU HAVE THE AUTHORITY TO ENTER INTO THIS
+AGREEMENT ON BEHALF OF SUCH COMPANY (OR OTHER ENTITY).
+
+BY USING THE ACCOMPANYING SOFTWARE, YOU ACKNOWLEDGE AND AGREE THAT YOU HAVE
+READ ALL OF THE TERMS AND CONDITIONS SET FORTH BELOW, UNDERSTAND ALL OF THE
+TERMS AND CONDITIONS OF THIS AGREEMENT, AGREE TO BE BOUND BY ALL OF THE
+TERMS AND CONDITIONS OF THIS AGREEMENT.
+
+IF YOU DO NOT AGREE TO ANY OF THE TERMS OR CONDITIONS OF THIS AGREEMENT,
+CLOUDERA IS UNWILLING TO LICENSE THE SOFTWARE (AS DEFINED BELOW) TO YOU, AND
+YOU MUST DELETE ALL SOFTWARE ACCOMPANYING THIS AGREEMENT IMMEDIATELY.
+
+THE “EFFECTIVE DATE” OF THIS AGREEMENT IS THE DATE UPON WHICH YOU CLICK
+RECEIVE THIS AGREEMENT ALONG WITH THE ACCOMPANYING SOFTWARE. FOR THE PURPOSE
+OF THIS AGREEMENT, YOU AND, IF APPLICABLE, SUCH COMPANY (OR OTHER ENTITY)
+CONSTITUTES “CUSTOMER”.
+
+-------------------------------------------------------------------------------
+1.Definitions.
+
+1.1	“Intellectual Property Rights” means all patents, copyrights, moral
+rights, trademarks, trade secrets and any other form of intellectual property
+rights recognized in any jurisdiction, including applications and registrations
+for any of the foregoing.
+
+1.2	“Software” means the Cloudera Enterprise tools described at
+http://www.cloudera.com/products-services/tools/ (and incorporated into this
+Agreement by this reference) together with the Third Party Software.
+
+1.3	“Support Services” means the then-current standard support services
+outlined at described at www.cloudera.com/support (and incorporated into this
+Agreement by this reference).
+
+1.4	“Third Party Software” means certain third party and open source
+software as described at www.cloudera.com/thirdpartysoftware (and incorporated
+into this Agreement by this reference).
+
+1.5	“Third Party Licenses” means the terms and conditions applicable to the
+Third Party Software described at www.cloudera.com/thirdpartysoftware (and
+incorporated into this Agreement by this reference).
+
+1.6	“Trial Period” means the 90 day period commencing upon the Effective
+Date.
+
+2.License; Delivery; Support Services. Cloudera grants to Customer a
+nonexclusive, nontransferable, nonsublicensable, revocable and limited license
+to access, use and reproduce the Software solely for Customer’s internal
+purposes. The Software may be downloaded from Cloudera’s site at
+www.cloudera.com. Cloudera will use commercially reasonable efforts to provide
+the Support Services to Customer.
+
+3.License Restrictions. Except as expressly authorized by this Agreement,
+Customer may not: (i) modify, translate or create derivative works of the
+Software; (ii) decompile or reverse assemble any portion of the Software or
+attempt to discover any source code or underlying ideas or algorithms of any
+Software; (iii) publicly perform or publicly display any portion of the
+Software; (iv) sell, assign, sublicense, rent, lease, loan, provide, distribute
+or otherwise transfer all or any portion of the Software; (v) allow the
+transfer, transmission, export, or re-export of the Software, or any portion
+thereof, in violation of any export control laws or regulations administered by
+the U.S. Commerce Department, OFAC, or any other government agency; or (vi)
+cause or permit any other party to do any of the foregoing. In addition,
+Customer will not remove, alter or obscure any proprietary notices in the
+Software, including copyright notices, or permit any other party to do so.
+
+4.Ownership. As between the parties and subject to the grants under this
+Agreement, Cloudera owns all right, title and interest in and to the Software
+and any and all Intellectual Property Rights embodied therein.
+
+5.Nondisclosure. “Confidential Information” means all information disclosed
+(whether in oral, written, or other tangible or intangible form) by Cloudera to
+Customer concerning or related to this Agreement or Cloudera (whether before,
+on or after the Effective Date) which Customer knows or should know, given the
+facts and circumstances surrounding the disclosure of the information by
+Cloudera, is confidential information of Cloudera. Confidential Information
+includes, but is not limited to, the components of the business plans, the
+Software (excluding the Third Party Software), inventions, design plans,
+financial plans, computer programs, know-how, customer information, strategies
+and other similar information. Customer will, during the term of this
+Agreement, and thereafter maintain in confidence the Confidential Information
+and will not use such Confidential Information except as expressly permitted
+herein. Customer will use the same degree of care in protecting the
+Confidential Information as Customer uses to protect its own confidential
+information from unauthorized use or disclosure, but in no event less than
+reasonable care. Confidential Information will be used by Customer solely for
+the purpose of carrying out Customer’s obligations under this Agreement.
+Confidential Information will not include information that: (i) is in or enters
+the public domain without breach of this Agreement through no fault of Customer;
+(ii) Customer can reasonably demonstrate was in its possession prior to first
+receiving it from Cloudera; (iii) Customer can demonstrate was developed by
+Customer independently and without use of or reference to the Confidential
+Information; or (iv) Customer receives from a third party without restriction
+on disclosure and without breach of a nondisclosure obligation. Notwithstanding
+any terms to the contrary in this Agreement, any suggestions, comments or other
+feedback provided by Customer to Cloudera with respect to the Software
+(collectively, “Feedback”) will constitute Confidential Information. Further,
+Cloudera will be free to use, disclose, reproduce, license and otherwise
+distribute, and exploit the Feedback provided to it as it sees fit, entirely
+without obligation or restriction of any kind on account of Intellectual
+Property Rights or otherwise.
+
+6.Disclaimer. THE SOFTWARE IS PROVIDED ON AN “AS IS” OR “AS AVAILABLE” BASIS
+WITHOUT ANY REPRESENTATIONS, WARRANTIES, COVENANTS OR CONDITIONS OF ANY KIND.
+CLOUDERA AND ITS SUPPLIERS DO NOT WARRANT THAT THE SOFTWARE WILL BE FREE FROM
+BUGS, ERRORS, OR OMISSIONS. CLOUDERA AND ITS SUPPLIERS DISCLAIM ANY AND ALL
+WARRANTIES AND REPRESENTATIONS (EXPRESS OR IMPLIED, ORAL OR WRITTEN) WITH
+RESPECT TO THE SOFTWARE WHETHER ALLEGED TO ARISE BY OPERATION OF LAW, BY REASON
+OF CUSTOM OR USAGE IN THE TRADE, BY COURSE OF DEALING OR OTHERWISE, INCLUDING
+ANY AND ALL (I) WARRANTIES OF MERCHANTABILITY, (II) WARRANTIES OF FITNESS OR
+SUITABILITY FOR ANY PURPOSE (WHETHER OR NOT CLOUDERA KNOWS, HAS REASON TO KNOW,
+HAS BEEN ADVISED, OR IS OTHERWISE AWARE OF ANY SUCH PURPOSE), AND (C)
+WARRANTIES OF NONINFRINGEMENT OR CONDITION OF TITLE. CUSTOMER ACKNOWLEDGES
+AND AGREES THAT CUSTOMER HAS RELIED ON NO WARRANTIES.
+
+7.Limitation of Liability. EXCEPT FOR ANY ACTS OF FRAUD, GROSS NEGLIGENCE, OR
+WILLFUL MISCONDUCT, IN NO EVENT WILL: (I) CLOUDERA BE LIABLE TO CUSTOMER OR
+ANY THIRD PARTY FOR ANY LOSS OF PROFITS, LOSS OF USE, LOSS OF REVENUE, LOSS
+OF GOODWILL, ANY INTERRUPTION OF BUSINESS, OR FOR ANY INDIRECT, SPECIAL,
+INCIDENTAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES OF ANY KIND ARISING
+OUT OF OR IN CONNECTION WITH THIS AGREEMENT OR THE SOFTWARE, REGARDLESS OF
+THE FORM OF ACTION, WHETHER IN CONTRACT, TORT, STRICT LIABILITY OR OTHERWISE,
+EVEN IF CLOUDERA HAS BEEN ADVISED OR IS OTHERWISE AWARE OF THE POSSIBILITY OF
+SUCH DAMAGES; AND (II) CLOUDERA’s TOTAL LIABILITY ARISING OUT OF OR RELATED
+TO THIS AGREEMENT EXCEED THE aggregate of the amounts paid or payable by
+customer to CLOUDERA, if any, UNDER THIS AGREEMENT. MULTIPLE CLAIMS WILL NOT
+EXPAND THIS LIMITATION.
+
+8.Third Party Suppliers. Notwithstanding any terms to the contrary in this
+Agreement, Customer acknowledges and agrees that Customer's use, reproduction,
+modification and creation of derivative works of the Third Party Software is
+subject to and governed by the applicable Third Party Licenses.
+
+9.Termination. Unless terminated as set forth herein, the term of this
+Agreement will be for the Trial Period. In the event of a breach of Sections
+2, 3 or 5, Cloudera may immediately terminate this Agreement. On or before the
+expiration of the Trial Period, Customer may opt to enter into Cloudera’s
+standard subscription agreement. Upon the expiration or termination of this
+Agreement: (i) all rights granted to Customer under this Agreement will
+immediately cease; and (ii) Customer will promptly provide Cloudera with all
+Confidential Information then in its possession or destroy all copies of such
+Confidential Information, at Cloudera’s sole discretion and direction;
+provided, however, that if Customer enters into Cloudera’s standard
+subscription agreement, Customer does not have to return the Software. In
+addition to all definitions and this sentence, the following Sections will
+survive any termination or expiration of this Agreement: 3, 4, 5, 6, 7 and 10.
+
+10.Miscellaneous.  This Agreement together with any exhibits attached hereto,
+are the entire agreement of the parties regarding the subject matter hereof,
+superseding all other agreements between them, whether oral or written,
+regarding the subject matter hereof. This Agreement will be governed by and
+construed in accordance with the laws of the State of California applicable
+to agreements made and to be entirely performed within the State of California,
+without resort to its conflict of law provisions. The parties agree that any
+action at law or in equity arising out of or relating to this Agreement will
+be filed only in the state and federal courts located in San Mateo County,
+California. The parties hereby irrevocably and unconditionally consent and
+submit to the exclusive jurisdiction of such courts over any suit, action or
+proceeding arising out of this Agreement. Neither this Agreement nor any right
+or duty under this Agreement may be transferred, assigned or delegated by
+Customer, by operation of law or otherwise, without the prior written consent
+of Cloudera, and any attempted transfer, assignment or delegation without such
+consent will be void and without effect. Cloudera may freely transfer, assign
+or delegate this Agreement or its rights and duties under this Agreement.
+Subject to the foregoing, this Agreement will be binding upon and will inure to
+the benefit of the parties and their respective representatives, heirs,
+administrators, successors and permitted assigns. If any provision of this
+Agreement is invalid, illegal, or incapable of being enforced by any rule of
+law or public policy, all other provisions of this Agreement will nonetheless
+remain in full force and effect so long as the economic or legal substance of
+the transactions contemplated by this Agreement is not affected in any manner
+adverse to any party. Upon such determination that any provision is invalid,
+illegal, or incapable of being enforced, the parties will negotiate in good
+faith to modify this Agreement so as to effect the original intent of the
+parties as closely as possible in an acceptable manner to the end that the
+transactions contemplated hereby are fulfilled. Notwithstanding any terms to
+the contrary in this Agreement, Cloudera may choose to electronically deliver
+all communications with Customer, which may include email to Customer’s email
+address indicated in Customer’s communications with Cloudera. Cloudera’s
+electronic communications to Customer may transmit or convey information about
+action taken on Customer’s request, portions of Customer’s request that may be
+incomplete or require additional explanation, any notices required under
+applicable law and any other notices. Customer agrees to do business
+electronically with Cloudera, and to receive electronically all current and
+future notices, disclosures, communications and information, and that the
+aforementioned provided electronically satisfies any legal requirement that
+such communications be in writing. An electronic notice will be deemed to have
+been received the day of receipt as evidenced by such email.
+

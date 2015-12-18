@@ -1,1 +1,1 @@
-verify -Dmaven.test.skip=${maven.archetype-test.skip}
+verify -Dmaven.test.skip=${maven.system-test.skip}
