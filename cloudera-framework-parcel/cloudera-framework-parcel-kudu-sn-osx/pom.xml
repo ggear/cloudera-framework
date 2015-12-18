@@ -23,7 +23,6 @@
 			<plugin>
 				<groupId>com.cloudera.framework</groupId>
 				<artifactId>cloudera-framework-plugin</artifactId>
-				<version>${project.version}</version>
 				<extensions>true</extensions>
 			</plugin>
 			<plugin>

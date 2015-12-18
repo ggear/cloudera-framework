@@ -147,6 +147,16 @@
 		</profile>
 	</profiles>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.cloudera.framework</groupId>
+				<artifactId>cloudera-framework-plugin</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -242,7 +252,8 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.9</version>
 					<configuration>
-						<argLine>-Djava.awt.headless=true -Xmx${project.runtime.heap.max}m
+						<argLine>-Djava.awt.headless=true
+							-Xmx${project.runtime.heap.max}m
 							-XX:MaxPermSize=${project.runtime.perm.heap.max}m</argLine>
 					</configuration>
 				</plugin>
