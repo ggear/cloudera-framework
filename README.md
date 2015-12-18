@@ -37,7 +37,7 @@ mvn install -PSTG1
 mvn install
 ```
 
-Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.3.0-cdh5.5.1](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.3.0-cdh5.5.1/cloudera-framework-thirdparty/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
+Alternatively, the module can be distributed as a binary by copying the dependencies (eg [https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.2.5-cdh5.5.1/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
 
 ##Usage
 
