@@ -1,6 +1,6 @@
 #Cloudera Framework
 
-Provide an example organisation core Cloudera Framework, defining corporate standards on runtime components, datasets, libraries, testing and project structure. This example includes [client](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-client) and [runtime](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-runtime) bill-of-materials, [utlitiy libraries](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common), [driver base class](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common/Driver.java), a [unit test harness](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/test/java/com/cloudera/framework/test) and a parcel management [maven plugin](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-plugin) with full coverage against CDH, including:
+Provide an example organisation core Cloudera Framework, defining corporate standards on runtime components, datasets, libraries, testing and project structure. This example includes [client](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-client) and [runtime](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-runtime) bill-of-materials, [utlitiy libraries](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common), [driver base class](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common/Driver.java) and a [unit test harness](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/test/java/com/cloudera/framework/test) with full coverage against CDH, including:
 
 * HDFS
 * YARN
@@ -33,7 +33,6 @@ git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
 git branch -all
 git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
-mvn install -PSTG1
 mvn install
 ```
 
@@ -70,8 +69,7 @@ export CF_VERSION_RELEASE=1.3.0
 export CDH_VERSION_RELEASE=5.5.1
 export CF_VERSION_HEAD=1.3.1
 export CDH_VERSION_HEAD=5.5.1
-mvn clean install -PSTG1,CMP
-mvn clean install -PSTG2,CMP
+mvn clean install -PCMP
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:clean
 git checkout -b cloudera-framework-$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE cloudera-framework-$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE
