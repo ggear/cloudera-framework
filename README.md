@@ -27,7 +27,7 @@ This project can be installed to a local repository as per:
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION=1.3.0
+export CF_VERSION=1.3.1
 export CDH_VERSION=5.5.1
 git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
@@ -36,7 +36,7 @@ git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
 mvn install
 ```
 
-Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.3.0-cdh5.5.1](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.2.5-cdh5.5.1/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
+Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.3.1-cdh5.5.1](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.2.5-cdh5.5.1/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
 
 ##Usage
 
@@ -44,7 +44,7 @@ The cloudera-framework includes an archetype allowing you to stand up a simple, 
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION=1.3.0
+export CF_VERSION=1.3.1
 export CDH_VERSION=5.5.1
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate \
@@ -65,10 +65,10 @@ To perform a release:
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION_RELEASE=1.3.0
+export CF_VERSION_RELEASE=1.3.1
 export CDH_VERSION_RELEASE=5.5.1
 export CF_VERSION_HEAD=1.3.1
-export CDH_VERSION_HEAD=5.5.1
+export CDH_VERSION_HEAD=5.5.2
 mvn clean install -PCMP
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:clean
