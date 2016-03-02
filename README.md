@@ -36,7 +36,7 @@ git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
 mvn install
 ```
 
-Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.3.1-cdh5.5.2](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.3.1-cdh5.5.2/cloudera-framework-repo/cloudera-framework-repo-external/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
+Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.3.1-cdh5.5.2](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.3.1-cdh5.5.2/cloudera-framework-thirdparty/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
 
 ##Usage
 
