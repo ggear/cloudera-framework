@@ -65,9 +65,9 @@ To perform a release:
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION_RELEASE=1.3.0
-export CDH_VERSION_RELEASE=5.5.1
-export CF_VERSION_HEAD=1.3.1
+export CF_VERSION_RELEASE=1.3.1
+export CDH_VERSION_RELEASE=5.5.2
+export CF_VERSION_HEAD=1.3.2
 export CDH_VERSION_HEAD=5.5.2
 mvn clean install -PCMP
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
