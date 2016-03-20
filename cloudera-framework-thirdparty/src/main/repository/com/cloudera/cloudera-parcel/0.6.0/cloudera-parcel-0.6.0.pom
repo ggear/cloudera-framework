@@ -5,7 +5,7 @@
 	<groupId>com.cloudera</groupId>
 	<artifactId>cloudera-parcel</artifactId>
 	<packaging>pom</packaging>
-	<version>0.5.0</version>
+	<version>0.6.0</version>
 
 	<prerequisites>
 		<maven>3.3</maven>
@@ -15,7 +15,7 @@
 		<connection>scm:git:git@github.com:ggear/cloudera-parcel.git</connection>
 		<url>scm:git:git@github.com:ggear/cloudera-parcel.git</url>
 		<developerConnection>scm:git:git@github.com:ggear/cloudera-parcel.git</developerConnection>
-		<tag>cloudera-parcel-0.5.0</tag>
+		<tag>cloudera-parcel-0.6.0</tag>
 	</scm>
 
 	<distributionManagement>

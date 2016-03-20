@@ -59,8 +59,8 @@
 		<cdh-parquet.version>1.5.0-cdh5.5.2</cdh-parquet.version>
 		<cdh-zookeeper.version>3.4.5-cdh5.5.2</cdh-zookeeper.version>
 		<cdh-kafka.version>0.8.2.0-kafka-1.4.0</cdh-kafka.version>
-		<cdh-kudu.version>0.7.0</cdh-kudu.version>
-		<cdh-kudu-parcel.version>0.7.0-1.kudu0.7.0.p0.27</cdh-kudu-parcel.version>
+		<cdh-kudu.version>0.7.1</cdh-kudu.version>
+		<cdh-kudu-parcel.version>0.7.1-1.kudu0.7.1.p0.36</cdh-kudu-parcel.version>
 
 		<snappy.version>1.1.1.7</snappy.version>
 		<elephantbird.version>4.9</elephantbird.version>
@@ -68,7 +68,7 @@
 		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
 		<junit.version>4.12</junit.version>
 
-		<parcel-plugin.version>0.5.0</parcel-plugin.version>
+		<parcel-plugin.version>0.6.0</parcel-plugin.version>
 
 		<java.version>1.7</java.version>
 		<scala.version>2.10</scala.version>
