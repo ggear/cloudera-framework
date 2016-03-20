@@ -38,7 +38,7 @@ public class BaseTestTest extends LocalClusterDfsMrTest {
                 //
                 { null }, //
             } }, //
-            new Map[] { Collections.EMPTY_MAP, }, //
+            new Map[] { Collections.EMPTY_MAP, }, // ®
         }, //
         {
             //

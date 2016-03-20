@@ -49,8 +49,11 @@ public abstract class BaseTest {
   public static final String DIR_FS_TMP = "test-fs-tmp";
   public static final String DIR_FS_LOCAL = "test-fs-local";
   public static final String DIR_DFS_LOCAL = "test-hdfs-local";
-  public static final String DIR_DFS_MINICLUSTER = "test-hdfs-minicluster";
-  public static final String DIR_MINICLUSTER_PREFIX = "MiniMRCluster_";
+  public static final String DIR_KUDU_LOCAL = "test-kudu-local";
+  public static final String DIR_MINICLUSTER_KUDU = "runtime-kudu";
+  public static final String DIR_MINICLUSTER_DFS = "test-hdfs-minicluster";
+  public static final String DIR_MINICLUSTER_MR_PREFIX = "MiniMRCluster_";
+  
 
   // Relative directories
   public static final String REL_DIR_DATA = DIR_TARGET + "/" + DIR_DATA;
@@ -59,7 +62,8 @@ public abstract class BaseTest {
   public static final String REL_DIR_FS_TMP = DIR_TARGET + "/" + DIR_FS_TMP;
   public static final String REL_DIR_FS_LOCAL = DIR_TARGET + "/" + DIR_FS_LOCAL;
   public static final String REL_DIR_DFS_LOCAL = DIR_TARGET + "/" + DIR_DFS_LOCAL;
-  public static final String REL_DIR_DFS_MINICLUSTER = DIR_TARGET + "/" + DIR_DFS_MINICLUSTER;
+  public static final String REL_DIR_KUDU_LOCAL = DIR_TARGET + "/" + DIR_KUDU_LOCAL;
+  public static final String REL_DIR_DFS_MINICLUSTER = DIR_TARGET + "/" + DIR_MINICLUSTER_DFS;
 
   // Absolute directories
   public static final String ABS_DIR_WORKING = new File(".").getAbsolutePath();
@@ -67,7 +71,7 @@ public abstract class BaseTest {
   public static final String ABS_DIR_DATA = ABS_DIR_TARGET + "/" + DIR_DATA;
   public static final String ABS_DIR_FS_TMP = ABS_DIR_TARGET + "/" + DIR_FS_TMP;
   public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/" + DIR_DFS_LOCAL;
-  public static final String ABS_DIR_DFS_MINICLUSTER = ABS_DIR_TARGET + "/" + DIR_DFS_MINICLUSTER;
+  public static final String ABS_DIR_DFS_MINICLUSTER = ABS_DIR_TARGET + "/" + DIR_MINICLUSTER_DFS;
 
   protected static String LOG_PREFIX = "Test harness";
 
@@ -384,7 +388,7 @@ public abstract class BaseTest {
     for (File file : new File(ABS_DIR_TARGET).listFiles(new FileFilter() {
       @Override
       public boolean accept(File pathname) {
-        return pathname.isDirectory() && pathname.getName().startsWith(DIR_MINICLUSTER_PREFIX);
+        return pathname.isDirectory() && pathname.getName().startsWith(DIR_MINICLUSTER_MR_PREFIX);
       }
     })) {
       FileUtils.deleteDirectory(file);
@@ -409,7 +413,7 @@ public abstract class BaseTest {
       String userHiveDir = userDir + "/hive";
       String userIdDir = userDir + "/" + System.getProperty("user.name");
       String userIdWorkingDir = userIdDir + "/target";
-      String userIdWorkingDirPrefix = DIR_MINICLUSTER_PREFIX;
+      String userIdWorkingDirPrefix = DIR_MINICLUSTER_MR_PREFIX;
       Path rootPath = new Path(getPathString(rootDir));
       Path tmpPath = new Path(getPathString(tmpDir));
       Path userPath = new Path(getPathString(userDir));
@@ -458,7 +462,7 @@ public abstract class BaseTest {
     Arrays.sort(files);
     StringBuilder filesString = new StringBuilder();
     for (Path file : files) {
-      if (!file.toString().contains(DIR_MINICLUSTER_PREFIX)) {
+      if (!file.toString().contains(DIR_MINICLUSTER_MR_PREFIX)) {
         filesString.append("\n").append(
             Path.getPathWithoutSchemeAndAuthority(file).toString().replace(getPathLocal(REL_DIR_DFS_LOCAL), ""));
       }

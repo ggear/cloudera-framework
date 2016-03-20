@@ -1,39 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cloudera</groupId>
-	<artifactId>cloudera-framework</artifactId>
+	<artifactId>cloudera-parcel</artifactId>
 	<packaging>pom</packaging>
-	<version>1.3.2-cdh5.5.2-SNAPSHOT</version>
+	<version>0.5.0</version>
 
 	<prerequisites>
 		<maven>3.3</maven>
 	</prerequisites>
 
 	<scm>
-		<connection>scm:git:git@github.com:ggear/cloudera-framework.git</connection>
-		<url>scm:git:git@github.com:ggear/cloudera-framework.git</url>
-		<developerConnection>scm:git:git@github.com:ggear/cloudera-framework.git</developerConnection>
-		<tag>HEAD</tag>
+		<connection>scm:git:git@github.com:ggear/cloudera-parcel.git</connection>
+		<url>scm:git:git@github.com:ggear/cloudera-parcel.git</url>
+		<developerConnection>scm:git:git@github.com:ggear/cloudera-parcel.git</developerConnection>
+		<tag>cloudera-parcel-0.5.0</tag>
 	</scm>
 
 	<distributionManagement>
 		<site>
-			<url>scm:git:git@github.com:ggear/cloudera-framework.git</url>
+			<url>scm:git:git@github.com:ggear/cloudera-parcel.git</url>
 		</site>
 	</distributionManagement>
 
 	<repositories>
-		<repository>
-			<id>cdh.repo</id>
-			<url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
-			<name>Cloudera Repository</name>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
 		<repository>
 			<id>central.repo</id>
 			<url>https://repo1.maven.org/maven2</url>
@@ -52,27 +43,17 @@
 		<maven.data-download.skip>true</maven.data-download.skip>
 		<maven.assembly.skip>false</maven.assembly.skip>
 
-		<cdh-hadoop.version>2.6.0-cdh5.5.2</cdh-hadoop.version>
-		<cdh-spark.version>1.5.0-cdh5.5.2</cdh-spark.version>
-		<cdh-hive.version>1.1.0-cdh5.5.2</cdh-hive.version>
-		<cdh-flume.version>1.6.0-cdh5.5.2</cdh-flume.version>
-		<cdh-avro.version>1.7.6-cdh5.5.2</cdh-avro.version>
-		<cdh-parquet.version>1.5.0-cdh5.5.2</cdh-parquet.version>
-		<cdh-zookeeper.version>3.4.5-cdh5.5.2</cdh-zookeeper.version>
-		<cdh-kafka.version>0.8.2.0-kafka-1.4.0</cdh-kafka.version>
-		<cdh-kudu.version>0.7.0</cdh-kudu.version>
-		<cdh-kudu-parcel.version>0.7.0-1.kudu0.7.0.p0.27</cdh-kudu-parcel.version>
-
-		<snappy.version>1.1.1.7</snappy.version>
-		<elephantbird.version>4.9</elephantbird.version>
-		<slf4j.version>1.7.5</slf4j.version>
-		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
+		<commons-io.version>2.4</commons-io.version>
+		<google-http.version>1.21.0</google-http.version>
+		<google-guava.version>19.0</google-guava.version>
+		<maven-plugin-api.version>3.3.3</maven-plugin-api.version>
+		<maven-plugin-annotations.version>3.3</maven-plugin-annotations.version>
+		<maven-project.version>2.2.1</maven-project.version>
+		<plexus-utils.version>3.0.9</plexus-utils.version>
+		<plexus-archiver.version>3.0.1</plexus-archiver.version>
 		<junit.version>4.12</junit.version>
 
-		<parcel-plugin.version>0.5.0</parcel-plugin.version>
-
 		<java.version>1.7</java.version>
-		<scala.version>2.10</scala.version>
 
 		<project.runtime.heap.max>1024</project.runtime.heap.max>
 		<project.runtime.perm.heap.max>256</project.runtime.perm.heap.max>
@@ -123,22 +104,59 @@
 	</profiles>
 
 	<modules>
-		<module>cloudera-framework-thirdparty</module>
-		<module>cloudera-framework-client</module>
-		<module>cloudera-framework-runtime</module>
-		<module>cloudera-framework-testing</module>
-		<module>cloudera-framework-common</module>
-		<module>cloudera-framework-archetype</module>
+		<module>cloudera-parcel-plugin</module>
 	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>${maven-plugin-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-project</artifactId>
+			<version>${maven-project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugin-tools</groupId>
+			<artifactId>maven-plugin-annotations</artifactId>
+			<version>${maven-plugin-annotations.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>${plexus-utils.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-archiver</artifactId>
+			<version>${plexus-archiver.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client</artifactId>
+			<version>${google-http.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>com.cloudera.parcel</groupId>
-					<artifactId>cloudera-parcel-plugin</artifactId>
-					<version>${parcel-plugin.version}</version>
-				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-antrun-plugin</artifactId>
@@ -238,53 +256,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>cloudera-framework-thirdparty/src/main/repository</directory>
-							<includes>
-								<include>**/${project.artifactId}/**</include>
-							</includes>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<inherited>false</inherited>
-				<executions>
-					<execution>
-						<id>install-artifact</id>
-						<phase>install</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<pomFile>pom.xml</pomFile>
-							<file>pom.xml</file>
-							<localRepositoryPath>cloudera-framework-thirdparty/src/main/repository</localRepositoryPath>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
 	</build>
 
 </project>

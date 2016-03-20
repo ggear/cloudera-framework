@@ -21,13 +21,24 @@ To compile, build and package from source, this project requires:
 * JDK 1.7
 * Maven 3
 
+To run the unit and integrations tests, binaries and meta-data are provided for all CDH componnents:
+
+* OS-X 10.11.x
+* CentOS/RHEL 6.x
+* CentOS/RHEL 7.x
+* Ubuntu LTS 14.04.x
+
+Some CDH components have additional coverage on other platforms and versions.
+
+Note that in addition to Maven dependencies, Cloudera [parcels](http://www.cloudera.com/documentation/enterprise/latest/topics/cm_ig_parcels.html) are used to manage platform dependent binaries. This project depends on the [cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/cloudera-parcel-plugin) to help manage its Parcel dependencies, a copy of which is shipped with the module in the (thirdparty repository)[https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-thirdparty/src/main/repository].
+
 ##Install
 
 This project can be installed to a local repository as per:
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION=1.3.1
+export CF_VERSION=1.3.2
 export CDH_VERSION=5.5.2
 git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
@@ -36,7 +47,7 @@ git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
 mvn install
 ```
 
-Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.3.1-cdh5.5.2](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.3.1-cdh5.5.2/cloudera-framework-thirdparty/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
+Alternatively, the module can be distributed as a binary by copying the dependencies (eg [cloudera-framework-1.3.2-cdh5.5.2](https://github.com/ggear/cloudera-framework/tree/cloudera-framework-1.3.2-cdh5.5.2/cloudera-framework-thirdparty/src/main/repository) into a shared lib (eg, [cloudera-cyclehire](https://github.com/ggear/cloudera-cyclehire)).
 
 ##Usage
 
@@ -44,7 +55,7 @@ The cloudera-framework includes an archetype allowing you to stand up a simple, 
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION=1.3.1
+export CF_VERSION=1.3.2
 export CDH_VERSION=5.5.2
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate \
@@ -65,9 +76,9 @@ To perform a release:
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION_RELEASE=1.3.1
+export CF_VERSION_RELEASE=1.3.2
 export CDH_VERSION_RELEASE=5.5.2
-export CF_VERSION_HEAD=1.3.2
+export CF_VERSION_HEAD=1.3.3
 export CDH_VERSION_HEAD=5.5.2
 mvn clean install -PCMP
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
