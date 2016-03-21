@@ -30,7 +30,7 @@ To run the unit and integrations tests, binaries and meta-data are provided for 
 
 Some CDH components have additional coverage on other platforms and versions.
 
-Note that in addition to Maven dependencies, Cloudera [parcels](http://www.cloudera.com/documentation/enterprise/latest/topics/cm_ig_parcels.html) are used to manage platform dependent binaries. This project depends on the [cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/cloudera-parcel-plugin) to help manage its Parcel dependencies, a copy of which is shipped with the module in the (thirdparty repository)[https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-thirdparty/src/main/repository].
+Note that in addition to Maven dependencies, Cloudera [parcels](http://www.cloudera.com/documentation/enterprise/latest/topics/cm_ig_parcels.html) are used to manage platform dependent binaries. This project depends on the [cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/cloudera-parcel-plugin) to help manage its Parcel dependencies, a copy of which is shipped with the module in the [thirdparty repository](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-thirdparty/src/main/repository).
 
 ##Install
 

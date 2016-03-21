@@ -75,11 +75,11 @@ public class LocalClusterDfsKuduTest extends BaseTest {
     long time = debugMessageHeader(LOG, "setUpRuntime");
     fileSystem = FileSystem.getLocal(conf = new JobConf());
     conf.set(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
-    File kuduHome = new File(ABS_DIR_KUDU_MINICLUSTER, "sbin");
-    if (!kuduHome.exists()) {
-      kuduHome = new File(ABS_DIR_KUDU_MINICLUSTER, "bin");
+    File kuduBin = new File(ABS_DIR_KUDU_MINICLUSTER, "sbin");
+    if (!kuduBin.exists()) {
+      kuduBin = new File(ABS_DIR_KUDU_MINICLUSTER, "bin");
     }
-    System.setProperty(SYSTEM_PROPERTY_KUDU_HOME_BIN, kuduHome.getAbsolutePath());
+    System.setProperty(SYSTEM_PROPERTY_KUDU_HOME_BIN, kuduBin.getAbsolutePath());
     File dataDir = new File(REL_DIR_KUDU_LOCAL);
     FileUtils.deleteDirectory(dataDir);
     dataDir.mkdirs();
