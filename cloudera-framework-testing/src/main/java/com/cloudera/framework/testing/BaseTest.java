@@ -71,6 +71,7 @@ public abstract class BaseTest {
   public static final String ABS_DIR_DATA = ABS_DIR_TARGET + "/" + DIR_DATA;
   public static final String ABS_DIR_FS_TMP = ABS_DIR_TARGET + "/" + DIR_FS_TMP;
   public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/" + DIR_DFS_LOCAL;
+  public static final String ABS_DIR_KUDU_MINICLUSTER = ABS_DIR_TARGET + "/" + DIR_MINICLUSTER_KUDU;
   public static final String ABS_DIR_DFS_MINICLUSTER = ABS_DIR_TARGET + "/" + DIR_MINICLUSTER_DFS;
 
   protected static String LOG_PREFIX = "Test harness";
