@@ -69,10 +69,9 @@
 								<parcel>
 									<groupId>com.cloudera.parcel</groupId>
 									<artifactId>KUDU</artifactId>
-									<version>${cdh-kudu-parcel.version}</version>
+									<version>${cdh-kudu.version}</version>
 									<classifier>${os-platform.version}</classifier>
 									<linkDirectory>${project.build.directory}/runtime-kudu</linkDirectory>
-									<repositoryUrl>http://52.63.86.162/tmph3l7m2vv103/sbin/kudu/parcels</repositoryUrl>
 								</parcel>
 							</parcels>
 						</configuration>

@@ -713,7 +713,7 @@
 		<dependency>
 			<groupId>org.kududb</groupId>
 			<artifactId>kudu-client</artifactId>
-			<version>${cdh-kudu.version}</version>
+			<version>${cdh-kuduapi.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.zookeeper</groupId>
@@ -740,7 +740,7 @@
 		<dependency>
 			<groupId>org.kududb</groupId>
 			<artifactId>kudu-client</artifactId>
-			<version>${cdh-kudu.version}</version>
+			<version>${cdh-kuduapi.version}</version>
 			<classifier>tests</classifier>
 			<exclusions>
 				<exclusion>

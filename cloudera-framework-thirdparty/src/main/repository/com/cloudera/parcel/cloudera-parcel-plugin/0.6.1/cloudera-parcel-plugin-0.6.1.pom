@@ -5,12 +5,12 @@
 	<groupId>com.cloudera.parcel</groupId>
 	<artifactId>cloudera-parcel-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>0.6.0</version>
+	<version>0.6.1</version>
 
 	<parent>
 		<groupId>com.cloudera</groupId>
 		<artifactId>cloudera-parcel</artifactId>
-		<version>0.6.0</version>
+		<version>0.6.1</version>
 	</parent>
 
 	<dependencies>
@@ -56,6 +56,11 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>${google-guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>${jsch.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

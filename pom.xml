@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cloudera</groupId>
@@ -28,15 +29,32 @@
 		<repository>
 			<id>cdh.repo</id>
 			<url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
-			<name>Cloudera Repository</name>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+			</releases>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 		<repository>
-			<id>central.repo</id>
-			<url>https://repo1.maven.org/maven2</url>
-			<name>Central Repository</name>
+			<id>conjars.repo</id>
+			<url>http://conjars.org/repo</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>daily</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>kudu.repo</id>
+			<url>http://52.63.86.162/tmph3l7m2vv103/sbin/kudu/parcels</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -59,8 +77,8 @@
 		<cdh-parquet.version>1.5.0-cdh5.5.2</cdh-parquet.version>
 		<cdh-zookeeper.version>3.4.5-cdh5.5.2</cdh-zookeeper.version>
 		<cdh-kafka.version>0.8.2.0-kafka-1.4.0</cdh-kafka.version>
-		<cdh-kudu.version>0.7.1</cdh-kudu.version>
-		<cdh-kudu-parcel.version>0.7.1-1.kudu0.7.1.p0.36</cdh-kudu-parcel.version>
+		<cdh-kuduapi.version>0.7.1</cdh-kuduapi.version>
+		<cdh-kudu.version>0.7.1-1.kudu0.7.1.p0.36</cdh-kudu.version>
 
 		<snappy.version>1.1.1.7</snappy.version>
 		<elephantbird.version>4.9</elephantbird.version>
@@ -68,7 +86,7 @@
 		<sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
 		<junit.version>4.12</junit.version>
 
-		<parcel-plugin.version>0.6.0</parcel-plugin.version>
+		<parcel-plugin.version>0.6.1</parcel-plugin.version>
 
 		<java.version>1.7</java.version>
 		<scala.version>2.10</scala.version>
@@ -195,6 +213,11 @@
 					<version>2.6</version>
 				</plugin>
 				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>1.9.1</version>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.5.2</version>
@@ -240,6 +263,25 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>regex-property</id>
+						<goals>
+							<goal>regex-property</goal>
+						</goals>
+						<configuration>
+							<name>cdh-kuduapi.version</name>
+							<value>${cdh-kudu.version}</value>
+							<regex>^([0-9]+)\.([0-9]+)\.([0-9]+).*</regex>
+							<replacement>$1.$2.$3</replacement>
+							<failIfNoMatch>true</failIfNoMatch>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
