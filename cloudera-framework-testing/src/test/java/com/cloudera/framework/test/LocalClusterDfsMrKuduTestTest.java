@@ -18,12 +18,12 @@ import org.kududb.client.PartialRow;
 import org.kududb.client.RowResult;
 import org.kududb.client.RowResultIterator;
 
-import com.cloudera.framework.testing.LocalClusterDfsKuduTest;
+import com.cloudera.framework.testing.LocalClusterDfsMrKuduTest;
 
 /**
  * LocalClusterDfsKuduTest system test
  */
-public class LocalClusterDfsKuduTestTest extends LocalClusterDfsKuduTest {
+public class LocalClusterDfsMrKuduTestTest extends LocalClusterDfsMrKuduTest {
 
   /**
    * Test Kudu
@@ -66,7 +66,7 @@ public class LocalClusterDfsKuduTestTest extends LocalClusterDfsKuduTest {
   }
 
   /**
-   * Test Spark
+   * Test Kudu
    *
    * @throws Exception
    */

@@ -22,7 +22,7 @@ import scala.Serializable;
 /**
  * Base class for all local-cluster DFS and Spark tests, single-process,
  * multi-threaded DFS and Spark daemons, exercises the full read/write path of
- * the stack providing isolated and idempotent runtime
+ * the stack providing isolated and idempotent unit tests.
  */
 @SuppressWarnings("serial")
 public class MiniClusterDfsSparkTest extends BaseTest implements Serializable {

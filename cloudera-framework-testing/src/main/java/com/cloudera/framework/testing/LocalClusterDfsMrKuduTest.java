@@ -22,11 +22,11 @@ import org.slf4j.LoggerFactory;
  * Base class for all local-cluster DFS and Kudu tests, single-process,
  * multi-threaded DFS facade over local file system and multi-process Kudu
  * cluster, providing fast, functional read/write API compatibility, isolated
- * and idempotent runtime
+ * and idempotent unit tests
  */
-public class LocalClusterDfsKuduTest extends BaseTest {
+public class LocalClusterDfsMrKuduTest extends BaseTest {
 
-  private static Logger LOG = LoggerFactory.getLogger(LocalClusterDfsKuduTest.class);
+  private static Logger LOG = LoggerFactory.getLogger(LocalClusterDfsMrKuduTest.class);
 
   private static JobConf conf;
   private static FileSystem fileSystem;
@@ -37,11 +37,11 @@ public class LocalClusterDfsKuduTest extends BaseTest {
 
   private static String SYSTEM_PROPERTY_KUDU_HOME_BIN = "binDir";
 
-  public LocalClusterDfsKuduTest() {
+  public LocalClusterDfsMrKuduTest() {
     super();
   }
 
-  public LocalClusterDfsKuduTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
+  public LocalClusterDfsMrKuduTest(String[] sources, String[] destinations, String[] datasets, String[][] subsets,
       String[][][] labels, @SuppressWarnings("rawtypes") Map[] metadata) {
     super(sources, destinations, datasets, subsets, labels, metadata);
   }

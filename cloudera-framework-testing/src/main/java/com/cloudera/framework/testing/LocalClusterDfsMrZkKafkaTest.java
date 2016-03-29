@@ -20,7 +20,7 @@ import com.cloudera.framework.testing.cluster.MiniZooKeeper;
  * Base class for all local-cluster DFS, MR, ZK and Kafka tests, single-process,
  * multi-threaded DFS facade over local file system and local MR job runner,
  * providing fast, functional read/write API compatibility, isolated and
- * idempotent runtime
+ * idempotent unit tests.
  */
 public class LocalClusterDfsMrZkKafkaTest extends BaseTest {
 

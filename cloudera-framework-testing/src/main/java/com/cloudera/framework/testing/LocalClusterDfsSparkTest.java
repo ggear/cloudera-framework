@@ -22,7 +22,7 @@ import scala.Serializable;
  * Base class for all local-cluster DFS and Spark tests, single-process,
  * multi-threaded DFS facade over local file system and local mode Spark,
  * providing fast, functional read/write API compatibility, isolated and
- * idempotent runtime
+ * idempotent unit tests.
  */
 @SuppressWarnings("serial")
 public class LocalClusterDfsSparkTest extends BaseTest implements Serializable {

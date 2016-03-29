@@ -29,10 +29,6 @@
 		<repository>
 			<id>cdh.repo</id>
 			<url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-			</releases>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -40,10 +36,6 @@
 		<repository>
 			<id>conjars.repo</id>
 			<url>http://conjars.org/repo</url>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>daily</updatePolicy>
-			</releases>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -52,7 +44,7 @@
 			<id>kudu.repo</id>
 			<url>http://52.63.86.162/tmph3l7m2vv103/sbin/kudu/parcels</url>
 			<releases>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 				<updatePolicy>never</updatePolicy>
 			</releases>
 			<snapshots>

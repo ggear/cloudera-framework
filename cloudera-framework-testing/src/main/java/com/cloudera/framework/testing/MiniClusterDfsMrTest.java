@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Base class for all local-cluster DFS and MR tests, single-process,
  * multi-threaded DFS and MR daemons, exercises the full read/write path of the
- * stack providing isolated and idempotent runtime
+ * stack providing isolated and idempotent unit tests.
  */
 public class MiniClusterDfsMrTest extends BaseTest {
 
