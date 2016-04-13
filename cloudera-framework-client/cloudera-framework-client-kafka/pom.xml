@@ -5,12 +5,12 @@
 	<groupId>com.cloudera.framework.client</groupId>
 	<artifactId>cloudera-framework-client-kafka</artifactId>
 	<packaging>pom</packaging>
-	<version>1.3.3-cdh5.7.0</version>
+	<version>1.3.4-cdh5.7.0-SNAPSHOT</version>
 
 	<parent>
 		<groupId>com.cloudera.framework</groupId>
 		<artifactId>cloudera-framework-client</artifactId>
-		<version>1.3.3-cdh5.7.0</version>
+		<version>1.3.4-cdh5.7.0-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
