@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.I0Itec.zkclient.ZkClient;
+import org.I0Itec.zkclient.ZkConnection;
 import org.apache.commons.io.FileUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -22,6 +23,7 @@ import kafka.common.TopicExistsException;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServerStartable;
 import kafka.utils.ZKStringSerializer$;
+import kafka.utils.ZkUtils;
 
 /**
  * Provide a mini-Kafka cluster, requires an externally managed mini-ZooKeeper
@@ -36,6 +38,7 @@ public class MiniKafka {
   private static Logger LOG = LoggerFactory.getLogger(MiniKafka.class);
 
   private MiniZooKeeper zooKeeper;
+  private ZkUtils zooKeeperUtils;
   private ZkClient zooKeeperClient;
   private KafkaServerStartable kafka;
   private Producer<String, String> producer;
@@ -59,9 +62,11 @@ public class MiniKafka {
     producer = new KafkaProducer<String, String>(properties);
     zooKeeperClient = new ZkClient(zooKeeper.getConnectString(), MiniZooKeeper.ZOOKEEPER_TIMEOUT_MS,
         MiniZooKeeper.ZOOKEEPER_TIMEOUT_MS, ZKStringSerializer$.MODULE$);
+    zooKeeperUtils = new ZkUtils(zooKeeperClient, new ZkConnection(zooKeeper.getConnectString()), false);
   }
 
   public void stop() throws IOException {
+    zooKeeperUtils.close();
     zooKeeperClient.close();
     producer.close();
     kafka.shutdown();
@@ -77,11 +82,11 @@ public class MiniKafka {
 
   public void create(String topic) throws InterruptedException {
     try {
-      AdminUtils.createTopic(zooKeeperClient, topic, 1, 1, new Properties());
+      AdminUtils.createTopic(zooKeeperUtils, topic, 1, 1, new Properties());
     } catch (TopicExistsException e) {
       // ignore
     }
-    while (AdminUtils.fetchTopicMetadataFromZk(topic, zooKeeperClient).toString()
+    while (AdminUtils.fetchTopicMetadataFromZk(topic, zooKeeperUtils).toString()
         .contains("LeaderNotAvailableException")) {
       if (LOG.isTraceEnabled()) {
         LOG.trace("Sleeping for [" + KAFKA_POLL_MS + "] ms, waiting for Kafka topic to be reigstered in ZK");
@@ -95,7 +100,7 @@ public class MiniKafka {
   }
 
   public void delete(String topic) throws InterruptedException {
-    AdminUtils.deleteTopic(zooKeeperClient, topic);
+    AdminUtils.deleteTopic(zooKeeperUtils, topic);
   }
 
 }
