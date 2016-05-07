@@ -53,7 +53,6 @@ public abstract class BaseTest {
   public static final String DIR_MINICLUSTER_KUDU = "runtime-kudu";
   public static final String DIR_MINICLUSTER_DFS = "test-hdfs-minicluster";
   public static final String DIR_MINICLUSTER_MR_PREFIX = "MiniMRCluster_";
-  
 
   // Relative directories
   public static final String REL_DIR_DATA = DIR_TARGET + "/" + DIR_DATA;

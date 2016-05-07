@@ -6,4 +6,4 @@ source $ROOT_DIR/bin/*.env
 
 set -x
 
-su $USER_ADMIN -c "hadoop $@"
+sudo su $USER_ADMIN -c "hadoop --config $HADOOP_CONF_DIR $@"
