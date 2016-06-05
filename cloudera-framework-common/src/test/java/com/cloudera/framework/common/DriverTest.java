@@ -1,5 +1,7 @@
 package com.cloudera.framework.common;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
@@ -7,37 +9,43 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
-import org.junit.Assert;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import com.cloudera.framework.testing.MiniClusterDfsMrTest;
+import com.cloudera.framework.testing.TestRunner;
+import com.cloudera.framework.testing.server.DfsServer;
 
-public class DriverTest extends MiniClusterDfsMrTest {
+@RunWith(TestRunner.class)
+public class DriverTest {
+
+  @ClassRule
+  public static DfsServer dfsServer = DfsServer.getInstance();
 
   @Test
   public void testRunnerSuccessParameters() throws Exception {
-    Driver driver = new CountFilesDriver(getConf());
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { "false" }));
+    Driver driver = new CountFilesDriver(dfsServer.getConf());
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { "false" }));
   }
 
   @Test
   public void testRunnerSuccessOptions() throws Exception {
-    Driver driver = new CountFilesDriver(getConf());
+    Driver driver = new CountFilesDriver(dfsServer.getConf());
     driver.getConf().setBoolean("i.should.fail.option", false);
-    Assert.assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { "false" }));
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { "false" }));
   }
 
   @Test
   public void testRunnerFailureParameters() throws Exception {
-    Driver driver = new CountFilesDriver(getConf());
-    Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[] { "true" }));
+    Driver driver = new CountFilesDriver(dfsServer.getConf());
+    assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[] { "true" }));
   }
 
   @Test
   public void testRunnerFailureOptions() throws Exception {
-    Driver driver = new CountFilesDriver(getConf());
+    Driver driver = new CountFilesDriver(dfsServer.getConf());
     driver.getConf().setBoolean("i.should.fail.option", true);
-    Assert.assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[] { "false" }));
+    assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[] { "false" }));
   }
 
   private enum Counter {
@@ -81,7 +89,7 @@ public class DriverTest extends MiniClusterDfsMrTest {
     @Override
     public int execute() throws IOException {
       FileSystem fileSystem = FileSystem.newInstance(getConf());
-      RemoteIterator<LocatedFileStatus> files = fileSystem.listFiles(new Path("/"), true);
+      RemoteIterator<LocatedFileStatus> files = fileSystem.listFiles(new Path("."), true);
       while (files.hasNext()) {
         files.next();
         incrementCounter(Counter.FILES_NUMBER, 1);

@@ -35,7 +35,7 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
   @Override
   public void initialize() {
     decoder = DecoderFactory.get().directBinaryDecoder(new ByteArrayInputStream(new byte[0]), decoder);
-    reader = new SpecificDatumReader<AvroFlumeEvent>(AvroFlumeEvent.class);
+    reader = new SpecificDatumReader<>(AvroFlumeEvent.class);
     if (LOG.isInfoEnabled()) {
       LOG.info("Flume Event Unwrap Interceptor initialised");
     }
@@ -48,7 +48,7 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
 
   @Override
   public List<Event> intercept(List<Event> events) {
-    List<Event> eventsUnwrapped = new ArrayList<Event>();
+    List<Event> eventsUnwrapped = new ArrayList<>();
     for (Event event : events) {
       eventsUnwrapped.add(unwrap(event));
     }
@@ -87,7 +87,7 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
 
   private static Map<String, String> toStringMap(Map<CharSequence, CharSequence> charSequenceMap,
       Map<String, String> mergeMap) {
-    Map<String, String> stringMap = new HashMap<String, String>();
+    Map<String, String> stringMap = new HashMap<>();
     for (Map.Entry<CharSequence, CharSequence> entry : charSequenceMap.entrySet()) {
       stringMap.put(entry.getKey().toString(), entry.getValue().toString());
     }

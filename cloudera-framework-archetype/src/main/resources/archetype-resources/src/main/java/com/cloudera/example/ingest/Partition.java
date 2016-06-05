@@ -177,21 +177,21 @@ public class Partition extends Driver {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void setup(
         org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
       multipleOutputs = new MultipleOutputs(context);
     }
 
     @Override
     protected void cleanup(
         org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
       multipleOutputs.close();
     }
 
     @Override
     protected void map(RecordKey key, AvroGenericRecordWritable value,
         org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
       if (key.isValid()) {
         key.setHash(recordValue.hashCode());
         recordWrapped.datum((Record) value.getRecord());
@@ -232,7 +232,7 @@ public class Partition extends Driver {
     @Override
     protected void setup(
         org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
       multipleOutputsAvro = new AvroMultipleOutputs(context);
       partitions.clear();
     }
@@ -251,7 +251,7 @@ public class Partition extends Driver {
     @Override
     protected void reduce(RecordKey key, Iterable<AvroValue<Record>> values,
         org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
       records.clear();
       Iterator<AvroValue<Record>> valuesIterator = values.iterator();
       while (valuesIterator.hasNext()) {

@@ -72,7 +72,7 @@ public class DfsUtil {
    */
   public static Set<Path> listFiles(FileSystem hdfs, Path path, boolean recurse, boolean filterMetaData)
       throws FileNotFoundException, IOException {
-    Set<Path> files = new HashSet<Path>();
+    Set<Path> files = new HashSet<>();
     try {
       RemoteIterator<LocatedFileStatus> filesIterator = hdfs.listFiles(path, recurse);
       while (filesIterator.hasNext()) {
@@ -103,7 +103,7 @@ public class DfsUtil {
    */
   public static Set<Path> listDirs(FileSystem hdfs, Path path, boolean recurse, boolean filterMetaData)
       throws FileNotFoundException, IOException {
-    Map<Path, Boolean> dirs = new HashMap<Path, Boolean>();
+    Map<Path, Boolean> dirs = new HashMap<>();
     try {
       RemoteIterator<LocatedFileStatus> filesIterator = hdfs.listFiles(path, recurse);
       while (filesIterator.hasNext()) {
@@ -117,7 +117,7 @@ public class DfsUtil {
     }
     Set<Path> dirsFiltered = dirs.keySet();
     if (filterMetaData) {
-      dirsFiltered = new HashSet<Path>();
+      dirsFiltered = new HashSet<>();
       for (Path dir : dirs.keySet()) {
         if (!dirs.get(dir) && !dir.getName().startsWith(FILE_METADATA_PREFIX)) {
           dirsFiltered.add(dir);

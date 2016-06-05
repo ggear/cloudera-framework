@@ -170,7 +170,7 @@ public class Stage extends Driver {
     @Override
     protected void map(RecordKey key, Text value,
         org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, Text>.Context context)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
       string.setLength(0);
       context.getCounter(RecordCounter.FILES).increment(1);
       if (key.isValid()) {

@@ -154,7 +154,7 @@ public class Process extends Driver {
     @Override
     protected void map(AvroKey<Record> key, NullWritable value,
         org.apache.hadoop.mapreduce.Mapper<AvroKey<Record>, NullWritable, Void, Record>.Context context)
-            throws IOException, InterruptedException {
+        throws IOException, InterruptedException {
       context.getCounter(RecordCounter.RECORDS).increment(1);
       context.getCounter(RecordCounter.RECORDS_CANONICAL).increment(1);
       context.write(null, key.datum());

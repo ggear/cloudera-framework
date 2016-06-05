@@ -1,40 +1,46 @@
 package com.cloudera.framework.common.util;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.SequenceFile.CompressionType;
 import org.apache.hadoop.io.compress.DefaultCodec;
 import org.apache.hadoop.io.compress.SnappyCodec;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.junit.Assert;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import com.cloudera.framework.testing.LocalClusterDfsMrTest;
+import com.cloudera.framework.testing.TestRunner;
+import com.cloudera.framework.testing.server.DfsServer;
 
-public class MrUtilTest extends LocalClusterDfsMrTest {
+@RunWith(TestRunner.class)
+public class MrUtilTest {
+
+  @ClassRule
+  public static DfsServer dfsServer = DfsServer.getInstance();
 
   @Test
   public void testGetCodecString() {
-    Configuration configuration = getConf();
-    Assert.assertEquals(MrUtil.CODEC_NONE, MrUtil.getCodecString(configuration));
+    Configuration configuration = dfsServer.getConf();
+    assertEquals(MrUtil.CODEC_NONE, MrUtil.getCodecString(configuration));
     configuration.setBoolean(FileOutputFormat.COMPRESS, false);
-    Assert.assertEquals(MrUtil.CODEC_NONE, MrUtil.getCodecString(configuration));
+    assertEquals(MrUtil.CODEC_NONE, MrUtil.getCodecString(configuration));
     configuration.setBoolean(FileOutputFormat.COMPRESS, true);
-    Assert.assertEquals(
+    assertEquals(
         new DefaultCodec().getDefaultExtension().substring(1, new DefaultCodec().getDefaultExtension().length()),
         MrUtil.getCodecString(configuration));
     configuration.set(FileOutputFormat.COMPRESS_CODEC, SnappyCodec.class.getName());
-    Assert.assertEquals(
-        new SnappyCodec().getDefaultExtension().substring(1, new SnappyCodec().getDefaultExtension().length()),
+    assertEquals(new SnappyCodec().getDefaultExtension().substring(1, new SnappyCodec().getDefaultExtension().length()),
         MrUtil.getCodecString(configuration));
     configuration.set(FileOutputFormat.COMPRESS_TYPE, CompressionType.BLOCK.toString());
-    Assert.assertEquals(
-        new SnappyCodec().getDefaultExtension().substring(1, new SnappyCodec().getDefaultExtension().length()),
+    assertEquals(new SnappyCodec().getDefaultExtension().substring(1, new SnappyCodec().getDefaultExtension().length()),
         MrUtil.getCodecString(configuration));
     configuration.set(FileOutputFormat.COMPRESS_TYPE, CompressionType.NONE.toString());
-    Assert.assertEquals(MrUtil.CODEC_NONE, MrUtil.getCodecString(configuration));
+    assertEquals(MrUtil.CODEC_NONE, MrUtil.getCodecString(configuration));
     configuration.set(FileOutputFormat.COMPRESS_TYPE, CompressionType.BLOCK.toString());
     configuration.setBoolean(FileOutputFormat.COMPRESS, false);
-    Assert.assertEquals(MrUtil.CODEC_NONE, MrUtil.getCodecString(configuration));
+    assertEquals(MrUtil.CODEC_NONE, MrUtil.getCodecString(configuration));
   }
 
 }

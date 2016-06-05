@@ -1,13 +1,11 @@
 package com.cloudera.example;
 
-import com.cloudera.framework.testing.BaseTest;
-
 /**
  * Test constants
  */
-public interface TestConstants extends Constants {
+public interface TestConstants extends com.cloudera.framework.testing.TestConstants {
 
-  public static final String DS_DIR = BaseTest.REL_DIR_DATASET;
+  public static final String DS_DIR = REL_DIR_DATASET;
   public static final String DS_MYDATASET = "mydataset";
   public static final String DSS_MYDATASET_CSV = "csv";
   public static final String DSS_MYDATASET_XML = "xml";

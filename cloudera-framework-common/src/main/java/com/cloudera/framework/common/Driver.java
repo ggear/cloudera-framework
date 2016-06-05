@@ -36,7 +36,7 @@ public abstract class Driver extends Configured implements Tool {
 
   private static final int FORMAT_TIME_FACTOR = 10;
 
-  private Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<String, Map<Enum<?>, Long>>();
+  private Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
 
   public Driver() {
     super();
@@ -220,16 +220,16 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Map<String, Map<Enum<?>, Long>> getCounters() {
-    return new LinkedHashMap<String, Map<Enum<?>, Long>>(counters);
+    return new LinkedHashMap<>(counters);
   }
 
   public Map<Enum<?>, Long> getCounters(String group) {
     return counters.get(group) == null ? Collections.<Enum<?>, Long> emptyMap()
-        : new LinkedHashMap<Enum<?>, Long>(counters.get(group));
+        : new LinkedHashMap<>(counters.get(group));
   }
 
   public Set<String> getCountersGroups() {
-    return new LinkedHashSet<String>(counters.keySet());
+    return new LinkedHashSet<>(counters.keySet());
   }
 
   public Long getCounter(String group, Enum<?> counter) {
