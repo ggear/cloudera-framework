@@ -23,14 +23,14 @@ public class TestDfsServerLocal extends TestDfsServer {
   @Override
   @TestWith({ "testMetaData1", "testMetaData2", "testMetaData3", //
       "testMetaData4", "testMetaData5", "testMetaData6", "testMetaData7" })
-  public void testCdhMetaData(TestMetaData testMetaData) throws Exception {
-    super.testCdhMetaData(testMetaData);
+  public void testDfs(TestMetaData testMetaData) throws Exception {
+    super.testDfs(testMetaData);
   }
 
   @TestWith({ "testMetaData1", "testMetaData2", "testMetaData3", //
       "testMetaData4", "testMetaData5", "testMetaData6", "testMetaData7" })
-  public void testCdhMetaDataAgain(TestMetaData testMetaData) throws Exception {
-    super.testCdhMetaData(testMetaData);
+  public void testDfsAgain(TestMetaData testMetaData) throws Exception {
+    super.testDfs(testMetaData);
   }
 
   @Coercion

@@ -8,9 +8,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.hive.shims.HadoopShims.MiniMrShim;
 import org.apache.hadoop.hive.shims.ShimLoader;
 import org.apache.hadoop.mapreduce.MRConfig;
+import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * MR2 {@link TestRule}
+ */
 public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
 
   public enum Runtime {

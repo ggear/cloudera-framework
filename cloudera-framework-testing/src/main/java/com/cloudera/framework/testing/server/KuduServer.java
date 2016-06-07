@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.junit.rules.TestRule;
 import org.kududb.client.KuduClient;
 import org.kududb.client.KuduClient.KuduClientBuilder;
 import org.kududb.client.MiniKuduCluster;
@@ -14,6 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.net.HostAndPort;
 
+/**
+ * Kudu {@link TestRule}
+ */
 public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
 
   public enum Runtime {
@@ -39,11 +43,6 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
   @Override
   public int getIndex() {
     return 20;
-  }
-
-  @Override
-  public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[0];
   }
 
   @Override

@@ -18,12 +18,16 @@ import org.apache.flume.channel.ChannelProcessor;
 import org.apache.flume.channel.MemoryChannel;
 import org.apache.flume.channel.ReplicatingChannelSelector;
 import org.apache.flume.conf.Configurables;
+import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.model.Parameter.Source;
 
+/**
+ * Flume {@link TestRule}
+ */
 public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
 
   public enum Runtime {

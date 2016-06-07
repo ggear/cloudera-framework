@@ -4,9 +4,13 @@ import java.io.IOException;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Spark {@link TestRule}
+ */
 public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
 
   public enum Runtime {

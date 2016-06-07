@@ -15,6 +15,7 @@ import org.junit.internal.runners.statements.Fail;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.RunRules;
 import org.junit.rules.TestRule;
+import org.junit.runner.Runner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
@@ -30,6 +31,15 @@ import parquet.Log;
 import parquet.hadoop.ParquetOutputFormat;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
+/**
+ * JUnit {@link Runner} required for all tests as per:
+ *
+ * <pre>
+ * &#64;RunWith(TestRunner.class)
+ * public class MyTest {
+ * }
+ * </pre>
+ */
 public class TestRunner extends ZohhakRunner implements TestConstants {
 
   public TestRunner(Class<?> clazz) throws InitializationError {

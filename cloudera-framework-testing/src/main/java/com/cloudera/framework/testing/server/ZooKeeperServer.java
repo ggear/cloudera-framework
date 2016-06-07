@@ -12,9 +12,13 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.server.NIOServerCnxnFactory;
+import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * ZooKeeper {@link TestRule}
+ */
 public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.Runtime> {
 
   public static final int ZOOKEEPER_TICK_MS = 2000;
@@ -39,11 +43,6 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
   @Override
   public int getIndex() {
     return 30;
-  }
-
-  @Override
-  public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[0];
   }
 
   @Override

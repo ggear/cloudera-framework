@@ -247,7 +247,7 @@ public abstract class TestDfsServer implements TestConstants {
       .dataSetDestinationDirs(DIR_DESTINATION + "/one", DIR_DESTINATION + "/two") //
       .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 4L)));
 
-  public void testCdhMetaData(TestMetaData testMetaData) throws Exception {
+  public void testDfs(TestMetaData testMetaData) throws Exception {
     assertNotNull(testMetaData);
     assertCounterEquals(testMetaData.getAsserts()[0],
         ImmutableMap.of(COUNTER_GROUP,

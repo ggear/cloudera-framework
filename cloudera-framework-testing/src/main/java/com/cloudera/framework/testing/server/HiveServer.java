@@ -36,9 +36,13 @@ import org.apache.hive.service.cli.thrift.ThriftBinaryCLIService;
 import org.apache.hive.service.cli.thrift.ThriftCLIServiceClient;
 import org.apache.hive.service.cli.thrift.ThriftHttpCLIService;
 import org.apache.hive.service.server.HiveServer2;
+import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Hive {@link TestRule}
+ */
 public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   public enum Runtime {

@@ -6,7 +6,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.JobConf;
+import org.junit.ClassRule;
 import org.junit.rules.ExternalResource;
+import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -15,15 +17,27 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.amazonaws.services.s3.model.BucketLifecycleConfiguration.Rule;
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestRunner;
 
+/**
+ * Base class for all {@link ClassRule} and {@link Rule} annotated
+ * {@link TestRule TestRules}.
+ *
+ * @param <U>
+ *          Specialised class
+ * @param <V>
+ *          Specialised class runtime enum
+ */
 public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalResource
     implements TestConstants, Comparable<CdhServer<CdhServer<?, ?>, V>> {
 
   public abstract int getIndex();
 
-  public abstract CdhServer<?, ?>[] getDependencies();
+  public CdhServer<?, ?>[] getDependencies() {
+    return new CdhServer<?, ?>[0];
+  }
 
   public synchronized Configuration getConf() {
     return conf;

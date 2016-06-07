@@ -2,6 +2,9 @@ package com.cloudera.framework.testing;
 
 import java.util.Map;
 
+/**
+ * Provide additional, convenience {@link org.junit.Assert} methods
+ */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class Assert extends org.junit.Assert {
 

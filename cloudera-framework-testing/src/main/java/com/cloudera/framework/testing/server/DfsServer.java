@@ -22,9 +22,13 @@ import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hive.shims.HadoopShims.MiniDFSShim;
 import org.apache.hadoop.hive.shims.ShimLoader;
+import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * DFS {@link TestRule}
+ */
 public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
 
   public enum Runtime {
@@ -269,11 +273,6 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   @Override
   public int getIndex() {
     return 10;
-  }
-
-  @Override
-  public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[0];
   }
 
   @Override

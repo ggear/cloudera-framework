@@ -12,6 +12,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,9 @@ import kafka.server.KafkaServerStartable;
 import kafka.utils.ZKStringSerializer$;
 import kafka.utils.ZkUtils;
 
+/**
+ * Kafka {@link TestRule}
+ */
 public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   public enum Runtime {

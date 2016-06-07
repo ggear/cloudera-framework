@@ -2,6 +2,9 @@ package com.cloudera.framework.testing;
 
 import java.io.File;
 
+/**
+ * Test constants
+ */
 public interface TestConstants {
 
   // Directories
