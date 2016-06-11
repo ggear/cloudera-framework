@@ -38,7 +38,7 @@ This project can be installed to a local repository as per:
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION=1.4.0
+export CF_VERSION=1.4.1
 export CDH_VERSION=5.7.0
 git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
@@ -47,7 +47,7 @@ git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
 mvn install -PPKG
 ```
 
-Alternatively, the module can be included as binary dependency in maven, an example of pulling in the core client bill-of-matierals and test harness is seen below:
+Alternatively, the module can be included as a binary dependency in maven, an example of pulling in the core client bill-of-matierals and test harness is seen below:
 
 ```xml
 	<repositories>
@@ -64,14 +64,14 @@ Alternatively, the module can be included as binary dependency in maven, an exam
 		<dependency>
 			<groupId>com.cloudera.framework.client</groupId>
 			<artifactId>cloudera-framework-client-core</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1-cdh5.7.0</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cloudera.framework</groupId>
 			<artifactId>cloudera-framework-testing</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1-cdh5.7.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -83,7 +83,7 @@ The cloudera-framework includes an archetype allowing you to stand up a simple, 
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION=1.4.0
+export CF_VERSION=1.4.1
 export CDH_VERSION=5.7.0
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate \
@@ -104,9 +104,9 @@ To perform a release:
 
 ```bash
 # Change the following variables to appropriate values for your target environment
-export CF_VERSION_RELEASE=1.4.0
+export CF_VERSION_RELEASE=1.4.1
 export CDH_VERSION_RELEASE=5.7.0
-export CF_VERSION_HEAD=1.4.1
+export CF_VERSION_HEAD=1.4.2
 export CDH_VERSION_HEAD=5.7.0
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:perform
