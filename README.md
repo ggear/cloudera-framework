@@ -111,6 +111,5 @@ export CDH_VERSION_HEAD=5.7.0
 rm -rf ~/.m2/repository/com/cloudera/parcel/cloudera-*
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:perform
-mvn release:clean
 git tag
 ```
