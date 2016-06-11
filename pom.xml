@@ -23,6 +23,10 @@
 			<id>cloudera-framework</id>
 			<url>http://52.63.86.162:80/artifactory/libs-release-local</url>
 		</repository>
+		<snapshotRepository>
+			<id>cloudera-framework</id>
+			<url>http://52.63.86.162:80/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<repositories>
