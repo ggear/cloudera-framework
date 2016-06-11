@@ -79,7 +79,7 @@ Alternatively, the module can be included as a binary dependency in maven, an ex
 
 ##Usage
 
-The cloudera-framework includes an archetype allowing you to stand up a simple, best practices project that shows how to use the framework and get going fast:
+The cloudera-framework includes an [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) module which exercises the entire codebase. In addition, an archetype is available allowing you to stand up a simple, bare bones project for new cloudera-framework clients as so:
 
 ```bash
 # Change the following variables to appropriate values for your target environment
@@ -87,6 +87,7 @@ export CF_VERSION=1.4.2
 export CDH_VERSION=5.7.0
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate \
+  -DarchetypeRepository=http://52.63.86.162/artifactory/libs-release-local \
   -DarchetypeGroupId=com.cloudera.framework \
   -DarchetypeArtifactId=cloudera-framework-archetype \
   -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
