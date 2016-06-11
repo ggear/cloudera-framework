@@ -38,7 +38,7 @@ public abstract class TestDfsServer implements TestConstants {
   @Test
   public void testGetDfsServer() {
     assertNotNull(getDfsServer());
-    assertTrue(getDfsServer().isStarted());
+    assertFalse(getDfsServer().isStarted());
   }
 
   private static final String DIR_SOURCE = REL_DIR_CLASSES + "/data";
