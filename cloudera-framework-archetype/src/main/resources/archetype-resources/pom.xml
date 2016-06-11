@@ -44,7 +44,11 @@
 			<id>cloudera-framework</id>
 			<url>http://52.63.86.162:80/artifactory/libs-release-local</url>
 		</repository>
-	</distributionManagement>
+ 		<snapshotRepository>
+			<id>cloudera-framework</id>
+			<url>http://52.63.86.162:80/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+ 	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
