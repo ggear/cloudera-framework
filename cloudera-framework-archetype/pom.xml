@@ -5,12 +5,12 @@
 	<groupId>com.cloudera.framework</groupId>
 	<artifactId>cloudera-framework-archetype</artifactId>
 	<packaging>maven-archetype</packaging>
-	<version>1.4.3-cdh5.7.1-SNAPSHOT</version>
+	<version>1.4.3-cdh5.7.1</version>
 
 	<parent>
 		<groupId>com.cloudera</groupId>
 		<artifactId>cloudera-framework</artifactId>
-		<version>1.4.3-cdh5.7.1-SNAPSHOT</version>
+		<version>1.4.3-cdh5.7.1</version>
 	</parent>
 
 	<properties>
