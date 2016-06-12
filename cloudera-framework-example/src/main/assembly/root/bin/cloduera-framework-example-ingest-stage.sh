@@ -12,7 +12,7 @@ ROOT_DIR_HDFS_STAGED=${3:-"$ROOT_DIR_HDFS_STAGED"}
 
 $ROOT_DIR/lib/bin/cloudera-framework-shell-hadoop.sh "\
   jar $ROOT_DIR/lib/jar/*.jar \
-  com.cloudera.example.ingest.Stage \
+  com.cloudera.framework.example.ingest.Stage \
   -libjars $LIBJARS \
   $CMD_LINE_ARGUMENTS \
   $ROOT_DIR_HDFS_RAW_CANONICAL \

@@ -1,5 +1,5 @@
 {
-  "namespace":"com.cloudera.example.model",
+  "namespace":"com.cloudera.framework.example.model",
   "type":"record",
   "name":"Record",
   "fields":[

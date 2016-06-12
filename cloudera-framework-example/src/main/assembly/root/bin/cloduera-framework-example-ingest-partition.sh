@@ -12,7 +12,7 @@ ROOT_DIR_HDFS_PARTITIONED=${3:-"$ROOT_DIR_HDFS_PARTITIONED"}
 
 $ROOT_DIR/lib/bin/cloudera-framework-shell-hadoop.sh "\
   jar $ROOT_DIR/lib/jar/*.jar \
-  com.cloudera.example.ingest.Partition \
+  com.cloudera.framework.example.ingest.Partition \
   -libjars $LIBJARS \
   $CMD_LINE_ARGUMENTS \
   $ROOT_DIR_HDFS_STAGED_CANONICAL \

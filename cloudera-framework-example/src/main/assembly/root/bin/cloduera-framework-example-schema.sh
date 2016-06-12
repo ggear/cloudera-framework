@@ -91,10 +91,10 @@ TABLES_SERDE=( \
 	"org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe" \
 )
 TABLES_INPUT=( \
-	"com.cloudera.example.model.input.hive.RecordTextInputFormatCsv" \
-	"com.cloudera.example.model.input.hive.RecordTextInputFormatXml" \
-	"com.cloudera.example.model.input.hive.RecordSequenceInputFormatCsv" \
-	"com.cloudera.example.model.input.hive.RecordSequenceInputFormatXml" \
+	"com.cloudera.framework.example.model.input.hive.RecordTextInputFormatCsv" \
+	"com.cloudera.framework.example.model.input.hive.RecordTextInputFormatXml" \
+	"com.cloudera.framework.example.model.input.hive.RecordSequenceInputFormatCsv" \
+	"com.cloudera.framework.example.model.input.hive.RecordSequenceInputFormatXml" \
 	"org.apache.hadoop.mapred.TextInputFormat" \
 	"org.apache.hadoop.mapred.TextInputFormat" \
 	"org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat" \
