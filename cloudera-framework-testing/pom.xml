@@ -15,8 +15,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.cloudera.framework</groupId>
-			<artifactId>cloudera-framework-runtime</artifactId>
+			<groupId>com.cloudera.framework.library</groupId>
+			<artifactId>cloudera-framework-library-runtime</artifactId>
 			<version>${project.version}</version>
 			<type>pom</type>
 		</dependency>

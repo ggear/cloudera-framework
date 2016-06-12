@@ -15,48 +15,48 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.cloudera.framework.client</groupId>
-			<artifactId>cloudera-framework-client-core</artifactId>
+			<groupId>com.cloudera.framework.library.client</groupId>
+			<artifactId>cloudera-framework-library-client-core</artifactId>
 			<version>${project.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.cloudera.framework.client</groupId>
-			<artifactId>cloudera-framework-client-zookeeper</artifactId>
+			<groupId>com.cloudera.framework.library.client</groupId>
+			<artifactId>cloudera-framework-library-client-zookeeper</artifactId>
 			<version>${project.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.cloudera.framework.client</groupId>
-			<artifactId>cloudera-framework-client-kafka</artifactId>
+			<groupId>com.cloudera.framework.library.client</groupId>
+			<artifactId>cloudera-framework-library-client-kafka</artifactId>
 			<version>${project.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.cloudera.framework.client</groupId>
-			<artifactId>cloudera-framework-client-flume</artifactId>
+			<groupId>com.cloudera.framework.library.client</groupId>
+			<artifactId>cloudera-framework-library-client-flume</artifactId>
 			<version>${project.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.cloudera.framework.client</groupId>
-			<artifactId>cloudera-framework-client-avro</artifactId>
+			<groupId>com.cloudera.framework.library.thirdparty</groupId>
+			<artifactId>cloudera-framework-library-thirdparty-avro</artifactId>
 			<version>${project.version}</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>
-			<groupId>com.cloudera.framework.client</groupId>
-			<artifactId>cloudera-framework-client-parquet</artifactId>
+			<groupId>com.cloudera.framework.library.thirdparty</groupId>
+			<artifactId>cloudera-framework-library-thirdparty-parquet</artifactId>
 			<version>${project.version}</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>
-			<groupId>com.cloudera.framework.client</groupId>
-			<artifactId>cloudera-framework-client-elephantbird</artifactId>
+			<groupId>com.cloudera.framework.library.thirdparty</groupId>
+			<artifactId>cloudera-framework-library-thirdparty-elephantbird</artifactId>
 			<version>${project.version}</version>
 			<type>pom</type>
 		</dependency>
@@ -184,8 +184,8 @@
 						</goals>
 						<configuration>
 							<excludeTypes>pom</excludeTypes>
-							<includeScope>runtime</includeScope>
-							<excludeTransitive>false</excludeTransitive>
+							<includeScope>compile</includeScope>
+							<excludeTransitive>true</excludeTransitive>
 							<outputDirectory>${project.build.directory}/parcel/${project.artifactId}-${project.version}-none.parcel/lib</outputDirectory>
 						</configuration>
 					</execution>

@@ -151,8 +151,7 @@
 	</profiles>
 
 	<modules>
-		<module>cloudera-framework-client</module>
-		<module>cloudera-framework-runtime</module>
+		<module>cloudera-framework-library</module>
 		<module>cloudera-framework-testing</module>
 		<module>cloudera-framework-common</module>
 		<module>cloudera-framework-example</module>
