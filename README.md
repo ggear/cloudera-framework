@@ -12,7 +12,7 @@ Provide an example organisation wide Cloudera (i.e. Hadoop ecosystem) project fr
 * Flume
 * Kafka
 
-An [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) is also included, codifying the standards, providing an end to end data [streaming](), [ingest](), [modeling](), [testing]() and synthetic [datasets]() to exercise the codebase.
+An [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) is also included, codifying the standards, providing an end to end data [streaming](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/stream), [ingest](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/ingest), [modeling](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/model), [testing](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/java/com/cloudera/framework/example) and synthetic [datasets](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/resources/data/mydataset) to exercise the codebase.
 
 Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) is also included to provide a bare bones starter client module.
 
