@@ -5,7 +5,7 @@
 	<groupId>com.cloudera</groupId>
 	<artifactId>cloudera-framework</artifactId>
 	<packaging>pom</packaging>
-	<version>1.4.4-cdh5.7.1-SNAPSHOT</version>
+	<version>1.4.3-cdh5.7.1-SNAPSHOT</version>
 
 	<prerequisites>
 		<maven>3.3</maven>
