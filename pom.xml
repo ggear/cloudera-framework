@@ -5,7 +5,7 @@
 	<groupId>com.cloudera</groupId>
 	<artifactId>cloudera-framework</artifactId>
 	<packaging>pom</packaging>
-	<version>1.4.3-cdh5.7.1</version>
+	<version>1.4.4-cdh5.7.1-SNAPSHOT</version>
 
 	<prerequisites>
 		<maven>3.3</maven>
@@ -15,7 +15,7 @@
 		<connection>scm:git:git@github.com:ggear/cloudera-framework.git</connection>
 		<url>scm:git:git@github.com:ggear/cloudera-framework.git</url>
 		<developerConnection>scm:git:git@github.com:ggear/cloudera-framework.git</developerConnection>
-		<tag>cloudera-framework-1.4.3-cdh5.7.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
