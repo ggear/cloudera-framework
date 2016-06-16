@@ -39,14 +39,9 @@ Note that in addition to Maven dependencies, Cloudera [parcels](http://www.cloud
 This project can be installed to a local repository as per:
 
 ```bash
-# Change the following variables to appropriate values for your target environment
-export CF_VERSION=1.4.3
-export CDH_VERSION=5.7.1
 git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
-git branch -all
-git checkout cloudera-framework-$CF_VERSION-cdh$CDH_VERSION
-mvn install -PPKG
+mvn install
 ```
 
 Alternatively, the module can be included as a binary dependency in maven, an example of pulling in the core client bill-of-materials and test harness is seen below:
@@ -64,8 +59,8 @@ Alternatively, the module can be included as a binary dependency in maven, an ex
 	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>com.cloudera.framework.client</groupId>
-			<artifactId>cloudera-framework-client-core</artifactId>
+			<groupId>com.cloudera.framework.library.client</groupId>
+			<artifactId>cloudera-framework-library-client-core</artifactId>
 			<version>1.4.3-cdh5.7.1</version>
 			<type>pom</type>
 			<scope>provided</scope>
