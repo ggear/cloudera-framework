@@ -24,8 +24,8 @@ ROOT_DIR_HDFS_STAGED=${15:-"$ROOT_DIR_HDFS_STAGED"}
 ROOT_DIR_HDFS_STAGED_CANONICAL=${16:-"$ROOT_DIR_HDFS_STAGED_CANONICAL"}
 RECORD_FORMAT=${17:-"xml"}
 
-$ROOT_DIR/lib/bin/cloudera-framework-shell-hadoop.sh "fs -mkdir -p $ROOT_DIR_HDFS_STAGED"
-$ROOT_DIR/lib/bin/cloudera-framework-shell-hadoop.sh "fs -chmod -R 777 $ROOT_DIR_HDFS_STAGED"
+$ROOT_DIR/lib/bin/cloudera-framework-hadoop.sh "fs -mkdir -p $ROOT_DIR_HDFS_STAGED"
+$ROOT_DIR/lib/bin/cloudera-framework-hadoop.sh "fs -chmod -R 777 $ROOT_DIR_HDFS_STAGED"
 
 FLUME_AGENT_HOSTS_ARRAY=(${FLUME_AGENT_HOSTS//,/ })
 for FLUME_AGENT_HOST in "${FLUME_AGENT_HOSTS_ARRAY[@]}"; do

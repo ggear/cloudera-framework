@@ -72,12 +72,12 @@ public class Ingest extends Driver {
     Driver stageDriver = new Stage(getConf());
     Driver partitionDriver = new Partition(getConf());
     Driver cleanseDriver = new Process(getConf());
-    if ((returnValue = stageDriver.run(new String[] { pathRaw + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL,
-        pathStaged })) == RETURN_SUCCESS) {
-      if ((returnValue = partitionDriver.run(new String[] {
-          pathStaged + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathPartitioned })) == RETURN_SUCCESS) {
-        returnValue = cleanseDriver.run(
-            new String[] { pathPartitioned + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathProcessed });
+    if ((returnValue = stageDriver
+        .run(new String[] { pathRaw + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathStaged })) == RETURN_SUCCESS) {
+      if ((returnValue = partitionDriver
+          .run(new String[] { pathStaged + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathPartitioned })) == RETURN_SUCCESS) {
+        returnValue = cleanseDriver
+            .run(new String[] { pathPartitioned + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathProcessed });
       }
     }
     importCountersAll(stageDriver.getCounters());

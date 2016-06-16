@@ -179,9 +179,9 @@ public abstract class Driver extends Configured implements Tool {
       }
     }
     if (LOG.isInfoEnabled()) {
-      LOG.info("Driver [" + this.getClass().getSimpleName() + "] finshed "
-          + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully") + " with exit value [" + exitValue
-          + "] in " + formatTime(timeTotal));
+      LOG.info(
+          "Driver [" + this.getClass().getSimpleName() + "] finshed " + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully")
+              + " with exit value [" + exitValue + "] in " + formatTime(timeTotal));
     }
     return exitValue;
   }
@@ -224,8 +224,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Map<Enum<?>, Long> getCounters(String group) {
-    return counters.get(group) == null ? Collections.<Enum<?>, Long> emptyMap()
-        : new LinkedHashMap<>(counters.get(group));
+    return counters.get(group) == null ? Collections.<Enum<?>, Long> emptyMap() : new LinkedHashMap<>(counters.get(group));
   }
 
   public Set<String> getCountersGroups() {
@@ -233,8 +232,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Long getCounter(String group, Enum<?> counter) {
-    return counters.get(group) == null || counters.get(group).get(counter) == null ? null
-        : counters.get(group).get(counter);
+    return counters.get(group) == null || counters.get(group).get(counter) == null ? null : counters.get(group).get(counter);
   }
 
   protected void importCountersAll(Map<String, Map<Enum<?>, Long>> counters) {
@@ -254,8 +252,7 @@ public abstract class Driver extends Configured implements Tool {
     for (Enum<?> value : counters.keySet()) {
       if (counters.get(value) != null) {
         this.counters.get(group).put(value,
-            (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value))
-                + counters.get(value));
+            (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value)) + counters.get(value));
       }
     }
   }
@@ -271,9 +268,8 @@ public abstract class Driver extends Configured implements Tool {
     Counters counters = job.getCounters();
     for (Enum<?> value : values) {
       if (counters.findCounter(value) != null) {
-        this.counters.get(group).put(value,
-            (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value))
-                + counters.findCounter(value).getValue());
+        this.counters.get(group).put(value, (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value))
+            + counters.findCounter(value).getValue());
       }
     }
   }
@@ -286,8 +282,7 @@ public abstract class Driver extends Configured implements Tool {
     if (this.counters.get(group) == null) {
       this.counters.put(group, new LinkedHashMap<Enum<?>, Long>());
     }
-    return counters.get(group).put(counter,
-        (counters.get(group).get(counter) == null ? 0 : counters.get(group).get(counter)) + incrament);
+    return counters.get(group).put(counter, (counters.get(group).get(counter) == null ? 0 : counters.get(group).get(counter)) + incrament);
   }
 
   public Long incrementCounter(Enum<?> counter, int incrament, String tag, Set<String> set) {

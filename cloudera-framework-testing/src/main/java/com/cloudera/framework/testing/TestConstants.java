@@ -35,8 +35,7 @@ public interface TestConstants {
   public static final String REL_DIR_KUDU = DIR_TARGET + "/" + DIR_KUDU;
 
   // Absolute directories
-  public static final String ABS_DIR_WORKING = new File(".").getAbsolutePath().substring(0,
-      new File(".").getAbsolutePath().length() - 2);
+  public static final String ABS_DIR_WORKING = new File(".").getAbsolutePath().substring(0, new File(".").getAbsolutePath().length() - 2);
   public static final String ABS_DIR_TARGET = ABS_DIR_WORKING + "/" + DIR_TARGET;
   public static final String ABS_DIR_DATA = ABS_DIR_TARGET + "/" + DIR_DATA;
   public static final String ABS_DIR_DERBY = ABS_DIR_TARGET + "/" + DIR_DERBY;

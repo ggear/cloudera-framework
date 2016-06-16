@@ -2,7 +2,6 @@ package com.cloudera.framework.testing.server;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -12,8 +11,6 @@ import org.kududb.client.KuduClient.KuduClientBuilder;
 import org.kududb.client.MiniKuduCluster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.net.HostAndPort;
 
 /**
  * Kudu {@link TestRule}
@@ -36,10 +33,6 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
     return miniKudu.getMasterAddresses();
   }
 
-  public synchronized List<HostAndPort> getMasterHostPorts() {
-    return miniKudu.getMasterHostPorts();
-  }
-
   @Override
   public int getIndex() {
     return 20;
@@ -57,14 +50,12 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
     FileUtils.deleteDirectory(dataDir);
     dataDir.mkdirs();
     try {
-      (miniKudu = new MiniKuduCluster.MiniKuduClusterBuilder().numMasters(KUDU_MSERVER_NUM)
-          .numTservers(KUDU_TSERVER_NUM).defaultTimeoutMs(50000).build()).waitForTabletServers(KUDU_TSERVER_NUM);
+      (miniKudu = new MiniKuduCluster.MiniKuduClusterBuilder().numMasters(KUDU_MSERVER_NUM).numTservers(KUDU_TSERVER_NUM)
+          .defaultTimeoutMs(50000).build()).waitForTabletServers(KUDU_TSERVER_NUM);
     } catch (Exception exception) {
-      throw new RuntimeException(
-          "Failed to start kudu processes, it is possible that a previous test was halted prior to "
-              + "cleaning up the kudu processes it had spawned, if so this command "
-              + "[ps aux | grep runtime-kudu | grep -v grep] will show those processes that should be killed",
-          exception);
+      throw new RuntimeException("Failed to start kudu processes, it is possible that a previous test was halted prior to "
+          + "cleaning up the kudu processes it had spawned, if so this command "
+          + "[ps aux | grep runtime-kudu | grep -v grep] will show those processes that should be killed", exception);
     }
     log(LOG, "start", time);
   }

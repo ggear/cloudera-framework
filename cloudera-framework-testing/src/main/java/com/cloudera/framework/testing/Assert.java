@@ -58,15 +58,14 @@ public class Assert extends org.junit.Assert {
    * @param actual
    *          <code>Map<String, Map<Enum<?>, Long>></code>
    */
-  public static void assertCounterEqualsLessThanGreaterThan(Map expectedEquals, Map expectedLessThan,
-      Map expectedGreaterThan, Map actual) {
+  public static void assertCounterEqualsLessThanGreaterThan(Map expectedEquals, Map expectedLessThan, Map expectedGreaterThan, Map actual) {
     assertCounterEqualsLessThanGreaterThan(expectedEquals, actual, true, false, false, true);
     assertCounterEqualsLessThanGreaterThan(expectedLessThan, actual, false, true, false, true);
     assertCounterEqualsLessThanGreaterThan(expectedGreaterThan, actual, false, false, true, true);
   }
 
-  private static void assertCounterEqualsLessThanGreaterThan(Map expected, Map<String, Map<Enum<?>, Long>> actual,
-      boolean assertEquals, boolean assertLessThan, boolean assertGreaterThan, boolean isBatch) {
+  private static void assertCounterEqualsLessThanGreaterThan(Map expected, Map<String, Map<Enum<?>, Long>> actual, boolean assertEquals,
+      boolean assertLessThan, boolean assertGreaterThan, boolean isBatch) {
     if (!isBatch) {
       assertTrue("Expected smaller than actual", expected.size() >= actual.size());
     }
@@ -84,16 +83,13 @@ public class Assert extends org.junit.Assert {
             Long expectedLong = ((Map<Enum<?>, Long>) expected.get(group)).get(counter);
             Long actualLong = actual.get(group).get(counter);
             if (assertEquals) {
-              assertTrue("Expected [" + expectedLong + "] to be equal to actual [" + actualLong + "]",
-                  expectedLong.equals(actualLong));
+              assertTrue("Expected [" + expectedLong + "] to be equal to actual [" + actualLong + "]", expectedLong.equals(actualLong));
             }
             if (assertLessThan) {
-              assertTrue("Expected [" + expectedLong + "] to be greater than actual [" + actualLong + "]",
-                  expectedLong > actualLong);
+              assertTrue("Expected [" + expectedLong + "] to be greater than actual [" + actualLong + "]", expectedLong > actualLong);
             }
             if (assertGreaterThan) {
-              assertTrue("Expected [" + expectedLong + "] to be less than actual [" + actualLong + "]",
-                  expectedLong < actualLong);
+              assertTrue("Expected [" + expectedLong + "] to be less than actual [" + actualLong + "]", expectedLong < actualLong);
             }
           }
         }

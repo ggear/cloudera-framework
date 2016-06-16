@@ -95,8 +95,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *         by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
-  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration)
-      throws Exception {
+  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration) throws Exception {
     return execute(statement, parameters, configuration, MAX_RESULTS_DEFAULT);
   }
 
@@ -113,8 +112,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *         by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
-  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration,
-      int maxResults) throws Exception {
+  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults)
+      throws Exception {
     return execute(statement, parameters, configuration, maxResults, false);
   }
 
@@ -132,8 +131,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *         by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
-  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration,
-      int maxResults, boolean quiet) throws Exception {
+  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults,
+      boolean quiet) throws Exception {
     long time = System.currentTimeMillis();
     if (!quiet) {
       log(LOG, "execute", true);
@@ -144,8 +143,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     }
     List<String> results = new ArrayList<>();
     CommandProcessor commandProcessor = CommandProcessorFactory.getForHiveCommand(
-        (statement = new StrSubstitutor(parameters, "${hivevar:", "}").replace(statement.trim())).split("\\s+"),
-        confSession);
+        (statement = new StrSubstitutor(parameters, "${hivevar:", "}").replace(statement.trim())).split("\\s+"), confSession);
     if (commandProcessor == null) {
       ((Driver) (commandProcessor = new Driver(confSession))).setMaxRows(maxResults);
     }
@@ -217,8 +215,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *         {@link String} {@link List}
    * @throws Exception
    */
-  public List<List<String>> execute(String directory, String file, Map<String, String> parameters,
-      Map<String, String> configuration) throws Exception {
+  public List<List<String>> execute(String directory, String file, Map<String, String> parameters, Map<String, String> configuration)
+      throws Exception {
     return execute(directory, file, parameters, configuration, MAX_RESULTS_DEFAULT);
   }
 
@@ -238,8 +236,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *         {@link String} {@link List}
    * @throws Exception
    */
-  public List<List<String>> execute(String directory, String file, Map<String, String> parameters,
-      Map<String, String> configuration, int maxResults) throws Exception {
+  public List<List<String>> execute(String directory, String file, Map<String, String> parameters, Map<String, String> configuration,
+      int maxResults) throws Exception {
     List<List<String>> results = new ArrayList<>();
     for (String statement : readFileToLines(directory, file, COMMAND_DELIMETER)) {
       results.add(execute(statement, parameters, configuration, maxResults));
@@ -293,8 +291,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       setConf(hiveConf);
       break;
     default:
-      throw new IllegalArgumentException(
-          "Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+      throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
     log(LOG, "start", time);
   }
@@ -302,8 +299,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   @Override
   public synchronized void clean() throws Exception {
     long time = log(LOG, "clean");
-    for (String table : execute("SHOW TABLES", Collections.<String, String> emptyMap(),
-        Collections.<String, String> emptyMap(), MAX_RESULTS_DEFAULT, true)) {
+    for (String table : execute("SHOW TABLES", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
+        MAX_RESULTS_DEFAULT, true)) {
       if (table.length() > 0) {
         execute("DROP TABLE " + table, Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
             MAX_RESULTS_DEFAULT, true);
@@ -315,8 +312,10 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   @Override
   public synchronized void state() throws Exception {
     long time = log(LOG, "state", true);
-    log(LOG, "state", "tables\n" + StringUtils.join(execute("SHOW TABLES", Collections.<String, String> emptyMap(),
-        Collections.<String, String> emptyMap(), MAX_RESULTS_DEFAULT, true).toArray(), "\n"), true);
+    log(LOG, "state", "tables\n" + StringUtils.join(
+        execute("SHOW TABLES", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(), MAX_RESULTS_DEFAULT, true)
+            .toArray(),
+        "\n"), true);
     log(LOG, "state", time, true);
   }
 
@@ -331,8 +330,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       }
       break;
     default:
-      throw new IllegalArgumentException(
-          "Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+      throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
     log(LOG, "stop", time);
   }
@@ -376,8 +374,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     if (!hiveConfExt.trim().equals("")) {
       hiveConfExt = "?" + hiveConfExt;
     }
-    return "jdbc:hive2://localhost" + ":" + (isHttpTransportMode() ? httpPort : binaryPort) + "/" + dbName
-        + sessionConfExt + hiveConfExt;
+    return "jdbc:hive2://localhost" + ":" + (isHttpTransportMode() ? httpPort : binaryPort) + "/" + dbName + sessionConfExt + hiveConfExt;
   }
 
   private CLIServiceClient getClient() {

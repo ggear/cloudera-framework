@@ -31,15 +31,14 @@ public class TestZooKeeperServer implements TestConstants {
   @Test
   public void testZookeeper() throws IOException, InterruptedException, KeeperException {
     final CountDownLatch connected = new CountDownLatch(1);
-    ZooKeeper zooKeeper = new ZooKeeper(zooKeeperServer.getConnectString(), ZooKeeperServer.ZOOKEEPER_TIMEOUT_MS,
-        new Watcher() {
-          @Override
-          public void process(WatchedEvent event) {
-            if (event.getState() == KeeperState.SyncConnected) {
-              connected.countDown();
-            }
-          }
-        });
+    ZooKeeper zooKeeper = new ZooKeeper(zooKeeperServer.getConnectString(), ZooKeeperServer.ZOOKEEPER_TIMEOUT_MS, new Watcher() {
+      @Override
+      public void process(WatchedEvent event) {
+        if (event.getState() == KeeperState.SyncConnected) {
+          connected.countDown();
+        }
+      }
+    });
     assertTrue(connected.await(ZooKeeperServer.ZOOKEEPER_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     String node = "/mytestnode";
     final CountDownLatch created = new CountDownLatch(1);

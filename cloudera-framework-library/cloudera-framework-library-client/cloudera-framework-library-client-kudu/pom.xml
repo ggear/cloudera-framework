@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>org.kududb</groupId>
 			<artifactId>kudu-client</artifactId>
-			<version>${cdh-kuduapi.version}</version>
+			<version>${cdh-kudu-base.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>

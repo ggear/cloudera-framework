@@ -49,15 +49,18 @@ public abstract class TestHiveServer implements TestConstants {
     writer.close();
     assertEquals(0, DfsServer.getInstance().listFilesDfs("/usr/hive").length);
     assertEquals(0, getHiveServer().execute("SHOW TABLES").size());
-    assertEquals(2, getHiveServer().execute("/ddl", "create.sql", new ImmutableMap.Builder<String, String>()
-        .put("test.table.name", "somedata").put("test.table.field.delim", ",").build()).size());
-    assertEquals(0, getHiveServer()
-        .execute("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata").size());
+    assertEquals(2,
+        getHiveServer()
+            .execute("/ddl", "create.sql",
+                new ImmutableMap.Builder<String, String>().put("test.table.name", "somedata").put("test.table.field.delim", ",").build())
+            .size());
+    assertEquals(0,
+        getHiveServer().execute("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata").size());
     assertEquals(1, DfsServer.getInstance().listFilesDfs("/usr/hive").length);
     assertEquals("3", getHiveServer().execute("SELECT count(1) AS cnt FROM somedata").get(0));
     assertEquals("2", getHiveServer().execute("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
-    assertEquals(2, getHiveServer().execute("SELECT * FROM somedata", Collections.<String, String> emptyMap(),
-        Collections.<String, String> emptyMap(), 2).size());
+    assertEquals(2, getHiveServer()
+        .execute("SELECT * FROM somedata", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(), 2).size());
     assertEquals(1, getHiveServer().execute("SHOW TABLES").size());
   }
 

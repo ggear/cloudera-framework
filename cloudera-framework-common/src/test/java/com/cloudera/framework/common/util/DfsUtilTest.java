@@ -26,14 +26,14 @@ public class DfsUtilTest {
 
   @Test
   public void testCanDoAction() throws IllegalArgumentException, IOException {
-    assertTrue(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" },
-        new Path(dfsServer.getPathUri("/tmp")), FsAction.READ));
-    assertTrue(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" },
-        new Path(dfsServer.getPathUri("/tmp")), FsAction.WRITE));
-    assertFalse(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" },
-        new Path(dfsServer.getPathUri("/tmp/t")), FsAction.READ));
-    assertFalse(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" },
-        new Path(dfsServer.getPathUri("/tmp/t")), FsAction.WRITE));
+    assertTrue(
+        DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" }, new Path(dfsServer.getPathUri("/tmp")), FsAction.READ));
+    assertTrue(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" }, new Path(dfsServer.getPathUri("/tmp")),
+        FsAction.WRITE));
+    assertFalse(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" }, new Path(dfsServer.getPathUri("/tmp/t")),
+        FsAction.READ));
+    assertFalse(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" }, new Path(dfsServer.getPathUri("/tmp/t")),
+        FsAction.WRITE));
   }
 
   @Test
@@ -80,8 +80,7 @@ public class DfsUtilTest {
 
   @Before
   public void setUpData() throws IllegalArgumentException, IOException {
-    dfsServer.getFileSystem().mkdirs(dfsServer.getPath("/tmp/t"),
-        new FsPermission(FsAction.ALL, FsAction.NONE, FsAction.NONE));
+    dfsServer.getFileSystem().mkdirs(dfsServer.getPath("/tmp/t"), new FsPermission(FsAction.ALL, FsAction.NONE, FsAction.NONE));
     dfsServer.getFileSystem().createNewFile(dfsServer.getPath("/tmp/t/t1/t1.txt"));
     dfsServer.getFileSystem().createNewFile(dfsServer.getPath("/tmp/t/t2/t2.txt"));
     dfsServer.getFileSystem().createNewFile(dfsServer.getPath("/tmp/t/t3/_t3.txt"));

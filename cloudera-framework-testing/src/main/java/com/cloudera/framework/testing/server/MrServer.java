@@ -55,12 +55,10 @@ public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
       })) {
         FileUtils.deleteDirectory(file);
       }
-      miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(getConf(), 1,
-          DfsServer.getInstance().getFileSystem().getUri().toString(), 1);
+      miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(getConf(), 1, DfsServer.getInstance().getFileSystem().getUri().toString(), 1);
       break;
     default:
-      throw new IllegalArgumentException(
-          "Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+      throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
     log(LOG, "start", time);
   }
@@ -78,8 +76,7 @@ public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
       }
       break;
     default:
-      throw new IllegalArgumentException(
-          "Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+      throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
     log(LOG, "stop", time);
   }

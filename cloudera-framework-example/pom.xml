@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cloudera.framework</groupId>
@@ -43,6 +44,19 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.cloudera.framework.library.client</groupId>
+			<artifactId>cloudera-framework-library-client-hive</artifactId>
+			<version>${project.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.cloudera.framework</groupId>
+			<artifactId>cloudera-framework-assembly</artifactId>
+			<version>${project.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.cloudera.framework.library.thirdparty</groupId>
 			<artifactId>cloudera-framework-library-thirdparty-avro</artifactId>
 			<version>${project.version}</version>
@@ -81,6 +95,26 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.codehaus.groovy.maven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<source>
+								import org.apache.commons.lang.StringUtils
+								project.properties["parcel.name"] = \
+								StringUtils.upperCase(project.artifactId).replaceAll('-','_') \
+								+ "-" + project.version
+							</source>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.avro</groupId>
 				<artifactId>avro-maven-plugin</artifactId>
 				<executions>
@@ -113,14 +147,14 @@
 									<groupId>${project.groupId}</groupId>
 									<artifactId>${project.artifactId}</artifactId>
 									<version>${project.version}</version>
-									<classifier>none</classifier>
+									<classifier>el7</classifier>
 								</parcel>
 							</parcels>
 						</configuration>
 					</execution>
 					<execution>
 						<id>package</id>
-						<phase>package</phase>
+						<phase>post-integration-test</phase>
 						<goals>
 							<goal>build</goal>
 						</goals>
@@ -130,7 +164,26 @@
 									<groupId>${project.groupId}</groupId>
 									<artifactId>${project.artifactId}</artifactId>
 									<version>${project.version}</version>
-									<classifier>none</classifier>
+									<classifier>el7</classifier>
+									<distributionRepositoryUrl>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</distributionRepositoryUrl>
+								</parcel>
+							</parcels>
+						</configuration>
+					</execution>
+					<execution>
+						<id>deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+						<configuration>
+							<parcels>
+								<parcel>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+									<classifier>el7</classifier>
+									<distributionRepositoryUrl>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</distributionRepositoryUrl>
 								</parcel>
 							</parcels>
 						</configuration>
@@ -142,6 +195,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>package-tar</id>
 						<phase>verify</phase>
 						<goals>
 							<goal>attached</goal>
@@ -159,9 +213,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
-<!-- 					<execution>
+					<execution>
 						<id>parcel-dependency</id>
-						<phase>process-resources</phase>
+						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>copy</goal>
 						</goals>
@@ -173,25 +227,25 @@
 									<version>${project.version}</version>
 								</artifactItem>
 							</artifactItems>
-							<outputDirectory>${project.build.directory}/parcel/${project.artifactId}-${project.version}-none.parcel/lib</outputDirectory>
+							<outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib</outputDirectory>
 						</configuration>
 					</execution>
- -->					<execution>
+					<execution>
 						<id>parcel-dependencies</id>
-						<phase>process-resources</phase>
+						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
 							<excludeTypes>pom</excludeTypes>
-							<includeScope>compile</includeScope>
-							<excludeTransitive>true</excludeTransitive>
-							<outputDirectory>${project.build.directory}/parcel/${project.artifactId}-${project.version}-none.parcel/lib</outputDirectory>
+							<includeScope>runtime</includeScope>
+							<excludeTransitive>false</excludeTransitive>
+							<outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
 						<id>unpack-assembly</id>
-						<phase>verify</phase>
+						<phase>install</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -206,6 +260,27 @@
 									<outputDirectory>${project.build.directory}/assembly</outputDirectory>
 								</artifactItem>
 							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>execute</id>
+						<phase>install</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>chmod</executable>
+							<arguments>
+								<argument>-R</argument>
+								<argument>+x</argument>
+								<argument>${project.build.directory}/assembly/${project.artifactId}-${project.version}/lib/bin</argument>
+							</arguments>
 						</configuration>
 					</execution>
 				</executions>

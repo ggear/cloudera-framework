@@ -32,16 +32,14 @@ public class Partition extends TestBase {
    */
   @TestWith({ "testMetaDataCsvPristine", "testMetaDataXmlPristine", "testMetaDataAll" })
   public void testPartition(TestMetaData testMetaData) throws Exception {
-    assertEquals(Driver.RETURN_SUCCESS, new com.cloudera.framework.example.ingest.Stage(dfsServer.getConf()).runner(new String[] {
-        dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString() }));
+    assertEquals(Driver.RETURN_SUCCESS, new com.cloudera.framework.example.ingest.Stage(dfsServer.getConf()).runner(
+        new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString() }));
     Driver driver = new com.cloudera.framework.example.ingest.Partition(dfsServer.getConf());
-    assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString() }));
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(),
+        dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[0], driver.getCounters());
-    assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString() }));
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(),
+        dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[1], driver.getCounters());
   }
 

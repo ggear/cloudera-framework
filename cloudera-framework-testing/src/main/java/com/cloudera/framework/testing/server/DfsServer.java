@@ -197,10 +197,9 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   public File[] copyFromLocalDir(String[] sourcePaths, String[] destinationPaths, String[] datasets, String[][] subsets,
       String[][][] labels) throws IllegalArgumentException, IOException {
     List<File> files = new ArrayList<>();
-    if (datasets.length != sourcePaths.length || datasets.length != destinationPaths.length
-        || datasets.length != subsets.length || datasets.length != labels.length) {
-      throw new IllegalArgumentException(
-          "Number of datasets exceeds number of source paths, destination paths, subsets and or labels");
+    if (datasets.length != sourcePaths.length || datasets.length != destinationPaths.length || datasets.length != subsets.length
+        || datasets.length != labels.length) {
+      throw new IllegalArgumentException("Number of datasets exceeds number of source paths, destination paths, subsets and or labels");
     }
     for (int i = 0; i < datasets.length; i++) {
       if (subsets[i].length != labels[i].length) {
@@ -213,11 +212,9 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
           } else if (subsets[i][j] == null) {
             files.addAll(Arrays.asList(copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i])));
           } else if (labels[i][j][k] == null) {
-            files.addAll(
-                Arrays.asList(copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i], subsets[i][j])));
+            files.addAll(Arrays.asList(copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i], subsets[i][j])));
           } else {
-            files.addAll(Arrays.asList(
-                copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i], subsets[i][j], labels[i][j][k])));
+            files.addAll(Arrays.asList(copyFromLocalDir(sourcePaths[i], destinationPaths[i], datasets[i], subsets[i][j], labels[i][j][k])));
           }
         }
       }
@@ -244,9 +241,8 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     long time = log(LOG, "copy", true);
     List<File> files = new ArrayList<>();
     StringBuilder filesString = new StringBuilder();
-    String sourcePathGlob = ((sourcePaths.length == 0 ? "*" : sourcePaths[0]) + "/"
-        + (sourcePaths.length <= 1 ? "*" : sourcePaths[1]) + "/" + (sourcePaths.length <= 2 ? "*" : sourcePaths[2]))
-            .replace(ABS_DIR_WORKING, ".");
+    String sourcePathGlob = ((sourcePaths.length == 0 ? "*" : sourcePaths[0]) + "/" + (sourcePaths.length <= 1 ? "*" : sourcePaths[1]) + "/"
+        + (sourcePaths.length <= 2 ? "*" : sourcePaths[2])).replace(ABS_DIR_WORKING, ".");
     getFileSystem().mkdirs(getPath(destinationPath));
     for (File file : listFilesLocal(sourcePath, false, sourcePaths)) {
       copyFromLocalFile(Arrays.asList(new Path(file.getPath())), getPath(destinationPath));
@@ -256,13 +252,12 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
         files.addAll(FileUtils.listFiles(file, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE));
       }
       filesString.append("\n").append("/")
-          .append(file.getParentFile().getParentFile().getParentFile().getName() + "/"
-              + file.getParentFile().getParentFile().getName() + "/" + file.getParentFile().getName() + "/"
-              + file.getName() + (file.isDirectory() ? "/" : ""))
+          .append(file.getParentFile().getParentFile().getParentFile().getName() + "/" + file.getParentFile().getParentFile().getName()
+              + "/" + file.getParentFile().getName() + "/" + file.getName() + (file.isDirectory() ? "/" : ""))
           .append(" -> ").append(destinationPath).append("/").append(file.getName());
     }
-    log(LOG, "copy", "[copy] cp -rvf /" + sourcePathGlob + "/* " + destinationPath
-        + (filesString.length() > 0 ? filesString.toString() : "\n"), true);
+    log(LOG, "copy",
+        "[copy] cp -rvf /" + sourcePathGlob + "/* " + destinationPath + (filesString.length() > 0 ? filesString.toString() : "\n"), true);
     if (files.isEmpty()) {
       throw new IllegalArgumentException("Could not find files with path [" + sourcePathGlob + "]");
     }
@@ -287,8 +282,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       setConf(fileSystem.getConf());
       break;
     default:
-      throw new IllegalArgumentException(
-          "Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+      throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
     log(LOG, "start", time);
   }
@@ -316,8 +310,8 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     StringBuilder filesString = new StringBuilder();
     for (Path file : files) {
       if (!file.toString().contains(DIR_RUNTIME_MR)) {
-        filesString.append("\n").append(
-            Path.getPathWithoutSchemeAndAuthority(file).toString().replace(getPathLocal(REL_DIR_DFS_LOCAL), ""));
+        filesString.append("\n")
+            .append(Path.getPathWithoutSchemeAndAuthority(file).toString().replace(getPathLocal(REL_DIR_DFS_LOCAL), ""));
       }
     }
     log(LOG, "state", "find / -type f" + (filesString.length() > 0 ? filesString.toString() : "\n"), true);

@@ -21,8 +21,8 @@ import com.cloudera.framework.example.model.serde.RecordStringSerDe.RecordString
  */
 public abstract class RecordTextReader extends RecordReader<RecordKey, AvroGenericRecordWritable> {
 
-  public abstract RecordReader<RecordKey, Text> getRecordReader(InputSplit split, TaskAttemptContext context,
-      Integer index) throws IOException;
+  public abstract RecordReader<RecordKey, Text> getRecordReader(InputSplit split, TaskAttemptContext context, Integer index)
+      throws IOException;
 
   public abstract RecordStringSerDe getRecordStringSerDe() throws IOException;
 
@@ -62,8 +62,7 @@ public abstract class RecordTextReader extends RecordReader<RecordKey, AvroGener
     }
     if (recordReader.nextKeyValue()) {
       recordsKey = recordReader.getCurrentKey();
-      recordStringDe = getRecordStringSerDe().getDeserialiser(recordKey, record,
-          recordReader.getCurrentValue().toString());
+      recordStringDe = getRecordStringSerDe().getDeserialiser(recordKey, record, recordReader.getCurrentValue().toString());
       return nextKeyValue();
     }
     return false;

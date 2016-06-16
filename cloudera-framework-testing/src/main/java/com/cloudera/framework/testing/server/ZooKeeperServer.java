@@ -49,8 +49,8 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
   public synchronized void start() throws IOException, InterruptedException {
     long time = log(LOG, "start");
     FileUtils.deleteDirectory(new File(ABS_DIR_ZOOKEEPER));
-    zooKeeper = new org.apache.zookeeper.server.ZooKeeperServer(new File(ABS_DIR_ZOOKEEPER),
-        new File(ABS_DIR_ZOOKEEPER), ZOOKEEPER_TICK_MS);
+    zooKeeper = new org.apache.zookeeper.server.ZooKeeperServer(new File(ABS_DIR_ZOOKEEPER), new File(ABS_DIR_ZOOKEEPER),
+        ZOOKEEPER_TICK_MS);
     factory = new NIOServerCnxnFactory();
     factory.configure(new InetSocketAddress(CdhServer.SERVER_BIND_IP, port), 0);
     factory.startup(zooKeeper);

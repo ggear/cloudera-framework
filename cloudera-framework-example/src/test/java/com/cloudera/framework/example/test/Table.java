@@ -205,25 +205,19 @@ public class Table extends TestBase {
   @TestWith({ "testMetaDataAll" })
   public void testTable(TestMetaData testMetaData) throws Exception {
     assertEquals(Driver.RETURN_SUCCESS,
-        new com.cloudera.framework.example.ingest.Ingest(dfsServer.getConf()).runner(new String[] {
-            dfsServer.getPath(DIR_ABS_MYDS_RAW).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
+        new com.cloudera.framework.example.ingest.Ingest(dfsServer.getConf())
+            .runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString(),
+                dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(), dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
     for (int i = 0; i < testMetaData.getParameters().length; i++) {
       String testName = "Table index [" + i + "], name [" + testMetaData.getParameters()[i].get(DDL_VAR_NAME) + "]";
-      String inputPath = dfsServer.getFileSystem()
-          .makeQualified(new Path((String) testMetaData.getParameters()[i].get(DDL_VAR_ROOT))).toString();
+      String inputPath = dfsServer.getFileSystem().makeQualified(new Path((String) testMetaData.getParameters()[i].get(DDL_VAR_ROOT)))
+          .toString();
       assertNotNull(testName,
-          hiveServer.execute(DDL_DIR,
-              (String) testMetaData.getParameters()[i].get(DDL_VAR_FILE), ImmutableMap.<String, String> builder()
-                  .putAll(testMetaData.getParameters()[i]).put(DDL_VAR_SCHEMA, MODEL_AVRO).build(),
+          hiveServer.execute(DDL_DIR, (String) testMetaData.getParameters()[i].get(DDL_VAR_FILE),
+              ImmutableMap.<String, String> builder().putAll(testMetaData.getParameters()[i]).put(DDL_VAR_SCHEMA, MODEL_AVRO).build(),
               ImmutableMap.of(Constants.CONFIG_INPUT_PATH, inputPath)));
-      assertNotNull(testName,
-          hiveServer.execute("DESCRIBE " + (String) testMetaData.getParameters()[i].get(DDL_VAR_NAME)));
-      assertEquals(testName,
-          testMetaData.getParameters()[i]
-              .get(
-                  DDL_VAR_ROWS),
+      assertNotNull(testName, hiveServer.execute("DESCRIBE " + (String) testMetaData.getParameters()[i].get(DDL_VAR_NAME)));
+      assertEquals(testName, testMetaData.getParameters()[i].get(DDL_VAR_ROWS),
           hiveServer.execute("SELECT * FROM " + (String) testMetaData.getParameters()[i].get(DDL_VAR_NAME),
               Collections.<String, String> emptyMap(), ImmutableMap.of(Constants.CONFIG_INPUT_PATH, inputPath,
                   HiveConf.ConfVars.HIVEINPUTFORMAT.varname, HiveInputFormat.class.getName()),
@@ -240,7 +234,7 @@ public class Table extends TestBase {
     return location.substring(1, location.length()).replace('-', '_').replace('/', '_');
   }
 
-  private static String MODEL_AVRO = new Scanner(Table.class.getResourceAsStream(Constants.MODEL_AVRO_FILE),
-      Charsets.UTF_8.name()).useDelimiter("\\A").next();
+  private static String MODEL_AVRO = new Scanner(Table.class.getResourceAsStream(Constants.MODEL_AVRO_FILE), Charsets.UTF_8.name())
+      .useDelimiter("\\A").next();
 
 }

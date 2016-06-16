@@ -30,12 +30,13 @@ public class TestFlumeServer implements TestConstants {
 
   @Test
   public void testFlume() throws InterruptedException, IOException, EventDeliveryException {
-    assertEquals(1, flumeServer.crankPipeline(ImmutableMap.of("HDFS_ROOT", dfsServer.getPathUri("/")),
-        "flume/flume-conf.properties", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
-        "agent1", "source1", "sink1", new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink1", 1));
-    assertTrue(flumeServer.crankPipeline(ImmutableMap.of("HDFS_ROOT", dfsServer.getPathUri("/")),
-        "flume/flume-conf.properties", ImmutableMap.of("batchSize", "3"), Collections.<String, String> emptyMap(),
-        "agent1", "source1", "sink2", new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink2", 5) >= 1);
+    assertEquals(1,
+        flumeServer.crankPipeline(ImmutableMap.of("HDFS_ROOT", dfsServer.getPathUri("/")), "flume/flume-conf.properties",
+            Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(), "agent1", "source1", "sink1",
+            new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink1", 1));
+    assertTrue(flumeServer.crankPipeline(ImmutableMap.of("HDFS_ROOT", dfsServer.getPathUri("/")), "flume/flume-conf.properties",
+        ImmutableMap.of("batchSize", "3"), Collections.<String, String> emptyMap(), "agent1", "source1", "sink2",
+        new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink2", 5) >= 1);
   }
 
   @Test

@@ -132,25 +132,22 @@ public class Stream extends TestBase {
   @TestWith({ "testMetaDataCsvBatch", "testMetaDataXmlBatch" })
   public void testStream(TestMetaData testMetaData) throws IOException, EventDeliveryException, InterruptedException {
     assertEquals(((Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_FILE_COUNT)).intValue(),
-        flumeServer.crankPipeline(FLUME_SUBSTITUTIONS, FLUME_CONFIG_FILE, testMetaData.getParameters()[0],
-            testMetaData.getParameters()[1], FLUME_AGENT_NAME,
-            (String) testMetaData.getParameters()[2].get(KEY_FLUME_SOURCE_NAME),
+        flumeServer.crankPipeline(FLUME_SUBSTITUTIONS, FLUME_CONFIG_FILE, testMetaData.getParameters()[0], testMetaData.getParameters()[1],
+            FLUME_AGENT_NAME, (String) testMetaData.getParameters()[2].get(KEY_FLUME_SOURCE_NAME),
             (String) testMetaData.getParameters()[2].get(KEY_FLUME_SINK_NAME), new com.cloudera.framework.example.stream.Stream(),
             new HDFSEventSink(), (String) testMetaData.getParameters()[2].get(KEY_FLUME_OUTPUT_DIR),
             (Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_ITERATIONS)));
     Driver driverStage = new com.cloudera.framework.example.ingest.Stage(dfsServer.getConf());
-    assertEquals(Driver.RETURN_SUCCESS, driverStage.runner(new String[] {
-        dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString() }));
+    assertEquals(Driver.RETURN_SUCCESS, driverStage.runner(
+        new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[0], driverStage.getCounters());
     Driver driverPartition = new com.cloudera.framework.example.ingest.Partition(dfsServer.getConf());
-    assertEquals(Driver.RETURN_SUCCESS,
-        driverPartition.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString() }));
+    assertEquals(Driver.RETURN_SUCCESS, driverPartition.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(),
+        dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[1], driverPartition.getCounters());
     Driver driverProcess = new com.cloudera.framework.example.ingest.Process(dfsServer.getConf());
-    assertEquals(Driver.RETURN_SUCCESS,
-        driverProcess.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED_CANONICAL).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
+    assertEquals(Driver.RETURN_SUCCESS, driverProcess.runner(new String[] {
+        dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[2], driverProcess.getCounters());
   }
 

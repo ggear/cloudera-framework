@@ -110,10 +110,9 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   @SuppressWarnings("unchecked")
   protected U assertRuntime(V runtime) {
     if (isStarted() && !this.runtime.equals(runtime)) {
-      throw new IllegalArgumentException(
-          "A server pipeline runtime dependency inconsistency has been detected, please decorate all ["
-              + this.getClass().getSimpleName() + "] server instances with [" + runtime
-              + "] runtime, explicitly if this server has been created implicitly by a depedant service");
+      throw new IllegalArgumentException("A server pipeline runtime dependency inconsistency has been detected, please decorate all ["
+          + this.getClass().getSimpleName() + "] server instances with [" + runtime
+          + "] runtime, explicitly if this server has been created implicitly by a depedant service");
     }
     this.runtime = runtime;
     return (U) this;
@@ -130,8 +129,8 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
     try {
       RunWith runWith = Class.forName(testClass).getAnnotation(RunWith.class);
       if (runWith == null) {
-        throw new RuntimeException("Missing [@" + RunWith.class.getCanonicalName() + "("
-            + TestRunner.class.getCanonicalName() + ".class)] on class [" + testClass + "]");
+        throw new RuntimeException("Missing [@" + RunWith.class.getCanonicalName() + "(" + TestRunner.class.getCanonicalName()
+            + ".class)] on class [" + testClass + "]");
       }
       if (runWith.value().equals(Suite.class)) {
         SuiteClasses suiteClasses = Class.forName(testClass).getAnnotation(SuiteClasses.class);
@@ -139,13 +138,11 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
           return assertTestRunner(suiteTestClass.getCanonicalName());
         }
       } else if (!runWith.value().equals(TestRunner.class)) {
-        throw new RuntimeException(
-            "Unsupported run with [" + runWith.value().getCanonicalName() + "] on class [" + testClass + "]");
+        throw new RuntimeException("Unsupported run with [" + runWith.value().getCanonicalName() + "] on class [" + testClass + "]");
       }
     } catch (Exception exception) {
-      String message = "The test [" + testClass + "] included a rule [" + getClass().getCanonicalName()
-          + "] but did not include a [@" + RunWith.class.getCanonicalName() + "(" + TestRunner.class.getCanonicalName()
-          + ".class)] class annotation";
+      String message = "The test [" + testClass + "] included a rule [" + getClass().getCanonicalName() + "] but did not include a [@"
+          + RunWith.class.getCanonicalName() + "(" + TestRunner.class.getCanonicalName() + ".class)] class annotation";
       if (LOG.isErrorEnabled()) {
         LOG.error(message, exception);
       }

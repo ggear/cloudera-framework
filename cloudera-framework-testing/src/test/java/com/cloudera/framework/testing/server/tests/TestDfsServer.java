@@ -177,32 +177,24 @@ public abstract class TestDfsServer implements TestConstants {
   @Test
   public void testAssertCounterEqualsLessThanGreaterThan() {
     assertCounterEquals(
-        ImmutableMap.of(COUNTER_GROUP + "1",
-            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
-            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
-        ImmutableMap.of(COUNTER_GROUP + "1",
-            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
-            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)));
+        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
+            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
+        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
+            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)));
     assertCounterLessThan(
-        ImmutableMap.of(COUNTER_GROUP + "1",
-            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
-            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
-        ImmutableMap.of(COUNTER_GROUP + "1",
-            ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L, Counter.COUNTER3, 2L), COUNTER_GROUP + "2",
-            ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L)));
+        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
+            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
+        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L, Counter.COUNTER3, 2L),
+            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L)));
     assertCounterGreaterThan(
-        ImmutableMap.of(COUNTER_GROUP + "1",
-            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L), COUNTER_GROUP + "2",
-            ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
-        ImmutableMap.of(COUNTER_GROUP + "1",
-            ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L, Counter.COUNTER3, 4L), COUNTER_GROUP + "2",
-            ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L)));
-    assertCounterEqualsLessThanGreaterThan(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)),
-        Collections.EMPTY_MAP, Collections.EMPTY_MAP,
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
-    assertCounterEqualsLessThanGreaterThan(Collections.EMPTY_MAP,
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)), Collections.EMPTY_MAP,
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
+        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
+            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
+        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L, Counter.COUNTER3, 4L),
+            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L)));
+    assertCounterEqualsLessThanGreaterThan(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)), Collections.EMPTY_MAP,
+        Collections.EMPTY_MAP, ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
+    assertCounterEqualsLessThanGreaterThan(Collections.EMPTY_MAP, ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)),
+        Collections.EMPTY_MAP, ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
     assertCounterEqualsLessThanGreaterThan(Collections.EMPTY_MAP, Collections.EMPTY_MAP,
         ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)),
         ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
@@ -250,10 +242,8 @@ public abstract class TestDfsServer implements TestConstants {
   public void testDfs(TestMetaData testMetaData) throws Exception {
     assertNotNull(testMetaData);
     assertCounterEquals(testMetaData.getAsserts()[0],
-        ImmutableMap.of(COUNTER_GROUP,
-            ImmutableMap.of(Counter.COUNTER1,
-                (long) getDfsServer().listFilesDfs("/").length - (MrServer.getInstance().isStarted()
-                    && MrServer.getInstance().getRuntime().equals(MrServer.Runtime.CLUSTER_JOB) ? 2 : 0))));
+        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, (long) getDfsServer().listFilesDfs("/").length
+            - (MrServer.getInstance().isStarted() && MrServer.getInstance().getRuntime().equals(MrServer.Runtime.CLUSTER_JOB) ? 2 : 0))));
   }
 
   private void assertCopyFromLocalDir(int countUpstream, int countDownstream, String sourcePath, String destinationPath,

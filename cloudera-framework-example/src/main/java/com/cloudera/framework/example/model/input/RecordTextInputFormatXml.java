@@ -30,8 +30,8 @@ public class RecordTextInputFormatXml extends FileInputFormat<RecordKey, AvroGen
   }
 
   @Override
-  public RecordReader<RecordKey, AvroGenericRecordWritable> createRecordReader(InputSplit split,
-      TaskAttemptContext context) throws IOException {
+  public RecordReader<RecordKey, AvroGenericRecordWritable> createRecordReader(InputSplit split, TaskAttemptContext context)
+      throws IOException {
     return new RecordReaderTextXml(split, context);
   }
 
@@ -42,8 +42,7 @@ public class RecordTextInputFormatXml extends FileInputFormat<RecordKey, AvroGen
     }
 
     @Override
-    public RecordReader<RecordKey, Text> getRecordReader(InputSplit split, TaskAttemptContext context, Integer index)
-        throws IOException {
+    public RecordReader<RecordKey, Text> getRecordReader(InputSplit split, TaskAttemptContext context, Integer index) throws IOException {
       return new RecordTextCombineInputFormat.RecordReaderText(split, context, index);
     }
 

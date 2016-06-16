@@ -71,13 +71,12 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
       eventUnwrapped = EventBuilder.withBody(eventUnwrappedAvro.getBody().array(),
           toStringMap(eventUnwrappedAvro.getHeaders(), event.getHeaders()));
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Flume Event successfully unwrapped, header [" + eventUnwrappedAvro.getHeaders().size()
-            + "] fields, body [" + eventUnwrapped.getBody().length + "] bytes");
+        LOG.debug("Flume Event successfully unwrapped, header [" + eventUnwrappedAvro.getHeaders().size() + "] fields, body ["
+            + eventUnwrapped.getBody().length + "] bytes");
       }
     } catch (Exception exception) {
       if (LOG.isWarnEnabled()) {
-        LOG.warn("Failed to unwrap Flume Event, " + "perhaps this source is not connected to a sinkless connector?",
-            exception);
+        LOG.warn("Failed to unwrap Flume Event, " + "perhaps this source is not connected to a sinkless connector?", exception);
       }
     } finally {
       IOUtils.closeQuietly(eventWrappedStream);
@@ -85,8 +84,7 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
     return eventUnwrapped;
   }
 
-  private static Map<String, String> toStringMap(Map<CharSequence, CharSequence> charSequenceMap,
-      Map<String, String> mergeMap) {
+  private static Map<String, String> toStringMap(Map<CharSequence, CharSequence> charSequenceMap, Map<String, String> mergeMap) {
     Map<String, String> stringMap = new HashMap<>();
     for (Map.Entry<CharSequence, CharSequence> entry : charSequenceMap.entrySet()) {
       stringMap.put(entry.getKey().toString(), entry.getValue().toString());

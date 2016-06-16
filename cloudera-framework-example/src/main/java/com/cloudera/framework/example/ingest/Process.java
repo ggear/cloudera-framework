@@ -43,8 +43,8 @@ import parquet.hadoop.metadata.CompressionCodecName;
  */
 public class Process extends Driver {
 
-  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS,
-      RecordCounter.RECORDS_CANONICAL, RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
+  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS, RecordCounter.RECORDS_CANONICAL,
+      RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
 
   private static final Logger LOG = LoggerFactory.getLogger(Process.class);
 
@@ -110,9 +110,8 @@ public class Process extends Driver {
     List<Job> jobs = new ArrayList<>();
     FileSystem hdfs = FileSystem.newInstance(getConf());
     for (Path inputPath : inputPaths) {
-      Path outputPath = new Path(this.outputPath,
-          Constants.DIR_REL_MYDS_PROCESSED_CANONICAL_PARQUET + Path.SEPARATOR_CHAR
-              + RecordPartition.getPartitionPathString(inputPath, RecordPartition.RECORD_COL_YEAR_MONTH, 0));
+      Path outputPath = new Path(this.outputPath, Constants.DIR_REL_MYDS_PROCESSED_CANONICAL_PARQUET + Path.SEPARATOR_CHAR
+          + RecordPartition.getPartitionPathString(inputPath, RecordPartition.RECORD_COL_YEAR_MONTH, 0));
       hdfs.delete(outputPath, true);
       Job job = Job.getInstance(getConf());
       job.setJobName(getClass().getSimpleName());

@@ -79,10 +79,9 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
    *         <code>outputPath</code>, 0 if <code>outputPath</code> is
    *         <code>null</code>
    */
-  public synchronized int crankPipeline(Map<String, String> substitutions, String configFile,
-      Map<String, String> configSourceOverlay, Map<String, String> configSinkOverlay, String agentName,
-      String sourceName, String sinkName, PollableSource source, Sink sink, String outputPath, int iterations)
-      throws IOException, EventDeliveryException, InterruptedException {
+  public synchronized int crankPipeline(Map<String, String> substitutions, String configFile, Map<String, String> configSourceOverlay,
+      Map<String, String> configSinkOverlay, String agentName, String sourceName, String sinkName, PollableSource source, Sink sink,
+      String outputPath, int iterations) throws IOException, EventDeliveryException, InterruptedException {
     Properties config = new Properties();
     if (configFile != null) {
       InputStream configStream = FlumeServer.class.getClassLoader().getResourceAsStream(configFile);
@@ -103,8 +102,8 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
       }
       if (key.startsWith(sinkConfigPrefix) && !key.endsWith(sinkConfigPrefix + "type") && !key.endsWith(".channel")) {
         sinkConfig.put(key.replace(sinkConfigPrefix, ""), value);
-      } else if (key.startsWith(sourceConfigPrefix) && !key.endsWith(sourceConfigPrefix + "type")
-          && !key.endsWith(".selector.type") && !key.endsWith(".channels")) {
+      } else if (key.startsWith(sourceConfigPrefix) && !key.endsWith(sourceConfigPrefix + "type") && !key.endsWith(".selector.type")
+          && !key.endsWith(".channels")) {
         sourceConfig.put(key.replace(sourceConfigPrefix, ""), value);
       }
     }

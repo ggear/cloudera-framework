@@ -54,8 +54,7 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
     } catch (TopicExistsException e) {
       // ignore
     }
-    while (AdminUtils.fetchTopicMetadataFromZk(topic, zooKeeperUtils).toString()
-        .contains("LeaderNotAvailableException")) {
+    while (AdminUtils.fetchTopicMetadataFromZk(topic, zooKeeperUtils).toString().contains("LeaderNotAvailableException")) {
       if (LOG.isTraceEnabled()) {
         LOG.trace("Sleeping for [" + KAFKA_POLL_MS + "] ms, waiting for Kafka topic to be reigstered in ZK");
       }
@@ -100,10 +99,9 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
     properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
     properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
     producer = new KafkaProducer<>(properties);
-    zooKeeperClient = new ZkClient(ZooKeeperServer.getInstance().getConnectString(),
-        ZooKeeperServer.ZOOKEEPER_TIMEOUT_MS, ZooKeeperServer.ZOOKEEPER_TIMEOUT_MS, ZKStringSerializer$.MODULE$);
-    zooKeeperUtils = new ZkUtils(zooKeeperClient, new ZkConnection(ZooKeeperServer.getInstance().getConnectString()),
-        false);
+    zooKeeperClient = new ZkClient(ZooKeeperServer.getInstance().getConnectString(), ZooKeeperServer.ZOOKEEPER_TIMEOUT_MS,
+        ZooKeeperServer.ZOOKEEPER_TIMEOUT_MS, ZKStringSerializer$.MODULE$);
+    zooKeeperUtils = new ZkUtils(zooKeeperClient, new ZkConnection(ZooKeeperServer.getInstance().getConnectString()), false);
     log(LOG, "start", time);
   }
 

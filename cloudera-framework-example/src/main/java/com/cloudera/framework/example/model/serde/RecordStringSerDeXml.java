@@ -182,8 +182,8 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
     }
 
     public Record get() {
-      return Record.newBuilder().setMyTimestamp(my_timestamp).setMyInteger(my_integer).setMyDouble(my_double)
-          .setMyBoolean(my_boolean).setMyString(my_string).build();
+      return Record.newBuilder().setMyTimestamp(my_timestamp).setMyInteger(my_integer).setMyDouble(my_double).setMyBoolean(my_boolean)
+          .setMyString(my_string).build();
     }
 
   }

@@ -10,8 +10,7 @@ import com.twitter.elephantbird.mapred.input.DeprecatedFileInputFormatWrapper;
  * Provide an old API {@link InputFormat} facade over the new API
  * {@link org.apache.hadoop.mapreduce.InputFormat} implementation for Hive
  */
-public class RecordSequenceInputFormatXml
-    extends DeprecatedFileInputFormatWrapper<RecordKey, AvroGenericRecordWritable> {
+public class RecordSequenceInputFormatXml extends DeprecatedFileInputFormatWrapper<RecordKey, AvroGenericRecordWritable> {
 
   public RecordSequenceInputFormatXml() {
     super(new com.cloudera.framework.example.model.input.RecordSequenceInputFormatXml());

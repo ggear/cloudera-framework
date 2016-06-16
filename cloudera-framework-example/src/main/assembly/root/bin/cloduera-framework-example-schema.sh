@@ -136,14 +136,14 @@ TABLES_LOCATION=( \
 	"$ROOT_DIR_HDFS_PROCESSED_DUPLICATE/parquet/dict/snappy" \
 )
 
-if $DROP_SCHEMA && [ $($ROOT_DIR/lib/bin/cloudera-framework-shell-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 1 ]; then
+if $DROP_SCHEMA && [ $($ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 1 ]; then
 
-  $ROOT_DIR/lib/bin/cloudera-framework-shell-hive.sh -e "DROP TABLE £"
-  $ROOT_DIR/lib/bin/cloudera-framework-shell-impala.sh -r -q "USE default; DROP DATABASE $NAME_SPACE_DATABASE; DROP ROLE $USER_ADMIN;"
+  $ROOT_DIR/lib/bin/cloudera-framework-hive.sh -e "DROP TABLE £"
+  $ROOT_DIR/lib/bin/cloudera-framework-impala.sh -r -q "USE default; DROP DATABASE $NAME_SPACE_DATABASE; DROP ROLE $USER_ADMIN;"
 
 fi
 
-if [ $($ROOT_DIR/lib/bin/cloudera-framework-shell-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 0 ]; then
+if [ $($ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 0 ]; then
   
   HIVE_HIVESERVER2_HOSTS_ARRAY=(${HIVE_HIVESERVER2_HOSTS//,/ })
   for HIVE_HIVESERVER2_HOST in "${HIVE_HIVESERVER2_HOSTS_ARRAY[@]}"; do
@@ -172,13 +172,13 @@ if __name__ == '__main__':
   sys.exit(main(sys.argv))
 END
   
-  $ROOT_DIR/lib/bin/cloudera-framework-shell-hive.sh \
+  $ROOT_DIR/lib/bin/cloudera-framework-hive.sh \
     --hivevar my.user=$USER_ADMIN \
     --hivevar my.server.name=$NAME_SPACE_SERVER \
     --hivevar my.database.name=$NAME_SPACE_DATABASE \
     --hivevar my.database.location=$ROOT_DIR_HDFS \
     -f $ROOT_DIR/lib/ddl/hive/database_create.ddl
-  until $ROOT_DIR/lib/bin/cloudera-framework-shell-impala.sh -r -q "SHOW TABLES"; do
+  until $ROOT_DIR/lib/bin/cloudera-framework-impala.sh -r -q "SHOW TABLES"; do
   	echo "Sleeping while waiting for database and roles to sync ... "
     sleep 5
   done
@@ -186,7 +186,7 @@ END
   AVRO_SCHEMA="$(cat $ROOT_DIR/lib/cfg/avro/model.avsc | tr '\n' ' ' | tr '\t' ' ')"
 
   for((i=0;i<${#TABLES_NAME[@]};i++)); do
-    $ROOT_DIR/lib/bin/cloudera-framework-shell-hive.sh \
+    $ROOT_DIR/lib/bin/cloudera-framework-hive.sh \
       --hivevar my.table.name="${TABLES_NAME[$i]}" \
       --hivevar my.table.partition="${TABLES_PARTITION[$i]}" \
       --hivevar my.table.serde="${TABLES_SERDE[$i]}" \
@@ -195,7 +195,7 @@ END
       --hivevar my.table.location="${TABLES_LOCATION[$i]}" \
       --hivevar my.table.schema="$AVRO_SCHEMA" \
       -f $ROOT_DIR/lib/ddl/hive/"${TABLES_DDL[$i]}"
-    $ROOT_DIR/lib/bin/cloudera-framework-shell-impala.sh -q "INVALIDATE METADATA ${TABLES_NAME[$i]};"
+    $ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "INVALIDATE METADATA ${TABLES_NAME[$i]};"
   done  
   
 fi
@@ -206,5 +206,5 @@ for((i=0;i<${#TABLES_NAME[@]};i++)); do
   TABLES_REFRESH_HIVE="$TABLES_REFRESH_HIVE"" MSCK REPAIR TABLE ""${TABLES_NAME[$i]}""; "
   TABLES_REFRESH_IMPALA="$TABLES_REFRESH_IMPALA"" REFRESH ""${TABLES_NAME[$i]}""; "
 done
-$ROOT_DIR/lib/bin/cloudera-framework-shell-hive.sh -e "$TABLES_REFRESH_HIVE"
-$ROOT_DIR/lib/bin/cloudera-framework-shell-impala.sh -q "$TABLES_REFRESH_IMPALA"
+$ROOT_DIR/lib/bin/cloudera-framework-hive.sh -e "$TABLES_REFRESH_HIVE"
+$ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "$TABLES_REFRESH_IMPALA"

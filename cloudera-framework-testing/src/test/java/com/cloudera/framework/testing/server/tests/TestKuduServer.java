@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.kududb.ColumnSchema;
 import org.kududb.Schema;
 import org.kududb.Type;
+import org.kududb.client.CreateTableOptions;
 import org.kududb.client.Insert;
 import org.kududb.client.KuduClient;
 import org.kududb.client.KuduClient.KuduClientBuilder;
@@ -24,6 +25,7 @@ import org.kududb.client.RowResultIterator;
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.KuduServer;
+import com.google.common.collect.ImmutableList;
 
 @RunWith(TestRunner.class)
 public class TestKuduServer implements TestConstants {
@@ -40,7 +42,7 @@ public class TestKuduServer implements TestConstants {
       columns.add(new ColumnSchema.ColumnSchemaBuilder("key", Type.INT32).key(true).build());
       columns.add(new ColumnSchema.ColumnSchemaBuilder("value", Type.STRING).build());
       Schema schema = new Schema(columns);
-      client.createTable(tableName, schema);
+      client.createTable(tableName, schema, new CreateTableOptions().setRangePartitionColumns(ImmutableList.of("key")));
       KuduTable table = client.openTable(tableName);
       KuduSession session = client.newSession();
       for (int i = 0; i < 3; i++) {

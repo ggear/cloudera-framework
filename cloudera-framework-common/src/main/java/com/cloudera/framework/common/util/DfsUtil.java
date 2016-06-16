@@ -38,8 +38,7 @@ public class DfsUtil {
    * @return <code>true</code> if action is allowed, <code>false</code>
    *         otherwise
    */
-  public static boolean canDoAction(FileSystem hdfs, String user, String[] groups, Path path, FsAction action)
-      throws IOException {
+  public static boolean canDoAction(FileSystem hdfs, String user, String[] groups, Path path, FsAction action) throws IOException {
     FileStatus status = hdfs.getFileStatus(path);
     FsPermission permission = status.getPermission();
     if (permission.getOtherAction().implies(action)) {
@@ -109,8 +108,7 @@ public class DfsUtil {
       while (filesIterator.hasNext()) {
         Path file = filesIterator.next().getPath();
         Path dir = file.getParent();
-        dirs.put(dir,
-            (dirs.containsKey(dir) ? dirs.get(dir) : false) || file.getName().startsWith(FILE_METADATA_PREFIX));
+        dirs.put(dir, (dirs.containsKey(dir) ? dirs.get(dir) : false) || file.getName().startsWith(FILE_METADATA_PREFIX));
       }
     } catch (FileNotFoundException exception) {
       // ignore

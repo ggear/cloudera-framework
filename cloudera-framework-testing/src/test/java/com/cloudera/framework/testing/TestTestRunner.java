@@ -125,10 +125,8 @@ public class TestTestRunner implements TestConstants {
     Assert.assertEquals(6, COUNTER.incrementAndGet());
   }
 
-  public static final TestMetaData testMetaData1 = TestMetaData.getInstance()
-      .parameters(ImmutableMap.of("metadata", "1"));
-  public static final TestMetaData testMetaData2 = TestMetaData.getInstance()
-      .parameters(ImmutableMap.of("metadata", "2"));
+  public static final TestMetaData testMetaData1 = TestMetaData.getInstance().parameters(ImmutableMap.of("metadata", "1"));
+  public static final TestMetaData testMetaData2 = TestMetaData.getInstance().parameters(ImmutableMap.of("metadata", "2"));
 
   @TestWith({ "testMetaData1", "testMetaData2" })
   public void testCdhMetaData1(TestMetaData testMetaData) throws Exception {

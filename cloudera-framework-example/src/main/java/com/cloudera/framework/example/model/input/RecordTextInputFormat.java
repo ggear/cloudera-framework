@@ -26,8 +26,7 @@ public class RecordTextInputFormat extends FileInputFormat<RecordKey, Text> {
   }
 
   @Override
-  public RecordReader<RecordKey, Text> createRecordReader(InputSplit split, TaskAttemptContext context)
-      throws IOException {
+  public RecordReader<RecordKey, Text> createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException {
     return new RecordReaderText(split, context);
   }
 

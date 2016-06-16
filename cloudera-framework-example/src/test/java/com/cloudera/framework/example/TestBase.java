@@ -1,6 +1,5 @@
 package com.cloudera.framework.example;
 
-import com.cloudera.framework.example.Constants;
 import com.cloudera.framework.example.model.RecordCounter;
 import com.cloudera.framework.testing.TestMetaData;
 import com.google.common.collect.ImmutableMap;

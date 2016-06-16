@@ -7,8 +7,7 @@ package com.cloudera.framework.example.model;
 
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
-public class Record extends org.apache.avro.specific.SpecificRecordBase
-    implements org.apache.avro.specific.SpecificRecord {
+public class Record extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
   public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse(
       "{\"type\":\"record\",\"name\":\"Record\",\"namespace\":\"com.cloudera.framework.example.model\",\"fields\":[{\"name\":\"ingest_id\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"order\":\"ignore\"},{\"name\":\"ingest_batch\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null,\"order\":\"ignore\"},{\"name\":\"ingest_timestamp\",\"type\":[\"null\",\"long\"],\"default\":null,\"order\":\"ignore\"},{\"name\":\"my_timestamp\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"my_integer\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"my_double\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"my_boolean\",\"type\":[\"null\",\"boolean\"],\"default\":null},{\"name\":\"my_string\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null}]}");
 
@@ -44,9 +43,8 @@ public class Record extends org.apache.avro.specific.SpecificRecordBase
   /**
    * All-args constructor.
    */
-  public Record(java.lang.String ingest_id, java.lang.String ingest_batch, java.lang.Long ingest_timestamp,
-      java.lang.Long my_timestamp, java.lang.Integer my_integer, java.lang.Double my_double,
-      java.lang.Boolean my_boolean, java.lang.String my_string) {
+  public Record(java.lang.String ingest_id, java.lang.String ingest_batch, java.lang.Long ingest_timestamp, java.lang.Long my_timestamp,
+      java.lang.Integer my_integer, java.lang.Double my_double, java.lang.Boolean my_boolean, java.lang.String my_string) {
     this.ingest_id = ingest_id;
     this.ingest_batch = ingest_batch;
     this.ingest_timestamp = ingest_timestamp;
@@ -574,8 +572,7 @@ public class Record extends org.apache.avro.specific.SpecificRecordBase
         Record record = new Record();
         record.ingest_id = fieldSetFlags()[0] ? this.ingest_id : (java.lang.String) defaultValue(fields()[0]);
         record.ingest_batch = fieldSetFlags()[1] ? this.ingest_batch : (java.lang.String) defaultValue(fields()[1]);
-        record.ingest_timestamp = fieldSetFlags()[2] ? this.ingest_timestamp
-            : (java.lang.Long) defaultValue(fields()[2]);
+        record.ingest_timestamp = fieldSetFlags()[2] ? this.ingest_timestamp : (java.lang.Long) defaultValue(fields()[2]);
         record.my_timestamp = fieldSetFlags()[3] ? this.my_timestamp : (java.lang.Long) defaultValue(fields()[3]);
         record.my_integer = fieldSetFlags()[4] ? this.my_integer : (java.lang.Integer) defaultValue(fields()[4]);
         record.my_double = fieldSetFlags()[5] ? this.my_double : (java.lang.Double) defaultValue(fields()[5]);

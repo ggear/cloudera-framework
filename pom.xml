@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cloudera</groupId>
@@ -79,12 +80,13 @@
 		<cdh-spark.version>1.6.0-cdh5.7.1</cdh-spark.version>
 		<cdh-hive.version>1.1.0-cdh5.7.1</cdh-hive.version>
 		<cdh-flume.version>1.6.0-cdh5.7.1</cdh-flume.version>
+		<cdh-avro-base.version>1.7.6</cdh-avro-base.version>
 		<cdh-avro.version>1.7.6-cdh5.7.1</cdh-avro.version>
 		<cdh-parquet.version>1.5.0-cdh5.7.1</cdh-parquet.version>
 		<cdh-zookeeper.version>3.4.5-cdh5.7.1</cdh-zookeeper.version>
 		<cdh-kafka.version>0.9.0-kafka-2.0.1</cdh-kafka.version>
-		<cdh-kuduapi.version>0.8.0</cdh-kuduapi.version>
-		<cdh-kudu.version>0.8.0-1.kudu0.8.0.p0.11</cdh-kudu.version>
+		<cdh-kudu-base.version>0.9.0</cdh-kudu-base.version>
+		<cdh-kudu.version>0.9.0-1.kudu0.9.0.p0.17</cdh-kudu.version>
 
 		<snappy.version>1.1.1.7</snappy.version>
 		<elephantbird.version>4.9</elephantbird.version>
@@ -95,7 +97,7 @@
 		<zohhak.version>1.1.1</zohhak.version>
 		<junit.version>4.12</junit.version>
 
-		<parcel-plugin.version>0.7.0</parcel-plugin.version>
+		<parcel-plugin.version>0.7.1</parcel-plugin.version>
 
 		<java.version>1.7</java.version>
 		<scala.version>2.10</scala.version>
@@ -154,6 +156,7 @@
 		<module>cloudera-framework-library</module>
 		<module>cloudera-framework-testing</module>
 		<module>cloudera-framework-common</module>
+		<module>cloudera-framework-assembly</module>
 		<module>cloudera-framework-example</module>
 		<module>cloudera-framework-archetype</module>
 	</modules>
@@ -169,7 +172,17 @@
 				<plugin>
 					<groupId>org.apache.avro</groupId>
 					<artifactId>avro-maven-plugin</artifactId>
-					<version>1.7.7</version>
+					<version>${cdh-avro-base.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.groovy.maven</groupId>
+					<artifactId>gmaven-plugin</artifactId>
+					<version>1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.5.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -203,7 +216,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.9</version>
+					<version>2.10</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -213,7 +226,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-eclipse-plugin</artifactId>
-					<version>2.9</version>
+					<version>2.10</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -223,12 +236,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.0.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>1.9.1</version>
+					<version>1.10</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -241,7 +254,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.0.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -251,7 +264,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.9.1</version>
+					<version>2.10.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -271,9 +284,9 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.9</version>
+					<version>2.19.1</version>
 					<configuration>
-						<argLine>-Djava.awt.headless=true
+						<argLine>
 							-Xmx${project.runtime.heap.max}m
 							-XX:MaxPermSize=${project.runtime.perm.heap.max}m</argLine>
 					</configuration>
@@ -291,7 +304,7 @@
 							<goal>regex-property</goal>
 						</goals>
 						<configuration>
-							<name>cdh-kuduapi.version</name>
+							<name>cdh-kudu-base.version</name>
 							<value>${cdh-kudu.version}</value>
 							<regex>^([0-9]+)\.([0-9]+)\.([0-9]+).*</regex>
 							<replacement>$1.$2.$3</replacement>

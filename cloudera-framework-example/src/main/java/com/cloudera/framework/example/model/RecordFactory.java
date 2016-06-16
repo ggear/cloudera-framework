@@ -21,12 +21,11 @@ public class RecordFactory {
   public static final String RECORD_STRING_SERDE_CSV = "csv";
   public static final String RECORD_STRING_SERDE_XML = "xml";
 
-  private static final Map<String, ? extends RecordStringSerDe> RECORD_STRING_SERDES = ImmutableMap
-      .of(RECORD_STRING_SERDE_CSV, new RecordStringSerDeCsv(), RECORD_STRING_SERDE_XML, new RecordStringSerDeXml());
+  private static final Map<String, ? extends RecordStringSerDe> RECORD_STRING_SERDES = ImmutableMap.of(RECORD_STRING_SERDE_CSV,
+      new RecordStringSerDeCsv(), RECORD_STRING_SERDE_XML, new RecordStringSerDeXml());
 
   private static final Map<String, Class<? extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable>>> RECORD_INPUT_FORMATS = ImmutableMap
-      .of(RECORD_STRING_SERDE_CSV, RecordSequenceInputFormatCsv.class, RECORD_STRING_SERDE_XML,
-          RecordSequenceInputFormatXml.class);
+      .of(RECORD_STRING_SERDE_CSV, RecordSequenceInputFormatCsv.class, RECORD_STRING_SERDE_XML, RecordSequenceInputFormatXml.class);
 
   /**
    * Get a {@link RecordStringSerDe} from a <code>type</code>
@@ -49,8 +48,8 @@ public class RecordFactory {
    *          the type to lookup
    * @return the {@link SequenceFileInputFormat} instance
    */
-  public static Class<? extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable>> getRecordSequenceInputFormat(
-      String type) throws IOException {
+  public static Class<? extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable>> getRecordSequenceInputFormat(String type)
+      throws IOException {
     if (!RECORD_INPUT_FORMATS.containsKey(type)) {
       throw new IOException("Could not find [RecordSequenceInputFormat] for type [" + type + "]");
     }

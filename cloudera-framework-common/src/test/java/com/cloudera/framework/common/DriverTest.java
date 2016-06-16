@@ -94,8 +94,8 @@ public class DriverTest {
         files.next();
         incrementCounter(Counter.FILES_NUMBER, 1);
       }
-      return iShouldFailOption || iShouldFailParameter.toLowerCase().equals(Boolean.TRUE.toString().toLowerCase())
-          ? RETURN_FAILURE_RUNTIME : RETURN_SUCCESS;
+      return iShouldFailOption || iShouldFailParameter.toLowerCase().equals(Boolean.TRUE.toString().toLowerCase()) ? RETURN_FAILURE_RUNTIME
+          : RETURN_SUCCESS;
     }
 
   }

@@ -68,13 +68,12 @@ public abstract class TestMrServer implements TestConstants {
     FileInputFormat.setInputPaths(job, getDfsServer().getPathUri(dirInput));
     FileOutputFormat.setOutputPath(job, new Path(getDfsServer().getPathUri(dirOutput)));
     assertTrue(job.waitForCompletion(true));
-    Path[] outputFiles = FileUtil
-        .stat2Paths(getDfsServer().getFileSystem().listStatus(getDfsServer().getPath(dirOutput), new PathFilter() {
-          @Override
-          public boolean accept(Path path) {
-            return !path.getName().equals(FileOutputCommitter.SUCCEEDED_FILE_NAME);
-          }
-        }));
+    Path[] outputFiles = FileUtil.stat2Paths(getDfsServer().getFileSystem().listStatus(getDfsServer().getPath(dirOutput), new PathFilter() {
+      @Override
+      public boolean accept(Path path) {
+        return !path.getName().equals(FileOutputCommitter.SUCCEEDED_FILE_NAME);
+      }
+    }));
     assertEquals(1, outputFiles.length);
     InputStream in = getDfsServer().getFileSystem().open(outputFiles[0]);
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -109,8 +108,7 @@ public abstract class TestMrServer implements TestConstants {
   private static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
 
     @Override
-    protected void reduce(Text key, Iterable<IntWritable> values, Context context)
-        throws IOException, InterruptedException {
+    protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
       int sum = 0;
       for (IntWritable value : values) {
         sum += value.get();

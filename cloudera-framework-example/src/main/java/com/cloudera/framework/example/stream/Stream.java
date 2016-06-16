@@ -84,16 +84,14 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
           "Source [" + getName() + "] has illegal paramater [" + PROPERTY_BATCH_SIZE + "] value [" + batchSize + "]");
     }
     try {
-      recordStringSerDe = RecordFactory
-          .getRecordStringSerDe(recordType = context.getString(PROPERTY_RECORD_TYPE, recordType));
+      recordStringSerDe = RecordFactory.getRecordStringSerDe(recordType = context.getString(PROPERTY_RECORD_TYPE, recordType));
     } catch (IOException exception) {
-      throw new IllegalArgumentException(
-          "Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_TYPE + "].", exception);
+      throw new IllegalArgumentException("Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_TYPE + "].", exception);
     }
     recordNumber = context.getInteger(PROPERTY_RECORD_NUMBER, recordNumber);
     if (recordNumber < 1) {
-      throw new IllegalArgumentException("Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_NUMBER
-          + "] value [" + recordNumber + "]");
+      throw new IllegalArgumentException(
+          "Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_NUMBER + "] value [" + recordNumber + "]");
     }
     if (sourceCounter == null) {
       sourceCounter = new SourceCounter(getName());
@@ -183,19 +181,19 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     try {
       RecordStringSer recordStringSer = recordStringSerDe.getSerialiser(recordNumber);
       for (int i = 0; i < recordNumber; i++) {
-        recordStringSer.add(Record.newBuilder().setMyTimestamp(System.currentTimeMillis())
-            .setMyInteger((int) (Math.random() * 10)).setMyDouble(Math.round(Math.random() * 10000000) / 100D)
-            .setMyBoolean(Math.random() < 0.5 ? true : false).setMyString(UUID.randomUUID().toString()).build());
+        recordStringSer.add(Record.newBuilder().setMyTimestamp(System.currentTimeMillis()).setMyInteger((int) (Math.random() * 10))
+            .setMyDouble(Math.round(Math.random() * 10000000) / 100D).setMyBoolean(Math.random() < 0.5 ? true : false)
+            .setMyString(UUID.randomUUID().toString()).build());
       }
       String record = recordStringSer.get();
-      processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()),
-          getEventHeader(System.currentTimeMillis())), false);
+      processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()), getEventHeader(System.currentTimeMillis())),
+          false);
       int sleepMs = 0;
       int tickMs = pollMs / (pollTicks + 1);
       for (int i = 0; i <= pollTicks; i++) {
         if (pollTicks > 0 && i < pollTicks) {
-          processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()),
-              getEventHeader(System.currentTimeMillis())), false);
+          processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()), getEventHeader(System.currentTimeMillis())),
+              false);
           if (i < pollTicks - 1) {
             if (LOG.isDebugEnabled()) {
               LOG.debug("Source [" + getName() + "] sleeping for next tick, ms [" + tickMs + "]");
@@ -227,8 +225,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       throw error;
     } catch (Exception exception) {
       if (LOG.isErrorEnabled()) {
-        LOG.error("Source [" + getName() + "] encountered exception processing event, " + "backing off and retrying",
-            exception);
+        LOG.error("Source [" + getName() + "] encountered exception processing event, " + "backing off and retrying", exception);
       }
     }
     if (LOG.isDebugEnabled()) {
@@ -268,8 +265,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       String batchTimestampStart = putHeader(events.get(0), HEADER_TIMESTAMP, timestamp);
       String batchTimestampFinish = putHeader(events.get(events.size() - 1), HEADER_TIMESTAMP, timestamp);
       for (int i = 0; i < events.size(); i++) {
-        setEventHeaders(events.get(i), timestamp, batchId, i + 1, events.size(), batchTimestampStart,
-            batchTimestampFinish);
+        setEventHeaders(events.get(i), timestamp, batchId, i + 1, events.size(), batchTimestampStart, batchTimestampFinish);
       }
       return events;
     }
@@ -278,8 +274,8 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     public void close() {
     }
 
-    private Event setEventHeaders(Event event, String timestamp, String batchId, int batchIndex, int batchSum,
-        String batchTimestampStart, String batchTimestampFinish) {
+    private Event setEventHeaders(Event event, String timestamp, String batchId, int batchIndex, int batchSum, String batchTimestampStart,
+        String batchTimestampFinish) {
       putHeader(event, HEADER_TIMESTAMP, "" + timestamp);
       putHeader(event, HEADER_BATCH_TYPE, recordType);
       putHeader(event, HEADER_BATCH_ID, batchId, true);
@@ -333,8 +329,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
 
     private static final String DFS_CODEC = "none";
     private static final String DFS_CONTAINER = "sequence";
-    private static final String DFS_BATCH_PATTERN = DFS_CONTAINER + "/%{bt}/" + DFS_CODEC
-        + "/%{btss}_%{btsf}_mydataset-%{bid}.seq";
+    private static final String DFS_BATCH_PATTERN = DFS_CONTAINER + "/%{bt}/" + DFS_CODEC + "/%{btss}_%{btsf}_mydataset-%{bid}.seq";
 
     @Override
     public Class<RecordKey> getKeyClass() {

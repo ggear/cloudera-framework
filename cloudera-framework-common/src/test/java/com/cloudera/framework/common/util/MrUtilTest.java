@@ -27,8 +27,7 @@ public class MrUtilTest {
     configuration.setBoolean(FileOutputFormat.COMPRESS, false);
     assertEquals(MrUtil.CODEC_NONE, MrUtil.getCodecString(configuration));
     configuration.setBoolean(FileOutputFormat.COMPRESS, true);
-    assertEquals(
-        new DefaultCodec().getDefaultExtension().substring(1, new DefaultCodec().getDefaultExtension().length()),
+    assertEquals(new DefaultCodec().getDefaultExtension().substring(1, new DefaultCodec().getDefaultExtension().length()),
         MrUtil.getCodecString(configuration));
     configuration.set(FileOutputFormat.COMPRESS_CODEC, SnappyCodec.class.getName());
     assertEquals(new SnappyCodec().getDefaultExtension().substring(1, new SnappyCodec().getDefaultExtension().length()),

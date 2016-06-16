@@ -52,8 +52,8 @@ public class Partition extends Driver {
 
   public static final String CONF_RECORD_FILTER_DEFAULT = RecordFilter.CONF_RECORD_FILTER_PASS_THROUGH;
 
-  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS,
-      RecordCounter.RECORDS_CANONICAL, RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
+  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS, RecordCounter.RECORDS_CANONICAL,
+      RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
 
   protected static final String OUTPUT_TEXT = "text";
   protected static final String OUTPUT_AVRO = "avro";
@@ -132,8 +132,8 @@ public class Partition extends Driver {
       job.getConfiguration().set(Constants.CONFIG_OUTPUT_PATH, outputPath.toString());
       job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
       for (Path inputPath : inputPaths) {
-        MultipleInputs.addInputPath(job, inputPath, RecordFactory.getRecordSequenceInputFormat(
-            RecordPartition.getPartitionPathName(inputPath, RecordPartition.BATCH_COL_ID_START_FINISH, 2)));
+        MultipleInputs.addInputPath(job, inputPath, RecordFactory
+            .getRecordSequenceInputFormat(RecordPartition.getPartitionPathName(inputPath, RecordPartition.BATCH_COL_ID_START_FINISH, 2)));
       }
       job.setMapperClass(Mapper.class);
       job.setSortComparatorClass(RecordKey.RecordKeyComparator.class);
@@ -168,8 +168,7 @@ public class Partition extends Driver {
     private final Text textValue = new Text();
     private final StringBuilder string = new StringBuilder(512);
     private final AvroValue<Record> recordWrapped = new AvroValue<>();
-    private final String MALFORMED_PATH_PREFIX = Constants.DIR_REL_MYDS_MALFORMED + Path.SEPARATOR_CHAR + OUTPUT_TEXT
-        + Path.SEPARATOR_CHAR;
+    private final String MALFORMED_PATH_PREFIX = Constants.DIR_REL_MYDS_MALFORMED + Path.SEPARATOR_CHAR + OUTPUT_TEXT + Path.SEPARATOR_CHAR;
 
     private MultipleOutputs<RecordKey, Text> multipleOutputs;
 
@@ -214,8 +213,7 @@ public class Partition extends Driver {
    * Note this class is not thread-safe but is jvm-reuse-safe, reusing objects
    * where possible.
    */
-  private static class Reducer
-      extends org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>> {
+  private static class Reducer extends org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>> {
 
     private static final String PARTITION_YEAR = RecordPartition.RECORD_COL_YEAR_MONTH[0] + "=";
     private static final String PARTITION_MONTH = RecordPartition.RECORD_COL_YEAR_MONTH[1] + "=";
@@ -230,8 +228,7 @@ public class Partition extends Driver {
     private AvroMultipleOutputs multipleOutputsAvro;
 
     @Override
-    protected void setup(
-        org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
+    protected void setup(org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
         throws IOException, InterruptedException {
       multipleOutputsAvro = new AvroMultipleOutputs(context);
       partitions.clear();
@@ -265,12 +262,10 @@ public class Partition extends Driver {
         string
             .append(counter.equals(RecordCounter.RECORDS_CANONICAL) ? Constants.DIR_REL_MYDS_PARTITIONED_CANONICAL_AVRO
                 : Constants.DIR_REL_MYDS_PARTITIONED_DUPLICATE_AVRO)
-            .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR))
-            .append(Path.SEPARATOR_CHAR).append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1)
-            .append(Path.SEPARATOR_CHAR);
+            .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR)).append(Path.SEPARATOR_CHAR)
+            .append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1).append(Path.SEPARATOR_CHAR);
         partitions.add(string.toString());
-        multipleOutputsAvro.write(OUTPUT_AVRO, this.record, NullWritable.get(),
-            string.append(PARTITION_FILE).toString());
+        multipleOutputsAvro.write(OUTPUT_AVRO, this.record, NullWritable.get(), string.append(PARTITION_FILE).toString());
       }
     }
 

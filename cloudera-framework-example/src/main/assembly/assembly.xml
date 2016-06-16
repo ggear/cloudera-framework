@@ -26,10 +26,10 @@
 			<directoryMode>0755</directoryMode>
 		</fileSet>
 		<fileSet>
-			<outputDirectory>/lib/parcel</outputDirectory>
+			<outputDirectory>lib/parcel</outputDirectory>
 			<directory>target</directory>
 			<includes>
-				<include>*.parcel</include>
+				<include>*.parcel*</include>
 			</includes>
 			<fileMode>0644</fileMode>
 			<directoryMode>0755</directoryMode>
@@ -37,25 +37,28 @@
 	</fileSets>
 	<dependencySets>
 		<dependencySet>
-			<outputDirectory>/lib/jar</outputDirectory>
+			<outputDirectory>lib/jar</outputDirectory>
 			<fileMode>0644</fileMode>
 			<directoryMode>0755</directoryMode>
-			<scope>runtime</scope>
+			<scope>compile</scope>
 			<includes>
 				<include>${groupId}:${artifactId}</include>
 			</includes>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>/lib/jar/dep</outputDirectory>
+			<outputDirectory>lib/jar/dep</outputDirectory>
 			<fileMode>0644</fileMode>
 			<directoryMode>0755</directoryMode>
-			<scope>runtime</scope>
+			<scope>compile</scope>
+			<includes>
+				<include>${groupId}</include>
+			</includes>
 			<excludes>
 				<exclude>${groupId}:${artifactId}</exclude>
 			</excludes>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>/lib</outputDirectory>
+			<outputDirectory>lib</outputDirectory>
 			<unpack>true</unpack>
 			<includes>
 				<include>${groupId}:${artifactId}</include>
@@ -65,6 +68,22 @@
 					<include>cfg/**/*</include>
 					<include>ddl/**/*</include>
 					<include>sql/**/*</include>
+				</includes>
+			</unpackOptions>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory></outputDirectory>
+			<unpack>true</unpack>
+			<includes>
+				<include>com.cloudera.framework:cloudera-framework-assembly
+				</include>
+			</includes>
+			<fileMode>0700</fileMode>
+			<directoryMode>0755</directoryMode>
+			<unpackOptions>
+				<includes>
+					<include>**/*.sh</include>
+					<include>**/*.py</include>
 				</includes>
 			</unpackOptions>
 		</dependencySet>

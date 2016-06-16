@@ -34,14 +34,12 @@ public class Ingest extends TestBase {
   public void testIngest(TestMetaData testMetaData) throws Exception {
     Driver driver = new com.cloudera.framework.example.ingest.Ingest(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString(), dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
+        driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString(),
+            dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(), dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[0], driver.getCounters());
     assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString(), dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
+        driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString(),
+            dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(), dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[1], driver.getCounters());
   }
 

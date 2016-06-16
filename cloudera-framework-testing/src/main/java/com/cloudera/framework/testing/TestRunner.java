@@ -74,8 +74,8 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
         throw new IllegalArgumentException("Could not find field");
       }
     } catch (Exception exception) {
-      String message = "Could not find field [" + field + "] with type [" + type + "] on object [" + object
-          + "] with class [" + (object == null ? "null" : object.getClass()) + "]";
+      String message = "Could not find field [" + field + "] with type [" + type + "] on object [" + object + "] with class ["
+          + (object == null ? "null" : object.getClass()) + "]";
       if (LOG.isErrorEnabled()) {
         LOG.error(message, exception);
       }
@@ -89,9 +89,8 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
     if (cdhMetaData.getDataSetSourceDirs() != null && cdhMetaData.getDataSetDestinationDirs() != null
         && DfsServer.getInstance().isStarted()) {
       try {
-        DfsServer.getInstance().copyFromLocalDir(cdhMetaData.getDataSetSourceDirs(),
-            cdhMetaData.getDataSetDestinationDirs(), cdhMetaData.getDataSetNames(), cdhMetaData.getDataSetSubsets(),
-            cdhMetaData.getDataSetLabels());
+        DfsServer.getInstance().copyFromLocalDir(cdhMetaData.getDataSetSourceDirs(), cdhMetaData.getDataSetDestinationDirs(),
+            cdhMetaData.getDataSetNames(), cdhMetaData.getDataSetSubsets(), cdhMetaData.getDataSetLabels());
       } catch (Exception exception) {
         if (LOG.isWarnEnabled()) {
           LOG.warn("Could not initialise [" + object.getClass().getSimpleName() + "]", exception);

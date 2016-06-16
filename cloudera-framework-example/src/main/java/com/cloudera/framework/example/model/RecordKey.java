@@ -170,8 +170,8 @@ public class RecordKey implements WritableComparable<RecordKey> {
 
   @Override
   public String toString() {
-    return "RecordKey [hash=" + hash + ", type=" + type + ", codec=" + codec + ", container=" + container
-        + ", timestamp=" + timestamp + ", batch=" + batch + ", source=" + source + ", valid=" + valid + "]";
+    return "RecordKey [hash=" + hash + ", type=" + type + ", codec=" + codec + ", container=" + container + ", timestamp=" + timestamp
+        + ", batch=" + batch + ", source=" + source + ", valid=" + valid + "]";
   }
 
   @Override

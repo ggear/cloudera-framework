@@ -24,8 +24,8 @@ import com.cloudera.framework.example.model.serde.RecordStringSerDe;
 public class RecordSequenceInputFormatCsv extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable> {
 
   @Override
-  public RecordReader<RecordKey, AvroGenericRecordWritable> createRecordReader(InputSplit split,
-      TaskAttemptContext context) throws IOException {
+  public RecordReader<RecordKey, AvroGenericRecordWritable> createRecordReader(InputSplit split, TaskAttemptContext context)
+      throws IOException {
     return new RecordReaderSequenceCsv();
   }
 

@@ -40,8 +40,7 @@ public class RecordTextCombineInputFormat extends CombineFileInputFormat<RecordK
   }
 
   @Override
-  public RecordReader<RecordKey, Text> createRecordReader(InputSplit split, TaskAttemptContext context)
-      throws IOException {
+  public RecordReader<RecordKey, Text> createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException {
     return new CombineFileRecordReader<>((CombineFileSplit) split, context, RecordReaderText.class);
   }
 
@@ -96,8 +95,7 @@ public class RecordTextCombineInputFormat extends CombineFileInputFormat<RecordK
           value = new Text(valueString);
           String pathString = path.toString();
           try {
-            pathString = pathString.substring(pathString.indexOf(inputPath) + inputPath.length() + 1,
-                pathString.length());
+            pathString = pathString.substring(pathString.indexOf(inputPath) + inputPath.length() + 1, pathString.length());
           } catch (IndexOutOfBoundsException exception) {
             // ignore
           }
