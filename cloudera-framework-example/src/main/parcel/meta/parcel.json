@@ -23,6 +23,15 @@
 		"cdh-plugin",
 		"${parcel.label}"
 	],
-	"users": {},
-	"groups": []
+	"users": {
+		"${parcel.label}": {
+			"longname": "${parcel.label}",
+			"home": "/var/lib/${parcel.label}",
+			"shell": "/bin/false",
+			"extra_groups": []
+		}
+	},
+	"groups": [
+		"hadoop"
+	]
 }
