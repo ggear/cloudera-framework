@@ -107,18 +107,18 @@ def do_call(host, port, version, user, password, cluster_name, parcel_name, parc
             for script in glob.glob(init_pre_dir + '/*.sh'):
                 subprocess.call([script])
             print 'Cluster [PRE_INIT] finihsed'            
-#         print 'Cluster [CONFIG_DEPLOYMENT] starting ... '
-#         cluster.deploy_client_config()
-#         cmd = cluster.deploy_client_config()
-#         if not cmd.wait(TIMEOUT_SEC).success:
-#             raise Exception('Failed to deploy client configs')
-#         print 'Cluster [CONFIG_DEPLOYMENT] finihsed'
-#         print 'Cluster [STOP] starting ... '
-#         cluster.stop().wait()
-#         print 'Cluster [STOP] finihsed'
-#         print 'Cluster [START] starting ... '
-#         cluster.start().wait()
-#         print 'Cluster [START] finihsed'
+        print 'Cluster [CONFIG_DEPLOYMENT] starting ... '
+        cluster.deploy_client_config()
+        cmd = cluster.deploy_client_config()
+        if not cmd.wait(TIMEOUT_SEC).success:
+            raise Exception('Failed to deploy client configs')
+        print 'Cluster [CONFIG_DEPLOYMENT] finihsed'
+        print 'Cluster [STOP] starting ... '
+        cluster.stop().wait()
+        print 'Cluster [STOP] finihsed'
+        print 'Cluster [START] starting ... '
+        cluster.start().wait()
+        print 'Cluster [START] finihsed'
         if init_post_dir is not None and os.path.isdir(init_post_dir):
             print 'Cluster [POST_INIT] starting ... '
             for script in glob.glob(init_post_dir + '/*.sh'):
