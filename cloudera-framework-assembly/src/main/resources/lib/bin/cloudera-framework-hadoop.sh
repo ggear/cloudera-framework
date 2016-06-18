@@ -6,4 +6,4 @@ source $ROOT_DIR/bin/*.env
 
 set -x
 
-sudo su $USER_ADMIN -c "hadoop --config $HADOOP_CONF_DIR $@"
+sudo su $USER_ADMIN -c "export HADOOP_CLASSPATH=$HADOOP_CLASSPATH; hadoop --config $HADOOP_CONF_DIR $@"
