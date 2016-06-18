@@ -12,4 +12,8 @@ $ROOT_DIR/lib/bin/cloudera-framework-parcel.py \
 	--parcel_name $PARCEL_NAME \
 	--parcel_version $PARCEL_VERSION \
 	--parcel_repo $PARCEL_REPO/$PARCEL_VERSION_SHORT \
+	--init_pre_dir $ROOT_DIR/bin/init/pre \
+	--init_post_dir $ROOT_DIR/bin/init/post \
 	|| { exit 1; }
+
+	

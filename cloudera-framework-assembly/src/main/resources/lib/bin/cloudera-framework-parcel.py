@@ -22,21 +22,31 @@ Options:
                                          Throws an error if not defined
 --parcel_repo=<parcel-repo>              The parcel http repository URL sans base version
                                          Throws an error if not defined
+--init_pre_dir=<init-pre-script-dir>     A fully qualified directory containing initialisation scripts
+                                         matching *.sh glob to be run pre cluster restart
+                                         Defaults to not defined
+--init_post_dir=<init-post-script-dir>   A fully qualified directory containing initialisation scripts
+                                         matching *.sh glob to be run post cluster restart
+                                         Defaults to not defined
 '''
 
-import getopt
-import inspect
-import logging
-from random import randint
+import os
 import re
 import sys
-import textwrap
-from time import sleep
+import glob
 import time
+import getopt
+import random
+import inspect
+import logging
+import textwrap
+import subprocess
+
+from time import sleep
+from random import randint
 
 from cm_api import api_client
 from cm_api.api_client import ApiResource
-
 
 LOG = logging.getLogger(__name__)
 
@@ -59,7 +69,7 @@ def do_parcel_op(cluster, parcel_name, parcel_version, parcel_op_label, stage_en
           print 'Parcel [%s] %s/%s' % (parcel_op_label, parcel.state.progress, parcel.state.totalProgress)
         print 'Parcel [%s] finished' % (parcel_op_label)    
                     
-def do_call(host, port, version, user, password, cluster_name, parcel_name, parcel_version, parcel_repo):
+def do_call(host, port, version, user, password, cluster_name, parcel_name, parcel_version, parcel_repo, init_pre_dir, init_post_dir):
     api = ApiResource(host, port, user, password, False, version)
     if not parcel_repo.endswith('/'):
         parcel_repo += '/'
@@ -85,7 +95,6 @@ def do_call(host, port, version, user, password, cluster_name, parcel_name, parc
         cluster = api.get_cluster(cluster_name_itr)
         parcel = cluster.get_parcel(parcel_name, parcel_version)
         print 'Parcel [DEPLOYMENT] starting ... '
-        do_parcel_op(cluster, parcel_name, parcel_version, 'DEACTIVATE', 'ACTIVATED', 'DISTRIBUTED', 'deactivate')
         do_parcel_op(cluster, parcel_name, parcel_version, 'DOWNLOAD', 'AVAILABLE_REMOTELY', 'DOWNLOADED', 'start_download')
         do_parcel_op(cluster, parcel_name, parcel_version, 'DISTRIBUTE', 'DOWNLOADED', 'DISTRIBUTED', 'start_distribution')
         do_parcel_op(cluster, parcel_name, parcel_version, 'ACTIVATE', 'DISTRIBUTED', 'ACTIVATED', 'activate')
@@ -93,18 +102,28 @@ def do_call(host, port, version, user, password, cluster_name, parcel_name, parc
         if parcel.stage != 'ACTIVATED':
             raise Exception('Parcel is currently mid-stage [' + parcel.stage + '], please wait for this to complete')
         print 'Parcel [DEPLOYMENT] finished'
-        print 'Cluster [CONFIG_DEPLOYMENT] starting ... '
-        cluster.deploy_client_config()
-        cmd = cluster.deploy_client_config()
-        if not cmd.wait(TIMEOUT_SEC).success:
-            raise Exception('Failed to deploy client configs')
-        print 'Cluster [CONFIG_DEPLOYMENT] finihsed'
-        print 'Cluster [STOP] starting ... '
-        cluster.stop().wait()
-        print 'Cluster [STOP] finihsed'
-        print 'Cluster [START] starting ... '
-        cluster.start().wait()
-        print 'Cluster [START] finihsed'
+        if init_pre_dir is not None and os.path.isdir(init_pre_dir):
+            print 'Cluster [PRE_INIT] starting ... '
+            for script in glob.glob(init_pre_dir + '/*.sh'):
+                subprocess.call([script])
+            print 'Cluster [PRE_INIT] finihsed'            
+#         print 'Cluster [CONFIG_DEPLOYMENT] starting ... '
+#         cluster.deploy_client_config()
+#         cmd = cluster.deploy_client_config()
+#         if not cmd.wait(TIMEOUT_SEC).success:
+#             raise Exception('Failed to deploy client configs')
+#         print 'Cluster [CONFIG_DEPLOYMENT] finihsed'
+#         print 'Cluster [STOP] starting ... '
+#         cluster.stop().wait()
+#         print 'Cluster [STOP] finihsed'
+#         print 'Cluster [START] starting ... '
+#         cluster.start().wait()
+#         print 'Cluster [START] finihsed'
+        if init_post_dir is not None and os.path.isdir(init_post_dir):
+            print 'Cluster [POST_INIT] starting ... '
+            for script in glob.glob(init_post_dir + '/*.sh'):
+                subprocess.call([script])
+            print 'Cluster [POST_INIT] finihsed'            
         print 'Cluster [DEPLOYMENT] finished'
 
 def usage():
@@ -125,9 +144,11 @@ def main(argv):
     cluster_name = None
     parcel_name = None
     parcel_version = None
-    parcel_repo = None    
+    parcel_repo = None
+    init_pre_dir = None    
+    init_post_dir = None    
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'h', ['help', 'host=', 'port=', 'version=', 'user=', 'password=', 'cluster_name=', 'parcel_name=', 'parcel_version=', 'parcel_repo='])
+        opts, args = getopt.getopt(sys.argv[1:], 'h', ['help', 'host=', 'port=', 'version=', 'user=', 'password=', 'cluster_name=', 'parcel_name=', 'parcel_version=', 'parcel_repo=', 'init_pre_dir=', 'init_post_dir='])
     except getopt.GetoptError, err:
         print >> sys.stderr, err
         usage()
@@ -154,6 +175,10 @@ def main(argv):
             parcel_version = value
         elif option in ('--parcel_repo'):
             parcel_repo = value
+        elif option in ('--init_pre_dir'):
+            init_pre_dir = value
+        elif option in ('--init_post_dir'):
+            init_post_dir = value
         else:
             print >> sys.stderr, 'Unknown option or flag: ' + option
             usage()
@@ -162,7 +187,7 @@ def main(argv):
         print >> sys.stderr, 'Required parameters [parcel_name, parcel_version, parcel_repo] not passed on command line'        
         usage()
         return -1    
-    do_call(host, port, version, user, password, cluster_name, parcel_name, parcel_version, parcel_repo)
+    do_call(host, port, version, user, password, cluster_name, parcel_name, parcel_version, parcel_repo, init_pre_dir, init_post_dir)
     return 0
 
 if __name__ == '__main__':
