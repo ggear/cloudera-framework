@@ -1,6 +1,6 @@
 #!/usr/bin/python -u
 '''
-Provide a flat list of cluster connectivity parameters 
+Provide a Cloudera Manager parcel deployment pipeline
 Usage: %s [options]
 Options:
 -h --help                                Show help
