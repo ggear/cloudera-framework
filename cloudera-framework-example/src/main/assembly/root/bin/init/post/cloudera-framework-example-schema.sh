@@ -137,8 +137,7 @@ TABLES_LOCATION=( \
 )
 
 if $DROP_SCHEMA && [ $($ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 1 ]; then
-  $ROOT_DIR/lib/bin/cloudera-framework-hive.sh -e "DROP TABLE £"
-  $ROOT_DIR/lib/bin/cloudera-framework-impala.sh -r -q "USE default; DROP DATABASE $NAME_SPACE_DATABASE; DROP ROLE $USER_ADMIN;"
+  $ROOT_DIR/lib/bin/cloudera-framework-impala.sh -r -q "USE default; DROP DATABASE $NAME_SPACE_DATABASE CASCADE; DROP ROLE $USER_ADMIN;"
 fi
 
 if [ $($ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 0 ]; then
