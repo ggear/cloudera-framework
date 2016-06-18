@@ -88,7 +88,6 @@ mvn archetype:generate \
   -DarchetypeGroupId=com.cloudera.framework \
   -DarchetypeArtifactId=cloudera-framework-archetype \
   -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
-  -Dversion=1.0.0-SNAPSHOT \
   -DgroupId=com.my.company \
   -DartifactId=my-cloudera-project \
   -Dpackage="com.my.company"

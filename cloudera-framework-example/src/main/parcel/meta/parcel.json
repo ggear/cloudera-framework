@@ -6,13 +6,23 @@
 		"fullVersion": "${parcel.version.full}",
 		"baseVersion": "${parcel.version.base}"
 	},
-	"setActiveSymlink": false,
+	"setActiveSymlink": true,
 	"scripts": {
-		"defines": "cloduera-framework-example.sh"
+		"defines": "cloudera-framework-example-env.sh"
 	},
-	"packages": [],
-	"components": [],
-	"provides": [],
+	"packages": [{
+		"name": "${parcel.label}",
+		"version": "${parcel.version}"
+	}],
+	"components": [{
+		"name": "${parcel.label}",
+		"version": "${parcel.version}",
+		"pkg_version": "${parcel.version}"
+	}],
+	"provides": [
+		"cdh-plugin",
+		"${parcel.label}"
+	],
 	"users": {},
 	"groups": []
 }

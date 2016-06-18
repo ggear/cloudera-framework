@@ -6,7 +6,7 @@
 
 	<groupId>\${groupId}</groupId>
 	<artifactId>\${artifactId}</artifactId>
-	<version>\${version}</version>
+	<version>10.10.1000-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<repositories>

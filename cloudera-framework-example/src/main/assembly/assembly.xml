@@ -29,7 +29,7 @@
 			<outputDirectory>lib/parcel</outputDirectory>
 			<directory>target</directory>
 			<includes>
-				<include>*.parcel*</include>
+				<include>*parcel*</include>
 			</includes>
 			<fileMode>0644</fileMode>
 			<directoryMode>0755</directoryMode>

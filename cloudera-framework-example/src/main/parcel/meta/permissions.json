@@ -1,0 +1,7 @@
+{
+  "meta/cloudera-framework-initialise.sh": {
+    "user":  "root",
+    "group": "root",
+    "permissions": "0755"
+  }
+}

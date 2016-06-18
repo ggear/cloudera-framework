@@ -28,6 +28,7 @@ import getopt
 import inspect
 import logging
 from random import randint
+import re
 import sys
 import textwrap
 from time import sleep
@@ -40,11 +41,13 @@ from cm_api.api_client import ApiResource
 LOG = logging.getLogger(__name__)
 
 POLL_SEC = 2
+TIMEOUT_SEC = 180
+REGEX_VERSION = '[1-9][0-9]\.[1-9][0-9]\.[1-9][0-9][0-9][0-9]'
 
-def do_parcel_op(cluster, parcel_name, parcel_version, stage_enter, stage_exit, parcel_op):
+def do_parcel_op(cluster, parcel_name, parcel_version, parcel_op_label, stage_enter, stage_exit, parcel_op):
     parcel = cluster.get_parcel(parcel_name, parcel_version)
     if parcel.stage == stage_enter:            
-        print 'Parcel [%s] starting ... ' % (stage_exit)    
+        print 'Parcel [%s] starting ... ' % (parcel_op_label)    
         getattr(parcel, parcel_op)()
         while True:
           time.sleep(POLL_SEC)
@@ -53,19 +56,24 @@ def do_parcel_op(cluster, parcel_name, parcel_version, stage_enter, stage_exit, 
             break
           if parcel.state.errors:
             raise Exception(str(parcel.state.errors))
-          print 'Parcel [%s] %s/%s' % (stage_exit, parcel.state.progress, parcel.state.totalProgress)
-        print 'Parcel [%s] finished' % (stage_exit)    
+          print 'Parcel [%s] %s/%s' % (parcel_op_label, parcel.state.progress, parcel.state.totalProgress)
+        print 'Parcel [%s] finished' % (parcel_op_label)    
                     
 def do_call(host, port, version, user, password, cluster_name, parcel_name, parcel_version, parcel_repo):
     api = ApiResource(host, port, user, password, False, version)
+    if not parcel_repo.endswith('/'):
+        parcel_repo += '/'
+    if re.match(REGEX_VERSION, parcel_version) is None or re.match(REGEX_VERSION, parcel_version).group() != parcel_version:
+        raise Exception('Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] expected to match regular expression [' + REGEX_VERSION + ']')
+    if not parcel_repo.endswith(parcel_version + '/'):
+        raise Exception('Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] when compared with repository [' + parcel_repo + ']')    
     cm_config = api.get_cloudera_manager().get_config(view='full')
     repo_config = cm_config['REMOTE_PARCEL_REPO_URLS']
     repo_list = repo_config.value or repo_config.default
-    if parcel_repo in repo_list:     
-         raise Exception('Parcel repository [' + parcel_repo + '] already configured, cannot proceed with deployment of this parcel [' + parcel_name + "-" + parcel_version + "]")
-    repo_list += ',' + parcel_repo
-    api.get_cloudera_manager().update_config({'REMOTE_PARCEL_REPO_URLS': repo_list})
-    time.sleep(POLL_SEC)  # The parcel synchronize end-point is not exposed via the API, so sleep instead
+    if parcel_repo not in repo_list:     
+        repo_list += ',' + parcel_repo
+        api.get_cloudera_manager().update_config({'REMOTE_PARCEL_REPO_URLS': repo_list})
+        time.sleep(POLL_SEC)  # The parcel synchronize end-point is not exposed via the API, so sleep instead
     cluster_names = []
     if cluster_name is None:
         for cluster in api.get_all_clusters():
@@ -73,18 +81,31 @@ def do_call(host, port, version, user, password, cluster_name, parcel_name, parc
     else:
         cluster_names.append(cluster_name)
     for cluster_name_itr in cluster_names:
+        print 'Cluster [DEPLOYMENT] starting ... '
         cluster = api.get_cluster(cluster_name_itr)
         parcel = cluster.get_parcel(parcel_name, parcel_version)
-        if parcel.stage != 'AVAILABLE_REMOTELY':
-         raise Exception('Parcel already deployed, cannot proceed with deployment of this parcel [' + parcel_name + "-" + parcel_version + "]")
-        print 'Parcel [DEPLOYMENT] for [%s-%s] on cluster [%s] starting ... ' % (parcel.product, parcel.version, cluster.displayName)                
-        do_parcel_op(cluster, parcel_name, parcel_version, 'AVAILABLE_REMOTELY', 'DOWNLOADED', 'start_download')
-        do_parcel_op(cluster, parcel_name, parcel_version, 'DOWNLOADED', 'DISTRIBUTED', 'start_distribution')
-        do_parcel_op(cluster, parcel_name, parcel_version, 'DISTRIBUTED', 'ACTIVATED', 'activate')
+        print 'Parcel [DEPLOYMENT] starting ... '
+        do_parcel_op(cluster, parcel_name, parcel_version, 'DEACTIVATE', 'ACTIVATED', 'DISTRIBUTED', 'deactivate')
+        do_parcel_op(cluster, parcel_name, parcel_version, 'DOWNLOAD', 'AVAILABLE_REMOTELY', 'DOWNLOADED', 'start_download')
+        do_parcel_op(cluster, parcel_name, parcel_version, 'DISTRIBUTE', 'DOWNLOADED', 'DISTRIBUTED', 'start_distribution')
+        do_parcel_op(cluster, parcel_name, parcel_version, 'ACTIVATE', 'DISTRIBUTED', 'ACTIVATED', 'activate')
         parcel = cluster.get_parcel(parcel_name, parcel_version)
         if parcel.stage != 'ACTIVATED':
             raise Exception('Parcel is currently mid-stage [' + parcel.stage + '], please wait for this to complete')
-        print 'Parcel [DEPLOYMENT] for [%s-%s] on cluster [%s] finished' % (parcel.product, parcel.version, cluster.displayName)                
+        print 'Parcel [DEPLOYMENT] finished'
+        print 'Cluster [CONFIG_DEPLOYMENT] starting ... '
+        cluster.deploy_client_config()
+        cmd = cluster.deploy_client_config()
+        if not cmd.wait(TIMEOUT_SEC).success:
+            raise Exception('Failed to deploy client configs')
+        print 'Cluster [CONFIG_DEPLOYMENT] finihsed'
+        print 'Cluster [STOP] starting ... '
+        cluster.stop().wait()
+        print 'Cluster [STOP] finihsed'
+        print 'Cluster [START] starting ... '
+        cluster.start().wait()
+        print 'Cluster [START] finihsed'
+        print 'Cluster [DEPLOYMENT] finished'
 
 def usage():
     doc = inspect.getmodule(usage).__doc__
