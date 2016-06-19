@@ -227,7 +227,7 @@
 									<version>${project.version}</version>
 								</artifactItem>
 							</artifactItems>
-							<outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib</outputDirectory>
+							<outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib/jar</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
@@ -240,7 +240,37 @@
 							<excludeTypes>pom</excludeTypes>
 							<includeScope>runtime</includeScope>
 							<excludeTransitive>false</excludeTransitive>
-							<outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib</outputDirectory>
+							<outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib/jar</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>parcel-dependency-flume</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib/flume/${project.artifactId}/lib</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>parcel-dependencies-flume</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<excludeTypes>pom</excludeTypes>
+							<includeScope>runtime</includeScope>
+							<excludeTransitive>false</excludeTransitive>
+							<outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib/flume/${project.artifactId}/libext</outputDirectory>
 						</configuration>
 					</execution>
 					<execution>
