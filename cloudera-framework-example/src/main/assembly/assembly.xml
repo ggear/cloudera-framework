@@ -49,10 +49,7 @@
 			<outputDirectory>lib/jar/dep</outputDirectory>
 			<fileMode>0644</fileMode>
 			<directoryMode>0755</directoryMode>
-			<scope>compile</scope>
-			<includes>
-				<include>${groupId}</include>
-			</includes>
+			<scope>runtime</scope>
 			<excludes>
 				<exclude>${groupId}:${artifactId}</exclude>
 			</excludes>
