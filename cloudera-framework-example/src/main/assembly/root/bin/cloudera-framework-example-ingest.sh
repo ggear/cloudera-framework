@@ -21,3 +21,5 @@ $ROOT_DIR/lib/bin/cloudera-framework-hadoop.sh "\
   $ROOT_DIR_HDFS_STAGED \
   $ROOT_DIR_HDFS_PARTITIONED \
   $ROOT_DIR_HDFS_PROCESSED"
+
+$ROOT_DIR/bin/cloudera-framework-example-schema.sh
