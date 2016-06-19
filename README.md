@@ -105,7 +105,7 @@ To perform a release:
 export CF_VERSION_RELEASE=1.4.4
 export CDH_VERSION_RELEASE=5.7.0
 export CF_VERSION_HEAD=1.4.5
-export CDH_VERSION_HEAD=5.7.0
+export CDH_VERSION_HEAD=5.7.1
 rm -rf ~/.m2/repository/com/cloudera/parcel/cloudera-* ~/.m2/repository/com/cloudera/cloudera-parcel ~/.m2/repository/com/cloudera/*framework*
 mvn clean install -PPKG
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
