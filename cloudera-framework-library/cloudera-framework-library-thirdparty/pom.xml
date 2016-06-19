@@ -14,6 +14,7 @@
 	</parent>
 
 	<modules>
+		<module>cloudera-framework-library-thirdparty-hive</module>
 		<module>cloudera-framework-library-thirdparty-avro</module>
 		<module>cloudera-framework-library-thirdparty-parquet</module>
 		<module>cloudera-framework-library-thirdparty-elephantbird</module>

@@ -66,6 +66,14 @@
 				<updatePolicy>never</updatePolicy>
 			</snapshots>
 		</pluginRepository>
+		<pluginRepository>
+			<id>cloudera</id>
+			<url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</pluginRepository>
 	</pluginRepositories>
 
 	<properties>
