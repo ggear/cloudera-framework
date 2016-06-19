@@ -1,8 +1,8 @@
 #!/bin/bash
 
-ROOT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/..
+PARCEL_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/..
 
-$ROOT_DIR/cloudera-framework-initialise.sh
+$PARCEL_DIR/meta/cloudera-framework-initialise.sh
 
-export HIVE_AUX_JARS_PATH="$ROOT_DIR/lib/jar"
-export HADOOP_CLASSPATH="$HADOOP_CLASSPATH":"$(echo -n $(ls -m $ROOT_DIR/lib/jar/*.jar)|sed 's/, /:/g')"
+export HIVE_AUX_JARS_PATH="$PARCEL_DIR/lib/jar"
+export HADOOP_CLASSPATH="$HADOOP_CLASSPATH":"$(echo -n $(ls -m $PARCEL_DIR/lib/jar/*.jar)|sed 's/, /:/g')"
