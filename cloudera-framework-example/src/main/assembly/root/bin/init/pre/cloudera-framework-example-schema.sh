@@ -9,4 +9,4 @@ set -x
 CMD_LINE_ARGUMENTS="$1"
 DROP_SCHEMA=${2:-true}
 
-$ROOT_DIR/bin/init/post/cloudera-framework-example-schema.sh "" "$DROP_SCHEMA"
+$ROOT_DIR/bin/cloudera-framework-example-schema.sh "" "$DROP_SCHEMA"
