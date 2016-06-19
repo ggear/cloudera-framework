@@ -7,7 +7,7 @@ source $ROOT_DIR/bin/*.env
 set -x
 
 CMD_LINE_ARGUMENTS="$1"
-DROP_SCHEMA=${2:-true}
+DROP_SCHEMA=${2:-false}
 USER_ADMIN=${3:-"$USER_ADMIN"}
 NAME_SPACE_SERVER=${4:-"$NAME_SPACE_SERVER"}
 NAME_SPACE_DATABASE=${5:-"$NAME_SPACE_DATABASE"}
@@ -128,8 +128,11 @@ TABLES_LOCATION=( \
 	"$ROOT_DIR_HDFS_PROCESSED_DUPLICATE/parquet/dict/snappy" \
 )
 
-if $DROP_SCHEMA && [ $($ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 1 ]; then
-  $ROOT_DIR/lib/bin/cloudera-framework-impala.sh -r -q "USE default; DROP DATABASE $NAME_SPACE_DATABASE CASCADE; DROP ROLE $USER_ADMIN;"
+if $DROP_SCHEMA; then
+  if [ $($ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 1 ]; then
+    $ROOT_DIR/lib/bin/cloudera-framework-impala.sh -r -q "USE default; DROP DATABASE $NAME_SPACE_DATABASE CASCADE; DROP ROLE $USER_ADMIN;"
+  fi
+  exit 0
 fi
 
 if [ $($ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "SHOW ROLES" 2> /dev/null| grep $USER_ADMIN|wc -l) -eq 0 ]; then
