@@ -165,7 +165,6 @@ TABLES_REFRESH_HIVE=""
 TABLES_REFRESH_IMPALA=""  
 for((i=0;i<${#TABLES_NAME[@]};i++)); do
   TABLES_REFRESH_HIVE="$TABLES_REFRESH_HIVE"" MSCK REPAIR TABLE ""${TABLES_NAME[$i]}""; "
-  TABLES_REFRESH_IMPALA="$TABLES_REFRESH_IMPALA"" REFRESH ""${TABLES_NAME[$i]}""; "
+  $ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "REFRESH ${TABLES_NAME[$i]};" 2> /dev/null
 done
 $ROOT_DIR/lib/bin/cloudera-framework-hive.sh -e "$TABLES_REFRESH_HIVE"
-$ROOT_DIR/lib/bin/cloudera-framework-impala.sh -q "$TABLES_REFRESH_IMPALA"
