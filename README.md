@@ -61,14 +61,14 @@ Alternatively, the module can be included as a binary dependency in maven, an ex
 		<dependency>
 			<groupId>com.cloudera.framework.library.client</groupId>
 			<artifactId>cloudera-framework-library-client-core</artifactId>
-			<version>1.4.4-cdh5.7.0</version>
+			<version>1.4.4-cdh5.7.1</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cloudera.framework</groupId>
 			<artifactId>cloudera-framework-testing</artifactId>
-			<version>1.4.4-cdh5.7.0</version>
+			<version>1.4.4-cdh5.7.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -81,7 +81,7 @@ The cloudera-framework includes an [example](https://github.com/ggear/cloudera-f
 ```bash
 # Change the following variables to appropriate values for your target environment
 export CF_VERSION=1.4.4
-export CDH_VERSION=5.7.0
+export CDH_VERSION=5.7.1
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate \
   -DarchetypeRepository=http://52.63.86.162/artifactory/libs-release-local \
@@ -103,7 +103,7 @@ To perform a release:
 ```bash
 # Change the following variables to appropriate values for your target environment
 export CF_VERSION_RELEASE=1.4.4
-export CDH_VERSION_RELEASE=5.7.0
+export CDH_VERSION_RELEASE=5.7.1
 export CF_VERSION_HEAD=1.4.5
 export CDH_VERSION_HEAD=5.7.1
 rm -rf ~/.m2/repository/com/cloudera/parcel/cloudera-* ~/.m2/repository/com/cloudera/cloudera-parcel ~/.m2/repository/com/cloudera/*framework*
