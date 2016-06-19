@@ -7,5 +7,6 @@ source $ROOT_DIR/bin/*.env
 set -x
 
 CMD_LINE_ARGUMENTS="$1"
+START_AGENTS=${2:-false}
 
-echo "Do nothing for the time being!"
+$ROOT_DIR/bin/init/post/cloudera-framework-example-stream.sh "" "$START_AGENTS"

@@ -7,7 +7,7 @@ source $ROOT_DIR/bin/*.env
 set -x
 
 CMD_LINE_ARGUMENTS="$1"
-START_AGENTS=${2:-true}
+DEPLOY_CONFIG=${2:-true}
 MANAGER_SERVER_USER=${3:-"admin"}
 MANAGER_SERVER_PWORD=${4:-"admin"}
 MANAGER_SERVER_HOST=${5:-"$MANAGER_SERVER_HOST"}
@@ -23,7 +23,7 @@ ROOT_DIR_HDFS_STAGED_CANONICAL=${14:-"$ROOT_DIR_HDFS_STAGED_CANONICAL"}
 RECORD_FORMAT=${15:-"xml"}
 
 $ROOT_DIR/lib/bin/cloudera-framework-hadoop.sh "fs -mkdir -p $ROOT_DIR_HDFS_STAGED"
-$ROOT_DIR/lib/bin/cloudera-framework-hadoop.sh "fs -chmod -R 777 $ROOT_DIR_HDFS_STAGED"
+$ROOT_DIR/lib/bin/cloudera-framework-hadoop.sh "fs -chmod 777 $ROOT_DIR_HDFS_STAGED"
  
 FLUME_AGENT_CONFIG=$(cat $ROOT_DIR/lib/cfg/flume/flume-conf.properties | \
 	sed -e "s|\$ROOT_HDFS|$ROOT_HDFS|g" | \
@@ -33,13 +33,13 @@ FLUME_AGENT_CONFIG=$(cat $ROOT_DIR/lib/cfg/flume/flume-conf.properties | \
 	sed -e "s|\$RECORD_FORMAT|"$RECORD_FORMAT"|g" \
 )
 
-python - "$MANAGER_SERVER_USER" "$MANAGER_SERVER_PWORD" "$MANAGER_SERVER_HOST" "$MANAGER_SERVER_PORT" "$FLUME_AGENT_NAME" "$FLUME_AGENT_CONFIG" "$FLUME_PLUGINS_DIR" "$START_AGENTS" << END
+python - "$MANAGER_SERVER_USER" "$MANAGER_SERVER_PWORD" "$MANAGER_SERVER_HOST" "$MANAGER_SERVER_PORT" "$FLUME_AGENT_NAME" "$FLUME_AGENT_CONFIG" "$FLUME_PLUGINS_DIR" "$DEPLOY_CONFIG" << END
 import sys
 from cm_api import api_client
 from cm_api.api_client import ApiResource
 def main(argv):
   config = argv[6]
-  if argv[8] is not 'true':
+  if argv[8] == 'false':
     config = '#Empty config'
   print ''
   api = ApiResource(argv[3], argv[4], argv[1], argv[2], False, 10);
@@ -51,12 +51,13 @@ def main(argv):
         for group in service.get_all_role_config_groups():
           if group.roleType == 'AGENT':
             print 'Updating Flume config ...'
+            print 'Agent name [%s], plugin directory [%s], config:' % (argv[5], argv[7])
+            print config
             group.update_config({'agent_name': argv[5]})
             group.update_config({'agent_plugin_dirs': argv[7]})
             group.update_config({'agent_config_file': config})
-        if argv[8] is 'true':
-          print 'Starting flume agent ...'
-          service.start().wait()
+        print 'Starting flume agent ...'
+        service.start().wait()
   return 0
 if __name__ == '__main__':
   sys.exit(main(sys.argv))
