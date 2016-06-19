@@ -4,7 +4,5 @@ ROOT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 $ROOT_DIR/cloudera-framework-initialise.sh
 
-export CDH_HADOOP_HOME=$PARCELS_ROOT/$CDH_DIRNAME/lib/hadoop
-
-export HIVE_AUX_JARS_PATH=$ROOT_DIR/../lib
-
+export HIVE_AUX_JARS_PATH="$ROOT_DIR/../lib"
+export HADOOP_CLASSPATH="$HADOOP_CLASSPATH":"$(echo -n $(ls -m $ROOT_DIR/lib/jar/*.jar)|sed 's/, /:/g')"
