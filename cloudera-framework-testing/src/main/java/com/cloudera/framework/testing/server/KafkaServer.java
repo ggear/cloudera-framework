@@ -7,18 +7,12 @@ import java.util.Properties;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.ZkConnection;
 import org.apache.commons.io.FileUtils;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import kafka.admin.AdminUtils;
-import kafka.common.TopicAlreadyMarkedForDeletionException;
-import kafka.common.TopicExistsException;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServerStartable;
 import kafka.utils.ZKStringSerializer$;
@@ -48,30 +42,16 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
     return CdhServer.SERVER_BIND_IP + ":" + kafka.serverConfig().port();
   }
 
-  public synchronized void create(String topic) throws InterruptedException {
-    try {
-      AdminUtils.createTopic(zooKeeperUtils, topic, 1, 1, new Properties());
-    } catch (TopicExistsException e) {
-      // ignore
-    }
-    while (AdminUtils.fetchTopicMetadataFromZk(topic, zooKeeperUtils).toString().contains("LeaderNotAvailableException")) {
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Sleeping for [" + KAFKA_POLL_MS + "] ms, waiting for Kafka topic to be reigstered in ZK");
-      }
-      Thread.sleep(KAFKA_POLL_MS);
-    }
+  public synchronized ZkUtils getZooKeeperUtils() {
+    return zooKeeperUtils;
   }
 
-  public synchronized void send(String topic, String key, String value) {
-    producer.send(new ProducerRecord<>(topic, key, value));
-  }
-
-  public synchronized void delete(String topic) throws InterruptedException {
-    try {
-      AdminUtils.deleteTopic(zooKeeperUtils, topic);
-    } catch (TopicAlreadyMarkedForDeletionException exception) {
-      // ignore
-    }
+  public synchronized Properties getProducerProperties() throws IOException {
+    Properties properties = new Properties();
+    properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getConnectString());
+    properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+    properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+    return properties;
   }
 
   @Override
@@ -94,11 +74,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
     properties.put("broker.id", "1");
     kafka = new KafkaServerStartable(new KafkaConfig(properties));
     kafka.startup();
-    properties.clear();
-    properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getConnectString());
-    properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-    properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-    producer = new KafkaProducer<>(properties);
     zooKeeperClient = new ZkClient(ZooKeeperServer.getInstance().getConnectString(), ZooKeeperServer.ZOOKEEPER_TIMEOUT_MS,
         ZooKeeperServer.ZOOKEEPER_TIMEOUT_MS, ZKStringSerializer$.MODULE$);
     zooKeeperUtils = new ZkUtils(zooKeeperClient, new ZkConnection(ZooKeeperServer.getInstance().getConnectString()), false);
@@ -108,7 +83,8 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   @Override
   public synchronized void clean() throws Exception {
     long time = log(LOG, "clean");
-    // TODO: Provide impl
+    // TODO: Provide implementation, delete all existing topics, wait for them
+    // to be removed
     if (LOG.isWarnEnabled()) {
       LOG.warn(logPrefix() + " [clean] not implemented");
     }
@@ -118,7 +94,7 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   @Override
   public synchronized void state() throws Exception {
     long time = log(LOG, "state", true);
-    // TODO: Provide impl
+    // TODO: Provide implementation, report all created topics
     if (LOG.isWarnEnabled()) {
       LOG.warn(logPrefix() + " [state] not implemented");
     }
@@ -134,9 +110,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
     if (zooKeeperClient != null) {
       zooKeeperClient.close();
     }
-    if (producer != null) {
-      producer.close();
-    }
     if (kafka != null) {
       kafka.shutdown();
       kafka.awaitShutdown();
@@ -146,14 +119,11 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaServer.class);
 
-  private static final int KAFKA_POLL_MS = 250;
-
   private static KafkaServer instance;
 
   private ZkUtils zooKeeperUtils;
   private ZkClient zooKeeperClient;
   private KafkaServerStartable kafka;
-  private Producer<String, String> producer;
 
   private KafkaServer(Runtime runtime) {
     super(runtime);
