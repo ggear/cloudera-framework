@@ -120,6 +120,20 @@ public abstract class TestDfsServer implements TestConstants {
   }
 
   @Test
+  public void testCopyFromFile() throws Exception {
+    assertEquals(0, getDfsServer().listFilesDfs(DIR_DESTINATION).length);
+    getDfsServer().getFileSystem().mkdirs(getDfsServer().getPath(DIR_DESTINATION));
+    getDfsServer().getFileSystem().mkdirs(getDfsServer().getPath(DIR_DESTINATION + "/dataset-3/dataset-3-sub-1/dataset-3-sub-1-sub-1"));
+    getDfsServer().copyFromLocalFile(DIR_SOURCE + "/dataset-1", DIR_DESTINATION);
+    assertEquals(4, getDfsServer().listFilesDfs(DIR_DESTINATION).length);
+    getDfsServer().copyFromLocalFile(DIR_SOURCE + "/dataset-2", DIR_DESTINATION);
+    assertEquals(12, getDfsServer().listFilesDfs(DIR_DESTINATION).length);
+    getDfsServer().copyFromLocalFile(DIR_SOURCE + "/dataset-3//dataset-3-sub-1/dataset-3-sub-1-sub-1/data",
+        DIR_DESTINATION + "/dataset-3/dataset-3-sub-1/dataset-3-sub-1-sub-1");
+    assertEquals(13, getDfsServer().listFilesDfs(DIR_DESTINATION).length);
+  }
+
+  @Test
   public void testCopyFromTestClassesDirAll() throws Exception {
     assertCopyFromLocalDir(0, 4, DIR_SOURCE, DIR_DESTINATION);
     assertCopyFromLocalDir(4, 4, DIR_SOURCE, DIR_DESTINATION);

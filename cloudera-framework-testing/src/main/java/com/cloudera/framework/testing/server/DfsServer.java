@@ -93,11 +93,12 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    *          prefix
    * @return the local path
    */
-  protected static String getPathLocal(String path) {
+  protected static Path getPathLocal(String path) {
     String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(path);
-    return pathRelativeToModuleRootSansLeadingSlashes.equals("")
-        ? ABS_DIR_WORKING.length() < 2 ? "/" : ABS_DIR_WORKING.substring(0, ABS_DIR_WORKING.length() - 2)
-        : new Path(ABS_DIR_WORKING, pathRelativeToModuleRootSansLeadingSlashes).toUri().toString();
+    return new Path(
+        pathRelativeToModuleRootSansLeadingSlashes.equals("")
+            ? ABS_DIR_WORKING.length() < 2 ? "/" : ABS_DIR_WORKING.substring(0, ABS_DIR_WORKING.length() - 2) : ABS_DIR_WORKING,
+        pathRelativeToModuleRootSansLeadingSlashes);
   }
 
   /**
@@ -173,6 +174,28 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       }
     }
     return files;
+  }
+
+  /**
+   * Copy local <code>sourcePath</code> to DFS <code>destinationPath</code>
+   *
+   * @param sourcePath
+   * @param destinationPath
+   * @return local files that have been copied
+   * @throws IOException
+   */
+  public File[] copyFromLocalFile(String sourcePath, String destinationPath) throws IOException {
+    File file = new File(getPathLocal(sourcePath).toString());
+    if (!file.exists()) {
+      return new File[0];
+    }
+    getFileSystem().copyFromLocalFile(getPathLocal(sourcePath), getPath(destinationPath));
+    if (file.isFile()) {
+      return new File[] { file };
+    } else {
+      return FileUtils.listFiles(new File(getPathLocal(sourcePath).toString()), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)
+          .toArray(new File[0]);
+    }
   }
 
   /**
@@ -311,7 +334,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     for (Path file : files) {
       if (!file.toString().contains(DIR_RUNTIME_MR)) {
         filesString.append("\n")
-            .append(Path.getPathWithoutSchemeAndAuthority(file).toString().replace(getPathLocal(REL_DIR_DFS_LOCAL), ""));
+            .append(Path.getPathWithoutSchemeAndAuthority(file).toString().replace(getPathLocal(REL_DIR_DFS_LOCAL).toUri().toString(), ""));
       }
     }
     log(LOG, "state", "find / -type f" + (filesString.length() > 0 ? filesString.toString() : "\n"), true);

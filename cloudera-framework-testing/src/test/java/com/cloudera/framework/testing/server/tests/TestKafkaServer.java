@@ -28,7 +28,7 @@ public class TestKafkaServer implements TestConstants {
     kafkaServer.create(topic);
     kafkaServer.send(topic, "my-key", "my-value");
 
-    // TODO Add new consumer due with Kafka 0.9.0
+    // TODO: Add new consumer due with Kafka 0.9.0
 
     kafkaServer.delete(topic);
   }
