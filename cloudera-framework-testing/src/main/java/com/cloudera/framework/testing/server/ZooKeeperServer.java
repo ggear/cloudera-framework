@@ -76,7 +76,7 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
   @Override
   public synchronized void clean() throws Exception {
     long time = log(LOG, "clean");
-    // TODO: Provide implementation
+    // TODO: Provide implementation, remove all state
     if (LOG.isWarnEnabled()) {
       LOG.warn(logPrefix() + " [clean] not implemented");
     }
@@ -86,7 +86,7 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
   @Override
   public synchronized void state() throws Exception {
     long time = log(LOG, "state", true);
-    // TODO: Provide implementation
+    // TODO: Provide implementation, print state tree, like DfsServer.state()
     if (LOG.isWarnEnabled()) {
       LOG.warn(logPrefix() + " [state] not implemented");
     }

@@ -94,7 +94,7 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   @Override
   public synchronized void state() throws Exception {
     long time = log(LOG, "state", true);
-    // TODO: Provide implementation, report all created topics
+    // TODO: Provide implementation, report all created topics, like DfsServer.state()
     if (LOG.isWarnEnabled()) {
       LOG.warn(logPrefix() + " [state] not implemented");
     }
