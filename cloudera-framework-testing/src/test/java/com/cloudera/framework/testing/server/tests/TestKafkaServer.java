@@ -38,7 +38,8 @@ public class TestKafkaServer implements TestConstants {
     AdminUtils.createTopic(kafkaServer.getZooKeeperUtils(), topic, 1, 1, new Properties());
     // TODO: Add new consumer written against new Kafka 0.9.0 consumer API,
     // testing that messages are received, as simply and cleanly as possible
-    // likely using global java.util.concurrent.CountDownLatch's for threading
+    // likely using global java.util.concurrent.CountDownLatch's for threading,
+    // see TestZooKeeperServer.testZookeeper()
     Producer<String, String> producer = new KafkaProducer<>(kafkaServer.getProducerProperties());
     try {
       producer.send(new ProducerRecord<>(topic, "my-key", "my-value"));
