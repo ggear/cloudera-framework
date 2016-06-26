@@ -4,11 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.Collections;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import com.cloudera.framework.testing.TestConstants;
@@ -42,11 +41,7 @@ public abstract class TestHiveServer implements TestConstants {
   public void testHiveCreateSelect() throws Exception {
     new File(REL_DIR_DATA).mkdirs();
     File localDataFile = new File(REL_DIR_DATA + "/somedata.csv");
-    BufferedWriter writer = new BufferedWriter(new FileWriter(localDataFile));
-    writer.write("1,1\n");
-    writer.write("2,2\n");
-    writer.write("3,3\n");
-    writer.close();
+    FileUtils.writeStringToFile(localDataFile, "1,1\n2,2\n3,3\n");
     assertEquals(0, DfsServer.getInstance().listFilesDfs("/usr/hive").length);
     assertEquals(0, getHiveServer().execute("SHOW TABLES").size());
     assertEquals(2,
