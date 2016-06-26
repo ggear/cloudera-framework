@@ -3,11 +3,12 @@
 export ROOT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../..
 
 source $ROOT_DIR/bin/*.env
-source $ROOT_DIR/lib/parcel/parcel.env
 
 set -x
 
-$ROOT_DIR/lib/bin/cloudera-framework-parcel.py \
+if [ -f $ROOT_DIR/lib/parcel/parcel.env ]; then
+  source $ROOT_DIR/lib/parcel/parcel.env
+  $ROOT_DIR/lib/bin/cloudera-framework-parcel.py \
 	--host $MANAGER_SERVER_HOST \
 	--parcel_name $PARCEL_NAME \
 	--parcel_version $PARCEL_VERSION \
@@ -15,5 +16,5 @@ $ROOT_DIR/lib/bin/cloudera-framework-parcel.py \
 	--init_pre_dir $ROOT_DIR/bin/init/pre \
 	--init_post_dir $ROOT_DIR/bin/init/post \
 	|| { exit 1; }
-
+fi
 	
