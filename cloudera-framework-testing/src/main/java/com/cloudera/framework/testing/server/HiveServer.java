@@ -148,7 +148,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       ((Driver) (commandProcessor = new Driver(confSession))).setMaxRows(maxResults);
     }
     if (!quiet) {
-      log(LOG, "execute", "statement\n" + statement, true);
+      log(LOG, "execute", "statement:\n" + statement, true);
     }
     String responseErrorMessage = null;
     int responseCode = commandProcessor.run(statement).getResponseCode();
@@ -157,7 +157,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       responseErrorMessage = ((Driver) commandProcessor).getErrorMsg();
     }
     if (!quiet) {
-      log(LOG, "execute", "results count [" + results.size() + (results.size() == maxResults ? " (MAX)" : "") + "]\n"
+      log(LOG, "execute", "results count [" + results.size() + (results.size() == maxResults ? " (MAX)" : "") + "]:\n"
           + StringUtils.join(results.toArray(), "\n"), true);
       log(LOG, "execute", "finished in [" + (System.currentTimeMillis() - time) + "] ms", true);
     }
@@ -312,7 +312,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   @Override
   public synchronized void state() throws Exception {
     long time = log(LOG, "state", true);
-    log(LOG, "state", "tables\n" + StringUtils.join(
+    log(LOG, "state", "tables:\n" + StringUtils.join(
         execute("SHOW TABLES", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(), MAX_RESULTS_DEFAULT, true)
             .toArray(),
         "\n"), true);

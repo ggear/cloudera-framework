@@ -79,7 +79,7 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
     long time = log(LOG, "state", true);
     KuduClient client = new KuduClientBuilder(miniKudu.getMasterAddresses()).build();
     try {
-      log(LOG, "state", "tables\n" + StringUtils.join(client.getTablesList().getTablesList().toArray(), "\n"), true);
+      log(LOG, "state", "tables:\n" + StringUtils.join(client.getTablesList().getTablesList().toArray(), "\n"), true);
     } finally {
       client.shutdown();
     }

@@ -1,16 +1,23 @@
 package com.cloudera.framework.testing.server.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -18,8 +25,6 @@ import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.KafkaServer;
 import com.cloudera.framework.testing.server.ZooKeeperServer;
-
-import kafka.admin.AdminUtils;
 
 @RunWith(TestRunner.class)
 public class TestKafkaServer implements TestConstants {
@@ -33,26 +38,34 @@ public class TestKafkaServer implements TestConstants {
   }
 
   @Test
-  public void testKafka() throws InterruptedException, IOException {
-    String topic = "mytesttopic";
-    AdminUtils.createTopic(kafkaServer.getZooKeeperUtils(), topic, 1, 1, new Properties());
-    // TODO: Add new consumer written against new Kafka 0.9.0 consumer API,
-    // testing that messages are received, as simply and cleanly as possible
-    // likely using global java.util.concurrent.CountDownLatch's for threading,
-    // see TestZooKeeperServer.testZookeeper()
+  public void testKafka() throws InterruptedException, IOException, ExecutionException, TimeoutException {
+    int messageCount = 10;
+    kafkaServer.createTopic(TOPIC_NAME_TEST, 1, 1, new Properties());
     Producer<String, String> producer = new KafkaProducer<>(kafkaServer.getProducerProperties());
+    KafkaConsumer<String, String> consumer = new KafkaConsumer<>(kafkaServer.getConsumerProperties());
     try {
-      producer.send(new ProducerRecord<>(topic, "my-key", "my-value"));
+      consumer.subscribe(Arrays.asList(TOPIC_NAME_TEST));
+      for (int i = 0; i < messageCount; i++) {
+        producer.send(new ProducerRecord<>(TOPIC_NAME_TEST, "" + i, "" + i)).get(KafkaServer.KAFKA_POLL_MS, TimeUnit.MILLISECONDS);
+      }
+      producer.flush();
+      ConsumerRecords<String, String> records = consumer.poll(KafkaServer.KAFKA_POLL_MS * messageCount);
+      assertEquals(messageCount, records.count());
+      for (ConsumerRecord<String, String> record : records) {
+        assertTrue(record.offset() >= Long.parseLong(record.key()));
+        assertTrue(Long.parseLong(record.key()) == Long.parseLong(record.value()));
+      }
     } finally {
       IOUtils.closeQuietly(producer);
+      IOUtils.closeQuietly(consumer);
     }
   }
 
   @Test
-  @Ignore // TODO: Remove when KafkaServer.clean() is implemented and topics are
-          // flushed between test methods and this test can pass
-  public void testKafkaAgain() throws InterruptedException, IOException {
+  public void testKafkaAgain() throws InterruptedException, IOException, ExecutionException, TimeoutException {
     testKafka();
   }
+
+  private static final String TOPIC_NAME_TEST = "mytopic";
 
 }

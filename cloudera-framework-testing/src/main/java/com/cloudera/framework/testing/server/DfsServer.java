@@ -280,7 +280,8 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
           .append(" -> ").append(destinationPath).append("/").append(file.getName());
     }
     log(LOG, "copy",
-        "[copy] cp -rvf /" + sourcePathGlob + "/* " + destinationPath + (filesString.length() > 0 ? filesString.toString() : "\n"), true);
+        "[copy] cp -rvf /" + sourcePathGlob + "/* " + destinationPath + (filesString.length() > 0 ? filesString.toString() : ":\n  "),
+        true);
     if (files.isEmpty()) {
       throw new IllegalArgumentException("Could not find files with path [" + sourcePathGlob + "]");
     }
@@ -337,7 +338,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
             .append(Path.getPathWithoutSchemeAndAuthority(file).toString().replace(getPathLocal(REL_DIR_DFS_LOCAL).toUri().toString(), ""));
       }
     }
-    log(LOG, "state", "find / -type f" + (filesString.length() > 0 ? filesString.toString() : "\n"), true);
+    log(LOG, "state", "find / -type f:" + (filesString.length() > 0 ? filesString.toString() : "\n"), true);
     log(LOG, "state", time, true);
   }
 
