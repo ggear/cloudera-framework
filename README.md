@@ -88,10 +88,10 @@ mvn archetype:generate \
   -DarchetypeGroupId=com.cloudera.framework \
   -DarchetypeArtifactId=cloudera-framework-archetype \
   -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
-  -DgroupId=com.my.company \
-  -DartifactId=my-cloudera-project \
-  -Dversion=10.10.1000-SNAPSHOT \
-  -Dpackage="com.my.company"
+  -DgroupId=com.cloudera.mytest \
+  -DartifactId=cloudera-mytest \
+  -Dversion=10.10.1000 \
+  -Dpackage="com.cloudera"
 cd my-cloudera-project
 mvn -Declipse.workspace=$ECLIPSE_WORKSPACE eclipse:configure-workspace eclipse:eclipse clean install
 ```
