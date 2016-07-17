@@ -3,6 +3,7 @@ package com.cloudera.framework.example.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -213,7 +214,7 @@ public class Table extends TestBase {
       String inputPath = dfsServer.getFileSystem().makeQualified(new Path((String) testMetaData.getParameters()[i].get(DDL_VAR_ROOT)))
           .toString();
       assertNotNull(testName,
-          hiveServer.execute(DDL_DIR, (String) testMetaData.getParameters()[i].get(DDL_VAR_FILE),
+          hiveServer.execute(new File(DDL_DIR, (String) testMetaData.getParameters()[i].get(DDL_VAR_FILE)),
               ImmutableMap.<String, String> builder().putAll(testMetaData.getParameters()[i]).put(DDL_VAR_SCHEMA, MODEL_AVRO).build(),
               ImmutableMap.of(Constants.CONFIG_INPUT_PATH, inputPath)));
       assertNotNull(testName, hiveServer.execute("DESCRIBE " + (String) testMetaData.getParameters()[i].get(DDL_VAR_NAME)));

@@ -345,11 +345,10 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>chmod</executable>
+							<executable>bash</executable>
 							<arguments>
-								<argument>-R</argument>
-								<argument>+x</argument>
-								<argument>\${project.build.directory}/assembly/\${artifactId}-\${version}/lib/bin</argument>
+								<argument>-c</argument>
+								<argument>find \${project.build.directory}/assembly/\${artifactId}-\${version} -type f \( -name *.sh -or -name *.py \) -exec chmod 700 {} \;</argument>
 							</arguments>
 						</configuration>
 					</execution>

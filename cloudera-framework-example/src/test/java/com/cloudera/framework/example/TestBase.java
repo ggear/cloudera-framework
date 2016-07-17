@@ -4,6 +4,9 @@ import com.cloudera.framework.example.model.RecordCounter;
 import com.cloudera.framework.testing.TestMetaData;
 import com.google.common.collect.ImmutableMap;
 
+/**
+ *
+ */
 public abstract class TestBase implements Constants, TestConstants {
 
   public final TestMetaData testMetaDataCsvPristine = TestMetaData.getInstance() //

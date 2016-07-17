@@ -43,7 +43,7 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   /**
    * Get connect string
-   * 
+   *
    * @return formatted as <code>host:post</code>
    * @throws IOException
    */
@@ -56,7 +56,7 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   /**
    * Get the ZooKeeper Utils
-   * 
+   *
    * @return
    */
   public synchronized ZkUtils getZooKeeperUtils() {
@@ -65,7 +65,7 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   /**
    * Create topic
-   * 
+   *
    * @param topic
    * @param partitions
    * @param replicationFactor

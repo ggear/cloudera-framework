@@ -2,7 +2,6 @@ package com.cloudera.framework.testing.server;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +12,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.hadoop.conf.Configuration;
@@ -157,8 +155,13 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       responseErrorMessage = ((Driver) commandProcessor).getErrorMsg();
     }
     if (!quiet) {
-      log(LOG, "execute", "results count [" + results.size() + (results.size() == maxResults ? " (MAX)" : "") + "]:\n"
-          + StringUtils.join(results.toArray(), "\n"), true);
+      if (responseCode != 0 || responseErrorMessage != null) {
+        log(LOG, "execute",
+            "error code [" + responseCode + "]" + (responseErrorMessage != null ? " message [" + responseErrorMessage + " ]" : ""), true);
+      } else {
+        log(LOG, "execute", "results count [" + results.size() + (results.size() == maxResults ? " (MAX)" : "") + "]:\n"
+            + StringUtils.join(results.toArray(), "\n"), true);
+      }
       log(LOG, "execute", "finished in [" + (System.currentTimeMillis() - time) + "] ms", true);
     }
     if (responseCode != 0 || responseErrorMessage != null) {
@@ -170,25 +173,23 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   /**
    * Process a set of <code>;</code> delimited statements from a
-   * <code>file</code> in a <code>directory</code>
+   * <code>file</code>
    *
-   * @param directory
    * @param file
    * @return {@link List} of {@link List} of {@link String} results per
    *         statement, no result will be indicated by 1-length empty
    *         {@link String} {@link List}
    * @throws Exception
    */
-  public List<List<String>> execute(String directory, String file) throws Exception {
-    return execute(directory, file, Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap());
+  public List<List<String>> execute(File file) throws Exception {
+    return execute(file, Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap());
   }
 
   /**
    * Process a set of <code>;</code> delimited statements from a
-   * <code>file</code> in a <code>directory</code>, making <code>hivevar</code>
-   * substitutions from <code>parameters</code>
+   * <code>file</code>, making <code>hivevar</code> substitutions from
+   * <code>parameters</code>
    *
-   * @param directory
    * @param file
    * @param parameters
    * @return {@link List} of {@link List} of {@link String} results per
@@ -196,17 +197,16 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *         {@link String} {@link List}
    * @throws Exception
    */
-  public List<List<String>> execute(String directory, String file, Map<String, String> parameters) throws Exception {
-    return execute(directory, file, parameters, Collections.<String, String> emptyMap());
+  public List<List<String>> execute(File file, Map<String, String> parameters) throws Exception {
+    return execute(file, parameters, Collections.<String, String> emptyMap());
   }
 
   /**
    * Process a set of <code>;</code> delimited statements from a
-   * <code>file</code> in a <code>directory</code>, making <code>hivevar</code>
-   * substitutions from <code>parameters</code> and session settings from
+   * <code>file</code>, making <code>hivevar</code> substitutions from
+   * <code>parameters</code> and session settings from
    * <code>configuration</code>
    *
-   * @param directory
    * @param file
    * @param parameters
    * @param configuration
@@ -215,18 +215,16 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *         {@link String} {@link List}
    * @throws Exception
    */
-  public List<List<String>> execute(String directory, String file, Map<String, String> parameters, Map<String, String> configuration)
-      throws Exception {
-    return execute(directory, file, parameters, configuration, MAX_RESULTS_DEFAULT);
+  public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration) throws Exception {
+    return execute(file, parameters, configuration, MAX_RESULTS_DEFAULT);
   }
 
   /**
    * Process a set of <code>;</code> delimited statements from a
-   * <code>file</code> in a <code>directory</code>, making <code>hivevar</code>
-   * substitutions from <code>parameters</code> and session settings from
+   * <code>file</code>, making <code>hivevar</code> substitutions from
+   * <code>parameters</code> and session settings from
    * <code>configuration</code>
    *
-   * @param directory
    * @param file
    * @param parameters
    * @param configuration
@@ -236,11 +234,17 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *         {@link String} {@link List}
    * @throws Exception
    */
-  public List<List<String>> execute(String directory, String file, Map<String, String> parameters, Map<String, String> configuration,
-      int maxResults) throws Exception {
+  public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration, int maxResults)
+      throws Exception {
     List<List<String>> results = new ArrayList<>();
-    for (String statement : readFileToLines(directory, file, COMMAND_DELIMETER)) {
-      results.add(execute(statement, parameters, configuration, maxResults));
+    if (file == null) {
+      throw new IOException("File [" + file + "] not found");
+    }
+    log(LOG, "execute", "script [" + file.getAbsolutePath() + "]");
+    for (String statement : FileUtils.readFileToString(file).split(COMMAND_DELIMETER)) {
+      if (!StringUtils.isEmpty(statement.trim())) {
+        results.add(execute(statement, parameters, configuration, maxResults));
+      }
     }
     return results;
   }
@@ -415,24 +419,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       hiveClient.closeSession(sessionHandle);
       break;
     } while (true);
-  }
-
-  private static List<String> readFileToLines(String directory, String file, String delimeter) throws IOException {
-    List<String> lines = new ArrayList<>();
-    InputStream inputStream = HiveServer.class.getResourceAsStream(directory + "/" + file);
-    if (inputStream != null) {
-      try {
-        for (String line : IOUtils.toString(inputStream).split(delimeter)) {
-          if (!line.trim().equals("")) {
-            lines.add(line.trim());
-          }
-        }
-        return lines;
-      } finally {
-        inputStream.close();
-      }
-    }
-    throw new IOException("Could not load file [" + directory + "/" + file + "] from classpath");
   }
 
 }

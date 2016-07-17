@@ -21,4 +21,6 @@ public interface TestConstants extends com.cloudera.framework.testing.TestConsta
   public static final String DSS_MYDATASET_EMPTY_DIR = "empty-dir";
   public static final String DSS_MYDATASET_EMPTY_FILE = "empty-file";
 
+  public static final String DDL_DIR = ABS_DIR_CLASSES + "/hive/schema/ddl";
+
 }

@@ -152,8 +152,9 @@ public class Stream extends TestBase {
   }
 
   private final Map<String, String> FLUME_SUBSTITUTIONS = ImmutableMap.of(//
+      "FLUME_AGENT_NAME", FLUME_AGENT_NAME, //
       "ROOT_HDFS", dfsServer.getPathUri("/"), //
-      "ROOT_DIR_HDFS_STAGED_CANONICAL", DIR_ABS_MYDS_STAGED_CANONICAL, //
+      "ROOT_DIR_HDFS", DIR_ABS_MYDS, //
       "RECORD_FORMAT", "xml"//
   );
 
@@ -162,7 +163,7 @@ public class Stream extends TestBase {
     return TestRunner.toCdhMetaData(this, field);
   }
 
-  private static final String FLUME_CONFIG_FILE = "cfg/flume/flume-conf.properties";
+  private static final String FLUME_CONFIG_FILE = "flume/flume-conf.properties";
   private static final String FLUME_AGENT_NAME = "mydataset";
   private static final String FLUME_SOURCE_POLL_MS = "25";
 

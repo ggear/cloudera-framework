@@ -11,7 +11,8 @@ public interface TestConstants {
   public static final String DIR_TARGET = "target";
   public static final String DIR_DATASET = "data";
   public static final String DIR_DATA = "test-data";
-  public static final String DIR_CLASSES = "test-classes";
+  public static final String DIR_CLASSES = "classes";
+  public static final String DIR_CLASSES_TEST = "test-classes";
   public static final String DIR_DERBY = "test-derby";
   public static final String DIR_DERBY_DB = "test-db";
   public static final String DIR_DERBY_LOG = "derby.log";
@@ -29,7 +30,8 @@ public interface TestConstants {
   // Relative directories
   public static final String REL_DIR_DATA = DIR_TARGET + "/" + DIR_DATA;
   public static final String REL_DIR_CLASSES = DIR_TARGET + "/" + DIR_CLASSES;
-  public static final String REL_DIR_DATASET = REL_DIR_CLASSES + "/" + DIR_DATASET;
+  public static final String REL_DIR_CLASSES_TEST = DIR_TARGET + "/" + DIR_CLASSES_TEST;
+  public static final String REL_DIR_DATASET = REL_DIR_CLASSES_TEST + "/" + DIR_DATASET;
   public static final String REL_DIR_DFS_LOCAL = DIR_TARGET + "/" + DIR_DFS_LOCAL;
   public static final String REL_DIR_DFS = DIR_TARGET + "/" + DIR_DFS;
   public static final String REL_DIR_KUDU = DIR_TARGET + "/" + DIR_KUDU;
@@ -37,6 +39,8 @@ public interface TestConstants {
   // Absolute directories
   public static final String ABS_DIR_WORKING = new File(".").getAbsolutePath().substring(0, new File(".").getAbsolutePath().length() - 2);
   public static final String ABS_DIR_TARGET = ABS_DIR_WORKING + "/" + DIR_TARGET;
+  public static final String ABS_DIR_CLASSES = ABS_DIR_TARGET + "/" + DIR_CLASSES;
+  public static final String ABS_DIR_CLASSES_TEST = ABS_DIR_TARGET + "/" + DIR_CLASSES_TEST;
   public static final String ABS_DIR_DATA = ABS_DIR_TARGET + "/" + DIR_DATA;
   public static final String ABS_DIR_DERBY = ABS_DIR_TARGET + "/" + DIR_DERBY;
   public static final String ABS_DIR_DERBY_DB = ABS_DIR_DERBY + "/" + DIR_DERBY_DB;

@@ -7,10 +7,10 @@ source $ROOT_DIR/bin/*.env
 set -x
 
 CMD_LINE_ARGUMENTS="$1"
-ROOT_DIR_HDFS_RAW=${3:-"$ROOT_DIR_HDFS_RAW"}
+ROOT_DIR_HDFS_RAW=${2:-"$ROOT_DIR_HDFS_RAW"}
 ROOT_DIR_HDFS_STAGED=${3:-"$ROOT_DIR_HDFS_STAGED"}
-ROOT_DIR_HDFS_PARTITIONED=${3:-"$ROOT_DIR_HDFS_PARTITIONED"}
-ROOT_DIR_HDFS_PROCESSED=${3:-"$ROOT_DIR_HDFS_PROCESSED"}
+ROOT_DIR_HDFS_PARTITIONED=${4:-"$ROOT_DIR_HDFS_PARTITIONED"}
+ROOT_DIR_HDFS_PROCESSED=${5:-"$ROOT_DIR_HDFS_PROCESSED"}
 
 $ROOT_DIR/lib/bin/cloudera-framework-hadoop.sh "\
   jar $ROOT_DIR/lib/jar/*.jar \
@@ -22,4 +22,4 @@ $ROOT_DIR/lib/bin/cloudera-framework-hadoop.sh "\
   $ROOT_DIR_HDFS_PARTITIONED \
   $ROOT_DIR_HDFS_PROCESSED"
 
-$ROOT_DIR/bin/cloudera-framework-example-schema.sh
+$ROOT_DIR/bin/cloudera-framework-schema.sh

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 
 import org.apache.commons.io.FileUtils;
@@ -32,6 +33,16 @@ public abstract class TestHiveServer implements TestConstants {
     assertTrue(MrServer.getInstance().isStarted());
   }
 
+  @Test(expected = IOException.class)
+  public void testHiveNullFile() throws Exception {
+    getHiveServer().execute((File) null);
+  }
+
+  @Test(expected = IOException.class)
+  public void testHiveNoFile() throws Exception {
+    getHiveServer().execute(new File("/hive/some-non-existant-script.sql"));
+  }
+
   /**
    * Test Hive
    *
@@ -46,7 +57,7 @@ public abstract class TestHiveServer implements TestConstants {
     assertEquals(0, getHiveServer().execute("SHOW TABLES").size());
     assertEquals(2,
         getHiveServer()
-            .execute("/ddl", "create.sql",
+            .execute(new File(getClass().getResource("/ddl/create.sql").getPath()),
                 new ImmutableMap.Builder<String, String>().put("test.table.name", "somedata").put("test.table.field.delim", ",").build())
             .size());
     assertEquals(0,

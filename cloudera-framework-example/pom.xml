@@ -5,7 +5,7 @@
 	<groupId>com.cloudera.framework</groupId>
 	<artifactId>cloudera-framework-example</artifactId>
 	<packaging>jar</packaging>
-	<version>1.4.5-cdh5.7.1-SNAPSHOT</version>
+	<version>10.10.1002</version>
 
 	<parent>
 		<groupId>com.cloudera</groupId>
@@ -123,7 +123,7 @@
 						</goals>
 						<configuration>
 							<stringType>String</stringType>
-							<sourceDirectory>src/main/resources/cfg/avro/</sourceDirectory>
+							<sourceDirectory>src/main/resources/avro/</sourceDirectory>
 							<outputDirectory>src/main/java/</outputDirectory>
 						</configuration>
 					</execution>
@@ -321,11 +321,10 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>chmod</executable>
+							<executable>bash</executable>
 							<arguments>
-								<argument>-R</argument>
-								<argument>+x</argument>
-								<argument>${project.build.directory}/assembly/${project.artifactId}-${project.version}/lib/bin</argument>
+								<argument>-c</argument>
+								<argument>find ${project.build.directory}/assembly/${project.artifactId}-${project.version} -type f \( -name *.sh -or -name *.py \) -exec chmod 700 {} \;</argument>
 							</arguments>
 						</configuration>
 					</execution>

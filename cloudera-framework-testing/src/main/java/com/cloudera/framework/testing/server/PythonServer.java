@@ -2,7 +2,6 @@ package com.cloudera.framework.testing.server;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,39 +31,36 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   }
 
   /**
-   * Process a script from <code>file</code> sourced from
-   * <code>directory</code>, invoking with command line <code>parameters</code>
+   * Process a script from <code>file</code>, invoking with command line
+   * <code>parameters</code>
    *
-   * @param directory
    * @param file
    * @return the exit code
    * @throws InterruptedException
    * @throws Exception
    */
-  public int execute(String directory, String file) throws IOException, InterruptedException {
-    return execute(directory, file, null);
+  public int execute(File file) throws IOException, InterruptedException {
+    return execute(file, null);
   }
 
   /**
    * Process a script from <code>file</code> sourced from
    * <code>directory</code>, invoking with command line <code>parameters</code>
    *
-   * @param directory
    * @param file
    * @param parameters
    * @return the exit code
    * @throws InterruptedException
    * @throws Exception
    */
-  public int execute(String directory, String file, List<String> parameters) throws IOException, InterruptedException {
-    return execute(directory, file, parameters, null);
+  public int execute(File file, List<String> parameters) throws IOException, InterruptedException {
+    return execute(file, parameters, null);
   }
 
   /**
    * Process a script from <code>file</code> sourced from
    * <code>directory</code>, invoking with command line <code>parameters</code>
    *
-   * @param directory
    * @param file
    * @param parameters
    * @param configuration
@@ -72,16 +68,14 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * @throws InterruptedException
    * @throws Exception
    */
-  public int execute(String directory, String file, List<String> parameters, Map<String, String> configuration)
-      throws IOException, InterruptedException {
-    return execute(directory, file, parameters, configuration, null, null);
+  public int execute(File file, List<String> parameters, Map<String, String> configuration) throws IOException, InterruptedException {
+    return execute(file, parameters, configuration, null, null);
   }
 
   /**
    * Process a script from <code>file</code> sourced from
    * <code>directory</code>, invoking with command line <code>parameters</code>
    *
-   * @param directory
    * @param file
    * @param parameters
    * @param configuration
@@ -91,16 +85,15 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * @throws InterruptedException
    * @throws Exception
    */
-  public int execute(String directory, String file, List<String> parameters, Map<String, String> configuration, StringBuffer output,
-      StringBuffer error) throws IOException, InterruptedException {
-    return execute(directory, file, parameters, configuration, output, error, false);
+  public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error)
+      throws IOException, InterruptedException {
+    return execute(file, parameters, configuration, output, error, false);
   }
 
   /**
    * Process a script from <code>file</code> sourced from
    * <code>directory</code>, invoking with command line <code>parameters</code>
    *
-   * @param directory
    * @param file
    * @param parameters
    * @param configuration
@@ -111,19 +104,17 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * @throws InterruptedException
    * @throws Exception
    */
-  public int execute(String directory, String file, List<String> parameters, Map<String, String> configuration, StringBuffer output,
-      StringBuffer error, boolean quiet) throws IOException, InterruptedException {
+  public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error,
+      boolean quiet) throws IOException, InterruptedException {
     int exit = -1;
-    URL directoryUrl = PythonServer.class.getResource(StringUtils.isEmpty(directory) ? "/" : directory);
-    File script = new File(directoryUrl == null ? directory : directoryUrl.getFile(), StringUtils.isEmpty(file) ? "" : file);
-    if (!script.exists()) {
-      throw new IOException("Could not find file [" + script.getAbsolutePath() + "]");
+    if (file == null || !file.exists()) {
+      throw new IOException("Could not find file [" + file + "]");
     }
-    if (!script.canExecute()) {
-      script.setExecutable(true);
+    if (!file.canExecute()) {
+      file.setExecutable(true);
     }
     List<String> command = new ArrayList<>(parameters == null ? Collections.<String> emptyList() : parameters);
-    command.add(0, script.getAbsolutePath());
+    command.add(0, file.getAbsolutePath());
     Process process = new ProcessBuilder(command).start();
     IOUtils.closeQuietly(process.getOutputStream());
     exit = process.waitFor();
@@ -138,8 +129,8 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
       error.append(errorString);
     }
     if (!quiet) {
-      log(LOG, "execute",
-          "script [" + script.getAbsolutePath() + "]\n" + inputString + (StringUtils.isEmpty(errorString) ? "" : errorString), true);
+      log(LOG, "execute", "script [" + file.getAbsolutePath() + "]\n" + inputString + (StringUtils.isEmpty(errorString) ? "" : errorString),
+          true);
     }
     return exit;
   }

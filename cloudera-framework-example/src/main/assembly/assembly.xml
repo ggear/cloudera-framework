@@ -21,6 +21,7 @@
 			<directory>src/main/assembly/root</directory>
 			<includes>
 				<include>**/*.sh</include>
+				<include>**/*.py</include>
 			</includes>
 			<fileMode>0700</fileMode>
 			<directoryMode>0755</directoryMode>
@@ -61,19 +62,19 @@
 				<include>${groupId}:${artifactId}</include>
 			</includes>
 			<unpackOptions>
-				<includes>
-					<include>cfg/**/*</include>
-					<include>ddl/**/*</include>
-					<include>sql/**/*</include>
-				</includes>
+				<excludes>
+					<exclude>**/*.sh</exclude>
+					<exclude>**/*.py</exclude>
+					<exclude>META-INF/**</exclude>
+					<exclude>com/**</exclude>
+				</excludes>
 			</unpackOptions>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory></outputDirectory>
+			<outputDirectory>lib</outputDirectory>
 			<unpack>true</unpack>
 			<includes>
-				<include>com.cloudera.framework:cloudera-framework-assembly
-				</include>
+				<include>${groupId}:${artifactId}</include>
 			</includes>
 			<fileMode>0700</fileMode>
 			<directoryMode>0755</directoryMode>
@@ -81,7 +82,27 @@
 				<includes>
 					<include>**/*.sh</include>
 					<include>**/*.py</include>
+					<include>**/*.ddl</include>
 				</includes>
+			</unpackOptions>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory></outputDirectory>
+			<unpack>true</unpack>
+			<includes>
+				<include>com.cloudera.framework:cloudera-framework-assembly</include>
+			</includes>
+			<fileMode>0700</fileMode>
+			<directoryMode>0755</directoryMode>
+			<unpackOptions>
+				<includes>
+					<include>**/*.sh</include>
+					<include>**/*.py</include>
+					<include>**/*.ddl</include>
+				</includes>
+				<excludes>
+					<exclude>meta/**</exclude>
+				</excludes>
 			</unpackOptions>
 		</dependencySet>
 	</dependencySets>

@@ -1,10 +1,12 @@
 package com.cloudera.framework.testing;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -38,7 +40,7 @@ public class TestTestRunner implements TestConstants {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Start server class");
       }
-      Assert.assertEquals(1, COUNTER.incrementAndGet());
+      assertEquals(1, COUNTER.incrementAndGet());
     }
 
     @Override
@@ -46,7 +48,7 @@ public class TestTestRunner implements TestConstants {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Clean server class");
       }
-      Assert.assertEquals(4, COUNTER.incrementAndGet());
+      assertEquals(4, COUNTER.incrementAndGet());
     }
 
     @Override
@@ -54,7 +56,7 @@ public class TestTestRunner implements TestConstants {
       if (LOG.isDebugEnabled()) {
         LOG.debug("State server class");
       }
-      Assert.assertEquals(4, COUNTER.decrementAndGet());
+      assertEquals(4, COUNTER.decrementAndGet());
     }
 
     @Override
@@ -62,7 +64,7 @@ public class TestTestRunner implements TestConstants {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Stop server class");
       }
-      Assert.assertEquals(0, COUNTER.decrementAndGet());
+      assertEquals(0, COUNTER.decrementAndGet());
     }
 
   };
@@ -80,7 +82,7 @@ public class TestTestRunner implements TestConstants {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Start server method");
       }
-      Assert.assertEquals(3, COUNTER.incrementAndGet());
+      assertEquals(3, COUNTER.incrementAndGet());
     }
 
     @Override
@@ -88,7 +90,7 @@ public class TestTestRunner implements TestConstants {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Clean server method");
       }
-      Assert.assertEquals(5, COUNTER.incrementAndGet());
+      assertEquals(5, COUNTER.incrementAndGet());
     }
 
     @Override
@@ -96,7 +98,7 @@ public class TestTestRunner implements TestConstants {
       if (LOG.isDebugEnabled()) {
         LOG.debug("State server method");
       }
-      Assert.assertEquals(3, COUNTER.decrementAndGet());
+      assertEquals(3, COUNTER.decrementAndGet());
     }
 
     @Override
@@ -104,7 +106,7 @@ public class TestTestRunner implements TestConstants {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Stop server method");
       }
-      Assert.assertEquals(2, COUNTER.decrementAndGet());
+      assertEquals(2, COUNTER.decrementAndGet());
     }
 
   };
@@ -114,7 +116,7 @@ public class TestTestRunner implements TestConstants {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Before class");
     }
-    Assert.assertEquals(2, COUNTER.incrementAndGet());
+    assertEquals(2, COUNTER.incrementAndGet());
   }
 
   @Before
@@ -122,7 +124,7 @@ public class TestTestRunner implements TestConstants {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Before method");
     }
-    Assert.assertEquals(6, COUNTER.incrementAndGet());
+    assertEquals(6, COUNTER.incrementAndGet());
   }
 
   public static final TestMetaData testMetaData1 = TestMetaData.getInstance().parameters(ImmutableMap.of("metadata", "1"));
@@ -133,8 +135,8 @@ public class TestTestRunner implements TestConstants {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test " + testMetaData.getParameters()[0]);
     }
-    Assert.assertNotNull(testMetaData);
-    Assert.assertEquals(6, COUNTER.get());
+    assertNotNull(testMetaData);
+    assertEquals(6, COUNTER.get());
   }
 
   @TestWith({ "testMetaData1", "testMetaData2" })
@@ -142,8 +144,8 @@ public class TestTestRunner implements TestConstants {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test " + testMetaData.getParameters()[0]);
     }
-    Assert.assertNotNull(testMetaData);
-    Assert.assertEquals(6, COUNTER.get());
+    assertNotNull(testMetaData);
+    assertEquals(6, COUNTER.get());
   }
 
   @Coercion
@@ -156,7 +158,7 @@ public class TestTestRunner implements TestConstants {
     if (LOG.isDebugEnabled()) {
       LOG.debug("After method");
     }
-    Assert.assertEquals(5, COUNTER.decrementAndGet());
+    assertEquals(5, COUNTER.decrementAndGet());
   }
 
   @AfterClass
@@ -164,7 +166,7 @@ public class TestTestRunner implements TestConstants {
     if (LOG.isDebugEnabled()) {
       LOG.debug("After class");
     }
-    Assert.assertEquals(1, COUNTER.decrementAndGet());
+    assertEquals(1, COUNTER.decrementAndGet());
   }
 
   private static final AtomicInteger COUNTER = new AtomicInteger();

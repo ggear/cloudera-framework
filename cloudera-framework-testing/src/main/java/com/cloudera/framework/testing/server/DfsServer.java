@@ -279,8 +279,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
               + "/" + file.getParentFile().getName() + "/" + file.getName() + (file.isDirectory() ? "/" : ""))
           .append(" -> ").append(destinationPath).append("/").append(file.getName());
     }
-    log(LOG, "copy",
-        "[copy] cp -rvf /" + sourcePathGlob + "/* " + destinationPath + (filesString.length() > 0 ? filesString.toString() : ":\n  "),
+    log(LOG, "copy", "cp -rvf /" + sourcePathGlob + "/* " + destinationPath + (filesString.length() > 0 ? filesString.toString() : ":\n  "),
         true);
     if (files.isEmpty()) {
       throw new IllegalArgumentException("Could not find files with path [" + sourcePathGlob + "]");
