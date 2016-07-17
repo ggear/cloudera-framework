@@ -2,10 +2,11 @@
 -- Database grants and creates
 --
 
-CREATE ROLE ${hivevar:my.user};
-GRANT ALL ON SERVER ${hivevar:my.server.name} TO ROLE ${hivevar:my.user};
-GRANT ALL ON DATABASE ${hivevar:my.database.name} TO ROLE ${hivevar:my.user};
-GRANT ROLE ${hivevar:my.user} TO GROUP ${hivevar:my.user};
+GRANT ALL ON SERVER ${hivevar:user.server} TO ROLE ${hivevar:user.admin};
+GRANT ROLE ${hivevar:user.admin} TO GROUP ${hivevar:user.admin};
 
-CREATE DATABASE IF NOT EXISTS ${hivevar:my.database.name}
-LOCATION '${hivevar:my.database.location}';
+CREATE ROLE ${hivevar:user.app};
+GRANT ALL ON DATABASE ${hivevar:database.name} TO ROLE ${hivevar:user.app};
+GRANT ROLE ${hivevar:user.app} TO GROUP ${hivevar:user.app};
+
+CREATE DATABASE IF NOT EXISTS ${hivevar:database.name} LOCATION '${hivevar:database.location}';

@@ -7,6 +7,7 @@ source $ROOT_DIR/bin/*.env
 set -x
 
 if [ -f $ROOT_DIR/lib/parcel/parcel.env ]; then
+  id -u $PARCEL_NAMESPACE &>/dev/null || sudo useradd $PARCEL_NAMESPACE  
   $ROOT_DIR/bin/cloudera-framework-parcel.py \
 	--host $MANAGER_SERVER_HOST \
 	--parcel_name $PARCEL_NAME \

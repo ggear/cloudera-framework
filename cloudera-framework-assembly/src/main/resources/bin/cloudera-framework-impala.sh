@@ -6,8 +6,13 @@ source $ROOT_DIR/bin/*.env
 
 set -x
 
+if $USER_ADMIN; then
+  USER_APP=$USER_ADMIN_IMPALA
+  DATABASE_APP=default
+fi
+
 impala-shell \
 	-i $IMPALA_IMPALAD_HOST:$IMPALA_IMPALAD_PORT \
-	-u $USER_ADMIN \
+	-u $USER_APP \
 	-d $DATABASE_APP \
 	"$@"
