@@ -21,6 +21,7 @@ Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/
 To compile, build and package from source, this project requires:
 
 * JDK 1.7
+* Python 2.7
 * Maven 3
 
 To run the unit and integrations tests, binaries and meta-data are provided for all CDH componnents:
