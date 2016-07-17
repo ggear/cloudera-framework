@@ -20,11 +20,13 @@
 		"pkg_version": "${parcel.version}"
 	}],
 	"provides": [
-		"cdh-plugin",
+		"flume-plugin",
+		"hive-plugin",
+		"yarn-plugin",
 		"${parcel.label}"
 	],
 	"users": {
-		"${parcel.label}": {
+		"${parcel.namespace}": {
 			"longname": "${parcel.label}",
 			"home": "/var/lib/${parcel.label}",
 			"shell": "/bin/false",

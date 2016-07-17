@@ -113,12 +113,15 @@ def do_call(host, port, version, user, password, cluster_name, parcel_name, parc
         if not cmd.wait(TIMEOUT_SEC).success:
             raise Exception('Failed to deploy client configs')
         print 'Cluster [CONFIG_DEPLOYMENT] finihsed'
-        print 'Cluster [STOP] starting ... '
-        cluster.stop().wait()
-        print 'Cluster [STOP] finihsed'
-        print 'Cluster [START] starting ... '
-        cluster.start().wait()
-        print 'Cluster [START] finihsed'
+        print 'Cluster [RESTART] starting ... '
+        for service in cluster.get_all_services():
+            if service.type == "FLUME":
+                service.restart().wait()
+            if service.type == "HIVE":
+                service.restart().wait()
+            if service.type == "YARN":
+                service.restart().wait()
+        print 'Cluster [RESTART] finihsed'                
         if init_post_dir is not None and os.path.isdir(init_post_dir):
             print 'Cluster [POST_INIT] starting ... '
             for script in glob.glob(init_post_dir + '/*.sh'):
