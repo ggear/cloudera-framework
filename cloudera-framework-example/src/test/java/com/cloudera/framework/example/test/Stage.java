@@ -32,7 +32,7 @@ public class Stage extends TestBase {
    */
   @TestWith({ "testMetaDataCsvPristine", "testMetaDataXmlPristine", "testMetaDataAll" })
   public void testStage(TestMetaData testMetaData) throws Exception {
-    Driver driver = new com.cloudera.framework.example.ingest.Stage(dfsServer.getConf());
+    Driver driver = new com.cloudera.framework.example.process.Stage(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driver.runner(
         new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[0], driver.getCounters());

@@ -46,6 +46,8 @@
 			<groupId>com.cloudera.framework</groupId>
 			<artifactId>cloudera-framework-assembly</artifactId>
 			<version>${project.parent.version}</version>
+			<type>tar.gz</type>
+			<classifier>assembly</classifier>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -283,7 +285,8 @@
 									<groupId>com.cloudera.framework</groupId>
 									<artifactId>cloudera-framework-assembly</artifactId>
 									<version>${project.parent.version}</version>
-									<excludes>META-INF/**</excludes>
+									<type>tar.gz</type>
+									<classifier>assembly</classifier>
 									<outputDirectory>${project.build.directory}/parcel/${parcel.name}</outputDirectory>
 								</artifactItem>
 							</artifactItems>
@@ -306,26 +309,6 @@
 									<outputDirectory>${project.build.directory}/assembly</outputDirectory>
 								</artifactItem>
 							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>execute</id>
-						<phase>install</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>bash</executable>
-							<arguments>
-								<argument>-c</argument>
-								<argument>find ${project.build.directory}/assembly/${project.artifactId}-${project.version} -type f \( -name *.sh -or -name *.py \) -exec chmod 700 {} \;</argument>
-							</arguments>
 						</configuration>
 					</execution>
 				</executions>

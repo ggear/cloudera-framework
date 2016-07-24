@@ -4,20 +4,9 @@ export ROOT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../..
 
 source $ROOT_DIR/bin/*.env
 
-set -x
+set -x -e
 
-CMD_LINE_ARGUMENTS="$1"
-CREATE_SCHEMA=${2:-true}
-ROOT_DIR_HDFS=${3:-"$ROOT_DIR_HDFS"}
-ROOT_DIR_HDFS_RAW_CANONICAL=${4:-"$ROOT_DIR_HDFS_RAW_CANONICAL"}
-ROOT_DIR_HDFS_STAGED_CANONICAL=${5:-"$ROOT_DIR_HDFS_STAGED_CANONICAL"}
-ROOT_DIR_HDFS_STAGED_MALFORMED=${6:-"$ROOT_DIR_HDFS_STAGED_MALFORMED"}
-ROOT_DIR_HDFS_PARTITIONED_CANONICAL=${7:-"$ROOT_DIR_HDFS_PARTITIONED_CANONICAL"}
-ROOT_DIR_HDFS_PARTITIONED_DUPLICATE=${8:-"$ROOT_DIR_HDFS_PARTITIONED_DUPLICATE"}
-ROOT_DIR_HDFS_PARTITIONED_MALFORMED=${9:-"$ROOT_DIR_HDFS_PARTITIONED_MALFORMED"}
-ROOT_DIR_HDFS_PROCESSED_CANONICAL=${10:-"$ROOT_DIR_HDFS_PROCESSED_CANONICAL"}
-ROOT_DIR_HDFS_PROCESSED_REWRITTEN=${11:-"$ROOT_DIR_HDFS_PROCESSED_REWRITTEN"}
-ROOT_DIR_HDFS_PROCESSED_DUPLICATE=${12:-"$ROOT_DIR_HDFS_PROCESSED_DUPLICATE"}
+CREATE_SCHEMA=${1:-true}
 
 TABLES_DDL=( \
 	"avro.ddl" \
@@ -45,9 +34,9 @@ TABLES_NAME=( \
 	"mydataset_partitioned_duplicate_avro_binary_none" \
 	"mydataset_partitioned_malformed_text_csv_none" \
 	"mydataset_partitioned_malformed_text_xml_none" \
-	"mydataset_processed_canonical_parquet_dict_snappy" \
-	"mydataset_processed_rewritten_parquet_dict_snappy" \
-	"mydataset_processed_duplicate_parquet_dict_snappy" \
+	"mydataset_cleansed_canonical_parquet_dict_snappy" \
+	"mydataset_cleansed_rewritten_parquet_dict_snappy" \
+	"mydataset_cleansed_duplicate_parquet_dict_snappy" \
 )
 TABLES_PARTITION=( \
 	"ingest_batch_name STRING" \
@@ -120,15 +109,16 @@ TABLES_LOCATION=( \
 	"$ROOT_DIR_HDFS_PARTITIONED_DUPLICATE/avro/binary/none" \
 	"$ROOT_DIR_HDFS_PARTITIONED_MALFORMED/text/csv/none" \
 	"$ROOT_DIR_HDFS_PARTITIONED_MALFORMED/text/xml/none" \
-	"$ROOT_DIR_HDFS_PROCESSED_CANONICAL/parquet/dict/snappy" \
-	"$ROOT_DIR_HDFS_PROCESSED_REWRITTEN/parquet/dict/snappy" \
-	"$ROOT_DIR_HDFS_PROCESSED_DUPLICATE/parquet/dict/snappy" \
+	"$ROOT_DIR_HDFS_CLEANSED_CANONICAL/parquet/dict/snappy" \
+	"$ROOT_DIR_HDFS_CLEANSED_REWRITTEN/parquet/dict/snappy" \
+	"$ROOT_DIR_HDFS_CLEANSED_DUPLICATE/parquet/dict/snappy" \
 )
 
 if $CREATE_SCHEMA; then
   AVRO_SCHEMA="$(cat $ROOT_DIR/lib/avro/model.avsc | tr '\n' ' ' | tr '\t' ' ')"
   for((i=0;i<${#TABLES_NAME[@]};i++)); do
     $ROOT_DIR/bin/cloudera-framework-hive.sh \
+      --hivevar my.database.name="$DATABASE_APP" \
       --hivevar my.table.name="${TABLES_NAME[$i]}" \
       --hivevar my.table.partition="${TABLES_PARTITION[$i]}" \
       --hivevar my.table.serde="${TABLES_SERDE[$i]}" \
@@ -137,15 +127,19 @@ if $CREATE_SCHEMA; then
       --hivevar my.table.location="${TABLES_LOCATION[$i]}" \
       --hivevar my.table.schema="$AVRO_SCHEMA" \
       -f $ROOT_DIR/lib/hive/schema/ddl/"${TABLES_DDL[$i]}"
-    $ROOT_DIR/bin/cloudera-framework-impala.sh -q "INVALIDATE METADATA ${TABLES_NAME[$i]};"
+    $ROOT_DIR/bin/cloudera-framework-impala.sh -q "USE $DATABASE_APP; INVALIDATE METADATA ${TABLES_NAME[$i]};"
   done
 fi
 
-TABLES_REFRESH_HIVE=""  
-for((i=0;i<${#TABLES_NAME[@]};i++)); do
-  TABLES_REFRESH_HIVE="$TABLES_REFRESH_HIVE"" MSCK REPAIR TABLE ""${TABLES_NAME[$i]}""; "
-done
-$ROOT_DIR/bin/cloudera-framework-hive.sh -e "$TABLES_REFRESH_HIVE"
-for((i=0;i<${#TABLES_NAME[@]};i++)); do
-  $ROOT_DIR/bin/cloudera-framework-impala.sh -q "REFRESH ${TABLES_NAME[$i]};" 2> /dev/null
-done
+if ! $CREATE_SCHEMA; then
+  TABLES_REFRESH_HIVE=""
+  for((i=0;i<${#TABLES_NAME[@]};i++)); do
+    TABLES_REFRESH_HIVE="$TABLES_REFRESH_HIVE"" MSCK REPAIR TABLE ""${TABLES_NAME[$i]}""; "
+  done
+  $ROOT_DIR/bin/cloudera-framework-hive.sh -e "$TABLES_REFRESH_HIVE"
+  set +e
+  for((i=0;i<${#TABLES_NAME[@]};i++)); do
+    $ROOT_DIR/bin/cloudera-framework-impala.sh -q "REFRESH ${TABLES_NAME[$i]};" 2> /dev/null
+  done
+  set -e
+fi

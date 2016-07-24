@@ -27,6 +27,26 @@
 			<directoryMode>0755</directoryMode>
 		</fileSet>
 		<fileSet>
+			<outputDirectory>lib</outputDirectory>
+			<directory>src/main/resources</directory>
+			<excludes>
+				<exclude>**/*.sh</exclude>
+				<exclude>**/*.py</exclude>
+			</excludes>
+			<fileMode>0700</fileMode>
+			<directoryMode>0755</directoryMode>
+		</fileSet>
+		<fileSet>
+			<outputDirectory>lib</outputDirectory>
+			<directory>src/main/resources</directory>
+			<includes>
+				<include>**/*.sh</include>
+				<include>**/*.py</include>
+			</includes>
+			<fileMode>0700</fileMode>
+			<directoryMode>0755</directoryMode>
+		</fileSet>
+		<fileSet>
 			<outputDirectory>lib/parcel</outputDirectory>
 			<directory>target</directory>
 			<includes>
@@ -56,41 +76,11 @@
 			</excludes>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>lib</outputDirectory>
-			<unpack>true</unpack>
-			<includes>
-				<include>${groupId}:${artifactId}</include>
-			</includes>
-			<unpackOptions>
-				<excludes>
-					<exclude>**/*.sh</exclude>
-					<exclude>**/*.py</exclude>
-					<exclude>META-INF/**</exclude>
-					<exclude>com/**</exclude>
-				</excludes>
-			</unpackOptions>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>lib</outputDirectory>
-			<unpack>true</unpack>
-			<includes>
-				<include>${groupId}:${artifactId}</include>
-			</includes>
-			<fileMode>0700</fileMode>
-			<directoryMode>0755</directoryMode>
-			<unpackOptions>
-				<includes>
-					<include>**/*.sh</include>
-					<include>**/*.py</include>
-					<include>**/*.ddl</include>
-				</includes>
-			</unpackOptions>
-		</dependencySet>
-		<dependencySet>
 			<outputDirectory></outputDirectory>
 			<unpack>true</unpack>
 			<includes>
-				<include>com.cloudera.framework:cloudera-framework-assembly</include>
+				<include>com.cloudera.framework:cloudera-framework-assembly:tar.gz:assembly
+				</include>
 			</includes>
 			<fileMode>0700</fileMode>
 			<directoryMode>0755</directoryMode>
@@ -99,6 +89,7 @@
 					<include>**/*.sh</include>
 					<include>**/*.py</include>
 					<include>**/*.ddl</include>
+					<include>**/*.json</include>
 				</includes>
 				<excludes>
 					<exclude>meta/**</exclude>

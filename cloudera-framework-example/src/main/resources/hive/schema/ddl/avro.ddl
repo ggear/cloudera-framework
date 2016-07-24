@@ -2,6 +2,8 @@
 -- Table create
 --
 
+USE ${hivevar:my.database.name};
+
 CREATE EXTERNAL TABLE IF NOT EXISTS ${hivevar:my.table.name}
 PARTITIONED BY ( ${hivevar:my.table.partition} )
 ROW FORMAT SERDE '${hivevar:my.table.serde}'

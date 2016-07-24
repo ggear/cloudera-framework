@@ -1,4 +1,4 @@
-package com.cloudera.framework.example.ingest;
+package com.cloudera.framework.example.process;
 
 import java.io.IOException;
 import java.util.Set;

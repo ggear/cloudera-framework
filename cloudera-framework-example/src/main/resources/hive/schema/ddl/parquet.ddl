@@ -2,6 +2,8 @@
 -- Table create
 --
 
+USE ${hivevar:my.database.name};
+
 CREATE EXTERNAL TABLE IF NOT EXISTS ${hivevar:my.table.name} (
   ingest_id STRING,
   ingest_batch STRING,

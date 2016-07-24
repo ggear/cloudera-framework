@@ -11,7 +11,7 @@ public interface Constants {
   public static final String DIR_REL_MYDS_RAW = "raw";
   public static final String DIR_REL_MYDS_STAGED = "staged";
   public static final String DIR_REL_MYDS_PARTITIONED = "partitioned";
-  public static final String DIR_REL_MYDS_PROCESSED = "processed";
+  public static final String DIR_REL_MYDS_CLEANSED = "cleansed";
 
   public static final String DIR_REL_MYDS_CANONICAL = "canonical";
   public static final String DIR_REL_MYDS_REWRITTEN = "rewritten";
@@ -50,16 +50,16 @@ public interface Constants {
   public static final String DIR_REL_MYDS_PARTITIONED_MALFORMED_XML = "malformed/text/xml/none";
   public static final String DIR_ABS_MYDS_PARTITIONED_MALFORMED_XML = "/mydataset/partitioned/malformed/text/xml/none";
 
-  public static final String DIR_ABS_MYDS_PROCESSED = "/mydataset/processed";
-  public static final String DIR_ABS_MYDS_PROCESSED_CANONICAL = "/mydataset/processed/canonical";
-  public static final String DIR_REL_MYDS_PROCESSED_CANONICAL_PARQUET = "canonical/parquet/dict/snappy";
-  public static final String DIR_ABS_MYDS_PROCESSED_CANONICAL_PARQUET = "/mydataset/processed/canonical/parquet/dict/snappy";
-  public static final String DIR_ABS_MYDS_PROCESSED_REWRITTEN = "/mydataset/processed/rewritten";
-  public static final String DIR_REL_MYDS_PROCESSED_REWRITTEN_PARQUET = "rewritten/parquet/dict/snappy";
-  public static final String DIR_ABS_MYDS_PROCESSED_REWRITTEN_PARQUET = "/mydataset/processed/rewritten/parquet/dict/snappy";
-  public static final String DIR_ABS_MYDS_PROCESSED_DUPLICATE = "/mydataset/processed/duplicate";
-  public static final String DIR_REL_MYDS_PROCESSED_DUPLICATE_PARQUET = "duplicate/parquet/dict/snappy";
-  public static final String DIR_ABS_MYDS_PROCESSED_DUPLICATE_PARQUET = "/mydataset/processed/duplicate/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_CLEANSED = "/mydataset/cleansed";
+  public static final String DIR_ABS_MYDS_CLEANSED_CANONICAL = "/mydataset/cleansed/canonical";
+  public static final String DIR_REL_MYDS_CLEANSED_CANONICAL_PARQUET = "canonical/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_CLEANSED_CANONICAL_PARQUET = "/mydataset/cleansed/canonical/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_CLEANSED_REWRITTEN = "/mydataset/cleansed/rewritten";
+  public static final String DIR_REL_MYDS_CLEANSED_REWRITTEN_PARQUET = "rewritten/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_CLEANSED_REWRITTEN_PARQUET = "/mydataset/cleansed/rewritten/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_CLEANSED_DUPLICATE = "/mydataset/cleansed/duplicate";
+  public static final String DIR_REL_MYDS_CLEANSED_DUPLICATE_PARQUET = "duplicate/parquet/dict/snappy";
+  public static final String DIR_ABS_MYDS_CLEANSED_DUPLICATE_PARQUET = "/mydataset/cleansed/duplicate/parquet/dict/snappy";
 
   public static final String DDL_FILE_BATCH_NAME = "batch_name.ddl";
   public static final String DDL_FILE_BATCH_ID_START_FINISH = "batch_id_start_finish.ddl";
@@ -78,6 +78,7 @@ public interface Constants {
   public static final String DDL_VAR_ROOT = "my.table.root";
   public static final String DDL_VAR_LOCATION = "my.table.location";
   public static final String DDL_VAR_PARTITION = "my.table.partition";
+  public static final String DDL_VAR_DATABASE = "my.database.name";
 
   public static final String MODEL_AVRO_FILE = "/avro/model.avsc";
 

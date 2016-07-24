@@ -1,4 +1,4 @@
-package com.cloudera.framework.example.ingest;
+package com.cloudera.framework.example.process;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -10,24 +10,24 @@ import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.example.Constants;
 import com.cloudera.framework.example.model.RecordCounter;
 
-public class Ingest extends Driver {
+public class Process extends Driver {
 
   private String pathRaw;
   private String pathStaged;
   private String pathPartitioned;
-  private String pathProcessed;
+  private String pathCleansed;
 
-  public Ingest() {
+  public Process() {
     super();
   }
 
-  public Ingest(Configuration confguration) {
+  public Process(Configuration confguration) {
     super(confguration);
   }
 
   @Override
   public String description() {
-    return "Ingest my dataset";
+    return "Process my dataset";
   }
 
   @Override
@@ -37,7 +37,7 @@ public class Ingest extends Driver {
 
   @Override
   public String[] parameters() {
-    return new String[] { "input-path-raw", "input-path-staged", "input-path-partitioned", "input-path-processed" };
+    return new String[] { "input-path-raw", "input-path-staged", "input-path-partitioned", "input-path-cleansed" };
   }
 
   @Override
@@ -49,8 +49,8 @@ public class Ingest extends Driver {
     for (RecordCounter counter : Partition.COUNTERS) {
       incrementCounter(Partition.class.getCanonicalName(), counter, 0);
     }
-    for (RecordCounter counter : Process.COUNTERS) {
-      incrementCounter(Process.class.getCanonicalName(), counter, 0);
+    for (RecordCounter counter : Cleanse.COUNTERS) {
+      incrementCounter(Cleanse.class.getCanonicalName(), counter, 0);
     }
   }
 
@@ -62,7 +62,7 @@ public class Ingest extends Driver {
     pathRaw = arguments[0];
     pathStaged = arguments[1];
     pathPartitioned = arguments[2];
-    pathProcessed = arguments[3];
+    pathCleansed = arguments[3];
     return RETURN_SUCCESS;
   }
 
@@ -71,13 +71,13 @@ public class Ingest extends Driver {
     int returnValue = RETURN_FAILURE_RUNTIME;
     Driver stageDriver = new Stage(getConf());
     Driver partitionDriver = new Partition(getConf());
-    Driver cleanseDriver = new Process(getConf());
+    Driver cleanseDriver = new Cleanse(getConf());
     if ((returnValue = stageDriver
         .run(new String[] { pathRaw + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathStaged })) == RETURN_SUCCESS) {
       if ((returnValue = partitionDriver
           .run(new String[] { pathStaged + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathPartitioned })) == RETURN_SUCCESS) {
         returnValue = cleanseDriver
-            .run(new String[] { pathPartitioned + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathProcessed });
+            .run(new String[] { pathPartitioned + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathCleansed });
       }
     }
     importCountersAll(stageDriver.getCounters());
@@ -92,7 +92,7 @@ public class Ingest extends Driver {
   }
 
   public static void main(String... arguments) throws Exception {
-    System.exit(new Ingest().runner(arguments));
+    System.exit(new Process().runner(arguments));
   }
 
 }

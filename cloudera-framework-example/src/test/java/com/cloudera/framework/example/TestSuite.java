@@ -7,9 +7,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.cloudera.framework.example.test.Ingest;
-import com.cloudera.framework.example.test.Partition;
 import com.cloudera.framework.example.test.Process;
+import com.cloudera.framework.example.test.Partition;
+import com.cloudera.framework.example.test.Cleanse;
 import com.cloudera.framework.example.test.Stage;
 import com.cloudera.framework.example.test.Stream;
 import com.cloudera.framework.example.test.Table;
@@ -22,8 +22,8 @@ import com.cloudera.framework.testing.server.MrServer;
     Stream.class, //
     Stage.class, //
     Partition.class, //
+    Cleanse.class, //
     Process.class, //
-    Ingest.class, //
     Table.class, //
 })
 

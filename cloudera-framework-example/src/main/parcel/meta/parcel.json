@@ -8,14 +8,14 @@
 	},
 	"setActiveSymlink": true,
 	"scripts": {
-		"defines": "${parcel.label}-env.sh"
+		"defines": "${parcel.name.long}-env.sh"
 	},
 	"packages": [{
-		"name": "${parcel.label}",
+		"name": "${parcel.name.long}",
 		"version": "${parcel.version}"
 	}],
 	"components": [{
-		"name": "${parcel.label}",
+		"name": "${parcel.name.long}",
 		"version": "${parcel.version}",
 		"pkg_version": "${parcel.version}"
 	}],
@@ -23,12 +23,12 @@
 		"flume-plugin",
 		"hive-plugin",
 		"yarn-plugin",
-		"${parcel.label}"
+		"${parcel.name.long}"
 	],
 	"users": {
 		"${parcel.namespace}": {
-			"longname": "${parcel.label}",
-			"home": "/var/lib/${parcel.label}",
+			"longname": "${parcel.name.long}",
+			"home": "/var/lib/${parcel.name.long}",
 			"shell": "/bin/false",
 			"extra_groups": []
 		}

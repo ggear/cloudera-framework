@@ -1,4 +1,4 @@
-package com.cloudera.framework.example.ingest;
+package com.cloudera.framework.example.process;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import parquet.hadoop.ParquetOutputFormat;
 import parquet.hadoop.metadata.CompressionCodecName;
 
 /**
- * Process driver, take a set of partitioned Avro files and rewrite them into
+ * Cleanse driver, take a set of partitioned Avro files and rewrite them into
  * consolidated, schema partitioned, column order Parquet format with an
  * equivalent {@link Record#getClassSchema() schema}. The driver can be
  * configured as a pass-through, de-duplication and most-recent filter.
@@ -41,12 +41,12 @@ import parquet.hadoop.metadata.CompressionCodecName;
  * with {@link RecordKey key} and original {@link Text} value into the
  * originating source directory, partition and file name.
  */
-public class Process extends Driver {
+public class Cleanse extends Driver {
 
   public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS, RecordCounter.RECORDS_CANONICAL,
       RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
 
-  private static final Logger LOG = LoggerFactory.getLogger(Process.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Cleanse.class);
 
   private Path inputPath;
   private Path outputPath;
@@ -54,17 +54,17 @@ public class Process extends Driver {
 
   private FileSystem hdfs;
 
-  public Process() {
+  public Cleanse() {
     super();
   }
 
-  public Process(Configuration confguration) {
+  public Cleanse(Configuration confguration) {
     super(confguration);
   }
 
   @Override
   public String description() {
-    return "Process my dataset";
+    return "Cleanse my dataset";
   }
 
   @Override
@@ -81,7 +81,7 @@ public class Process extends Driver {
   public void reset() {
     super.reset();
     for (RecordCounter counter : COUNTERS) {
-      incrementCounter(Process.class.getCanonicalName(), counter, 0);
+      incrementCounter(Cleanse.class.getCanonicalName(), counter, 0);
     }
   }
 
@@ -110,12 +110,12 @@ public class Process extends Driver {
     List<Job> jobs = new ArrayList<>();
     FileSystem hdfs = FileSystem.newInstance(getConf());
     for (Path inputPath : inputPaths) {
-      Path outputPath = new Path(this.outputPath, Constants.DIR_REL_MYDS_PROCESSED_CANONICAL_PARQUET + Path.SEPARATOR_CHAR
+      Path outputPath = new Path(this.outputPath, Constants.DIR_REL_MYDS_CLEANSED_CANONICAL_PARQUET + Path.SEPARATOR_CHAR
           + RecordPartition.getPartitionPathString(inputPath, RecordPartition.RECORD_COL_YEAR_MONTH, 0));
       hdfs.delete(outputPath, true);
       Job job = Job.getInstance(getConf());
       job.setJobName(getClass().getSimpleName());
-      job.setJarByClass(Process.class);
+      job.setJarByClass(Cleanse.class);
       FileInputFormat.addInputPath(job, inputPath);
       job.setInputFormatClass(AvroKeyInputFormat.class);
       job.setOutputFormatClass(AvroParquetOutputFormat.class);
@@ -162,7 +162,7 @@ public class Process extends Driver {
   }
 
   public static void main(String... arguments) throws Exception {
-    System.exit(new Process().runner(arguments));
+    System.exit(new Cleanse().runner(arguments));
   }
 
 }

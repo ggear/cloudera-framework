@@ -59,7 +59,7 @@ public class Stream extends TestBase {
               KEY_FLUME_PROCESS_FILE_COUNT, 1)) //
       .asserts( //
           ImmutableMap.of( //
-              com.cloudera.framework.example.ingest.Stage.class.getCanonicalName(),
+              com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
               ImmutableMap.of( //
                   RecordCounter.FILES, 0L, //
                   RecordCounter.FILES_CANONICAL, 0L, //
@@ -67,7 +67,7 @@ public class Stream extends TestBase {
                   RecordCounter.FILES_MALFORMED, 0L //
               )), //
           ImmutableMap.of( //
-              com.cloudera.framework.example.ingest.Partition.class.getCanonicalName(),
+              com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
               ImmutableMap.of( //
                   RecordCounter.RECORDS, 5000L, //
                   RecordCounter.RECORDS_CANONICAL, 3000L, //
@@ -75,7 +75,7 @@ public class Stream extends TestBase {
                   RecordCounter.RECORDS_MALFORMED, 0L //
               )), //
           ImmutableMap.of( //
-              com.cloudera.framework.example.ingest.Process.class.getCanonicalName(),
+              com.cloudera.framework.example.process.Cleanse.class.getCanonicalName(),
               ImmutableMap.of( //
                   RecordCounter.RECORDS, 3000L, //
                   RecordCounter.RECORDS_CANONICAL, 3000L, //
@@ -102,7 +102,7 @@ public class Stream extends TestBase {
               KEY_FLUME_PROCESS_FILE_COUNT, 1)) //
       .asserts( //
           ImmutableMap.of( //
-              com.cloudera.framework.example.ingest.Stage.class.getCanonicalName(),
+              com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
               ImmutableMap.of( //
                   RecordCounter.FILES, 0L, //
                   RecordCounter.FILES_CANONICAL, 0L, //
@@ -110,7 +110,7 @@ public class Stream extends TestBase {
                   RecordCounter.FILES_MALFORMED, 0L //
               )), //
           ImmutableMap.of( //
-              com.cloudera.framework.example.ingest.Partition.class.getCanonicalName(),
+              com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
               ImmutableMap.of( //
                   RecordCounter.RECORDS, 5000L, //
                   RecordCounter.RECORDS_CANONICAL, 3000L, //
@@ -118,7 +118,7 @@ public class Stream extends TestBase {
                   RecordCounter.RECORDS_MALFORMED, 0L //
               )), //
           ImmutableMap.of( //
-              com.cloudera.framework.example.ingest.Process.class.getCanonicalName(),
+              com.cloudera.framework.example.process.Cleanse.class.getCanonicalName(),
               ImmutableMap.of( //
                   RecordCounter.RECORDS, 3000L, //
                   RecordCounter.RECORDS_CANONICAL, 3000L, //
@@ -137,17 +137,17 @@ public class Stream extends TestBase {
             (String) testMetaData.getParameters()[2].get(KEY_FLUME_SINK_NAME), new com.cloudera.framework.example.stream.Stream(),
             new HDFSEventSink(), (String) testMetaData.getParameters()[2].get(KEY_FLUME_OUTPUT_DIR),
             (Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_ITERATIONS)));
-    Driver driverStage = new com.cloudera.framework.example.ingest.Stage(dfsServer.getConf());
+    Driver driverStage = new com.cloudera.framework.example.process.Stage(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driverStage.runner(
         new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[0], driverStage.getCounters());
-    Driver driverPartition = new com.cloudera.framework.example.ingest.Partition(dfsServer.getConf());
+    Driver driverPartition = new com.cloudera.framework.example.process.Partition(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driverPartition.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(),
         dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[1], driverPartition.getCounters());
-    Driver driverProcess = new com.cloudera.framework.example.ingest.Process(dfsServer.getConf());
+    Driver driverProcess = new com.cloudera.framework.example.process.Cleanse(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driverProcess.runner(new String[] {
-        dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
+        dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_CLEANSED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[2], driverProcess.getCounters());
   }
 

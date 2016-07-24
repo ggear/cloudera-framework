@@ -2,6 +2,8 @@
 -- Table create
 --
 
+USE ${hivevar:my.database.name};
+
 CREATE EXTERNAL TABLE IF NOT EXISTS ${hivevar:my.table.name} (
   my_raw_data STRING
 )

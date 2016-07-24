@@ -16,10 +16,10 @@ import com.googlecode.zohhak.api.Coercion;
 import com.googlecode.zohhak.api.TestWith;
 
 /**
- * Test dataset ingest
+ * Test dataset cleanse
  */
 @RunWith(TestRunner.class)
-public class Ingest extends TestBase {
+public class Cleanse extends TestBase {
 
   @ClassRule
   public static DfsServer dfsServer = DfsServer.getInstance();
@@ -28,18 +28,20 @@ public class Ingest extends TestBase {
   public static MrServer mrServer = MrServer.getInstance();
 
   /**
-   * Test dataset ingest
+   * Test dataset cleanse
    */
   @TestWith({ "testMetaDataCsvPristine", "testMetaDataXmlPristine", "testMetaDataAll" })
-  public void testIngest(TestMetaData testMetaData) throws Exception {
-    Driver driver = new com.cloudera.framework.example.ingest.Ingest(dfsServer.getConf());
-    assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(), dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
+  public void testCleanse(TestMetaData testMetaData) throws Exception {
+    assertEquals(Driver.RETURN_SUCCESS, new com.cloudera.framework.example.process.Stage(dfsServer.getConf()).runner(
+        new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString() }));
+    assertEquals(Driver.RETURN_SUCCESS, new com.cloudera.framework.example.process.Partition(dfsServer.getConf()).runner(new String[] {
+        dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString() }));
+    Driver driver = new com.cloudera.framework.example.process.Cleanse(dfsServer.getConf());
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED_CANONICAL).toString(),
+        dfsServer.getPath(DIR_ABS_MYDS_CLEANSED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[0], driver.getCounters());
-    assertEquals(Driver.RETURN_SUCCESS,
-        driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString(),
-            dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(), dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED_CANONICAL).toString(),
+        dfsServer.getPath(DIR_ABS_MYDS_CLEANSED).toString() }));
     assertCounterEquals(testMetaData.getAsserts()[1], driver.getCounters());
   }
 

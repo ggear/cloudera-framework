@@ -167,35 +167,35 @@ public class Table extends TestBase {
               build(), //
           ImmutableMap.builder(). //
               put(DDL_VAR_FILE, DDL_FILE_CREATE_PARQUET). //
-              put(DDL_VAR_NAME, getTableName(DIR_ABS_MYDS_PROCESSED_CANONICAL_PARQUET)). //
+              put(DDL_VAR_NAME, getTableName(DIR_ABS_MYDS_CLEANSED_CANONICAL_PARQUET)). //
               put(DDL_VAR_PARTITION, Joiner.on(", ").join(RecordPartition.RECORD_DDL_YEAR_MONTH)). //
               put(DDL_VAR_SERDE, ParquetHiveSerDe.class.getName()). //
               put(DDL_VAR_INPUT, MapredParquetInputFormat.class.getName()). //
               put(DDL_VAR_OUTPUT, MapredParquetOutputFormat.class.getName()). //
-              put(DDL_VAR_ROOT, DIR_ABS_MYDS_PROCESSED_CANONICAL). //
-              put(DDL_VAR_LOCATION, dfsServer.getPathUri(DIR_ABS_MYDS_PROCESSED_CANONICAL_PARQUET)). //
+              put(DDL_VAR_ROOT, DIR_ABS_MYDS_CLEANSED_CANONICAL). //
+              put(DDL_VAR_LOCATION, dfsServer.getPathUri(DIR_ABS_MYDS_CLEANSED_CANONICAL_PARQUET)). //
               put(DDL_VAR_ROWS, 332).//
               build(), //
           ImmutableMap.builder(). //
               put(DDL_VAR_FILE, DDL_FILE_CREATE_PARQUET). //
-              put(DDL_VAR_NAME, getTableName(DIR_ABS_MYDS_PROCESSED_REWRITTEN_PARQUET)). //
+              put(DDL_VAR_NAME, getTableName(DIR_ABS_MYDS_CLEANSED_REWRITTEN_PARQUET)). //
               put(DDL_VAR_PARTITION, Joiner.on(", ").join(RecordPartition.RECORD_DDL_YEAR_MONTH)). //
               put(DDL_VAR_SERDE, ParquetHiveSerDe.class.getName()). //
               put(DDL_VAR_INPUT, MapredParquetInputFormat.class.getName()). //
               put(DDL_VAR_OUTPUT, MapredParquetOutputFormat.class.getName()). //
-              put(DDL_VAR_ROOT, DIR_ABS_MYDS_PROCESSED_REWRITTEN). //
-              put(DDL_VAR_LOCATION, dfsServer.getPathUri(DIR_ABS_MYDS_PROCESSED_REWRITTEN_PARQUET)). //
+              put(DDL_VAR_ROOT, DIR_ABS_MYDS_CLEANSED_REWRITTEN). //
+              put(DDL_VAR_LOCATION, dfsServer.getPathUri(DIR_ABS_MYDS_CLEANSED_REWRITTEN_PARQUET)). //
               put(DDL_VAR_ROWS, 0).//
               build(), //
           ImmutableMap.builder(). //
               put(DDL_VAR_FILE, DDL_FILE_CREATE_PARQUET). //
-              put(DDL_VAR_NAME, getTableName(DIR_ABS_MYDS_PROCESSED_DUPLICATE_PARQUET)). //
+              put(DDL_VAR_NAME, getTableName(DIR_ABS_MYDS_CLEANSED_DUPLICATE_PARQUET)). //
               put(DDL_VAR_PARTITION, Joiner.on(", ").join(RecordPartition.RECORD_DDL_YEAR_MONTH)). //
               put(DDL_VAR_SERDE, ParquetHiveSerDe.class.getName()). //
               put(DDL_VAR_INPUT, MapredParquetInputFormat.class.getName()). //
               put(DDL_VAR_OUTPUT, MapredParquetOutputFormat.class.getName()). //
-              put(DDL_VAR_ROOT, DIR_ABS_MYDS_PROCESSED_DUPLICATE). //
-              put(DDL_VAR_LOCATION, dfsServer.getPathUri(DIR_ABS_MYDS_PROCESSED_DUPLICATE_PARQUET)). //
+              put(DDL_VAR_ROOT, DIR_ABS_MYDS_CLEANSED_DUPLICATE). //
+              put(DDL_VAR_LOCATION, dfsServer.getPathUri(DIR_ABS_MYDS_CLEANSED_DUPLICATE_PARQUET)). //
               put(DDL_VAR_ROWS, 0).//
               build());
 
@@ -205,17 +205,19 @@ public class Table extends TestBase {
   @SuppressWarnings("unchecked")
   @TestWith({ "testMetaDataAll" })
   public void testTable(TestMetaData testMetaData) throws Exception {
+    hiveServer.execute("CREATE DATABASE IF NOT EXISTS " + DIR_REL_MYDS + " LOCATION '" + dfsServer.getPathUri(DIR_REL_MYDS) + "'");
     assertEquals(Driver.RETURN_SUCCESS,
-        new com.cloudera.framework.example.ingest.Ingest(dfsServer.getConf())
+        new com.cloudera.framework.example.process.Process(dfsServer.getConf())
             .runner(new String[] { dfsServer.getPath(DIR_ABS_MYDS_RAW).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString(),
-                dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(), dfsServer.getPath(DIR_ABS_MYDS_PROCESSED).toString() }));
+                dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString(), dfsServer.getPath(DIR_ABS_MYDS_CLEANSED).toString() }));
     for (int i = 0; i < testMetaData.getParameters().length; i++) {
       String testName = "Table index [" + i + "], name [" + testMetaData.getParameters()[i].get(DDL_VAR_NAME) + "]";
       String inputPath = dfsServer.getFileSystem().makeQualified(new Path((String) testMetaData.getParameters()[i].get(DDL_VAR_ROOT)))
           .toString();
       assertNotNull(testName,
-          hiveServer.execute(new File(DDL_DIR, (String) testMetaData.getParameters()[i].get(DDL_VAR_FILE)),
-              ImmutableMap.<String, String> builder().putAll(testMetaData.getParameters()[i]).put(DDL_VAR_SCHEMA, MODEL_AVRO).build(),
+          hiveServer.execute(
+              new File(DDL_DIR, (String) testMetaData.getParameters()[i].get(DDL_VAR_FILE)), ImmutableMap.<String, String> builder()
+                  .putAll(testMetaData.getParameters()[i]).put(DDL_VAR_SCHEMA, MODEL_AVRO).put(DDL_VAR_DATABASE, DIR_REL_MYDS).build(),
               ImmutableMap.of(Constants.CONFIG_INPUT_PATH, inputPath)));
       assertNotNull(testName, hiveServer.execute("DESCRIBE " + (String) testMetaData.getParameters()[i].get(DDL_VAR_NAME)));
       assertEquals(testName, testMetaData.getParameters()[i].get(DDL_VAR_ROWS),
