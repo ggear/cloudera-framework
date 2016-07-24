@@ -1,4 +1,4 @@
-package com.cloudera.framework.testing.server.tests;
+package com.cloudera.framework.testing.server.test;
 
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;

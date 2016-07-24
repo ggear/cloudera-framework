@@ -1,20 +1,21 @@
-package com.cloudera.framework.testing.server.tests;
+package com.cloudera.framework.testing.server.test;
 
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
-import com.cloudera.framework.testing.server.MrServer;
+import com.cloudera.framework.testing.server.SparkServer;
 
 @RunWith(TestRunner.class)
-public class TestMrServerCluster extends TestMrServer {
+@SuppressWarnings("serial")
+public class TestSparkServerCluster extends TestSparkServer {
 
   @ClassRule
   public static DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS);
 
   @ClassRule
-  public static MrServer mrServer = MrServer.getInstance(MrServer.Runtime.CLUSTER_JOB);
+  public static SparkServer sparkServer = SparkServer.getInstance();
 
   @Override
   public DfsServer getDfsServer() {
@@ -22,8 +23,8 @@ public class TestMrServerCluster extends TestMrServer {
   }
 
   @Override
-  public MrServer getMrServer() {
-    return mrServer;
+  public SparkServer getSparkServer() {
+    return sparkServer;
   }
 
 }

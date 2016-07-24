@@ -44,13 +44,24 @@ import org.slf4j.LoggerFactory;
 public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   public enum Runtime {
-    LOCAL_MR2, CLUSTER_MR2
+    LOCAL_MR2, // Local MR2 job runner backed Hive, inline-thread, light-weight
+    CLUSTER_MR2 // Mini MR2 cluster backed Hive, multi-threaded, heavy-weight
   };
 
+  /**
+   * Get instance with default runtime
+   *
+   * @return
+   */
   public static synchronized HiveServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_MR2 : instance.getRuntime());
   }
 
+  /**
+   * Get instance with specific <code>runtime</code>
+   *
+   * @return
+   */
   public static synchronized HiveServer getInstance(Runtime runtime) {
     return instance == null ? instance = new HiveServer(runtime) : instance.assertRuntime(runtime);
   }
@@ -307,6 +318,13 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
         MAX_RESULTS_DEFAULT, true)) {
       if (table.length() > 0) {
         execute("DROP TABLE " + table, Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
+            MAX_RESULTS_DEFAULT, true);
+      }
+    }
+    for (String database : execute("SHOW DATABASES", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
+        MAX_RESULTS_DEFAULT, true)) {
+      if (database.length() > 0 && !database.equals("default")) {
+        execute("DROP DATABASE " + database + " CASCADE", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
             MAX_RESULTS_DEFAULT, true);
       }
     }

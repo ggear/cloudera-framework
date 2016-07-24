@@ -4,9 +4,11 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Model test meta data used in paramaterised unit tests, including dataset
- * copying to DFS, unit test paramaterisation and unit test expecteds for
- * asserts. Usage is as so:
+ * Model test meta data used in paramaterised unit tests, including copying
+ * datasets to DFS, unit test paramaterisation and unit test expects for
+ * asserts.
+ * <p>
+ * Usage is as so:
  *
  * <pre>
  * public enum Counter {
@@ -110,7 +112,7 @@ public class TestMetaData {
   }
 
   /**
-   * Set the paramaters to paramaterise this test
+   * Set the parameters to paramaterise this test
    *
    * @param parameters
    * @return

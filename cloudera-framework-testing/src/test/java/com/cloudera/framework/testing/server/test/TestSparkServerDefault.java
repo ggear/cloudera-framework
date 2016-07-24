@@ -1,4 +1,4 @@
-package com.cloudera.framework.testing.server.tests;
+package com.cloudera.framework.testing.server.test;
 
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
@@ -9,10 +9,10 @@ import com.cloudera.framework.testing.server.SparkServer;
 
 @RunWith(TestRunner.class)
 @SuppressWarnings("serial")
-public class TestSparkServerCluster extends TestSparkServer {
+public class TestSparkServerDefault extends TestSparkServer {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS);
+  public static DfsServer dfsServer = DfsServer.getInstance();
 
   @ClassRule
   public static SparkServer sparkServer = SparkServer.getInstance();

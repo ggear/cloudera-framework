@@ -14,17 +14,32 @@ import org.slf4j.LoggerFactory;
 public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
 
   public enum Runtime {
-    LOCAL_CONTEXT
+    LOCAL_CONTEXT // Local Spark context, inline-thread, light-weight
   };
 
+  /**
+   * Get instance with default runtime
+   *
+   * @return
+   */
   public static synchronized SparkServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_CONTEXT : instance.getRuntime());
   }
 
+  /**
+   * Get instance with specific <code>runtime</code>
+   *
+   * @return
+   */
   public static synchronized SparkServer getInstance(Runtime runtime) {
     return instance == null ? instance = new SparkServer(runtime) : instance.assertRuntime(runtime);
   }
 
+  /**
+   * Get {@link JavaSparkContext}
+   *
+   * @return
+   */
   public synchronized JavaSparkContext getContext() {
     return context;
   }

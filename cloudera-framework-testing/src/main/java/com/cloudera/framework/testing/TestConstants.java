@@ -24,6 +24,7 @@ public interface TestConstants {
   public static final String DIR_KAFKA = "test-kafka";
   public static final String DIR_ZOOKEEPER = "test-zookeper";
 
+  // Runtime directories
   public static final String DIR_RUNTIME_KUDU = "runtime-kudu";
   public static final String DIR_RUNTIME_MR = "MiniMRCluster_";
 

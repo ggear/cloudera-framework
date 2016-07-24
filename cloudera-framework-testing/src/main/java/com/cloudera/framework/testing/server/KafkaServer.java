@@ -30,13 +30,23 @@ import scala.collection.Iterator;
 public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   public enum Runtime {
-    CLUSTER_BROKER
+    CLUSTER_BROKER // Kafka broker, multi-threaded, heavy-weight
   };
 
+  /**
+   * Get instance with default runtime
+   *
+   * @return
+   */
   public static synchronized KafkaServer getInstance() {
     return getInstance(instance == null ? Runtime.CLUSTER_BROKER : instance.getRuntime());
   }
 
+  /**
+   * Get instance with specific <code>runtime</code>
+   *
+   * @return
+   */
   public static synchronized KafkaServer getInstance(Runtime runtime) {
     return instance == null ? instance = new KafkaServer(runtime) : instance.assertRuntime(runtime);
   }

@@ -1,4 +1,4 @@
-package com.cloudera.framework.testing.server.tests;
+package com.cloudera.framework.testing.server.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -55,6 +55,7 @@ public abstract class TestHiveServer implements TestConstants {
     FileUtils.writeStringToFile(localDataFile, "1,1\n2,2\n3,3\n");
     assertEquals(0, DfsServer.getInstance().listFilesDfs("/usr/hive").length);
     assertEquals(0, getHiveServer().execute("SHOW TABLES").size());
+    assertEquals(1, getHiveServer().execute("SHOW DATABASES").size());
     assertEquals(2,
         getHiveServer()
             .execute(new File(getClass().getResource("/ddl/create.sql").getPath()),
@@ -68,6 +69,18 @@ public abstract class TestHiveServer implements TestConstants {
     assertEquals(2, getHiveServer()
         .execute("SELECT * FROM somedata", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(), 2).size());
     assertEquals(1, getHiveServer().execute("SHOW TABLES").size());
+    assertEquals(0, getHiveServer().execute("CREATE DATABASE somedb").size());
+    assertEquals(0, getHiveServer().execute("USE somedb").size());
+    assertEquals(0, getHiveServer()
+        .execute("CREATE TABLE somedata (col1 INT, col2 INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE").size());
+    assertEquals(0,
+        getHiveServer()
+            .execute("CREATE TABLE somedata_copy (col1 INT, col2 INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE")
+            .size());
+    assertEquals(2, getHiveServer().execute("SHOW TABLES").size());
+    assertEquals(0, getHiveServer().execute("USE default").size());
+    assertEquals(1, getHiveServer().execute("SHOW TABLES").size());
+    assertEquals(2, getHiveServer().execute("SHOW DATABASES").size());
   }
 
   @Test

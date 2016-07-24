@@ -1,4 +1,4 @@
-package com.cloudera.framework.testing.server.tests;
+package com.cloudera.framework.testing.server.test;
 
 import static org.junit.Assert.assertTrue;
 

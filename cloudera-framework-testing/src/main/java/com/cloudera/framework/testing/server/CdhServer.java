@@ -33,34 +33,87 @@ import com.cloudera.framework.testing.TestRunner;
 public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalResource
     implements TestConstants, Comparable<CdhServer<CdhServer<?, ?>, V>> {
 
+  /**
+   * Define the index that defines <code>this</code> objects order within the
+   * dependency pipeline, the lower the index the earlier in the dependency tree
+   * <code>this</code> object will be
+   *
+   * @return
+   */
   public abstract int getIndex();
 
+  /**
+   * Get the list of {@link CdhServer} dependencies, override if there are
+   * dependecies
+   *
+   * @return
+   */
   public CdhServer<?, ?>[] getDependencies() {
     return new CdhServer<?, ?>[0];
   }
 
+  /**
+   * Get the {@link Configuration} associated with this {@link CdhServer}
+   *
+   * @return
+   */
   public synchronized Configuration getConf() {
     return conf;
   }
 
+  /**
+   * Test to see if this {@link CdhServer} is started
+   *
+   * @return
+   */
   public synchronized boolean isStarted() {
     return semaphore > 0;
   }
 
+  /**
+   * Start the {@link CdhServer}
+   *
+   * @throws Exception
+   */
   public abstract void start() throws Exception;
 
+  /**
+   * Clean-up all state persisted by this {@link CdhServer}
+   *
+   * @throws Exception
+   */
   public void clean() throws Exception {
   }
 
+  /**
+   * Report on the state persisted by this {@link CdhServer}
+   *
+   * @throws Exception
+   */
   public void state() throws Exception {
   }
 
+  /**
+   * Stop the {@link CdhServer}
+   *
+   * @throws Exception
+   */
   public abstract void stop() throws Exception;
 
+  /**
+   * Get the configured runtime
+   *
+   * @return
+   */
   public synchronized V getRuntime() {
     return runtime;
   }
 
+  /**
+   * Set the {@link Configuration} associated with this {@link CdhServer}
+   *
+   * @param conf
+   */
   protected synchronized void setConf(Configuration conf) {
     this.conf = conf;
   }
@@ -201,6 +254,11 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
     }
   }
 
+  /**
+   * Get the next available port
+   *
+   * @return
+   */
   public static int getNextAvailablePort() {
     while (SERVER_BIND_PORT_START.get() < SERVER_BIND_PORT_FINISH) {
       try {

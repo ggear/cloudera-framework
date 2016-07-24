@@ -1,4 +1,4 @@
-package com.cloudera.framework.testing.server.tests;
+package com.cloudera.framework.testing.server.test;
 
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
@@ -10,10 +10,10 @@ import com.googlecode.zohhak.api.Coercion;
 import com.googlecode.zohhak.api.TestWith;
 
 @RunWith(TestRunner.class)
-public class TestDfsServerDefault extends TestDfsServer {
+public class TestDfsServerCluster extends TestDfsServer {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance();
+  public static DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS);
 
   @Override
   public DfsServer getDfsServer() {

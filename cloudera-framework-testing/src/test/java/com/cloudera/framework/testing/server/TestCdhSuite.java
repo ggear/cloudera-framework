@@ -7,15 +7,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.cloudera.framework.testing.server.tests.TestDfsServerDefault;
-import com.cloudera.framework.testing.server.tests.TestFlumeServer;
-import com.cloudera.framework.testing.server.tests.TestHiveServerMrDefault;
-import com.cloudera.framework.testing.server.tests.TestKafkaServer;
-import com.cloudera.framework.testing.server.tests.TestKuduServer;
-import com.cloudera.framework.testing.server.tests.TestMrServerDefault;
-import com.cloudera.framework.testing.server.tests.TestPythonServer;
-import com.cloudera.framework.testing.server.tests.TestSparkServerDefault;
-import com.cloudera.framework.testing.server.tests.TestZooKeeperServer;
+import com.cloudera.framework.testing.server.test.TestDfsServerDefault;
+import com.cloudera.framework.testing.server.test.TestFlumeServer;
+import com.cloudera.framework.testing.server.test.TestHiveServerMrDefault;
+import com.cloudera.framework.testing.server.test.TestKafkaServer;
+import com.cloudera.framework.testing.server.test.TestKuduServer;
+import com.cloudera.framework.testing.server.test.TestMrServerDefault;
+import com.cloudera.framework.testing.server.test.TestPythonServer;
+import com.cloudera.framework.testing.server.test.TestSparkServerDefault;
+import com.cloudera.framework.testing.server.test.TestZooKeeperServer;
 
 @RunWith(Suite.class)
 @SuiteClasses({ //

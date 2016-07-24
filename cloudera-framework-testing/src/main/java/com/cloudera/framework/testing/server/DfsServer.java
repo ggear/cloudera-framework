@@ -32,13 +32,24 @@ import org.slf4j.LoggerFactory;
 public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
 
   public enum Runtime {
-    LOCAL_FS, CLUSTER_DFS
+    LOCAL_FS, // Local file-system DFS facade, inline-thread, light-weight
+    CLUSTER_DFS // Mini DFS cluster, multi-threaded, heavy-weight
   };
 
+  /**
+   * Get instance with default runtime
+   *
+   * @return
+   */
   public static synchronized DfsServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_FS : instance.getRuntime());
   }
 
+  /**
+   * Get instance with specific <code>runtime</code>
+   *
+   * @return
+   */
   public static synchronized DfsServer getInstance(Runtime runtime) {
     return instance == null ? instance = new DfsServer(runtime) : instance.assertRuntime(runtime);
   }

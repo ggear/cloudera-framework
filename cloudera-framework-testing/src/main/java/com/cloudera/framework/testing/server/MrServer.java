@@ -18,13 +18,24 @@ import org.slf4j.LoggerFactory;
 public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
 
   public enum Runtime {
-    LOCAL_JOB, CLUSTER_JOB
+    LOCAL_JOB, // Local MR2 job runner, inline-thread, light-weight
+    CLUSTER_JOB // Mini MR2 cluster, multi-threaded, heavy-weight
   };
 
+  /**
+   * Get instance with default runtime
+   *
+   * @return
+   */
   public static synchronized MrServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_JOB : instance.getRuntime());
   }
 
+  /**
+   * Get instance with specific <code>runtime</code>
+   *
+   * @return
+   */
   public static synchronized MrServer getInstance(Runtime runtime) {
     return instance == null ? instance = new MrServer(runtime) : instance.assertRuntime(runtime);
   }

@@ -18,17 +18,32 @@ import org.slf4j.LoggerFactory;
 public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
 
   public enum Runtime {
-    CLUSTER_DEAMONS
+    CLUSTER_DEAMONS // Mini Kudu cluster, multi-process, heavy-weight
   };
 
+  /**
+   * Get instance with default runtime
+   *
+   * @return
+   */
   public static synchronized KuduServer getInstance() {
     return getInstance(instance == null ? Runtime.CLUSTER_DEAMONS : instance.getRuntime());
   }
 
+  /**
+   * Get instance with specific <code>runtime</code>
+   *
+   * @return
+   */
   public static synchronized KuduServer getInstance(Runtime runtime) {
     return instance == null ? instance = new KuduServer(runtime) : instance.assertRuntime(runtime);
   }
 
+  /**
+   * Get master addresses
+   *
+   * @return
+   */
   public synchronized String getMasterAddresses() {
     return miniKudu.getMasterAddresses();
   }

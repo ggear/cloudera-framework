@@ -19,13 +19,23 @@ import org.slf4j.LoggerFactory;
 public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> {
 
   public enum Runtime {
-    LOCAL_CPYTHON
+    LOCAL_CPYTHON // Local CPython script wrapper, single-process, heavy-weight
   };
 
+  /**
+   * Get instance with default runtime
+   *
+   * @return
+   */
   public static synchronized PythonServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_CPYTHON : instance.getRuntime());
   }
 
+  /**
+   * Get instance with specific <code>runtime</code>
+   *
+   * @return
+   */
   public static synchronized PythonServer getInstance(Runtime runtime) {
     return instance == null ? instance = new PythonServer(runtime) : instance.assertRuntime(runtime);
   }
