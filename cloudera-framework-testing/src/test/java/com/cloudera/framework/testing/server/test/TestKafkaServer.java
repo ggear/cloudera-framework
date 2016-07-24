@@ -1,5 +1,6 @@
 package com.cloudera.framework.testing.server.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -38,6 +39,7 @@ public class TestKafkaServer implements TestConstants {
 
   @Test
   public void testKafka() throws InterruptedException, IOException, ExecutionException, TimeoutException {
+    int pollCount = 5;
     int messageCount = 10;
     kafkaServer.createTopic(TOPIC_NAME_TEST, 1, 1, new Properties());
     Producer<String, String> producer = new KafkaProducer<>(kafkaServer.getProducerProperties());
@@ -48,9 +50,13 @@ public class TestKafkaServer implements TestConstants {
         producer.send(new ProducerRecord<>(TOPIC_NAME_TEST, "" + i, "" + i)).get(KafkaServer.KAFKA_POLL_MS, TimeUnit.MILLISECONDS);
       }
       producer.flush();
-      ConsumerRecords<String, String> records = consumer.poll(KafkaServer.KAFKA_POLL_MS * messageCount);
-      // TODO: Renable checking once AUTO_OFFSET_RESET_CONFIG is set correctly
-      // assertEquals(messageCount, records.count());
+      ConsumerRecords<String, String> records = null;
+      while ((records = consumer.poll(KafkaServer.KAFKA_POLL_MS * messageCount)).count() == 0) {
+        if (pollCount-- == 0) {
+          throw new TimeoutException("Could not poll message batch");
+        }
+      }
+      assertEquals(messageCount, records.count());
       for (ConsumerRecord<String, String> record : records) {
         assertTrue(record.offset() >= Long.parseLong(record.key()));
         assertTrue(Long.parseLong(record.key()) == Long.parseLong(record.value()));
