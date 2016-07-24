@@ -4,7 +4,7 @@ export ROOT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/..
 
 source $ROOT_DIR/bin/*.env
 
-set -x
+set -x -e
 
 if $USER_ADMIN; then
   USER_APP=$USER_ADMIN_HIVE

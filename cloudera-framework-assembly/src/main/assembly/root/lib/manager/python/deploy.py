@@ -1,6 +1,6 @@
 #!/usr/bin/python -u
 '''
-Provide a Cloudera Manager parcel deployment pipeline
+Provide a Cloudera Manager deployment pipeline
 Usage: %s [options]
 Options:
 -h --help                                Show help
@@ -94,34 +94,40 @@ def do_call(host, port, version, user, password, cluster_name, parcel_name, parc
         print 'Cluster [DEPLOYMENT] starting ... '
         cluster = api.get_cluster(cluster_name_itr)
         parcel = cluster.get_parcel(parcel_name, parcel_version)
+        parcel_already_activated = False
         print 'Parcel [DEPLOYMENT] starting ... '
-        do_parcel_op(cluster, parcel_name, parcel_version, 'DOWNLOAD', 'AVAILABLE_REMOTELY', 'DOWNLOADED', 'start_download')
-        do_parcel_op(cluster, parcel_name, parcel_version, 'DISTRIBUTE', 'DOWNLOADED', 'DISTRIBUTED', 'start_distribution')
-        do_parcel_op(cluster, parcel_name, parcel_version, 'ACTIVATE', 'DISTRIBUTED', 'ACTIVATED', 'activate')
-        parcel = cluster.get_parcel(parcel_name, parcel_version)
-        if parcel.stage != 'ACTIVATED':
-            raise Exception('Parcel is currently mid-stage [' + parcel.stage + '], please wait for this to complete')
+        if parcel.stage == 'ACTIVATED':
+            parcel_already_activated = True
+            print 'Parcel [DEPLOYMENT] already deployed'
+        else:
+            do_parcel_op(cluster, parcel_name, parcel_version, 'DOWNLOAD', 'AVAILABLE_REMOTELY', 'DOWNLOADED', 'start_download')
+            do_parcel_op(cluster, parcel_name, parcel_version, 'DISTRIBUTE', 'DOWNLOADED', 'DISTRIBUTED', 'start_distribution')
+            do_parcel_op(cluster, parcel_name, parcel_version, 'ACTIVATE', 'DISTRIBUTED', 'ACTIVATED', 'activate')
+            parcel = cluster.get_parcel(parcel_name, parcel_version)
+            if parcel.stage != 'ACTIVATED':
+                raise Exception('Parcel is currently mid-stage [' + parcel.stage + '], please wait for this to complete')
         print 'Parcel [DEPLOYMENT] finished'
         if init_pre_dir is not None and os.path.isdir(init_pre_dir):
             print 'Cluster [PRE_INIT] starting ... '
             for script in glob.glob(init_pre_dir + '/*.sh'):
                 subprocess.call([script])
             print 'Cluster [PRE_INIT] finihsed'            
-        print 'Cluster [CONFIG_DEPLOYMENT] starting ... '
-        cluster.deploy_client_config()
-        cmd = cluster.deploy_client_config()
-        if not cmd.wait(TIMEOUT_SEC).success:
-            raise Exception('Failed to deploy client configs')
-        print 'Cluster [CONFIG_DEPLOYMENT] finihsed'
-        print 'Cluster [RESTART] starting ... '
-        for service in cluster.get_all_services():
-            if service.type == "FLUME":
-                service.restart().wait()
-            if service.type == "HIVE":
-                service.restart().wait()
-            if service.type == "YARN":
-                service.restart().wait()
-        print 'Cluster [RESTART] finihsed'                
+        if not parcel_already_activated:
+            print 'Cluster [CONFIG_DEPLOYMENT] starting ... '
+            cluster.deploy_client_config()
+            cmd = cluster.deploy_client_config()
+            if not cmd.wait(TIMEOUT_SEC).success:
+                raise Exception('Failed to deploy client configs')
+            print 'Cluster [CONFIG_DEPLOYMENT] finihsed'
+            print 'Cluster [RESTART] starting ... '
+            for service in cluster.get_all_services():
+                if service.type == 'FLUME':
+                    service.restart().wait()
+                if service.type == 'HIVE':
+                    service.restart().wait()
+                if service.type == 'YARN':
+                    service.restart().wait()
+            print 'Cluster [RESTART] finihsed'                
         if init_post_dir is not None and os.path.isdir(init_post_dir):
             print 'Cluster [POST_INIT] starting ... '
             for script in glob.glob(init_post_dir + '/*.sh'):
@@ -141,7 +147,7 @@ def main(argv):
     setup_logging(logging.INFO)
     host = 'localhost'
     port = 7180
-    version = 12  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
+    version = 13  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
     user = 'admin'
     password = 'admin'
     cluster_name = None
