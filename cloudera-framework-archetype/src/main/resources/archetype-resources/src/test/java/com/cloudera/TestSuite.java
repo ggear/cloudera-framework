@@ -14,12 +14,16 @@ import com.cloudera.framework.testing.server.PythonServer;
 import com.cloudera.test.Hive;
 import com.cloudera.test.Python;
 
+/**
+ * Test suite that bootstraps all unit-test classes with the necessary,
+ * heavy-weight, CDH runtime servers (overriding the unit-test classes
+ * light-weight runtimes)
+ */
 @RunWith(Suite.class)
 @SuiteClasses({ //
     Hive.class, //
     Python.class, //
 })
-
 public class TestSuite {
 
   @ClassRule

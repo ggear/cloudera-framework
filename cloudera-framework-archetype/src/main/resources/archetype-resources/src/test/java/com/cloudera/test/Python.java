@@ -25,7 +25,7 @@ public class Python extends TestBase {
    * serial, lexicographic file name order
    *
    * @throws Exception
-   *           if any script fails to compile and run
+   *           if any script fails to run
    */
   @Test
   public void test() throws Exception {
