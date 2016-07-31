@@ -6,9 +6,9 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.cloudera.TestBase;
-import com.cloudera.TestConstants;
 import com.cloudera.framework.common.util.FsUtil;
+import com.cloudera.framework.example.TestBase;
+import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.HiveServer;
 

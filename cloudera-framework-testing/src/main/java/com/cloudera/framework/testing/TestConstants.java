@@ -53,5 +53,9 @@ public interface TestConstants {
   public static final String ABS_DIR_HIVE = ABS_DIR_TARGET + "/" + DIR_HIVE;
   public static final String ABS_DIR_KAFKA = ABS_DIR_TARGET + "/" + DIR_KAFKA;
   public static final String ABS_DIR_ZOOKEEPER = ABS_DIR_TARGET + "/" + DIR_ZOOKEEPER;
+  public static final String ABS_DIR_PYTHON = ABS_DIR_CLASSES + "/python";
+  public static final String ABS_DIR_HIVE_QUERY = ABS_DIR_CLASSES + "/hive/query";
+  public static final String ABS_DIR_HIVE_SCHEMA = ABS_DIR_CLASSES + "/hive/schema";
+  public static final String ABS_DIR_HIVE_REFRESH = ABS_DIR_CLASSES + "/hive/refresh";
 
 }
