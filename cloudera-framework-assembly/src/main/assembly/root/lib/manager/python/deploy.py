@@ -4,16 +4,14 @@ Provide a Cloudera Manager deployment pipeline
 Usage: %s [options]
 Options:
 -h --help                                Show help
---host=<cm-server-host>                  Specify a Cloudera Manager Server host
+--user=<cloudera-user>                   The Cloudera services user
+                                         Defaults to 'admin'
+--password=<cloudera-password>           The Cloudera services password
+                                         Defaults to 'admin'
+--man_host=<manager-host>                Specify a Cloudera Manager Server host
                                          Defaults to 'localhost'
---port=<cm-server-port>                  Override the default Cloudera Manager Server port
+--man_port=<manager-port>                Override the default Cloudera Manager Server port
                                          Defaults to '7180'
---version=<cm-server-api-version>        Define the Cloudera Manager Server API version
-                                         Defaults to latest as defined in the cm_api python module
---user=<cm-server-user>                  The Cloudera Manager user
-                                         Defaults to 'admin'
---password=<cm-server-user-password>     The Cloudera Manager user password
-                                         Defaults to 'admin'
 --cluster_name=<cluster-name>            The cluster name, if not defined will reflect on all clusters
                                          Defaults to not defined
 --parcel_name=<parcel-name>              The parcel name, required
@@ -30,29 +28,30 @@ Options:
                                          Defaults to not defined
 '''
 
-import os
-import re
-import sys
-import glob
-import time
 import getopt
-import random
+import glob
 import inspect
 import logging
-import textwrap
-import subprocess
-
-from time import sleep
+import os
 from random import randint
+import random
+import re
+import subprocess
+import sys
+import textwrap
+from time import sleep
+import time
 
 from cm_api import api_client
 from cm_api.api_client import ApiResource
+
 
 LOG = logging.getLogger(__name__)
 
 POLL_SEC = 2
 TIMEOUT_SEC = 180
 REGEX_VERSION = '[1-9][0-9]\.[1-9][0-9]\.[1-9][0-9][0-9][0-9]'
+MAN_API_VERSION = 13  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
 
 def do_parcel_op(cluster, parcel_name, parcel_version, parcel_op_label, stage_enter, stage_exit, parcel_op):
     parcel = cluster.get_parcel(parcel_name, parcel_version)
@@ -69,8 +68,8 @@ def do_parcel_op(cluster, parcel_name, parcel_version, parcel_op_label, stage_en
           print 'Parcel [%s] %s/%s' % (parcel_op_label, parcel.state.progress, parcel.state.totalProgress)
         print 'Parcel [%s] finished' % (parcel_op_label)    
                     
-def do_call(host, port, version, user, password, cluster_name, parcel_name, parcel_version, parcel_repo, init_pre_dir, init_post_dir):
-    api = ApiResource(host, port, user, password, False, version)
+def do_call(user, password, man_host, man_port, cluster_name, parcel_name, parcel_version, parcel_repo, init_pre_dir, init_post_dir):
+    api = ApiResource(man_host, man_port, user, password, False, MAN_API_VERSION)
     if not parcel_repo.endswith('/'):
         parcel_repo += '/'
     if re.match(REGEX_VERSION, parcel_version) is None or re.match(REGEX_VERSION, parcel_version).group() != parcel_version:
@@ -145,11 +144,10 @@ def setup_logging(level):
 
 def main(argv):
     setup_logging(logging.INFO)
-    host = 'localhost'
-    port = 7180
-    version = 13  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
     user = 'admin'
     password = 'admin'
+    man_host = 'localhost'
+    man_port = 7180
     cluster_name = None
     parcel_name = None
     parcel_version = None
@@ -157,7 +155,7 @@ def main(argv):
     init_pre_dir = None    
     init_post_dir = None    
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'h', ['help', 'host=', 'port=', 'version=', 'user=', 'password=', 'cluster_name=', 'parcel_name=', 'parcel_version=', 'parcel_repo=', 'init_pre_dir=', 'init_post_dir='])
+        opts, args = getopt.getopt(sys.argv[1:], 'h', ['help', 'user=', 'password=', 'man_host=', 'man_port=', 'cluster_name=', 'parcel_name=', 'parcel_version=', 'parcel_repo=', 'init_pre_dir=', 'init_post_dir='])
     except getopt.GetoptError, err:
         print >> sys.stderr, err
         usage()
@@ -166,16 +164,14 @@ def main(argv):
         if option in ('-h', '--help'):
             usage()
             return -1
-        elif option in ('--host'):
-            host = value
-        elif option in ('--port'):
-            port = value
-        elif option in ('--version'):
-            version = value
         elif option in ('--user'):
             user = value
         elif option in ('--password'):
             password = value
+        elif option in ('--man_host'):
+            man_host = value
+        elif option in ('--man_port'):
+            man_port = value
         elif option in ('--cluster_name'):
             cluster_name = value
         elif option in ('--parcel_name'):
@@ -196,7 +192,7 @@ def main(argv):
         print >> sys.stderr, 'Required parameters [parcel_name, parcel_version, parcel_repo] not passed on command line'        
         usage()
         return -1    
-    do_call(host, port, version, user, password, cluster_name, parcel_name, parcel_version, parcel_repo, init_pre_dir, init_post_dir)
+    do_call(user, password, man_host, man_port, cluster_name, parcel_name, parcel_version, parcel_repo, init_pre_dir, init_post_dir)
     return 0
 
 if __name__ == '__main__':

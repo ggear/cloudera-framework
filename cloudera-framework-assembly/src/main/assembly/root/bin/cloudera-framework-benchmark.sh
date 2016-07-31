@@ -6,10 +6,11 @@ source $ROOT_DIR/bin/*.env
 
 set -x
 
-MANAGER_SERVER_USER=${1:-"admin"}
-MANAGER_SERVER_PWORD=${2:-"admin"}
-SLEEP_PERIOD_S=${3:-"10"}
-STREAM_PERIOD_S=${4:-"60"}
+REPORT_ONLY=${1:-"false"}
+MANAGER_SERVER_USER=${2:-"admin"}
+MANAGER_SERVER_PWORD=${3:-"admin"}
+SLEEP_PERIOD_S=${4:-"5"}
+STREAM_PERIOD_S=${5:-"20"}
 
 function benchmark_failed {
   set +x
@@ -19,28 +20,27 @@ function benchmark_failed {
   exit 1
 }
 
-function benchmark_succeeded {
-  set +x
-  echo "" && echo "-------------------------------------------------------------------------------"
-  echo "Benchmark pipeline succeeded in [$DURATION_S] seconds"
-  echo "-------------------------------------------------------------------------------" && echo ""
-  exit 1
-}
-
-{ $ROOT_DIR/bin/cloudera-framework-deploy.sh; } || { benchmark_failed; }
-
-START_S=$(date +%s)
-{ $ROOT_DIR/bin/cloudera-framework-stream.sh true || benchmark_failed; } && { sleep $STREAM_PERIOD_S; }
-{ $ROOT_DIR/bin/cloudera-framework-stream.sh false && sleep $SLEEP_PERIOD_S; } || { benchmark_failed; }
-[ $(find $ROOT_DIR/bin -maxdepth 1 -type f -name "*-process.sh" | wc -l) -gt 1 ] && { echo "Error - multiple process scripts found" && benchmark_failed; }
-[ $(find $ROOT_DIR/bin -maxdepth 1 -type f -name "*-process.sh" | wc -l) -eq 1 ] && { $ROOT_DIR/bin/*-process.sh && sleep $SLEEP_PERIOD_S || benchmark_failed; }
-{ $ROOT_DIR/bin/cloudera-framework-query.sh && sleep $SLEEP_PERIOD_S; } || { benchmark_failed; }
-FINISH_S=$(date +%s)
-
-DURATION_S=$((FINISH_S-START_S))
+if ! $REPORT_ONLY; then
+  { $ROOT_DIR/bin/cloudera-framework-deploy.sh; } || { benchmark_failed; }
+  START_SEC=$(date +%s)
+  { $ROOT_DIR/bin/cloudera-framework-stream.sh true || benchmark_failed; } && { sleep $STREAM_PERIOD_S; }
+  { $ROOT_DIR/bin/cloudera-framework-stream.sh false && sleep $SLEEP_PERIOD_S; } || { benchmark_failed; }
+  [ $(find $ROOT_DIR/bin -maxdepth 1 -type f -name "*-process.sh" | wc -l) -gt 1 ] && { echo "Error - multiple process scripts found" && benchmark_failed; }
+  [ $(find $ROOT_DIR/bin -maxdepth 1 -type f -name "*-process.sh" | wc -l) -eq 1 ] && { $ROOT_DIR/bin/*-process.sh && sleep $SLEEP_PERIOD_S || benchmark_failed; }
+  { $ROOT_DIR/bin/cloudera-framework-query.sh && sleep $SLEEP_PERIOD_S; } || { benchmark_failed; }
+  FINISH_SEC=$(date +%s)
+  DURATION_SEC=$((FINISH_SEC-START_SEC))
+fi
 { $ROOT_DIR/lib/manager/python/benchmark.py \
-  --host $MANAGER_SERVER_HOST \
-  --user $MANAGER_SERVER_USER \
-  --password $MANAGER_SERVER_PWORD; } || { benchmark_failed; }
-
-benchmark_succeeded
+  --user "$MANAGER_SERVER_USER" \
+  --password "$MANAGER_SERVER_PWORD" \
+  --man_host "$MANAGER_SERVER_HOST" \
+  --nav_host "$MANAGER_NAVIGATORMETASERVER_HOST" \
+  --app_name "$PARCEL_NAME_LONG" \
+  --app_version "$PARCEL_VERSION" \
+  --app_namespace "$PARCEL_NAMESPACE" \
+  --app_time "$DURATION_SEC" \
+  --app_start "$START_SEC" \
+  --app_end "$FINISH_SEC" \
+  --app_dashboard "$ROOT_DIR/lib/manager/dashboard/release.json" \
+  --app_report_only "$REPORT_ONLY"; } || { benchmark_failed; }
