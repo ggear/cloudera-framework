@@ -8,7 +8,9 @@ set -x -e
 
 if $USER_ADMIN; then
   USER_APP=$USER_ADMIN_HIVE
-  DATABASE_APP=default
+  if $DATABASE_DEFAULT; then
+    DATABASE_APP=default
+  fi
 fi
 
 beeline \

@@ -15,6 +15,7 @@ ROOT_DIR_IMPALA_REFRESH=${6:-"$ROOT_DIR/lib/impala/refresh"}
 ROOT_DIR_HDFS_INIT=${7:-"$ROOT_DIR/lib/hdfs"}
 
 export USER_ADMIN=true
+export DATABASE_DEFAULT=true
 
 if $DROP_SCHEMA; then
   if [ $($ROOT_DIR/bin/cloudera-framework-impala.sh -d default -q "SHOW DATABASES" 2> /dev/null| grep $DATABASE_APP|wc -l) -gt 0 ]; then
@@ -50,6 +51,7 @@ if [ $($ROOT_DIR/bin/cloudera-framework-impala.sh -d default -q "SHOW ROLES" 2> 
   	echo "Sleeping while waiting admin role to sync ... "
     sleep 5
   done
+  export DATABASE_DEFAULT=false
   for SCRIPT in $(find $ROOT_DIR_HIVE_SCHEMA -maxdepth 1 -type f 2> /dev/null); do
     if [ ${SCRIPT: -3} == ".sh" ]; then
       $SCRIPT
@@ -64,7 +66,7 @@ if [ $($ROOT_DIR/bin/cloudera-framework-impala.sh -d default -q "SHOW ROLES" 2> 
       $ROOT_DIR/bin/cloudera-framework-impala.sh -f $SCRIPT
     fi
   done
-  $ROOT_DIR/bin/cloudera-framework-impala.sh -r -q "USE $DATABASE_APP; SHOW TABLES"
+  $ROOT_DIR/bin/cloudera-framework-impala.sh -r -q "SHOW TABLES"
   $ROOT_DIR/bin/cloudera-framework-hadoop.sh "fs -chown -R $USER_APP $ROOT_DIR_HDFS"
   for SCRIPT in $(find $ROOT_DIR_HDFS_INIT -maxdepth 1 -type f 2> /dev/null); do
     $SCRIPT
@@ -72,6 +74,7 @@ if [ $($ROOT_DIR/bin/cloudera-framework-impala.sh -d default -q "SHOW ROLES" 2> 
 fi
 
 unset USER_ADMIN
+unset DATABASE_DEFAULT
 
 for SCRIPT in $(find $ROOT_DIR_HIVE_REFRESH -maxdepth 1 -type f 2> /dev/null); do
   if [ ${SCRIPT: -3} == ".sh" ]; then
