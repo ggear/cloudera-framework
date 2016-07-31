@@ -84,15 +84,15 @@ def update_metadata(user, password, nav_host, nav_port, app_namespace, property_
             requests.put(nav_uri(nav_host, nav_port, 'entities/' + app_database), \
                          auth=(user, password), data='{"customProperties":{"' + property_namespace + '":' + json.dumps(property_values) + '}}')
     app_properties = {'database': app_database, 'properties':[]}
-    app_entities = requests.get(nav_uri(nav_host, nav_port, 'entities/?query=' + app_namespace.split('_')[0] + '%20%26%26%20type%3Adatabase&limit=9999&offset=0'), \
+    app_entities = requests.get(nav_uri(nav_host, nav_port, 'entities/?query=' + app_namespace.split('_')[0] + '*%20%26%26%20type%3Adatabase&limit=9999&offset=0'), \
                                 auth=(user, password)).json()
-    try:
-        for app_entities_properties in app_entities:
+    for app_entities_properties in app_entities:
+        try:
             app_properties['properties'].append(app_entities_properties['customProperties'][property_namespace])
-    except TypeError:
-        pass
-    except KeyError:
-        pass
+        except TypeError:
+            pass
+        except KeyError:
+            pass
     return app_properties
 
 def nav_uri(nav_host, nav_port, path):
