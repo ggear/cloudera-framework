@@ -10,7 +10,7 @@ REPORT_ONLY=${1:-"false"}
 MANAGER_SERVER_USER=${2:-"admin"}
 MANAGER_SERVER_PWORD=${3:-"admin"}
 SLEEP_PERIOD_S=${4:-"5"}
-STREAM_PERIOD_S=${5:-"60"}
+STREAM_PERIOD_S=${5:-"35"}
 
 function benchmark_failed {
   set +x
