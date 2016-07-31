@@ -131,13 +131,13 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
                         if time_series.metadata.metricName == 'cpu_percent_across_hosts':
                             cpu = compress_bins(time_series.data, 1)
                         if time_series.metadata.metricName == 'total_bytes_read_rate_across_datanodes':
-                            hdfs += compress_bins(time_series.data, 100000)
+                            hdfs += compress_bins(time_series.data, 1000)
                         if time_series.metadata.metricName == 'total_bytes_written_rate_across_datanodes':
-                            hdfs += compress_bins(time_series.data, 100000)
+                            hdfs += compress_bins(time_series.data, 1000)
                         if time_series.metadata.metricName == 'total_bytes_receive_rate_across_network_interfaces':
-                            network += compress_bins(time_series.data, 100000)
+                            network += compress_bins(time_series.data, 1000)
                         if time_series.metadata.metricName == 'total_bytes_transmit_rate_across_network_interfaces':
-                            network += compress_bins(time_series.data, 100000)
+                            network += compress_bins(time_series.data, 1000)
     properties = [ \
                   {'name':'Name', 'description':'Application name', 'value': {'Name': [app_name]}}, \
                   {'name':'Version', 'description':'Application version', 'value': {'Version': [app_version]}}, \
