@@ -74,7 +74,7 @@ def update_metadata(user, password, nav_host, nav_port, app_namespace, property_
                                            auth=(user, password)).json()['customProperties'][property_namespace]
         except KeyError:
             property_values = {}
-        for property in properties:
+        for property in reversed(properties):
             for property_name in property['value']:
                 if property_name in property_values:
                     property_values[property_name] = property_values[property_name] + property['value'][property_name]
@@ -141,7 +141,7 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
     properties = [ \
                   {'name':'Name', 'description':'Application name', 'value': {'Name': [app_name]}}, \
                   {'name':'Version', 'description':'Application version', 'value': {'Version': [app_version]}}, \
-                  {'name':'Run', 'description':'Run time', 'value': {'Run': [app_time + 's']}}, \
+                  {'name':'Run', 'description':'Run time', 'value': {'Run': [app_time]}}, \
                   {'name':'Start', 'description':'Start time', 'value': {'Start': [ app_start + '000']}}, \
                   {'name':'Finish', 'description':'Finish time', 'value': {'Finish': [ app_end + '000']}}, \
                   {'name':'CPU', 'description':'Relative CPU usage during benchmark', 'value': {'CPU': [str(cpu)]}}, \
