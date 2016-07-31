@@ -115,7 +115,7 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
     if app_report_only:
         app_start = '0'
         app_end = '0'
-    dashboard_name = 'Release (' + app_namespace + ', ' + app_time + 's)'
+    dashboard_name = 'Release (' + app_namespace + ')'
     if not app_report_only:
         api = ApiResource(man_host, man_port, user, password, False, MAN_API_VERSION)
         with open (app_dashboard, 'r') as dashboard_data_file:
@@ -131,19 +131,19 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
                         if time_series.metadata.metricName == 'cpu_percent_across_hosts':
                             cpu = compress_bins(time_series.data, 1)
                         if time_series.metadata.metricName == 'total_bytes_read_rate_across_datanodes':
-                            hdfs += compress_bins(time_series.data, 1000)
+                            hdfs += compress_bins(time_series.data, 1)
                         if time_series.metadata.metricName == 'total_bytes_written_rate_across_datanodes':
-                            hdfs += compress_bins(time_series.data, 1000)
+                            hdfs += compress_bins(time_series.data, 1)
                         if time_series.metadata.metricName == 'total_bytes_receive_rate_across_network_interfaces':
-                            network += compress_bins(time_series.data, 1000)
+                            network += compress_bins(time_series.data, 1)
                         if time_series.metadata.metricName == 'total_bytes_transmit_rate_across_network_interfaces':
-                            network += compress_bins(time_series.data, 1000)
+                            network += compress_bins(time_series.data, 1)
     properties = [ \
                   {'name':'Name', 'description':'Application name', 'value': {'Name': [app_name]}}, \
                   {'name':'Version', 'description':'Application version', 'value': {'Version': [app_version]}}, \
                   {'name':'Run', 'description':'Run time', 'value': {'Run': [app_time + 's']}}, \
-                  {'name':'Start', 'description':'Start time', 'value': {'Start': [datetime.datetime.fromtimestamp(float(app_start)).strftime('%Y-%m-%d %H:%M:%S')]}}, \
-                  {'name':'Finish', 'description':'Finish time', 'value': {'Finish': [datetime.datetime.fromtimestamp(float(app_end)).strftime('%Y-%m-%d %H:%M:%S')]}}, \
+                  {'name':'Start', 'description':'Start time', 'value': {'Start': [ app_start + '000']}}, \
+                  {'name':'Finish', 'description':'Finish time', 'value': {'Finish': [ app_end + '000']}}, \
                   {'name':'CPU', 'description':'Relative CPU usage during benchmark', 'value': {'CPU': [str(cpu)]}}, \
                   {'name':'HDFS', 'description':'Relative HDFS usage during benchmark', 'value': {'HDFS': [str(hdfs)]}}, \
                   {'name':'Network', 'description':'Relative Network usage during benchmark', 'value': {'Network': [str(network)]}} \
@@ -152,12 +152,16 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
     app_table_comparison = '{:<15} |{:>15} |{:>15} |{:>15} |{:>15}|'
     app_table = [['Application', app_name + '-' + app_version]]
     if not app_report_only:
-        app_table.append(['Run', app_time + 's'])
-        app_table.append(['Start', datetime.datetime.fromtimestamp(float(app_start)).strftime('%Y-%m-%d %H:%M:%S')])
-        app_table.append(['Finish', datetime.datetime.fromtimestamp(float(app_end)).strftime('%Y-%m-%d %H:%M:%S')])
+        app_table.append(['Run', app_time + 's (' + str((int(app_time) / 60)) + 'm)'])
+        app_table.append(['Start', datetime.datetime.fromtimestamp(float(app_start)).strftime('%Y-%m-%d %H:%M:%S') + ' (' + app_start + '000)'])
+        app_table.append(['Finish', datetime.datetime.fromtimestamp(float(app_end)).strftime('%Y-%m-%d %H:%M:%S') + ' (' + app_end + '000)'])
     if app_properties['database']:
         app_table.append(['Metadata', 'http://localhost:7187/?view=detailsView&id=' + app_properties['database']])
-        app_table.append(['Dashboard', 'http://localhost:7180/cmf/views/view?viewName=' + urllib.quote_plus(dashboard_name)])
+        app_dashbaord_uri = 'http://localhost:7180/cmf/views/view?viewName=' + urllib.quote_plus(dashboard_name)
+        if app_report_only:
+            app_table.append(['Dashboard', app_dashbaord_uri])
+        else:
+            app_table.append(['Dashboard', app_dashbaord_uri + '#startTime=' + app_start + '000&endTime=' + app_end + '000'])
     app_table.append(['Comparison', app_table_comparison.format('Version', 'Run', 'CPU', 'HDFS', 'Network')])        
     for properties_value in app_properties['properties']:
         app_table.append([None, app_table_comparison.format(', '.join(properties_value['Version']), ', '.join(properties_value['Run']), ', '.join(properties_value['CPU']), ', '.join(properties_value['HDFS']), ', '.join(properties_value['Network']))])        
