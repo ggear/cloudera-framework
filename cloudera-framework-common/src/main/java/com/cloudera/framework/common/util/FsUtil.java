@@ -23,9 +23,12 @@ public class FsUtil {
   public static Iterable<File> listFiles(String... paths) {
     List<File> files = new ArrayList<File>();
     for (String path : paths) {
-      for (File file : FileUtils.listFiles(new File(path), FileFilterUtils.trueFileFilter(), FileFilterUtils.falseFileFilter())) {
-        if (!file.getName().startsWith(".")) {
-          files.add(file);
+      File pathFile = new File(path);
+      if (pathFile.exists() && pathFile.isDirectory()) {
+        for (File file : FileUtils.listFiles(pathFile, FileFilterUtils.trueFileFilter(), FileFilterUtils.falseFileFilter())) {
+          if (!file.getName().startsWith(".")) {
+            files.add(file);
+          }
         }
       }
     }

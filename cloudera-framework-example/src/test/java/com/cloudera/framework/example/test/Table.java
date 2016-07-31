@@ -24,6 +24,7 @@ import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 
 import com.cloudera.framework.common.Driver;
+import com.cloudera.framework.common.util.FsUtil;
 import com.cloudera.framework.example.Constants;
 import com.cloudera.framework.example.TestBase;
 import com.cloudera.framework.example.model.RecordPartition;
@@ -36,6 +37,7 @@ import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.HiveServer;
+import com.cloudera.framework.testing.server.PythonServer;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.zohhak.api.Coercion;
@@ -52,6 +54,9 @@ public class Table extends TestBase {
 
   @ClassRule
   public static HiveServer hiveServer = HiveServer.getInstance();
+
+  @ClassRule
+  public static PythonServer pythonServer = PythonServer.getInstance();
 
   public final TestMetaData testMetaDataAll = super.testMetaDataAll //
       .parameters( //
@@ -225,6 +230,12 @@ public class Table extends TestBase {
               Collections.<String, String> emptyMap(), ImmutableMap.of(Constants.CONFIG_INPUT_PATH, inputPath,
                   HiveConf.ConfVars.HIVEINPUTFORMAT.varname, HiveInputFormat.class.getName()),
               1000).size());
+    }
+    for (File script : FsUtil.listFiles(ABS_DIR_HIVE_QUERY)) {
+      hiveServer.execute(script);
+    }
+    for (File script : FsUtil.listFiles(ABS_DIR_PYTHON)) {
+      pythonServer.execute(script);
     }
   }
 

@@ -16,6 +16,7 @@ import com.cloudera.framework.example.test.Table;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.HiveServer;
 import com.cloudera.framework.testing.server.MrServer;
+import com.cloudera.framework.testing.server.PythonServer;
 
 @RunWith(Suite.class)
 @SuiteClasses({ //
@@ -33,6 +34,7 @@ public class TestSuite {
   public static TestRule cdhServers = RuleChain //
       .outerRule(DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS)) //
       .around(MrServer.getInstance(MrServer.Runtime.CLUSTER_JOB)) //
+      .around(PythonServer.getInstance(PythonServer.Runtime.LOCAL_CPYTHON)) //
       .around(HiveServer.getInstance(HiveServer.Runtime.CLUSTER_MR2));
 
 }
