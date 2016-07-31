@@ -57,7 +57,7 @@ MAN_API_VERSION = 13  # Do not use api_client.API_CURRENT_VERSION, it is often +
 def update_metadata(user, password, nav_host, nav_port, app_namespace, property_namespace, properties, app_report_only):
     requests.post(nav_uri(nav_host, nav_port, 'models/namespaces'), \
                   auth=(user, password), data='{"name":"' + property_namespace + '","description":"' + property_namespace + ' Metadata"}')
-    for property in reversed(properties):
+    for property in properties:
         requests.post(nav_uri(nav_host, nav_port, 'models/namespaces/' + property_namespace + '/properties'), \
                       auth=(user, password), data='{"name":"' + property['name'] + '","description":"' + property['description'] + '","namespace":"' + property_namespace + '","multiValued":true,"type":"TEXT"}')
         requests.post(nav_uri(nav_host, nav_port, 'models/packages/nav/classes/hv_database/properties'), \
@@ -74,7 +74,7 @@ def update_metadata(user, password, nav_host, nav_port, app_namespace, property_
                                            auth=(user, password)).json()['customProperties'][property_namespace]
         except KeyError:
             property_values = {}
-        for property in reversed(properties):
+        for property in properties:
             for property_name in property['value']:
                 if property_name in property_values:
                     property_values[property_name] = property_values[property_name] + property['value'][property_name]
