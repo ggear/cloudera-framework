@@ -112,6 +112,10 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
     cpu = 0
     hdfs = 0
     network = 0
+    if app_report_only:
+        app_time = '0'
+        app_start = '0'
+        app_end = '0'
     dashboard_name = 'Release (' + app_namespace + ', ' + app_time + 's)'
     if not app_report_only:
         api = ApiResource(man_host, man_port, user, password, False, MAN_API_VERSION)
@@ -151,9 +155,10 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
     if not app_report_only:
         app_table.append(['Run', app_time + 's'])
         app_table.append(['Start', datetime.datetime.fromtimestamp(float(app_start)).strftime('%Y-%m-%d %H:%M:%S')])
-        app_table.append(['Finish', datetime.datetime.fromtimestamp(float(app_end)).strftime('%Y-%m-%d %H:%M:%S')])    
-    app_table.append(['Metadata', 'http://localhost:7187/?view=detailsView&id=' + app_properties['database']])
-    app_table.append(['Dashboard', 'http://localhost:7180/cmf/views/view?viewName=' + urllib.quote_plus(dashboard_name)])
+        app_table.append(['Finish', datetime.datetime.fromtimestamp(float(app_end)).strftime('%Y-%m-%d %H:%M:%S')])
+    if app_properties['database']:
+        app_table.append(['Metadata', 'http://localhost:7187/?view=detailsView&id=' + app_properties['database']])
+        app_table.append(['Dashboard', 'http://localhost:7180/cmf/views/view?viewName=' + urllib.quote_plus(dashboard_name)])
     app_table.append(['Comparison', app_table_comparison.format('Version', 'Run', 'CPU', 'HDFS', 'Network')])        
     for properties_value in app_properties['properties']:
         app_table.append([None, app_table_comparison.format(', '.join(properties_value['Version']), ', '.join(properties_value['Run']), ', '.join(properties_value['CPU']), ', '.join(properties_value['HDFS']), ', '.join(properties_value['Network']))])        
