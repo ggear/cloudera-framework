@@ -22,7 +22,6 @@ import org.junit.Test;
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.server.DfsServer;
-import com.cloudera.framework.testing.server.MrServer;
 import com.google.common.collect.ImmutableMap;
 
 public abstract class TestDfsServer implements TestConstants {
@@ -256,8 +255,7 @@ public abstract class TestDfsServer implements TestConstants {
   public void testDfs(TestMetaData testMetaData) throws Exception {
     assertNotNull(testMetaData);
     assertCounterEquals(testMetaData.getAsserts()[0],
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, (long) getDfsServer().listFilesDfs("/").length
-            - (MrServer.getInstance().isStarted() && MrServer.getInstance().getRuntime().equals(MrServer.Runtime.CLUSTER_JOB) ? 2 : 0))));
+        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, (long) getDfsServer().listFilesDfs("/").length)));
   }
 
   private void assertCopyFromLocalDir(int countUpstream, int countDownstream, String sourcePath, String destinationPath,
