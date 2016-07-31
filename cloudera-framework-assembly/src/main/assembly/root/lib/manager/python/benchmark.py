@@ -113,7 +113,6 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
     hdfs = 0
     network = 0
     if app_report_only:
-        app_time = '0'
         app_start = '0'
         app_end = '0'
     dashboard_name = 'Release (' + app_namespace + ', ' + app_time + 's)'
