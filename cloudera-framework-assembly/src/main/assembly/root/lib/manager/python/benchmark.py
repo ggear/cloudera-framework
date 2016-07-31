@@ -149,7 +149,7 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
                   {'name':'Network', 'description':'Relative Network usage during benchmark', 'value': {'Network': [str(network)]}} \
     ]
     app_properties = update_metadata(user, password, nav_host, nav_port, app_namespace, 'Benchmark', properties, app_report_only)
-    app_table_comparison = '{:<15} |{:>15} |{:>15} |{:>15} |{:>15}|'
+    app_table_comparison = '{:<15} |{:>15} |{:>15} |{:>15} |{:>15} |{:>15} |{:>15}|'
     app_table = [['Application', app_name + '-' + app_version]]
     if not app_report_only:
         app_table.append(['Run', app_time + 's (' + str((int(app_time) / 60)) + 'm)'])
@@ -162,9 +162,9 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
             app_table.append(['Dashboard', app_dashbaord_uri])
         else:
             app_table.append(['Dashboard', app_dashbaord_uri + '#startTime=' + app_start + '000&endTime=' + app_end + '000'])
-    app_table.append(['Comparison', app_table_comparison.format('Version', 'Run', 'CPU', 'HDFS', 'Network')])        
+    app_table.append(['Comparison', app_table_comparison.format('Version', 'Start', 'Finish', 'Run', 'CPU', 'HDFS', 'Network')])        
     for properties_value in app_properties['properties']:
-        app_table.append([None, app_table_comparison.format(', '.join(properties_value['Version']), ', '.join(properties_value['Run']), ', '.join(properties_value['CPU']), ', '.join(properties_value['HDFS']), ', '.join(properties_value['Network']))])        
+        app_table.append([None, app_table_comparison.format(', '.join(properties_value['Version']), ', '.join(properties_value['Start']), ', '.join(properties_value['Finish']), ', '.join(properties_value['Run']), ', '.join(properties_value['CPU']), ', '.join(properties_value['HDFS']), ', '.join(properties_value['Network']))])        
     print tabulate(app_table, tablefmt='grid')
 
 def usage():
