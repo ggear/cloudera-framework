@@ -69,16 +69,16 @@ public class Stream extends TestBase {
           ImmutableMap.of( //
               com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
               ImmutableMap.of( //
-                  RecordCounter.RECORDS, 5000L, //
-                  RecordCounter.RECORDS_CANONICAL, 3000L, //
-                  RecordCounter.RECORDS_DUPLICATE, 2000L, //
+                  RecordCounter.RECORDS, 10000L, //
+                  RecordCounter.RECORDS_CANONICAL, 6000L, //
+                  RecordCounter.RECORDS_DUPLICATE, 4000L, //
                   RecordCounter.RECORDS_MALFORMED, 0L //
               )), //
           ImmutableMap.of( //
               com.cloudera.framework.example.process.Cleanse.class.getCanonicalName(),
               ImmutableMap.of( //
-                  RecordCounter.RECORDS, 3000L, //
-                  RecordCounter.RECORDS_CANONICAL, 3000L, //
+                  RecordCounter.RECORDS, 6000L, //
+                  RecordCounter.RECORDS_CANONICAL, 6000L, //
                   RecordCounter.RECORDS_DUPLICATE, 0L, //
                   RecordCounter.RECORDS_MALFORMED, 0L //
               )));
@@ -112,16 +112,16 @@ public class Stream extends TestBase {
           ImmutableMap.of( //
               com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
               ImmutableMap.of( //
-                  RecordCounter.RECORDS, 5000L, //
-                  RecordCounter.RECORDS_CANONICAL, 3000L, //
-                  RecordCounter.RECORDS_DUPLICATE, 2000L, //
+                  RecordCounter.RECORDS, 10000L, //
+                  RecordCounter.RECORDS_CANONICAL, 6000L, //
+                  RecordCounter.RECORDS_DUPLICATE, 4000L, //
                   RecordCounter.RECORDS_MALFORMED, 0L //
               )), //
           ImmutableMap.of( //
               com.cloudera.framework.example.process.Cleanse.class.getCanonicalName(),
               ImmutableMap.of( //
-                  RecordCounter.RECORDS, 3000L, //
-                  RecordCounter.RECORDS_CANONICAL, 3000L, //
+                  RecordCounter.RECORDS, 6000L, //
+                  RecordCounter.RECORDS_CANONICAL, 6000L, //
                   RecordCounter.RECORDS_DUPLICATE, 0L, //
                   RecordCounter.RECORDS_MALFORMED, 0L //
               )));
