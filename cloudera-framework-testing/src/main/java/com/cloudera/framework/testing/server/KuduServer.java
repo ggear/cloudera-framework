@@ -5,10 +5,10 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.kudu.client.KuduClient;
+import org.apache.kudu.client.KuduClient.KuduClientBuilder;
+import org.apache.kudu.client.MiniKuduCluster;
 import org.junit.rules.TestRule;
-import org.kududb.client.KuduClient;
-import org.kududb.client.KuduClient.KuduClientBuilder;
-import org.kududb.client.MiniKuduCluster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

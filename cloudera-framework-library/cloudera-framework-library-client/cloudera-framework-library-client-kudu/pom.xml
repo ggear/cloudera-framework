@@ -15,7 +15,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.kududb</groupId>
+			<groupId>org.apache.kudu</groupId>
 			<artifactId>kudu-client</artifactId>
 			<version>${cdh-kudu-base.version}</version>
 			<exclusions>
