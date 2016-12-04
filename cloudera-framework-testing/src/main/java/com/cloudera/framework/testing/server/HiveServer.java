@@ -43,10 +43,27 @@ import org.slf4j.LoggerFactory;
  */
 public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
-  public enum Runtime {
-    LOCAL_MR2, // Local MR2 job runner backed Hive, inline-thread, light-weight
-    CLUSTER_MR2 // Mini MR2 cluster backed Hive, multi-threaded, heavy-weight
-  };
+  public static final String HS2_BINARY_MODE = "binary";
+
+  ;
+  public static final String HS2_HTTP_MODE = "http";
+  private static final String DIR_HOME = "usr/hive";
+  private static final String DIR_SCRATCH = "scratch";
+  private static final String DIR_WAREHOUSE = "warehouse";
+  private static final String COMMAND_DELIMETER = ";";
+  private static final int MAX_RESULTS_DEFAULT = 100;
+  private static final AtomicLong DERBY_DB_COUNTER = new AtomicLong();
+  private static Logger LOG = LoggerFactory.getLogger(HiveServer.class);
+  private static HiveServer instance;
+  private int httpPort;
+  private int binaryPort;
+  private HiveServer2 hiveServer;
+
+  private HiveServer(Runtime runtime) {
+    super(runtime);
+    httpPort = CdhServer.getNextAvailablePort();
+    binaryPort = CdhServer.getNextAvailablePort();
+  }
 
   /**
    * Get instance with default runtime
@@ -71,11 +88,11 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *
    * @param statement
    * @return {@link List} of {@link String} results, no result will be indicated
-   *         by 1-length empty {@link String} {@link List}
+   * by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
   public List<String> execute(String statement) throws Exception {
-    return execute(statement, Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap());
+    return execute(statement, Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap());
   }
 
   /**
@@ -85,11 +102,11 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param statement
    * @param parameters
    * @return {@link List} of {@link String} results, no result will be indicated
-   *         by 1-length empty {@link String} {@link List}
+   * by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
   public List<String> execute(String statement, Map<String, String> parameters) throws Exception {
-    return execute(statement, parameters, Collections.<String, String> emptyMap());
+    return execute(statement, parameters, Collections.<String, String>emptyMap());
   }
 
   /**
@@ -101,7 +118,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param parameters
    * @param configuration
    * @return {@link List} of {@link String} results, no result will be indicated
-   *         by 1-length empty {@link String} {@link List}
+   * by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
   public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration) throws Exception {
@@ -118,11 +135,11 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param configuration
    * @param maxResults
    * @return {@link List} of {@link String} results, no result will be indicated
-   *         by 1-length empty {@link String} {@link List}
+   * by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
   public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults)
-      throws Exception {
+    throws Exception {
     return execute(statement, parameters, configuration, maxResults, false);
   }
 
@@ -137,11 +154,11 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param maxResults
    * @param quiet
    * @return {@link List} of {@link String} results, no result will be indicated
-   *         by 1-length empty {@link String} {@link List}
+   * by 1-length empty {@link String} {@link List}
    * @throws Exception
    */
   public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults,
-      boolean quiet) throws Exception {
+                              boolean quiet) throws Exception {
     long time = System.currentTimeMillis();
     if (!quiet) {
       log(LOG, "execute", true);
@@ -152,7 +169,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     }
     List<String> results = new ArrayList<>();
     CommandProcessor commandProcessor = CommandProcessorFactory.getForHiveCommand(
-        (statement = new StrSubstitutor(parameters, "${hivevar:", "}").replace(statement.trim())).split("\\s+"), confSession);
+      (statement = new StrSubstitutor(parameters, "${hivevar:", "}").replace(statement.trim())).split("\\s+"), confSession);
     if (commandProcessor == null) {
       ((Driver) (commandProcessor = new Driver(confSession))).setMaxRows(maxResults);
     }
@@ -168,16 +185,16 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     if (!quiet) {
       if (responseCode != 0 || responseErrorMessage != null) {
         log(LOG, "execute",
-            "error code [" + responseCode + "]" + (responseErrorMessage != null ? " message [" + responseErrorMessage + " ]" : ""), true);
+          "error code [" + responseCode + "]" + (responseErrorMessage != null ? " message [" + responseErrorMessage + " ]" : ""), true);
       } else {
         log(LOG, "execute", "results count [" + results.size() + (results.size() == maxResults ? " (MAX)" : "") + "]:\n"
-            + StringUtils.join(results.toArray(), "\n"), true);
+          + StringUtils.join(results.toArray(), "\n"), true);
       }
       log(LOG, "execute", "finished in [" + (System.currentTimeMillis() - time) + "] ms", true);
     }
     if (responseCode != 0 || responseErrorMessage != null) {
       throw new SQLException("Statement executed with error response code [" + responseCode + "]"
-          + (responseErrorMessage != null ? " and error message [" + responseErrorMessage + " ]" : ""));
+        + (responseErrorMessage != null ? " and error message [" + responseErrorMessage + " ]" : ""));
     }
     return results;
   }
@@ -188,12 +205,12 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    *
    * @param file
    * @return {@link List} of {@link List} of {@link String} results per
-   *         statement, no result will be indicated by 1-length empty
-   *         {@link String} {@link List}
+   * statement, no result will be indicated by 1-length empty
+   * {@link String} {@link List}
    * @throws Exception
    */
   public List<List<String>> execute(File file) throws Exception {
-    return execute(file, Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap());
+    return execute(file, Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap());
   }
 
   /**
@@ -204,12 +221,12 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param file
    * @param parameters
    * @return {@link List} of {@link List} of {@link String} results per
-   *         statement, no result will be indicated by 1-length empty
-   *         {@link String} {@link List}
+   * statement, no result will be indicated by 1-length empty
+   * {@link String} {@link List}
    * @throws Exception
    */
   public List<List<String>> execute(File file, Map<String, String> parameters) throws Exception {
-    return execute(file, parameters, Collections.<String, String> emptyMap());
+    return execute(file, parameters, Collections.<String, String>emptyMap());
   }
 
   /**
@@ -222,8 +239,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param parameters
    * @param configuration
    * @return {@link List} of {@link List} of {@link String} results per
-   *         statement, no result will be indicated by 1-length empty
-   *         {@link String} {@link List}
+   * statement, no result will be indicated by 1-length empty
+   * {@link String} {@link List}
    * @throws Exception
    */
   public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration) throws Exception {
@@ -241,12 +258,12 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param configuration
    * @param maxResults
    * @return {@link List} of {@link List} of {@link String} results per
-   *         statement, no result will be indicated by 1-length empty
-   *         {@link String} {@link List}
+   * statement, no result will be indicated by 1-length empty
+   * {@link String} {@link List}
    * @throws Exception
    */
   public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration, int maxResults)
-      throws Exception {
+    throws Exception {
     List<List<String>> results = new ArrayList<>();
     if (file == null) {
       throw new IOException("File [" + file + "] not found");
@@ -267,7 +284,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   @Override
   public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[] { DfsServer.getInstance(), MrServer.getInstance() };
+    return new CdhServer<?, ?>[]{DfsServer.getInstance(), MrServer.getInstance()};
   }
 
   @Override
@@ -279,7 +296,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     File hiveScratchLocalPath = new File(ABS_DIR_HIVE, DIR_SCRATCH);
     File derbyDir = new File(ABS_DIR_DERBY_DB);
     String hiveDerbyConnectString = "jdbc:derby:" + derbyDir.getAbsolutePath() + "/test-hive-metastore-"
-        + DERBY_DB_COUNTER.incrementAndGet() + ";create=true";
+      + DERBY_DB_COUNTER.incrementAndGet() + ";create=true";
     FileUtils.deleteDirectory(derbyDir);
     derbyDir.mkdirs();
     DfsServer.getInstance().getFileSystem().mkdirs(hiveHomePath);
@@ -287,26 +304,26 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveWarehousePath, new FsPermission((short) 00777));
     FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveScratchPath, new FsPermission((short) 00733));
     switch (getRuntime()) {
-    case LOCAL_MR2:
-    case CLUSTER_MR2:
-      HiveConf hiveConf = new HiveConf(new Configuration(), CopyTask.class);
-      hiveConf.setVar(ConfVars.METASTOREWAREHOUSE, hiveWarehousePath.toString());
-      hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, hiveDerbyConnectString);
-      hiveConf.setVar(ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, "localhost");
-      hiveConf.setIntVar(ConfVars.HIVE_SERVER2_THRIFT_PORT, binaryPort);
-      hiveConf.setIntVar(ConfVars.HIVE_SERVER2_THRIFT_HTTP_PORT, httpPort);
-      hiveConf.setVar(ConfVars.SCRATCHDIR, hiveScratchPath.toString());
-      hiveConf.setVar(ConfVars.LOCALSCRATCHDIR, hiveScratchLocalPath.getAbsolutePath());
-      hiveConf.set(CommonConfigurationKeysPublic.HADOOP_SHELL_MISSING_DEFAULT_FS_WARNING_KEY, "false");
-      hiveServer = new HiveServer2();
-      hiveServer.init(hiveConf);
-      hiveServer.start();
-      waitForStart();
-      SessionState.start(new SessionState(hiveConf));
-      setConf(hiveConf);
-      break;
-    default:
-      throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+      case LOCAL_MR2:
+      case CLUSTER_MR2:
+        HiveConf hiveConf = new HiveConf(new Configuration(), CopyTask.class);
+        hiveConf.setVar(ConfVars.METASTOREWAREHOUSE, hiveWarehousePath.toString());
+        hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, hiveDerbyConnectString);
+        hiveConf.setVar(ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, "localhost");
+        hiveConf.setIntVar(ConfVars.HIVE_SERVER2_THRIFT_PORT, binaryPort);
+        hiveConf.setIntVar(ConfVars.HIVE_SERVER2_THRIFT_HTTP_PORT, httpPort);
+        hiveConf.setVar(ConfVars.SCRATCHDIR, hiveScratchPath.toString());
+        hiveConf.setVar(ConfVars.LOCALSCRATCHDIR, hiveScratchLocalPath.getAbsolutePath());
+        hiveConf.set(CommonConfigurationKeysPublic.HADOOP_SHELL_MISSING_DEFAULT_FS_WARNING_KEY, "false");
+        hiveServer = new HiveServer2();
+        hiveServer.init(hiveConf);
+        hiveServer.start();
+        waitForStart();
+        SessionState.start(new SessionState(hiveConf));
+        setConf(hiveConf);
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
     log(LOG, "start", time);
   }
@@ -314,18 +331,18 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   @Override
   public synchronized void clean() throws Exception {
     long time = log(LOG, "clean");
-    for (String table : execute("SHOW TABLES", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
-        MAX_RESULTS_DEFAULT, true)) {
+    for (String table : execute("SHOW TABLES", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(),
+      MAX_RESULTS_DEFAULT, true)) {
       if (table.length() > 0) {
-        execute("DROP TABLE " + table, Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
-            MAX_RESULTS_DEFAULT, true);
+        execute("DROP TABLE " + table, Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(),
+          MAX_RESULTS_DEFAULT, true);
       }
     }
-    for (String database : execute("SHOW DATABASES", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
-        MAX_RESULTS_DEFAULT, true)) {
+    for (String database : execute("SHOW DATABASES", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(),
+      MAX_RESULTS_DEFAULT, true)) {
       if (database.length() > 0 && !database.equals("default")) {
-        execute("DROP DATABASE " + database + " CASCADE", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(),
-            MAX_RESULTS_DEFAULT, true);
+        execute("DROP DATABASE " + database + " CASCADE", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(),
+          MAX_RESULTS_DEFAULT, true);
       }
     }
     log(LOG, "clean", time);
@@ -335,9 +352,9 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   public synchronized void state() throws Exception {
     long time = log(LOG, "state", true);
     log(LOG, "state", "tables:\n" + StringUtils.join(
-        execute("SHOW TABLES", Collections.<String, String> emptyMap(), Collections.<String, String> emptyMap(), MAX_RESULTS_DEFAULT, true)
-            .toArray(),
-        "\n"), true);
+      execute("SHOW TABLES", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), MAX_RESULTS_DEFAULT, true)
+        .toArray(),
+      "\n"), true);
     log(LOG, "state", time, true);
   }
 
@@ -345,43 +362,16 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   public synchronized void stop() throws IOException {
     long time = log(LOG, "stop");
     switch (getRuntime()) {
-    case LOCAL_MR2:
-    case CLUSTER_MR2:
-      if (hiveServer != null) {
-        hiveServer.stop();
-      }
-      break;
-    default:
-      throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+      case LOCAL_MR2:
+      case CLUSTER_MR2:
+        if (hiveServer != null) {
+          hiveServer.stop();
+        }
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
     log(LOG, "stop", time);
-  }
-
-  public static final String HS2_BINARY_MODE = "binary";
-  public static final String HS2_HTTP_MODE = "http";
-
-  private static Logger LOG = LoggerFactory.getLogger(HiveServer.class);
-
-  private static final String DIR_HOME = "usr/hive";
-  private static final String DIR_SCRATCH = "scratch";
-  private static final String DIR_WAREHOUSE = "warehouse";
-
-  private static final String COMMAND_DELIMETER = ";";
-
-  private static final int MAX_RESULTS_DEFAULT = 100;
-
-  private static final AtomicLong DERBY_DB_COUNTER = new AtomicLong();
-
-  private static HiveServer instance;
-
-  private int httpPort;
-  private int binaryPort;
-  private HiveServer2 hiveServer;
-
-  private HiveServer(Runtime runtime) {
-    super(runtime);
-    httpPort = CdhServer.getNextAvailablePort();
-    binaryPort = CdhServer.getNextAvailablePort();
   }
 
   private String getJdbcURL() {
@@ -437,6 +427,11 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       hiveClient.closeSession(sessionHandle);
       break;
     } while (true);
+  }
+
+  public enum Runtime {
+    LOCAL_MR2, // Local MR2 job runner backed Hive, inline-thread, light-weight
+    CLUSTER_MR2 // Mini MR2 cluster backed Hive, multi-threaded, heavy-weight
   }
 
 }

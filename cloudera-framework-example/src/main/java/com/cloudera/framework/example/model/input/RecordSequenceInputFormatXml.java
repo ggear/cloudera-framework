@@ -2,6 +2,10 @@ package com.cloudera.framework.example.model.input;
 
 import java.io.IOException;
 
+import com.cloudera.framework.example.model.Record;
+import com.cloudera.framework.example.model.RecordFactory;
+import com.cloudera.framework.example.model.RecordKey;
+import com.cloudera.framework.example.model.serde.RecordStringSerDe;
 import org.apache.hadoop.hive.serde2.avro.AvroGenericRecordWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputFormat;
@@ -10,11 +14,6 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileRecordReader;
-
-import com.cloudera.framework.example.model.Record;
-import com.cloudera.framework.example.model.RecordFactory;
-import com.cloudera.framework.example.model.RecordKey;
-import com.cloudera.framework.example.model.serde.RecordStringSerDe;
 
 /**
  * An {@link InputFormat} to act on sequence files of {@link RecordKey
@@ -25,7 +24,7 @@ public class RecordSequenceInputFormatXml extends SequenceFileInputFormat<Record
 
   @Override
   public RecordReader<RecordKey, AvroGenericRecordWritable> createRecordReader(InputSplit split, TaskAttemptContext context)
-      throws IOException {
+    throws IOException {
     return new RecordReaderSequenceXml();
   }
 

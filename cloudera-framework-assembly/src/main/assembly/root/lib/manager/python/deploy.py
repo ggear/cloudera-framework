@@ -33,18 +33,13 @@ import glob
 import inspect
 import logging
 import os
-from random import randint
-import random
 import re
 import subprocess
 import sys
 import textwrap
-from time import sleep
 import time
 
-from cm_api import api_client
 from cm_api.api_client import ApiResource
-
 
 LOG = logging.getLogger(__name__)
 
@@ -53,33 +48,37 @@ TIMEOUT_SEC = 180
 REGEX_VERSION = '[1-9][0-9]\.[1-9][0-9]\.[1-9][0-9][0-9][0-9]'
 MAN_API_VERSION = 13  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
 
+
 def do_parcel_op(cluster, parcel_name, parcel_version, parcel_op_label, stage_enter, stage_exit, parcel_op):
     parcel = cluster.get_parcel(parcel_name, parcel_version)
-    if parcel.stage == stage_enter:            
-        print 'Parcel [%s] starting ... ' % (parcel_op_label)    
+    if parcel.stage == stage_enter:
+        print 'Parcel [%s] starting ... ' % (parcel_op_label)
         getattr(parcel, parcel_op)()
         while True:
-          time.sleep(POLL_SEC)
-          parcel = cluster.get_parcel(parcel_name, parcel_version)
-          if parcel.stage == stage_exit:
-            break
-          if parcel.state.errors:
-            raise Exception(str(parcel.state.errors))
-          print 'Parcel [%s] %s/%s' % (parcel_op_label, parcel.state.progress, parcel.state.totalProgress)
-        print 'Parcel [%s] finished' % (parcel_op_label)    
-                    
+            time.sleep(POLL_SEC)
+            parcel = cluster.get_parcel(parcel_name, parcel_version)
+            if parcel.stage == stage_exit:
+                break
+            if parcel.state.errors:
+                raise Exception(str(parcel.state.errors))
+            print 'Parcel [%s] %s/%s' % (parcel_op_label, parcel.state.progress, parcel.state.totalProgress)
+        print 'Parcel [%s] finished' % (parcel_op_label)
+
+
 def do_call(user, password, man_host, man_port, cluster_name, parcel_name, parcel_version, parcel_repo, init_pre_dir, init_post_dir):
     api = ApiResource(man_host, man_port, user, password, False, MAN_API_VERSION)
     if not parcel_repo.endswith('/'):
         parcel_repo += '/'
     if re.match(REGEX_VERSION, parcel_version) is None or re.match(REGEX_VERSION, parcel_version).group() != parcel_version:
-        raise Exception('Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] expected to match regular expression [' + REGEX_VERSION + ']')
+        raise Exception(
+            'Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] expected to match regular expression [' + REGEX_VERSION + ']')
     if not parcel_repo.endswith(parcel_version + '/'):
-        raise Exception('Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] when compared with repository [' + parcel_repo + ']')    
+        raise Exception(
+            'Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] when compared with repository [' + parcel_repo + ']')
     cm_config = api.get_cloudera_manager().get_config(view='full')
     repo_config = cm_config['REMOTE_PARCEL_REPO_URLS']
     repo_list = repo_config.value or repo_config.default
-    if parcel_repo not in repo_list:     
+    if parcel_repo not in repo_list:
         repo_list += ',' + parcel_repo
         api.get_cloudera_manager().update_config({'REMOTE_PARCEL_REPO_URLS': repo_list})
         time.sleep(POLL_SEC)  # The parcel synchronize end-point is not exposed via the API, so sleep instead
@@ -110,7 +109,7 @@ def do_call(user, password, man_host, man_port, cluster_name, parcel_name, parce
             print 'Cluster [PRE_INIT] starting ... '
             for script in glob.glob(init_pre_dir + '/*.sh'):
                 subprocess.call([script])
-            print 'Cluster [PRE_INIT] finihsed'            
+            print 'Cluster [PRE_INIT] finihsed'
         if not parcel_already_activated:
             print 'Cluster [CONFIG_DEPLOYMENT] starting ... '
             cluster.deploy_client_config()
@@ -126,21 +125,24 @@ def do_call(user, password, man_host, man_port, cluster_name, parcel_name, parce
                     service.restart().wait()
                 if service.type == 'YARN':
                     service.restart().wait()
-            print 'Cluster [RESTART] finihsed'                
+            print 'Cluster [RESTART] finihsed'
         if init_post_dir is not None and os.path.isdir(init_post_dir):
             print 'Cluster [POST_INIT] starting ... '
             for script in glob.glob(init_post_dir + '/*.sh'):
                 subprocess.call([script])
-            print 'Cluster [POST_INIT] finihsed'            
+            print 'Cluster [POST_INIT] finihsed'
         print 'Cluster [DEPLOYMENT] finished'
+
 
 def usage():
     doc = inspect.getmodule(usage).__doc__
     print >> sys.stderr, textwrap.dedent(doc % (sys.argv[0],))
 
+
 def setup_logging(level):
     logging.basicConfig()
     logging.getLogger().setLevel(level)
+
 
 def main(argv):
     setup_logging(logging.INFO)
@@ -152,10 +154,12 @@ def main(argv):
     parcel_name = None
     parcel_version = None
     parcel_repo = None
-    init_pre_dir = None    
-    init_post_dir = None    
+    init_pre_dir = None
+    init_post_dir = None
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'h', ['help', 'user=', 'password=', 'man_host=', 'man_port=', 'cluster_name=', 'parcel_name=', 'parcel_version=', 'parcel_repo=', 'init_pre_dir=', 'init_post_dir='])
+        opts, args = getopt.getopt(sys.argv[1:], 'h',
+                                   ['help', 'user=', 'password=', 'man_host=', 'man_port=', 'cluster_name=', 'parcel_name=', 'parcel_version=',
+                                    'parcel_repo=', 'init_pre_dir=', 'init_post_dir='])
     except getopt.GetoptError, err:
         print >> sys.stderr, err
         usage()
@@ -188,12 +192,13 @@ def main(argv):
             print >> sys.stderr, 'Unknown option or flag: ' + option
             usage()
             return -1
-    if parcel_name is None or  parcel_version is None or parcel_repo is None:
-        print >> sys.stderr, 'Required parameters [parcel_name, parcel_version, parcel_repo] not passed on command line'        
+    if parcel_name is None or parcel_version is None or parcel_repo is None:
+        print >> sys.stderr, 'Required parameters [parcel_name, parcel_version, parcel_repo] not passed on command line'
         usage()
-        return -1    
+        return -1
     do_call(user, password, man_host, man_port, cluster_name, parcel_name, parcel_version, parcel_repo, init_pre_dir, init_post_dir)
     return 0
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

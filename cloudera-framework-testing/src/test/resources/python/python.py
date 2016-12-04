@@ -15,17 +15,21 @@ import sys
 import textwrap
 
 LOG = logging.getLogger(__name__)
-                    
+
+
 def do_call(param):
     print 'Invoked with parameter [%s]' % (param)
+
 
 def usage():
     doc = inspect.getmodule(usage).__doc__
     print >> sys.stderr, textwrap.dedent(doc % (sys.argv[0],))
 
+
 def setup_logging(level):
     logging.basicConfig()
     logging.getLogger().setLevel(level)
+
 
 def main(argv):
     setup_logging(logging.INFO)
@@ -47,11 +51,12 @@ def main(argv):
             usage()
             return -1
     if param is None:
-        print >> sys.stderr, 'Required parameters [param] not passed on command line'        
+        print >> sys.stderr, 'Required parameters [param] not passed on command line'
         usage()
-        return -1    
+        return -1
     do_call(param)
     return 0
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

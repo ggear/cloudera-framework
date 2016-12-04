@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import com.cloudera.framework.testing.TestRunner;
+import com.cloudera.framework.testing.server.DfsServer;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
@@ -12,9 +14,6 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.cloudera.framework.testing.TestRunner;
-import com.cloudera.framework.testing.server.DfsServer;
 
 @RunWith(TestRunner.class)
 public class DriverTest {
@@ -25,32 +24,34 @@ public class DriverTest {
   @Test
   public void testRunnerSuccessParameters() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf());
-    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { "false" }));
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{"false"}));
   }
 
   @Test
   public void testRunnerSuccessOptions() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf());
     driver.getConf().setBoolean("i.should.fail.option", false);
-    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[] { "false" }));
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{"false"}));
   }
 
   @Test
   public void testRunnerFailureParameters() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf());
-    assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[] { "true" }));
+    assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[]{"true"}));
   }
 
   @Test
   public void testRunnerFailureOptions() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf());
     driver.getConf().setBoolean("i.should.fail.option", true);
-    assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[] { "false" }));
+    assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[]{"false"}));
   }
 
   private enum Counter {
     FILES_NUMBER
-  };
+  }
+
+  ;
 
   private class CountFilesDriver extends Driver {
 
@@ -68,12 +69,12 @@ public class DriverTest {
 
     @Override
     public String[] options() {
-      return new String[] { "i.should.fail.option=true|false" };
+      return new String[]{"i.should.fail.option=true|false"};
     }
 
     @Override
     public String[] parameters() {
-      return new String[] { "i.should.fail.parameter" };
+      return new String[]{"i.should.fail.parameter"};
     }
 
     @Override
@@ -95,7 +96,7 @@ public class DriverTest {
         incrementCounter(Counter.FILES_NUMBER, 1);
       }
       return iShouldFailOption || iShouldFailParameter.toLowerCase().equals(Boolean.TRUE.toString().toLowerCase()) ? RETURN_FAILURE_RUNTIME
-          : RETURN_SUCCESS;
+        : RETURN_SUCCESS;
     }
 
   }

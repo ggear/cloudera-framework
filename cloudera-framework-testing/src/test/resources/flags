@@ -6,3 +6,7 @@
 --enable_data_block_fsync=false
 --enable_leader_failure_detection=true
 --catalog_manager_check_ts_count_for_create_table=false
+--logtostderr
+--never_fsync
+--unlock_experimental_flags
+--unlock_unsafe_flags

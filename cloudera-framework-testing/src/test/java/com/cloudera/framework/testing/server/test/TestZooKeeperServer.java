@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import com.cloudera.framework.testing.TestConstants;
+import com.cloudera.framework.testing.TestRunner;
+import com.cloudera.framework.testing.server.ZooKeeperServer;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
@@ -18,10 +21,6 @@ import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.cloudera.framework.testing.TestConstants;
-import com.cloudera.framework.testing.TestRunner;
-import com.cloudera.framework.testing.server.ZooKeeperServer;
 
 @RunWith(TestRunner.class)
 public class TestZooKeeperServer implements TestConstants {
@@ -58,7 +57,7 @@ public class TestZooKeeperServer implements TestConstants {
 
   @Test
   @Ignore // TODO: Remove when ZooKeeperServer.clean() is implemented and all
-          // state is flushed between test methods and this test can pass
+  // state is flushed between test methods and this test can pass
   public void testZookeeperAgain() throws IOException, InterruptedException, KeeperException {
     testZookeeper();
   }

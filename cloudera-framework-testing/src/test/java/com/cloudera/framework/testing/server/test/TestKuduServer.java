@@ -5,6 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cloudera.framework.testing.TestConstants;
+import com.cloudera.framework.testing.TestRunner;
+import com.cloudera.framework.testing.server.KuduServer;
+import com.google.common.collect.ImmutableList;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
@@ -21,11 +25,6 @@ import org.apache.kudu.client.RowResultIterator;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.cloudera.framework.testing.TestConstants;
-import com.cloudera.framework.testing.TestRunner;
-import com.cloudera.framework.testing.server.KuduServer;
-import com.google.common.collect.ImmutableList;
 
 @RunWith(TestRunner.class)
 public class TestKuduServer implements TestConstants {

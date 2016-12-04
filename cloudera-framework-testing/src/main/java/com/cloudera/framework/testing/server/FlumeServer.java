@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.google.common.collect.ImmutableMap;
+import com.sun.jersey.api.model.Parameter.Source;
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
@@ -22,18 +24,19 @@ import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableMap;
-import com.sun.jersey.api.model.Parameter.Source;
-
 /**
  * Flume {@link TestRule}
  */
 public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
 
-  public enum Runtime {
-    MANUALLY_CRANKED // Manually cranked Flume agent, inline-thread,
-                     // light-weight
-  };
+  private static final Logger LOG = LoggerFactory.getLogger(FlumeServer.class);
+
+  ;
+  private static FlumeServer instance;
+
+  private FlumeServer(Runtime runtime) {
+    super(runtime);
+  }
 
   /**
    * Get instance with default runtime
@@ -59,40 +62,29 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
    * {@link Sink sinks}. A full Flume deployment is suggested to integration
    * test a full Flume pipeline configuration.
    *
-   * @param substitutions
-   *          Config file $KEY, VALUE substitutions
-   * @param configFile
-   *          optional (can be <code>null</code>) classpath relative Flume
-   *          config, including <code>agentName</code>, <code>sourceName</code>
-   *          and <code>sinkName</code> prefixed configuration properties
-   * @param configSourceOverlay
-   *          configuration properties overlay for the source, not prefixed with
-   *          <code>agentName</code> or <code>sourceName</code>
-   * @param configSinkOverlay
-   *          configuration properties overlay for the sink, not prefixed with
-   *          <code>agentName</code> or <code>sinkName</code>
-   * @param agentName
-   *          the agent name
-   * @param sourceName
-   *          the source name
-   * @param sinkName
-   *          the sink name
-   * @param source
-   *          the source instance
-   * @param sink
-   *          the sink instance
-   * @param outputPath
-   *          the optional (can be <code>null</code>) root DFS output path for
-   *          the sink
-   * @param iterations
-   *          the number of iterations to run the source and sink for
+   * @param substitutions       Config file $KEY, VALUE substitutions
+   * @param configFile          optional (can be <code>null</code>) classpath relative Flume
+   *                            config, including <code>agentName</code>, <code>sourceName</code>
+   *                            and <code>sinkName</code> prefixed configuration properties
+   * @param configSourceOverlay configuration properties overlay for the source, not prefixed with
+   *                            <code>agentName</code> or <code>sourceName</code>
+   * @param configSinkOverlay   configuration properties overlay for the sink, not prefixed with
+   *                            <code>agentName</code> or <code>sinkName</code>
+   * @param agentName           the agent name
+   * @param sourceName          the source name
+   * @param sinkName            the sink name
+   * @param source              the source instance
+   * @param sink                the sink instance
+   * @param outputPath          the optional (can be <code>null</code>) root DFS output path for
+   *                            the sink
+   * @param iterations          the number of iterations to run the source and sink for
    * @return the number of files existing post-process under
-   *         <code>outputPath</code>, 0 if <code>outputPath</code> is
-   *         <code>null</code>
+   * <code>outputPath</code>, 0 if <code>outputPath</code> is
+   * <code>null</code>
    */
   public synchronized int crankPipeline(Map<String, String> substitutions, String configFile, Map<String, String> configSourceOverlay,
-      Map<String, String> configSinkOverlay, String agentName, String sourceName, String sinkName, PollableSource source, Sink sink,
-      String outputPath, int iterations) throws IOException, EventDeliveryException, InterruptedException {
+                                        Map<String, String> configSinkOverlay, String agentName, String sourceName, String sinkName, PollableSource source, Sink sink,
+                                        String outputPath, int iterations) throws IOException, EventDeliveryException, InterruptedException {
     Properties config = new Properties();
     if (configFile != null) {
       InputStream configStream = FlumeServer.class.getClassLoader().getResourceAsStream(configFile);
@@ -115,7 +107,7 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
       if (key.startsWith(sinkConfigPrefix) && !key.endsWith(sinkConfigPrefix + "type") && !key.endsWith(".channel")) {
         sinkConfig.put(key.replace(sinkConfigPrefix, ""), value);
       } else if (key.startsWith(sourceConfigPrefix) && !key.endsWith(sourceConfigPrefix + "type") && !key.endsWith(".selector.type")
-          && !key.endsWith(".channels")) {
+        && !key.endsWith(".channels")) {
         sourceConfig.put(key.replace(sourceConfigPrefix, ""), value);
       }
     }
@@ -161,7 +153,7 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
 
   @Override
   public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[] { DfsServer.getInstance() };
+    return new CdhServer<?, ?>[]{DfsServer.getInstance()};
   }
 
   @Override
@@ -176,12 +168,9 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
     log(LOG, "stop", time);
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(FlumeServer.class);
-
-  private static FlumeServer instance;
-
-  private FlumeServer(Runtime runtime) {
-    super(runtime);
+  public enum Runtime {
+    MANUALLY_CRANKED // Manually cranked Flume agent, inline-thread,
+    // light-weight
   }
 
 }

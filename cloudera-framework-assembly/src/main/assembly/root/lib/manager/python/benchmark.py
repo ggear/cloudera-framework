@@ -35,31 +35,27 @@ import getopt
 import inspect
 import json
 import logging
+import requests
 import sys
 import textwrap
-from time import sleep
-import time
 import urllib
-
-from cm_api import api_client
 from cm_api.api_client import ApiResource, ApiException
 from cm_api.endpoints.dashboards import ApiDashboard, create_dashboards
-
-import requests
 from tabulate import tabulate
-
 
 LOG = logging.getLogger(__name__)
 
 NAV_API_VERSION = 9
 MAN_API_VERSION = 13  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
 
+
 def update_metadata(user, password, nav_host, nav_port, app_namespace, property_namespace, properties, app_report_only):
     requests.post(nav_uri(nav_host, nav_port, 'models/namespaces'), \
                   auth=(user, password), data='{"name":"' + property_namespace + '","description":"' + property_namespace + ' Metadata"}')
     for property in properties:
         requests.post(nav_uri(nav_host, nav_port, 'models/namespaces/' + property_namespace + '/properties'), \
-                      auth=(user, password), data='{"name":"' + property['name'] + '","description":"' + property['description'] + '","namespace":"' + property_namespace + '","multiValued":true,"type":"TEXT"}')
+                      auth=(user, password), data='{"name":"' + property['name'] + '","description":"' + property[
+                'description'] + '","namespace":"' + property_namespace + '","multiValued":true,"type":"TEXT"}')
         requests.post(nav_uri(nav_host, nav_port, 'models/packages/nav/classes/hv_database/properties'), \
                       auth=(user, password), data='[{"name":"' + property['name'] + '","namespace":"' + property_namespace + '"}]')
     app_database = ''
@@ -83,9 +79,10 @@ def update_metadata(user, password, nav_host, nav_port, app_namespace, property_
         if not app_report_only:
             requests.put(nav_uri(nav_host, nav_port, 'entities/' + app_database), \
                          auth=(user, password), data='{"customProperties":{"' + property_namespace + '":' + json.dumps(property_values) + '}}')
-    app_properties = {'database': app_database, 'properties':[]}
-    app_entities = requests.get(nav_uri(nav_host, nav_port, 'entities/?query=' + app_namespace.split('_')[0] + '*%20%26%26%20type%3Adatabase&limit=9999&offset=0'), \
-                                auth=(user, password)).json()
+    app_properties = {'database': app_database, 'properties': []}
+    app_entities = requests.get(
+        nav_uri(nav_host, nav_port, 'entities/?query=' + app_namespace.split('_')[0] + '*%20%26%26%20type%3Adatabase&limit=9999&offset=0'), \
+        auth=(user, password)).json()
     for app_entities_properties in app_entities:
         try:
             app_properties['properties'].append(app_entities_properties['customProperties'][property_namespace])
@@ -95,8 +92,10 @@ def update_metadata(user, password, nav_host, nav_port, app_namespace, property_
             pass
     return app_properties
 
+
 def nav_uri(nav_host, nav_port, path):
     return 'http://' + nav_host + ':' + str(nav_port) + '/api/v' + str(NAV_API_VERSION) + '/' + path
+
 
 def compress_bins(bins, normalising_factor):
     bins_num = 0
@@ -106,9 +105,11 @@ def compress_bins(bins, normalising_factor):
         bins_sum += bin.value / normalising_factor
     if bins_num == 0:
         return 0
-    return int(bins_sum / bins_num)  
+    return int(bins_sum / bins_num)
 
-def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, app_version, app_namespace, app_time, app_start, app_end, app_dashboard, app_report_only):
+
+def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, app_version, app_namespace, app_time, app_start, app_end, app_dashboard,
+            app_report_only):
     cpu = 0
     hdfs = 0
     network = 0
@@ -118,7 +119,7 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
     dashboard_name = 'Release (' + app_namespace + ')'
     if not app_report_only:
         api = ApiResource(man_host, man_port, user, password, False, MAN_API_VERSION)
-        with open (app_dashboard, 'r') as dashboard_data_file:
+        with open(app_dashboard, 'r') as dashboard_data_file:
             dashboard_data = dashboard_data_file.read()
         try:
             create_dashboards(api, [ApiDashboard(api, dashboard_name, dashboard_data)])
@@ -127,7 +128,10 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
         for view_plot in json.loads(dashboard_data)['viewPlots']:
             for key, value in view_plot['plot'].items():
                 if key == 'tsquery':
-                    for time_series in api.query_timeseries(value, datetime.datetime.fromtimestamp(float(app_start)), datetime.datetime.fromtimestamp(float(app_end)))[0].timeSeries:
+                    for time_series in \
+                            api.query_timeseries(value, datetime.datetime.fromtimestamp(float(app_start)),
+                                                 datetime.datetime.fromtimestamp(float(app_end)))[
+                                0].timeSeries:
                         if time_series.metadata.metricName == 'cpu_percent_across_hosts':
                             cpu = compress_bins(time_series.data, 1)
                         if time_series.metadata.metricName == 'total_bytes_read_rate_across_datanodes':
@@ -139,15 +143,15 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
                         if time_series.metadata.metricName == 'total_bytes_transmit_rate_across_network_interfaces':
                             network += compress_bins(time_series.data, 100000)
     properties = [ \
-                  {'name':'Name', 'description':'Application name', 'value': {'Name': [app_name]}}, \
-                  {'name':'Version', 'description':'Application version', 'value': {'Version': [app_version]}}, \
-                  {'name':'Run', 'description':'Run time', 'value': {'Run': [app_time]}}, \
-                  {'name':'Start', 'description':'Start time', 'value': {'Start': [ app_start + '000']}}, \
-                  {'name':'Finish', 'description':'Finish time', 'value': {'Finish': [ app_end + '000']}}, \
-                  {'name':'CPU', 'description':'Relative CPU usage during benchmark', 'value': {'CPU': [str(cpu)]}}, \
-                  {'name':'HDFS', 'description':'Relative HDFS usage during benchmark', 'value': {'HDFS': [str(hdfs)]}}, \
-                  {'name':'Network', 'description':'Relative Network usage during benchmark', 'value': {'Network': [str(network)]}} \
-    ]
+        {'name': 'Name', 'description': 'Application name', 'value': {'Name': [app_name]}}, \
+        {'name': 'Version', 'description': 'Application version', 'value': {'Version': [app_version]}}, \
+        {'name': 'Run', 'description': 'Run time', 'value': {'Run': [app_time]}}, \
+        {'name': 'Start', 'description': 'Start time', 'value': {'Start': [app_start + '000']}}, \
+        {'name': 'Finish', 'description': 'Finish time', 'value': {'Finish': [app_end + '000']}}, \
+        {'name': 'CPU', 'description': 'Relative CPU usage during benchmark', 'value': {'CPU': [str(cpu)]}}, \
+        {'name': 'HDFS', 'description': 'Relative HDFS usage during benchmark', 'value': {'HDFS': [str(hdfs)]}}, \
+        {'name': 'Network', 'description': 'Relative Network usage during benchmark', 'value': {'Network': [str(network)]}} \
+        ]
     app_properties = update_metadata(user, password, nav_host, nav_port, app_namespace, 'Benchmark', properties, app_report_only)
     app_table_comparison = '{:<15} |{:>15} |{:>15} |{:>15} |{:>15} |{:>15} |{:>15}|'
     app_table = [['Application', app_name + '-' + app_version]]
@@ -162,19 +166,25 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
             app_table.append(['Dashboard', app_dashbaord_uri])
         else:
             app_table.append(['Dashboard', app_dashbaord_uri + '#startTime=' + app_start + '000&endTime=' + app_end + '000'])
-    app_table.append(['Comparison', app_table_comparison.format('Version', 'Start', 'Finish', 'Run', 'CPU', 'HDFS', 'Network')])        
+    app_table.append(['Comparison', app_table_comparison.format('Version', 'Start', 'Finish', 'Run', 'CPU', 'HDFS', 'Network')])
     for properties_value in app_properties['properties']:
-        app_table.append([None, app_table_comparison.format(', '.join(properties_value['Version']), ', '.join(properties_value['Start']), ', '.join(properties_value['Finish']), ', '.join(properties_value['Run']), ', '.join(properties_value['CPU']), ', '.join(properties_value['HDFS']), ', '.join(properties_value['Network']))])        
+        app_table.append([None, app_table_comparison.format(', '.join(properties_value['Version']), ', '.join(properties_value['Start']),
+                                                            ', '.join(properties_value['Finish']), ', '.join(properties_value['Run']),
+                                                            ', '.join(properties_value['CPU']), ', '.join(properties_value['HDFS']),
+                                                            ', '.join(properties_value['Network']))])
     print tabulate(app_table, tablefmt='grid')
+
 
 def usage():
     doc = inspect.getmodule(usage).__doc__
     print >> sys.stderr, textwrap.dedent(doc % (sys.argv[0],))
 
+
 def setup_logging(level):
     logging.basicConfig()
     logging.getLogger().setLevel(level)
     logging.getLogger("requests").setLevel(logging.WARNING)
+
 
 def main(argv):
     setup_logging(logging.INFO)
@@ -193,7 +203,9 @@ def main(argv):
     app_dashboard = None
     app_report_only = False
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'h', ['help', 'user=', 'password=', 'man_host=', 'man_port=', 'nav_host=', 'nav_port=', 'app_name=', 'app_version=', 'app_namespace=', 'app_time=', 'app_start=', 'app_end=', 'app_dashboard=', 'app_report_only='])
+        opts, args = getopt.getopt(sys.argv[1:], 'h',
+                                   ['help', 'user=', 'password=', 'man_host=', 'man_port=', 'nav_host=', 'nav_port=', 'app_name=', 'app_version=',
+                                    'app_namespace=', 'app_time=', 'app_start=', 'app_end=', 'app_dashboard=', 'app_report_only='])
     except getopt.GetoptError, err:
         print >> sys.stderr, err
         usage()
@@ -239,8 +251,10 @@ def main(argv):
         print >> sys.stderr, 'Required parameters [app_name, app_version, app_namespace, app_time, app_start, app_end, app_dashboard] not passed on command line'
         usage()
         return -1
-    do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, app_version, app_namespace, app_time, app_start, app_end, app_dashboard, app_report_only)
+    do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, app_version, app_namespace, app_time, app_start, app_end, app_dashboard,
+            app_report_only)
     return 0
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

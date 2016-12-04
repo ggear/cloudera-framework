@@ -18,9 +18,14 @@ import org.slf4j.LoggerFactory;
  */
 public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> {
 
-  public enum Runtime {
-    LOCAL_CPYTHON // Local CPython script wrapper, single-process, heavy-weight
-  };
+  private static Logger LOG = LoggerFactory.getLogger(PythonServer.class);
+
+  ;
+  private static PythonServer instance;
+
+  private PythonServer(Runtime runtime) {
+    super(runtime);
+  }
 
   /**
    * Get instance with default runtime
@@ -96,7 +101,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * @throws Exception
    */
   public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error)
-      throws IOException, InterruptedException {
+    throws IOException, InterruptedException {
     return execute(file, parameters, configuration, output, error, false);
   }
 
@@ -115,7 +120,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * @throws Exception
    */
   public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error,
-      boolean quiet) throws IOException, InterruptedException {
+                     boolean quiet) throws IOException, InterruptedException {
     int exit = -1;
     if (file == null || !file.exists()) {
       throw new IOException("Could not find file [" + file + "]");
@@ -123,7 +128,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
     if (!file.canExecute()) {
       file.setExecutable(true);
     }
-    List<String> command = new ArrayList<>(parameters == null ? Collections.<String> emptyList() : parameters);
+    List<String> command = new ArrayList<>(parameters == null ? Collections.<String>emptyList() : parameters);
     command.add(0, file.getAbsolutePath());
     Process process = new ProcessBuilder(command).start();
     IOUtils.closeQuietly(process.getOutputStream());
@@ -140,7 +145,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
     }
     if (!quiet) {
       log(LOG, "execute", "script [" + file.getAbsolutePath() + "]\n" + inputString + (StringUtils.isEmpty(errorString) ? "" : errorString),
-          true);
+        true);
     }
     return exit;
   }
@@ -159,10 +164,10 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
     switch (getRuntime()) {
-    case LOCAL_CPYTHON:
-      break;
-    default:
-      throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+      case LOCAL_CPYTHON:
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
     log(LOG, "start", time);
   }
@@ -171,20 +176,16 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   public synchronized void stop() throws IOException {
     long time = log(LOG, "stop");
     switch (getRuntime()) {
-    case LOCAL_CPYTHON:
-      break;
-    default:
-      throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+      case LOCAL_CPYTHON:
+        break;
+      default:
+        throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
     log(LOG, "stop", time);
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(PythonServer.class);
-
-  private static PythonServer instance;
-
-  private PythonServer(Runtime runtime) {
-    super(runtime);
+  public enum Runtime {
+    LOCAL_CPYTHON // Local CPython script wrapper, single-process, heavy-weight
   }
 
 }

@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.amazonaws.services.s3.model.BucketLifecycleConfiguration.Rule;
+import com.cloudera.framework.testing.TestConstants;
+import com.cloudera.framework.testing.TestRunner;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.JobConf;
 import org.junit.ClassRule;
@@ -17,21 +20,46 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.amazonaws.services.s3.model.BucketLifecycleConfiguration.Rule;
-import com.cloudera.framework.testing.TestConstants;
-import com.cloudera.framework.testing.TestRunner;
-
 /**
  * Base class for all {@link ClassRule} and {@link Rule} annotated
  * {@link TestRule TestRules}.
  *
- * @param <U>
- *          Specialised class
- * @param <V>
- *          Specialised class runtime enum
+ * @param <U> Specialised class
+ * @param <V> Specialised class runtime enum
  */
 public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalResource
-    implements TestConstants, Comparable<CdhServer<CdhServer<?, ?>, V>> {
+  implements TestConstants, Comparable<CdhServer<CdhServer<?, ?>, V>> {
+
+  public static final String SERVER_BIND_IP = "127.0.0.1";
+  public static final AtomicInteger SERVER_BIND_PORT_START = new AtomicInteger(25000);
+  public static final int SERVER_BIND_PORT_FINISH = 25100;
+  private static Logger LOG = LoggerFactory.getLogger(DfsServer.class);
+  private V runtime;
+  private int semaphore;
+  private Configuration conf;
+
+  protected CdhServer(V runtime) {
+    conf = new JobConf();
+    this.runtime = runtime;
+  }
+
+  /**
+   * Get the next available port
+   *
+   * @return
+   */
+  public static int getNextAvailablePort() {
+    while (SERVER_BIND_PORT_START.get() < SERVER_BIND_PORT_FINISH) {
+      try {
+        ServerSocket server = new ServerSocket(SERVER_BIND_PORT_START.getAndIncrement());
+        server.close();
+        return server.getLocalPort();
+      } catch (IOException exception) {
+        // ignore
+      }
+    }
+    throw new RuntimeException("Could not find avialable port");
+  }
 
   /**
    * Define the index that defines <code>this</code> objects order within the
@@ -59,6 +87,15 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
    */
   public synchronized Configuration getConf() {
     return conf;
+  }
+
+  /**
+   * Set the {@link Configuration} associated with this {@link CdhServer}
+   *
+   * @param conf
+   */
+  protected synchronized void setConf(Configuration conf) {
+    this.conf = conf;
   }
 
   /**
@@ -109,24 +146,26 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
     return runtime;
   }
 
-  /**
-   * Set the {@link Configuration} associated with this {@link CdhServer}
-   *
-   * @param conf
-   */
-  protected synchronized void setConf(Configuration conf) {
-    this.conf = conf;
+  @Override
+  public int compareTo(CdhServer<CdhServer<?, ?>, V> that) {
+    return getIndex() < that.getIndex() ? 1 : getIndex() > that.getIndex() ? -1 : 0;
   }
 
-  private static Logger LOG = LoggerFactory.getLogger(DfsServer.class);
-
-  private V runtime;
-  private int semaphore;
-  private Configuration conf;
-
-  protected CdhServer(V runtime) {
-    conf = new JobConf();
+  @SuppressWarnings("unchecked")
+  protected U assertRuntime(V runtime) {
+    if (isStarted() && !this.runtime.equals(runtime)) {
+      throw new IllegalArgumentException("A server pipeline runtime dependency inconsistency has been detected, please decorate all ["
+        + this.getClass().getSimpleName() + "] server instances with [" + runtime
+        + "] runtime, explicitly if this server has been created implicitly by a depedant service");
+    }
     this.runtime = runtime;
+    return (U) this;
+  }
+
+  @Override
+  public Statement apply(Statement base, Description description) {
+    assertTestRunner(description.getClassName());
+    return super.apply(base, description);
   }
 
   @Override
@@ -155,35 +194,13 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
     }
   }
 
-  @Override
-  public int compareTo(CdhServer<CdhServer<?, ?>, V> that) {
-    return getIndex() < that.getIndex() ? 1 : getIndex() > that.getIndex() ? -1 : 0;
-  }
-
-  @SuppressWarnings("unchecked")
-  protected U assertRuntime(V runtime) {
-    if (isStarted() && !this.runtime.equals(runtime)) {
-      throw new IllegalArgumentException("A server pipeline runtime dependency inconsistency has been detected, please decorate all ["
-          + this.getClass().getSimpleName() + "] server instances with [" + runtime
-          + "] runtime, explicitly if this server has been created implicitly by a depedant service");
-    }
-    this.runtime = runtime;
-    return (U) this;
-  }
-
-  @Override
-  public Statement apply(Statement base, Description description) {
-    assertTestRunner(description.getClassName());
-    return super.apply(base, description);
-  }
-
   @SuppressWarnings("rawtypes")
   private boolean assertTestRunner(String testClass) {
     try {
       RunWith runWith = Class.forName(testClass).getAnnotation(RunWith.class);
       if (runWith == null) {
         throw new RuntimeException("Missing [@" + RunWith.class.getCanonicalName() + "(" + TestRunner.class.getCanonicalName()
-            + ".class)] on class [" + testClass + "]");
+          + ".class)] on class [" + testClass + "]");
       }
       if (runWith.value().equals(Suite.class)) {
         SuiteClasses suiteClasses = Class.forName(testClass).getAnnotation(SuiteClasses.class);
@@ -195,7 +212,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
       }
     } catch (Exception exception) {
       String message = "The test [" + testClass + "] included a rule [" + getClass().getCanonicalName() + "] but did not include a [@"
-          + RunWith.class.getCanonicalName() + "(" + TestRunner.class.getCanonicalName() + ".class)] class annotation";
+        + RunWith.class.getCanonicalName() + "(" + TestRunner.class.getCanonicalName() + ".class)] class annotation";
       if (LOG.isErrorEnabled()) {
         LOG.error(message, exception);
       }
@@ -253,27 +270,5 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
       log.info(detail);
     }
   }
-
-  /**
-   * Get the next available port
-   *
-   * @return
-   */
-  public static int getNextAvailablePort() {
-    while (SERVER_BIND_PORT_START.get() < SERVER_BIND_PORT_FINISH) {
-      try {
-        ServerSocket server = new ServerSocket(SERVER_BIND_PORT_START.getAndIncrement());
-        server.close();
-        return server.getLocalPort();
-      } catch (IOException exception) {
-        // ignore
-      }
-    }
-    throw new RuntimeException("Could not find avialable port");
-  }
-
-  public static final String SERVER_BIND_IP = "127.0.0.1";
-  public static final AtomicInteger SERVER_BIND_PORT_START = new AtomicInteger(25000);
-  public static final int SERVER_BIND_PORT_FINISH = 25100;
 
 }

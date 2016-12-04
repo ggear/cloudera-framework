@@ -8,6 +8,15 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import com.cloudera.framework.common.Driver;
+import com.cloudera.framework.common.util.DfsUtil;
+import com.cloudera.framework.example.Constants;
+import com.cloudera.framework.example.model.Record;
+import com.cloudera.framework.example.model.RecordCounter;
+import com.cloudera.framework.example.model.RecordFactory;
+import com.cloudera.framework.example.model.RecordFilter;
+import com.cloudera.framework.example.model.RecordKey;
+import com.cloudera.framework.example.model.RecordPartition;
 import org.apache.avro.mapred.AvroKey;
 import org.apache.avro.mapred.AvroValue;
 import org.apache.avro.mapreduce.AvroJob;
@@ -29,16 +38,6 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cloudera.framework.common.Driver;
-import com.cloudera.framework.common.util.DfsUtil;
-import com.cloudera.framework.example.Constants;
-import com.cloudera.framework.example.model.Record;
-import com.cloudera.framework.example.model.RecordCounter;
-import com.cloudera.framework.example.model.RecordFactory;
-import com.cloudera.framework.example.model.RecordFilter;
-import com.cloudera.framework.example.model.RecordKey;
-import com.cloudera.framework.example.model.RecordPartition;
-
 /**
  * Partition driver, take a set of staged sequence files and rewrite them into
  * consolidated, schema partitioned, row order Avro
@@ -52,8 +51,8 @@ public class Partition extends Driver {
 
   public static final String CONF_RECORD_FILTER_DEFAULT = RecordFilter.CONF_RECORD_FILTER_PASS_THROUGH;
 
-  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS, RecordCounter.RECORDS_CANONICAL,
-      RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
+  public static final RecordCounter[] COUNTERS = new RecordCounter[]{RecordCounter.RECORDS, RecordCounter.RECORDS_CANONICAL,
+    RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED};
 
   protected static final String OUTPUT_TEXT = "text";
   protected static final String OUTPUT_AVRO = "avro";
@@ -74,6 +73,10 @@ public class Partition extends Driver {
     super(confguration);
   }
 
+  public static void main(String... arguments) throws Exception {
+    System.exit(new Partition().runner(arguments));
+  }
+
   @Override
   public String description() {
     return "Partition my dataset";
@@ -81,21 +84,13 @@ public class Partition extends Driver {
 
   @Override
   public String[] options() {
-    return new String[] { RecordFilter.CONF_RECORD_FILTER + "=" + RecordFilter.CONF_RECORD_FILTER_PASS_THROUGH + "|"
-        + RecordFilter.CONF_RECORD_FILTER_DE_DUPE };
+    return new String[]{RecordFilter.CONF_RECORD_FILTER + "=" + RecordFilter.CONF_RECORD_FILTER_PASS_THROUGH + "|"
+      + RecordFilter.CONF_RECORD_FILTER_DE_DUPE};
   }
 
   @Override
   public String[] parameters() {
-    return new String[] { "input-path", "output-path" };
-  }
-
-  @Override
-  public void reset() {
-    super.reset();
-    for (RecordCounter counter : COUNTERS) {
-      incrementCounter(Partition.class.getCanonicalName(), counter, 0);
-    }
+    return new String[]{"input-path", "output-path"};
   }
 
   @Override
@@ -133,7 +128,7 @@ public class Partition extends Driver {
       job.getConfiguration().set(FileOutputCommitter.SUCCESSFUL_JOB_OUTPUT_DIR_MARKER, Boolean.FALSE.toString());
       for (Path inputPath : inputPaths) {
         MultipleInputs.addInputPath(job, inputPath, RecordFactory
-            .getRecordSequenceInputFormat(RecordPartition.getPartitionPathName(inputPath, RecordPartition.BATCH_COL_ID_START_FINISH, 2)));
+          .getRecordSequenceInputFormat(RecordPartition.getPartitionPathName(inputPath, RecordPartition.BATCH_COL_ID_START_FINISH, 2)));
       }
       job.setMapperClass(Mapper.class);
       job.setSortComparatorClass(RecordKey.RecordKeyComparator.class);
@@ -154,6 +149,14 @@ public class Partition extends Driver {
     return jobSuccess ? RETURN_SUCCESS : RETURN_FAILURE_RUNTIME;
   }
 
+  @Override
+  public void reset() {
+    super.reset();
+    for (RecordCounter counter : COUNTERS) {
+      incrementCounter(Partition.class.getCanonicalName(), counter, 0);
+    }
+  }
+
   /**
    * Mapper.<br>
    * <br>
@@ -161,7 +164,7 @@ public class Partition extends Driver {
    * where possible.
    */
   private static class Mapper
-      extends org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>> {
+    extends org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>> {
 
     private final RecordKey recordKey = new RecordKey();
     private final Record recordValue = new Record();
@@ -173,24 +176,17 @@ public class Partition extends Driver {
     private MultipleOutputs<RecordKey, Text> multipleOutputs;
 
     @Override
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void setup(
-        org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
-        throws IOException, InterruptedException {
+      org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
+      throws IOException, InterruptedException {
       multipleOutputs = new MultipleOutputs(context);
     }
 
     @Override
-    protected void cleanup(
-        org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
-        throws IOException, InterruptedException {
-      multipleOutputs.close();
-    }
-
-    @Override
     protected void map(RecordKey key, AvroGenericRecordWritable value,
-        org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
-        throws IOException, InterruptedException {
+                       org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
+      throws IOException, InterruptedException {
       if (key.isValid()) {
         key.setHash(recordValue.hashCode());
         recordWrapped.datum((Record) value.getRecord());
@@ -201,8 +197,15 @@ public class Partition extends Driver {
         textValue.set(key.getSource());
         string.setLength(0);
         multipleOutputs.write(OUTPUT_TEXT, NullWritable.get(), textValue,
-            string.append(MALFORMED_PATH_PREFIX).append(key.getBatch()).toString());
+          string.append(MALFORMED_PATH_PREFIX).append(key.getBatch()).toString());
       }
+    }
+
+    @Override
+    protected void cleanup(
+      org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
+      throws IOException, InterruptedException {
+      multipleOutputs.close();
     }
 
   }
@@ -229,26 +232,15 @@ public class Partition extends Driver {
 
     @Override
     protected void setup(org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
-        throws IOException, InterruptedException {
+      throws IOException, InterruptedException {
       multipleOutputsAvro = new AvroMultipleOutputs(context);
       partitions.clear();
     }
 
     @Override
-    public void cleanup(Context context) throws IOException, InterruptedException {
-      for (String partition : partitions) {
-        FileSystem.get(context.getConfiguration())
-            .delete(new Path(context.getConfiguration().get(FileOutputFormat.OUTDIR) + Path.SEPARATOR_CHAR + partition,
-                FileOutputCommitter.SUCCEEDED_FILE_NAME), false);
-      }
-      partitions.clear();
-      multipleOutputsAvro.close();
-    }
-
-    @Override
     protected void reduce(RecordKey key, Iterable<AvroValue<Record>> values,
-        org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
-        throws IOException, InterruptedException {
+                          org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
+      throws IOException, InterruptedException {
       records.clear();
       Iterator<AvroValue<Record>> valuesIterator = values.iterator();
       while (valuesIterator.hasNext()) {
@@ -260,19 +252,26 @@ public class Partition extends Driver {
         calendar.setTimeInMillis(record.datum().getMyTimestamp());
         string.setLength(0);
         string
-            .append(counter.equals(RecordCounter.RECORDS_CANONICAL) ? Constants.DIR_REL_MYDS_PARTITIONED_CANONICAL_AVRO
-                : Constants.DIR_REL_MYDS_PARTITIONED_DUPLICATE_AVRO)
-            .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR)).append(Path.SEPARATOR_CHAR)
-            .append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1).append(Path.SEPARATOR_CHAR);
+          .append(counter.equals(RecordCounter.RECORDS_CANONICAL) ? Constants.DIR_REL_MYDS_PARTITIONED_CANONICAL_AVRO
+            : Constants.DIR_REL_MYDS_PARTITIONED_DUPLICATE_AVRO)
+          .append(Path.SEPARATOR_CHAR).append(PARTITION_YEAR).append(calendar.get(Calendar.YEAR)).append(Path.SEPARATOR_CHAR)
+          .append(PARTITION_MONTH).append(calendar.get(Calendar.MONTH) + 1).append(Path.SEPARATOR_CHAR);
         partitions.add(string.toString());
         multipleOutputsAvro.write(OUTPUT_AVRO, this.record, NullWritable.get(), string.append(PARTITION_FILE).toString());
       }
     }
 
-  }
+    @Override
+    public void cleanup(Context context) throws IOException, InterruptedException {
+      for (String partition : partitions) {
+        FileSystem.get(context.getConfiguration())
+          .delete(new Path(context.getConfiguration().get(FileOutputFormat.OUTDIR) + Path.SEPARATOR_CHAR + partition,
+            FileOutputCommitter.SUCCEEDED_FILE_NAME), false);
+      }
+      partitions.clear();
+      multipleOutputsAvro.close();
+    }
 
-  public static void main(String... arguments) throws Exception {
-    System.exit(new Partition().runner(arguments));
   }
 
 }

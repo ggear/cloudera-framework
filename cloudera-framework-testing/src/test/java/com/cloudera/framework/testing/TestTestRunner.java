@@ -5,6 +5,11 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.cloudera.framework.testing.server.CdhServer;
+import com.cloudera.framework.testing.server.DfsServer;
+import com.google.common.collect.ImmutableMap;
+import com.googlecode.zohhak.api.Coercion;
+import com.googlecode.zohhak.api.TestWith;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,18 +20,14 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cloudera.framework.testing.server.CdhServer;
-import com.cloudera.framework.testing.server.DfsServer;
-import com.google.common.collect.ImmutableMap;
-import com.googlecode.zohhak.api.Coercion;
-import com.googlecode.zohhak.api.TestWith;
-
 @RunWith(TestRunner.class)
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class TestTestRunner implements TestConstants {
 
+  public static final TestMetaData testMetaData1 = TestMetaData.getInstance().parameters(ImmutableMap.of("metadata", "1"));
+  public static final TestMetaData testMetaData2 = TestMetaData.getInstance().parameters(ImmutableMap.of("metadata", "2"));
+  private static final AtomicInteger COUNTER = new AtomicInteger();
   private static Logger LOG = LoggerFactory.getLogger(DfsServer.class);
-
   @ClassRule
   public static CdhServer cdhServerClass = new CdhServer(null) {
 
@@ -68,7 +69,6 @@ public class TestTestRunner implements TestConstants {
     }
 
   };
-
   @Rule
   public CdhServer cdhServer = new CdhServer(null) {
 
@@ -119,6 +119,14 @@ public class TestTestRunner implements TestConstants {
     assertEquals(2, COUNTER.incrementAndGet());
   }
 
+  @AfterClass
+  public static void afterClass() {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("After class");
+    }
+    assertEquals(1, COUNTER.decrementAndGet());
+  }
+
   @Before
   public void before() {
     if (LOG.isDebugEnabled()) {
@@ -127,10 +135,7 @@ public class TestTestRunner implements TestConstants {
     assertEquals(6, COUNTER.incrementAndGet());
   }
 
-  public static final TestMetaData testMetaData1 = TestMetaData.getInstance().parameters(ImmutableMap.of("metadata", "1"));
-  public static final TestMetaData testMetaData2 = TestMetaData.getInstance().parameters(ImmutableMap.of("metadata", "2"));
-
-  @TestWith({ "testMetaData1", "testMetaData2" })
+  @TestWith({"testMetaData1", "testMetaData2"})
   public void testCdhMetaData1(TestMetaData testMetaData) throws Exception {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test " + testMetaData.getParameters()[0]);
@@ -139,7 +144,7 @@ public class TestTestRunner implements TestConstants {
     assertEquals(6, COUNTER.get());
   }
 
-  @TestWith({ "testMetaData1", "testMetaData2" })
+  @TestWith({"testMetaData1", "testMetaData2"})
   public void testCdhMetaData2(TestMetaData testMetaData) throws Exception {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Test " + testMetaData.getParameters()[0]);
@@ -160,15 +165,5 @@ public class TestTestRunner implements TestConstants {
     }
     assertEquals(5, COUNTER.decrementAndGet());
   }
-
-  @AfterClass
-  public static void afterClass() {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("After class");
-    }
-    assertEquals(1, COUNTER.decrementAndGet());
-  }
-
-  private static final AtomicInteger COUNTER = new AtomicInteger();
 
 }

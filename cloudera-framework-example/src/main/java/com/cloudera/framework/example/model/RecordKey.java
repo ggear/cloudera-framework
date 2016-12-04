@@ -18,6 +18,8 @@ import org.apache.hadoop.io.WritableUtils;
 public class RecordKey implements WritableComparable<RecordKey> {
 
   public static final int FIELDS_NUMBER;
+  private static final Pattern REGEX_PATH = Pattern.compile(
+    ".*/?(([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/ingest_batch_name=([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-]*)\\.([a-z]+)\\.?([a-z]*)/([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-\\.]*)\\.(.*))");
 
   static {
     int recordFieldsNumber = 0;
@@ -28,9 +30,6 @@ public class RecordKey implements WritableComparable<RecordKey> {
     }
     FIELDS_NUMBER = recordFieldsNumber;
   }
-
-  private static final Pattern REGEX_PATH = Pattern.compile(
-      ".*/?(([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/([a-zA-Z0-9\\-]*)/ingest_batch_name=([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-]*)\\.([a-z]+)\\.?([a-z]*)/([1-9][0-9]{12})_?([1-9][0-9]{12})?_mydataset([a-zA-Z0-9\\-\\.]*)\\.(.*))");
 
   private int hash;
   private String type;
@@ -169,12 +168,6 @@ public class RecordKey implements WritableComparable<RecordKey> {
   }
 
   @Override
-  public String toString() {
-    return "RecordKey [hash=" + hash + ", type=" + type + ", codec=" + codec + ", container=" + container + ", timestamp=" + timestamp
-        + ", batch=" + batch + ", source=" + source + ", valid=" + valid + "]";
-  }
-
-  @Override
   public int hashCode() {
     return hash;
   }
@@ -188,6 +181,12 @@ public class RecordKey implements WritableComparable<RecordKey> {
     if (getClass() != that.getClass())
       return false;
     return this.hash == ((RecordKey) that).hash;
+  }
+
+  @Override
+  public String toString() {
+    return "RecordKey [hash=" + hash + ", type=" + type + ", codec=" + codec + ", container=" + container + ", timestamp=" + timestamp
+      + ", batch=" + batch + ", source=" + source + ", valid=" + valid + "]";
   }
 
   public static class RecordKeyComparator extends WritableComparator {

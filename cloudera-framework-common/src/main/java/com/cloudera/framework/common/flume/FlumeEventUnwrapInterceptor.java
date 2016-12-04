@@ -32,6 +32,15 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
   private BinaryDecoder decoder = null;
   private SpecificDatumReader<AvroFlumeEvent> reader = null;
 
+  private static Map<String, String> toStringMap(Map<CharSequence, CharSequence> charSequenceMap, Map<String, String> mergeMap) {
+    Map<String, String> stringMap = new HashMap<>();
+    for (Map.Entry<CharSequence, CharSequence> entry : charSequenceMap.entrySet()) {
+      stringMap.put(entry.getKey().toString(), entry.getValue().toString());
+    }
+    stringMap.putAll(mergeMap);
+    return stringMap;
+  }
+
   @Override
   public void initialize() {
     decoder = DecoderFactory.get().directBinaryDecoder(new ByteArrayInputStream(new byte[0]), decoder);
@@ -69,10 +78,10 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
       decoder = DecoderFactory.get().directBinaryDecoder(eventWrappedStream, decoder);
       AvroFlumeEvent eventUnwrappedAvro = reader.read(null, decoder);
       eventUnwrapped = EventBuilder.withBody(eventUnwrappedAvro.getBody().array(),
-          toStringMap(eventUnwrappedAvro.getHeaders(), event.getHeaders()));
+        toStringMap(eventUnwrappedAvro.getHeaders(), event.getHeaders()));
       if (LOG.isDebugEnabled()) {
         LOG.debug("Flume Event successfully unwrapped, header [" + eventUnwrappedAvro.getHeaders().size() + "] fields, body ["
-            + eventUnwrapped.getBody().length + "] bytes");
+          + eventUnwrapped.getBody().length + "] bytes");
       }
     } catch (Exception exception) {
       if (LOG.isWarnEnabled()) {
@@ -82,15 +91,6 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
       IOUtils.closeQuietly(eventWrappedStream);
     }
     return eventUnwrapped;
-  }
-
-  private static Map<String, String> toStringMap(Map<CharSequence, CharSequence> charSequenceMap, Map<String, String> mergeMap) {
-    Map<String, String> stringMap = new HashMap<>();
-    for (Map.Entry<CharSequence, CharSequence> entry : charSequenceMap.entrySet()) {
-      stringMap.put(entry.getKey().toString(), entry.getValue().toString());
-    }
-    stringMap.putAll(mergeMap);
-    return stringMap;
   }
 
   public static class Builder implements Interceptor.Builder {

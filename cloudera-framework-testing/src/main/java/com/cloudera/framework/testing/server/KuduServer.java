@@ -17,9 +17,18 @@ import org.slf4j.LoggerFactory;
  */
 public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
 
-  public enum Runtime {
-    CLUSTER_DEAMONS // Mini Kudu cluster, multi-process, heavy-weight
-  };
+  private static final Logger LOG = LoggerFactory.getLogger(KuduServer.class);
+
+  ;
+  private static final int KUDU_MSERVER_NUM = 1;
+  private static final int KUDU_TSERVER_NUM = 3;
+  private static final String SYSTEM_PROPERTY_KUDU_HOME_BIN = "binDir";
+  private static KuduServer instance;
+  private MiniKuduCluster miniKudu;
+
+  private KuduServer(Runtime runtime) {
+    super(runtime);
+  }
 
   /**
    * Get instance with default runtime
@@ -66,11 +75,11 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
     dataDir.mkdirs();
     try {
       (miniKudu = new MiniKuduCluster.MiniKuduClusterBuilder().numMasters(KUDU_MSERVER_NUM).numTservers(KUDU_TSERVER_NUM)
-          .defaultTimeoutMs(50000).build()).waitForTabletServers(KUDU_TSERVER_NUM);
+        .defaultTimeoutMs(50000).build()).waitForTabletServers(KUDU_TSERVER_NUM);
     } catch (Exception exception) {
       throw new RuntimeException("Failed to start kudu processes, it is possible that a previous test was halted prior to "
-          + "cleaning up the kudu processes it had spawned, if so this command "
-          + "[ps aux | grep runtime-kudu | grep -v grep] will show those processes that should be killed", exception);
+        + "cleaning up the kudu processes it had spawned, if so this command "
+        + "[ps aux | grep runtime-kudu | grep -v grep] will show those processes that should be killed", exception);
     }
     log(LOG, "start", time);
   }
@@ -110,19 +119,8 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
     log(LOG, "stop", time);
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(KuduServer.class);
-
-  private static final int KUDU_MSERVER_NUM = 1;
-  private static final int KUDU_TSERVER_NUM = 3;
-
-  private static final String SYSTEM_PROPERTY_KUDU_HOME_BIN = "binDir";
-
-  private static KuduServer instance;
-
-  private MiniKuduCluster miniKudu;
-
-  private KuduServer(Runtime runtime) {
-    super(runtime);
+  public enum Runtime {
+    CLUSTER_DEAMONS // Mini Kudu cluster, multi-process, heavy-weight
   }
 
 }

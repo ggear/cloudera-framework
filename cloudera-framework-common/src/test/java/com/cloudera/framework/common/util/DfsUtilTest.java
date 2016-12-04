@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.cloudera.framework.testing.TestRunner;
+import com.cloudera.framework.testing.server.DfsServer;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -14,9 +16,6 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.cloudera.framework.testing.TestRunner;
-import com.cloudera.framework.testing.server.DfsServer;
 
 @RunWith(TestRunner.class)
 public class DfsUtilTest {
@@ -27,13 +26,13 @@ public class DfsUtilTest {
   @Test
   public void testCanDoAction() throws IllegalArgumentException, IOException {
     assertTrue(
-        DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" }, new Path(dfsServer.getPathUri("/tmp")), FsAction.READ));
-    assertTrue(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" }, new Path(dfsServer.getPathUri("/tmp")),
-        FsAction.WRITE));
-    assertFalse(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" }, new Path(dfsServer.getPathUri("/tmp/t")),
-        FsAction.READ));
-    assertFalse(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[] { "me" }, new Path(dfsServer.getPathUri("/tmp/t")),
-        FsAction.WRITE));
+      DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[]{"me"}, new Path(dfsServer.getPathUri("/tmp")), FsAction.READ));
+    assertTrue(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[]{"me"}, new Path(dfsServer.getPathUri("/tmp")),
+      FsAction.WRITE));
+    assertFalse(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[]{"me"}, new Path(dfsServer.getPathUri("/tmp/t")),
+      FsAction.READ));
+    assertFalse(DfsUtil.canDoAction(dfsServer.getFileSystem(), "me", new String[]{"me"}, new Path(dfsServer.getPathUri("/tmp/t")),
+      FsAction.WRITE));
   }
 
   @Test

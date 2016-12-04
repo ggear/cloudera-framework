@@ -27,13 +27,10 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Driver extends Configured implements Tool {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
-
   public static final int RETURN_SUCCESS = 0;
   public static final int RETURN_FAILURE_RUNTIME = 10;
-
   public static final String CONF_SETTINGS = "driver-site.xml";
-
+  private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
   private static final int FORMAT_TIME_FACTOR = 10;
 
   private Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
@@ -44,6 +41,34 @@ public abstract class Driver extends Configured implements Tool {
 
   public Driver(Configuration conf) {
     super(conf);
+  }
+
+  private static String formatTime(long time) {
+    StringBuilder string = new StringBuilder(128);
+    int factor;
+    String unit;
+    if (time < 0) {
+      time = 0;
+      factor = 1;
+      unit = "ms";
+    } else if (time < FORMAT_TIME_FACTOR * 1000) {
+      factor = 1;
+      unit = "ms";
+    } else if (time < FORMAT_TIME_FACTOR * 1000 * 60) {
+      factor = 1000;
+      unit = "sec";
+    } else if (time < FORMAT_TIME_FACTOR * 1000 * 60 * 60) {
+      factor = 1000 * 60;
+      unit = "min";
+    } else {
+      factor = 1000 * 60 * 60;
+      unit = "hour";
+    }
+    string.append("[");
+    string.append(time / factor);
+    string.append("] ");
+    string.append(unit);
+    return string.toString();
   }
 
   /**
@@ -78,12 +103,11 @@ public abstract class Driver extends Configured implements Tool {
   /**
    * Prepare the driver
    *
-   * @param arguments
-   *          the arguments passed in via the command line, option switches will
-   *          be populated into the {@link Configuration} available from
-   *          {@link #getConf()}
+   * @param arguments the arguments passed in via the command line, option switches will
+   *                  be populated into the {@link Configuration} available from
+   *                  {@link #getConf()}
    * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
-   *         failure
+   * failure
    * @throws Exception
    */
   public int prepare(String... arguments) throws Exception {
@@ -94,7 +118,7 @@ public abstract class Driver extends Configured implements Tool {
    * Execute the driver
    *
    * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
-   *         failure
+   * failure
    * @throws Exception
    */
   public abstract int execute() throws Exception;
@@ -103,7 +127,7 @@ public abstract class Driver extends Configured implements Tool {
    * Clean the driver on shutdown
    *
    * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
-   *         failure
+   * failure
    * @throws Exception
    */
   public int cleanup() throws Exception {
@@ -180,8 +204,8 @@ public abstract class Driver extends Configured implements Tool {
     }
     if (LOG.isInfoEnabled()) {
       LOG.info(
-          "Driver [" + this.getClass().getSimpleName() + "] finshed " + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully")
-              + " with exit value [" + exitValue + "] in " + formatTime(timeTotal));
+        "Driver [" + this.getClass().getSimpleName() + "] finshed " + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully")
+          + " with exit value [" + exitValue + "] in " + formatTime(timeTotal));
     }
     return exitValue;
   }
@@ -224,7 +248,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Map<Enum<?>, Long> getCounters(String group) {
-    return counters.get(group) == null ? Collections.<Enum<?>, Long> emptyMap() : new LinkedHashMap<>(counters.get(group));
+    return counters.get(group) == null ? Collections.<Enum<?>, Long>emptyMap() : new LinkedHashMap<>(counters.get(group));
   }
 
   public Set<String> getCountersGroups() {
@@ -252,7 +276,7 @@ public abstract class Driver extends Configured implements Tool {
     for (Enum<?> value : counters.keySet()) {
       if (counters.get(value) != null) {
         this.counters.get(group).put(value,
-            (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value)) + counters.get(value));
+          (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value)) + counters.get(value));
       }
     }
   }
@@ -269,7 +293,7 @@ public abstract class Driver extends Configured implements Tool {
     for (Enum<?> value : values) {
       if (counters.findCounter(value) != null) {
         this.counters.get(group).put(value, (this.counters.get(group).get(value) == null ? 0 : this.counters.get(group).get(value))
-            + counters.findCounter(value).getValue());
+          + counters.findCounter(value).getValue());
       }
     }
   }
@@ -294,34 +318,6 @@ public abstract class Driver extends Configured implements Tool {
       return incrementCounter(group, counter, incrament);
     }
     return counters.get(group).get(counter);
-  }
-
-  private static String formatTime(long time) {
-    StringBuilder string = new StringBuilder(128);
-    int factor;
-    String unit;
-    if (time < 0) {
-      time = 0;
-      factor = 1;
-      unit = "ms";
-    } else if (time < FORMAT_TIME_FACTOR * 1000) {
-      factor = 1;
-      unit = "ms";
-    } else if (time < FORMAT_TIME_FACTOR * 1000 * 60) {
-      factor = 1000;
-      unit = "sec";
-    } else if (time < FORMAT_TIME_FACTOR * 1000 * 60 * 60) {
-      factor = 1000 * 60;
-      unit = "min";
-    } else {
-      factor = 1000 * 60 * 60;
-      unit = "hour";
-    }
-    string.append("[");
-    string.append(time / factor);
-    string.append("] ");
-    string.append(unit);
-    return string.toString();
   }
 
 }

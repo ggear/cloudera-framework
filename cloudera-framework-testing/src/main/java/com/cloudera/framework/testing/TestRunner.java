@@ -8,6 +8,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.cloudera.framework.testing.server.CdhServer;
+import com.cloudera.framework.testing.server.DfsServer;
+import com.googlecode.zohhak.api.runners.ZohhakRunner;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.internal.runners.model.ReflectiveCallable;
@@ -22,18 +25,13 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
-
-import com.cloudera.framework.testing.server.CdhServer;
-import com.cloudera.framework.testing.server.DfsServer;
-import com.googlecode.zohhak.api.runners.ZohhakRunner;
-
 import parquet.Log;
 import parquet.hadoop.ParquetOutputFormat;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 /**
  * JUnit {@link Runner} required for all tests as per:
- *
+ * <p>
  * <pre>
  * &#64;RunWith(TestRunner.class)
  * public class MyTest {
@@ -41,6 +39,26 @@ import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
  * </pre>
  */
 public class TestRunner extends ZohhakRunner implements TestConstants {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TestRunner.class);
+
+  static {
+    Log.getLog(ParquetOutputFormat.class);
+    SLF4JBridgeHandler.removeHandlersForRootLogger();
+    SLF4JBridgeHandler.install();
+    SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+    System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
+    System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
+    System.setProperty("java.security.krb5.conf", "/dev/null");
+    System.setProperty("dir.working", ABS_DIR_WORKING);
+    System.setProperty("dir.working.target", ABS_DIR_TARGET);
+    System.setProperty("dir.working.target.hdfs", ABS_DIR_DFS_LOCAL);
+    System.setProperty("test.build.data", ABS_DIR_DFS);
+    System.setProperty("hadoop.tmp.dir", ABS_DIR_DFS_TMP);
+    System.setProperty("dir.working.target.derby", ABS_DIR_DERBY);
+    System.setProperty("dir.working.target.derby.db", ABS_DIR_DERBY_DB);
+    System.setProperty("derby.stream.error.file", ABS_DIR_DERBY_LOG);
+  }
 
   public TestRunner(Class<?> clazz) throws InitializationError {
     super(clazz);
@@ -84,7 +102,7 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
       }
     } catch (Exception exception) {
       String message = "Could not find field [" + field + "] with type [" + type + "] on object [" + object + "] with class ["
-          + (object == null ? "null" : object.getClass()) + "]";
+        + (object == null ? "null" : object.getClass()) + "]";
       if (LOG.isErrorEnabled()) {
         LOG.error(message, exception);
       }
@@ -104,10 +122,10 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
   public static TestMetaData toCdhMetaData(Object object, String field) {
     TestMetaData cdhMetaData = (TestMetaData) toObject(object, field, TestMetaData.class);
     if (cdhMetaData.getDataSetSourceDirs() != null && cdhMetaData.getDataSetDestinationDirs() != null
-        && DfsServer.getInstance().isStarted()) {
+      && DfsServer.getInstance().isStarted()) {
       try {
         DfsServer.getInstance().copyFromLocalDir(cdhMetaData.getDataSetSourceDirs(), cdhMetaData.getDataSetDestinationDirs(),
-            cdhMetaData.getDataSetNames(), cdhMetaData.getDataSetSubsets(), cdhMetaData.getDataSetLabels());
+          cdhMetaData.getDataSetNames(), cdhMetaData.getDataSetSubsets(), cdhMetaData.getDataSetLabels());
       } catch (Exception exception) {
         if (LOG.isWarnEnabled()) {
           LOG.warn("Could not initialise [" + object.getClass().getSimpleName() + "]", exception);
@@ -116,8 +134,6 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
     }
     return cdhMetaData;
   }
-
-  private static final Logger LOG = LoggerFactory.getLogger(TestRunner.class);
 
   @Override
   @SuppressWarnings("deprecation")
@@ -160,14 +176,14 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
       protected void after() {
         if (LOG.isDebugEnabled()) {
           LOG.debug("Completed [" + method.getDeclaringClass().getCanonicalName() + "." + method.getName() + "] in ["
-              + (System.currentTimeMillis() - time.get()) + "] ms");
+            + (System.currentTimeMillis() - time.get()) + "] ms");
         }
       }
     });
     return new RunRules(statement, rules, getDescription());
   }
 
-  @SuppressWarnings({ "rawtypes" })
+  @SuppressWarnings({"rawtypes"})
   private Statement withServerRules(FrameworkMethod method, Object target, Statement statement) {
     final Set<CdhServer> servers = new TreeSet<>();
     servers.addAll(getTestClass().getAnnotatedFieldValues(target, Rule.class, CdhServer.class));
@@ -225,24 +241,6 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
 
   private Statement withTestRules(FrameworkMethod method, List<TestRule> testRules, Statement statement) {
     return testRules.isEmpty() ? statement : new RunRules(statement, testRules, describeChild(method));
-  }
-
-  static {
-    Log.getLog(ParquetOutputFormat.class);
-    SLF4JBridgeHandler.removeHandlersForRootLogger();
-    SLF4JBridgeHandler.install();
-    SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-    System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
-    System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
-    System.setProperty("java.security.krb5.conf", "/dev/null");
-    System.setProperty("dir.working", ABS_DIR_WORKING);
-    System.setProperty("dir.working.target", ABS_DIR_TARGET);
-    System.setProperty("dir.working.target.hdfs", ABS_DIR_DFS_LOCAL);
-    System.setProperty("test.build.data", ABS_DIR_DFS);
-    System.setProperty("hadoop.tmp.dir", ABS_DIR_DFS_TMP);
-    System.setProperty("dir.working.target.derby", ABS_DIR_DERBY);
-    System.setProperty("dir.working.target.derby.db", ABS_DIR_DERBY_DB);
-    System.setProperty("derby.stream.error.file", ABS_DIR_DERBY_LOG);
   }
 
 }

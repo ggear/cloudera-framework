@@ -1,10 +1,9 @@
 package com.cloudera.framework.example.model.input.hive;
 
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.InputFormat;
-
 import com.cloudera.framework.example.model.RecordKey;
 import com.twitter.elephantbird.mapred.input.DeprecatedFileInputFormatWrapper;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.InputFormat;
 
 /**
  * Provide an old API {@link InputFormat} facade over the new API

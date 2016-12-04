@@ -5,6 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.cloudera.framework.common.Driver;
+import com.cloudera.framework.common.util.DfsUtil;
+import com.cloudera.framework.example.Constants;
+import com.cloudera.framework.example.model.Record;
+import com.cloudera.framework.example.model.RecordCounter;
+import com.cloudera.framework.example.model.RecordKey;
+import com.cloudera.framework.example.model.RecordPartition;
 import org.apache.avro.mapred.AvroKey;
 import org.apache.avro.mapreduce.AvroJob;
 import org.apache.avro.mapreduce.AvroKeyInputFormat;
@@ -19,15 +26,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.cloudera.framework.common.Driver;
-import com.cloudera.framework.common.util.DfsUtil;
-import com.cloudera.framework.example.Constants;
-import com.cloudera.framework.example.model.Record;
-import com.cloudera.framework.example.model.RecordCounter;
-import com.cloudera.framework.example.model.RecordKey;
-import com.cloudera.framework.example.model.RecordPartition;
-
 import parquet.avro.AvroParquetOutputFormat;
 import parquet.hadoop.ParquetOutputFormat;
 import parquet.hadoop.metadata.CompressionCodecName;
@@ -43,8 +41,8 @@ import parquet.hadoop.metadata.CompressionCodecName;
  */
 public class Cleanse extends Driver {
 
-  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.RECORDS, RecordCounter.RECORDS_CANONICAL,
-      RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED };
+  public static final RecordCounter[] COUNTERS = new RecordCounter[]{RecordCounter.RECORDS, RecordCounter.RECORDS_CANONICAL,
+    RecordCounter.RECORDS_DUPLICATE, RecordCounter.RECORDS_MALFORMED};
 
   private static final Logger LOG = LoggerFactory.getLogger(Cleanse.class);
 
@@ -62,6 +60,10 @@ public class Cleanse extends Driver {
     super(confguration);
   }
 
+  public static void main(String... arguments) throws Exception {
+    System.exit(new Cleanse().runner(arguments));
+  }
+
   @Override
   public String description() {
     return "Cleanse my dataset";
@@ -69,20 +71,12 @@ public class Cleanse extends Driver {
 
   @Override
   public String[] options() {
-    return new String[] {};
+    return new String[]{};
   }
 
   @Override
   public String[] parameters() {
-    return new String[] { "input-path", "output-path" };
-  }
-
-  @Override
-  public void reset() {
-    super.reset();
-    for (RecordCounter counter : COUNTERS) {
-      incrementCounter(Cleanse.class.getCanonicalName(), counter, 0);
-    }
+    return new String[]{"input-path", "output-path"};
   }
 
   @Override
@@ -111,7 +105,7 @@ public class Cleanse extends Driver {
     FileSystem hdfs = FileSystem.newInstance(getConf());
     for (Path inputPath : inputPaths) {
       Path outputPath = new Path(this.outputPath, Constants.DIR_REL_MYDS_CLEANSED_CANONICAL_PARQUET + Path.SEPARATOR_CHAR
-          + RecordPartition.getPartitionPathString(inputPath, RecordPartition.RECORD_COL_YEAR_MONTH, 0));
+        + RecordPartition.getPartitionPathString(inputPath, RecordPartition.RECORD_COL_YEAR_MONTH, 0));
       hdfs.delete(outputPath, true);
       Job job = Job.getInstance(getConf());
       job.setJobName(getClass().getSimpleName());
@@ -142,6 +136,14 @@ public class Cleanse extends Driver {
     return jobSuccess ? RETURN_SUCCESS : RETURN_FAILURE_RUNTIME;
   }
 
+  @Override
+  public void reset() {
+    super.reset();
+    for (RecordCounter counter : COUNTERS) {
+      incrementCounter(Cleanse.class.getCanonicalName(), counter, 0);
+    }
+  }
+
   /**
    * Mapper.<br>
    * <br>
@@ -152,17 +154,13 @@ public class Cleanse extends Driver {
 
     @Override
     protected void map(AvroKey<Record> key, NullWritable value,
-        org.apache.hadoop.mapreduce.Mapper<AvroKey<Record>, NullWritable, Void, Record>.Context context)
-        throws IOException, InterruptedException {
+                       org.apache.hadoop.mapreduce.Mapper<AvroKey<Record>, NullWritable, Void, Record>.Context context)
+      throws IOException, InterruptedException {
       context.getCounter(RecordCounter.RECORDS).increment(1);
       context.getCounter(RecordCounter.RECORDS_CANONICAL).increment(1);
       context.write(null, key.datum());
     }
 
-  }
-
-  public static void main(String... arguments) throws Exception {
-    System.exit(new Cleanse().runner(arguments));
   }
 
 }

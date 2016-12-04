@@ -1,27 +1,27 @@
 <archetype-descriptor
-	xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
+        xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd">
 
-	<fileSets>
-		<fileSet filtered="false" packaged="false">
-			<directory>src/main/java</directory>
-		</fileSet>
-		<fileSet filtered="false" packaged="false">
-			<directory>src/main/resources</directory>
-		</fileSet>
-		<fileSet filtered="false" packaged="false">
-			<directory>src/main/parcel</directory>
-		</fileSet>
-		<fileSet filtered="false" packaged="false">
-			<directory>src/main/assembly</directory>
-		</fileSet>
-		<fileSet filtered="false" packaged="false">
-			<directory>src/test/java</directory>
-		</fileSet>
-		<fileSet filtered="false" packaged="false">
-			<directory>src/test/resources</directory>
-		</fileSet>
-	</fileSets>
+    <fileSets>
+        <fileSet filtered="false" packaged="false">
+            <directory>src/main/java</directory>
+        </fileSet>
+        <fileSet filtered="false" packaged="false">
+            <directory>src/main/resources</directory>
+        </fileSet>
+        <fileSet filtered="false" packaged="false">
+            <directory>src/main/parcel</directory>
+        </fileSet>
+        <fileSet filtered="false" packaged="false">
+            <directory>src/main/assembly</directory>
+        </fileSet>
+        <fileSet filtered="false" packaged="false">
+            <directory>src/test/java</directory>
+        </fileSet>
+        <fileSet filtered="false" packaged="false">
+            <directory>src/test/resources</directory>
+        </fileSet>
+    </fileSets>
 
 </archetype-descriptor>

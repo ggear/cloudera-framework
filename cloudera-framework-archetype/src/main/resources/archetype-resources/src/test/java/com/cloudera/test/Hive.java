@@ -2,15 +2,14 @@ package com.cloudera.test;
 
 import java.io.File;
 
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.cloudera.TestBase;
 import com.cloudera.TestConstants;
 import com.cloudera.framework.common.util.FsUtil;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.HiveServer;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * Hive script test
@@ -27,8 +26,7 @@ public class Hive extends TestBase {
    * {@link TestConstants#ABS_DIR_HIVE_QUERY} directories, in serial,
    * lexicographic file name order
    *
-   * @throws Exception
-   *           if any script fails to compile and run
+   * @throws Exception if any script fails to compile and run
    */
   @Test
   public void test() throws Exception {

@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.cloudera.framework.example.Constants;
+import com.cloudera.framework.example.model.RecordKey;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
@@ -18,9 +20,6 @@ import org.apache.hadoop.mapreduce.lib.input.CombineFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.CombineFileRecordReader;
 import org.apache.hadoop.mapreduce.lib.input.CombineFileSplit;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-
-import com.cloudera.framework.example.Constants;
-import com.cloudera.framework.example.model.RecordKey;
 
 /**
  * An {@link CombineFileInputFormat} to act on text files, forming the

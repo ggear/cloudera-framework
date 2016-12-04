@@ -3,12 +3,11 @@ package com.cloudera.framework.example.process;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-
 import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.example.Constants;
 import com.cloudera.framework.example.model.RecordCounter;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 
 public class Process extends Driver {
 
@@ -25,6 +24,10 @@ public class Process extends Driver {
     super(confguration);
   }
 
+  public static void main(String... arguments) throws Exception {
+    System.exit(new Process().runner(arguments));
+  }
+
   @Override
   public String description() {
     return "Process my dataset";
@@ -32,26 +35,12 @@ public class Process extends Driver {
 
   @Override
   public String[] options() {
-    return new String[] {};
+    return new String[]{};
   }
 
   @Override
   public String[] parameters() {
-    return new String[] { "input-path-raw", "input-path-staged", "input-path-partitioned", "input-path-cleansed" };
-  }
-
-  @Override
-  public void reset() {
-    super.reset();
-    for (RecordCounter counter : Stage.COUNTERS) {
-      incrementCounter(Stage.class.getCanonicalName(), counter, 0);
-    }
-    for (RecordCounter counter : Partition.COUNTERS) {
-      incrementCounter(Partition.class.getCanonicalName(), counter, 0);
-    }
-    for (RecordCounter counter : Cleanse.COUNTERS) {
-      incrementCounter(Cleanse.class.getCanonicalName(), counter, 0);
-    }
+    return new String[]{"input-path-raw", "input-path-staged", "input-path-partitioned", "input-path-cleansed"};
   }
 
   @Override
@@ -73,11 +62,11 @@ public class Process extends Driver {
     Driver partitionDriver = new Partition(getConf());
     Driver cleanseDriver = new Cleanse(getConf());
     if ((returnValue = stageDriver
-        .run(new String[] { pathRaw + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathStaged })) == RETURN_SUCCESS) {
+      .run(new String[]{pathRaw + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathStaged})) == RETURN_SUCCESS) {
       if ((returnValue = partitionDriver
-          .run(new String[] { pathStaged + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathPartitioned })) == RETURN_SUCCESS) {
+        .run(new String[]{pathStaged + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathPartitioned})) == RETURN_SUCCESS) {
         returnValue = cleanseDriver
-            .run(new String[] { pathPartitioned + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathCleansed });
+          .run(new String[]{pathPartitioned + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathCleansed});
       }
     }
     importCountersAll(stageDriver.getCounters());
@@ -91,8 +80,18 @@ public class Process extends Driver {
     return RETURN_SUCCESS;
   }
 
-  public static void main(String... arguments) throws Exception {
-    System.exit(new Process().runner(arguments));
+  @Override
+  public void reset() {
+    super.reset();
+    for (RecordCounter counter : Stage.COUNTERS) {
+      incrementCounter(Stage.class.getCanonicalName(), counter, 0);
+    }
+    for (RecordCounter counter : Partition.COUNTERS) {
+      incrementCounter(Partition.class.getCanonicalName(), counter, 0);
+    }
+    for (RecordCounter counter : Cleanse.COUNTERS) {
+      incrementCounter(Cleanse.class.getCanonicalName(), counter, 0);
+    }
   }
 
 }

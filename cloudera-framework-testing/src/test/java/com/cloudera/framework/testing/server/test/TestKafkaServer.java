@@ -10,6 +10,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.cloudera.framework.testing.TestConstants;
+import com.cloudera.framework.testing.TestRunner;
+import com.cloudera.framework.testing.server.KafkaServer;
+import com.cloudera.framework.testing.server.ZooKeeperServer;
 import org.apache.commons.io.IOUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -21,14 +25,10 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.cloudera.framework.testing.TestConstants;
-import com.cloudera.framework.testing.TestRunner;
-import com.cloudera.framework.testing.server.KafkaServer;
-import com.cloudera.framework.testing.server.ZooKeeperServer;
-
 @RunWith(TestRunner.class)
 public class TestKafkaServer implements TestConstants {
 
+  private static final String TOPIC_NAME_TEST = "mytopic";
   @ClassRule
   public static KafkaServer kafkaServer = KafkaServer.getInstance();
 
@@ -71,7 +71,5 @@ public class TestKafkaServer implements TestConstants {
   public void testKafkaAgain() throws InterruptedException, IOException, ExecutionException, TimeoutException {
     testKafka();
   }
-
-  private static final String TOPIC_NAME_TEST = "mytopic";
 
 }

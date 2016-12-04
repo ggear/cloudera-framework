@@ -25,18 +25,13 @@ public class DfsUtil {
   /**
    * Determine whether an action can be performed
    *
-   * @param hdfs
-   *          the {@link FileSystem file system}
-   * @param user
-   *          the user to test
-   * @param groups
-   *          the groups to test
-   * @param path
-   *          the {@link Path} to test
-   * @param action
-   *          the action to test
+   * @param hdfs   the {@link FileSystem file system}
+   * @param user   the user to test
+   * @param groups the groups to test
+   * @param path   the {@link Path} to test
+   * @param action the action to test
    * @return <code>true</code> if action is allowed, <code>false</code>
-   *         otherwise
+   * otherwise
    */
   public static boolean canDoAction(FileSystem hdfs, String user, String[] groups, Path path, FsAction action) throws IOException {
     FileStatus status = hdfs.getFileStatus(path);
@@ -58,19 +53,15 @@ public class DfsUtil {
   /**
    * List files.
    *
-   * @param hdfs
-   *          the {@link FileSystem file system}
-   * @param path
-   *          the root {@link Path path}
-   * @param recurse
-   *          whether to recurse from <code>path</code>
-   * @param filterMetaData
-   *          if <code>true</code> filter out files named with suffix
-   *          {@link #FILE_METADATA_PREFIX}
+   * @param hdfs           the {@link FileSystem file system}
+   * @param path           the root {@link Path path}
+   * @param recurse        whether to recurse from <code>path</code>
+   * @param filterMetaData if <code>true</code> filter out files named with suffix
+   *                       {@link #FILE_METADATA_PREFIX}
    * @return the {@link Set set} of file {@link Path paths}
    */
   public static Set<Path> listFiles(FileSystem hdfs, Path path, boolean recurse, boolean filterMetaData)
-      throws FileNotFoundException, IOException {
+    throws FileNotFoundException, IOException {
     Set<Path> files = new HashSet<>();
     try {
       RemoteIterator<LocatedFileStatus> filesIterator = hdfs.listFiles(path, recurse);
@@ -89,19 +80,15 @@ public class DfsUtil {
   /**
    * List directories.
    *
-   * @param hdfs
-   *          the {@link FileSystem file system}
-   * @param path
-   *          the root {@link Path path}
-   * @param recurse
-   *          whether to recurse from <code>path</code>
-   * @param filterMetaData
-   *          if <code>true</code> filter out directories either named or with a
-   *          containing file named with suffix {@link #FILE_METADATA_PREFIX}
+   * @param hdfs           the {@link FileSystem file system}
+   * @param path           the root {@link Path path}
+   * @param recurse        whether to recurse from <code>path</code>
+   * @param filterMetaData if <code>true</code> filter out directories either named or with a
+   *                       containing file named with suffix {@link #FILE_METADATA_PREFIX}
    * @return the {@link Set set} of directory {@link Path paths}
    */
   public static Set<Path> listDirs(FileSystem hdfs, Path path, boolean recurse, boolean filterMetaData)
-      throws FileNotFoundException, IOException {
+    throws FileNotFoundException, IOException {
     Map<Path, Boolean> dirs = new HashMap<>();
     try {
       RemoteIterator<LocatedFileStatus> filesIterator = hdfs.listFiles(path, recurse);

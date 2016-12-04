@@ -9,7 +9,7 @@ import java.util.Map;
  * asserts.
  * <p>
  * Usage is as so:
- *
+ * <p>
  * <pre>
  * public enum Counter {
  *   COUNTER1
@@ -44,6 +44,17 @@ import java.util.Map;
  */
 @SuppressWarnings("rawtypes")
 public class TestMetaData {
+
+  private String[] dataSetSourceDirs;
+  private String[] dataSetNames = new String[]{null};
+  private String[][] dataSetSubsets = new String[][]{{null}};
+  private String[][][] dataSetLabels = new String[][][]{{{null}}};
+  private String[] dataSetDestinationDirs;
+  private Map[] parameters = new Map[]{Collections.EMPTY_MAP};
+  private Map[] asserts = new Map[]{Collections.EMPTY_MAP};
+
+  private TestMetaData() {
+  }
 
   /**
    * Get an {@link TestMetaData}
@@ -180,17 +191,6 @@ public class TestMetaData {
    */
   public Map[] getAsserts() {
     return asserts;
-  }
-
-  private String[] dataSetSourceDirs;
-  private String[] dataSetNames = new String[] { null };
-  private String[][] dataSetSubsets = new String[][] { { null } };
-  private String[][][] dataSetLabels = new String[][][] { { { null } } };
-  private String[] dataSetDestinationDirs;
-  private Map[] parameters = new Map[] { Collections.EMPTY_MAP };
-  private Map[] asserts = new Map[] { Collections.EMPTY_MAP };
-
-  private TestMetaData() {
   }
 
 }

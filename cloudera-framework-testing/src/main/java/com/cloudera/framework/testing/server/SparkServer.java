@@ -13,9 +13,15 @@ import org.slf4j.LoggerFactory;
  */
 public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
 
-  public enum Runtime {
-    LOCAL_CONTEXT // Local Spark context, inline-thread, light-weight
-  };
+  private static final Logger LOG = LoggerFactory.getLogger(SparkServer.class);
+
+  ;
+  private static SparkServer instance;
+  private JavaSparkContext context;
+
+  private SparkServer(Runtime runtime) {
+    super(runtime);
+  }
 
   /**
    * Get instance with default runtime
@@ -51,7 +57,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
 
   @Override
   public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[] { DfsServer.getInstance() };
+    return new CdhServer<?, ?>[]{DfsServer.getInstance()};
   }
 
   @Override
@@ -70,14 +76,8 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
     log(LOG, "stop", time);
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(SparkServer.class);
-
-  private static SparkServer instance;
-
-  private JavaSparkContext context;
-
-  private SparkServer(Runtime runtime) {
-    super(runtime);
+  public enum Runtime {
+    LOCAL_CONTEXT // Local Spark context, inline-thread, light-weight
   }
 
 }

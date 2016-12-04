@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.cloudera.framework.example.model.Record;
+import com.cloudera.framework.example.model.RecordFactory;
+import com.cloudera.framework.example.model.RecordKey;
+import com.cloudera.framework.example.model.serde.RecordStringSerDe;
+import com.cloudera.framework.example.model.serde.RecordStringSerDe.RecordStringSer;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.flume.Context;
@@ -24,12 +29,6 @@ import org.apache.flume.source.AbstractSource;
 import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.cloudera.framework.example.model.Record;
-import com.cloudera.framework.example.model.RecordFactory;
-import com.cloudera.framework.example.model.RecordKey;
-import com.cloudera.framework.example.model.serde.RecordStringSerDe;
-import com.cloudera.framework.example.model.serde.RecordStringSerDe.RecordStringSer;
 
 /**
  * Flume {@link Source} to generate dataset events
@@ -71,17 +70,17 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     pollMs = context.getInteger(PROPERTY_POLL_MS, pollMs);
     if (pollMs <= 0) {
       throw new IllegalArgumentException(
-          "Source [" + getName() + "] has illegal paramater [" + PROPERTY_POLL_MS + "] value [" + pollMs + "]");
+        "Source [" + getName() + "] has illegal paramater [" + PROPERTY_POLL_MS + "] value [" + pollMs + "]");
     }
     pollTicks = context.getInteger(PROPERTY_POLL_TICKS, pollTicks);
     if (pollTicks < 0) {
       throw new IllegalArgumentException(
-          "Source [" + getName() + "] has illegal paramater [" + PROPERTY_POLL_TICKS + "] value [" + pollTicks + "]");
+        "Source [" + getName() + "] has illegal paramater [" + PROPERTY_POLL_TICKS + "] value [" + pollTicks + "]");
     }
     batchSize = context.getInteger(PROPERTY_BATCH_SIZE, batchSize);
     if (batchSize < 1) {
       throw new IllegalArgumentException(
-          "Source [" + getName() + "] has illegal paramater [" + PROPERTY_BATCH_SIZE + "] value [" + batchSize + "]");
+        "Source [" + getName() + "] has illegal paramater [" + PROPERTY_BATCH_SIZE + "] value [" + batchSize + "]");
     }
     try {
       recordStringSerDe = RecordFactory.getRecordStringSerDe(recordType = context.getString(PROPERTY_RECORD_TYPE, recordType));
@@ -91,7 +90,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     recordNumber = context.getInteger(PROPERTY_RECORD_NUMBER, recordNumber);
     if (recordNumber < 1) {
       throw new IllegalArgumentException(
-          "Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_NUMBER + "] value [" + recordNumber + "]");
+        "Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_NUMBER + "] value [" + recordNumber + "]");
     }
     if (sourceCounter == null) {
       sourceCounter = new SourceCounter(getName());
@@ -109,18 +108,6 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     if (LOG.isInfoEnabled()) {
       LOG.info("Source [" + getName() + "] started");
     }
-  }
-
-  @Override
-  public long getBackOffSleepIncrement() {
-    // TODO: Drive by configuration
-    return 50;
-  }
-
-  @Override
-  public long getMaxBackOffSleepInterval() {
-    // TODO: Drive by configuration
-    return 200;
   }
 
   @Override
@@ -182,18 +169,18 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       RecordStringSer recordStringSer = recordStringSerDe.getSerialiser(recordNumber);
       for (int i = 0; i < recordNumber; i++) {
         recordStringSer.add(Record.newBuilder().setMyTimestamp(System.currentTimeMillis()).setMyInteger((int) (Math.random() * 10))
-            .setMyDouble(Math.round(Math.random() * 10000000) / 100D).setMyBoolean(Math.random() < 0.5 ? true : false)
-            .setMyString(UUID.randomUUID().toString()).build());
+          .setMyDouble(Math.round(Math.random() * 10000000) / 100D).setMyBoolean(Math.random() < 0.5 ? true : false)
+          .setMyString(UUID.randomUUID().toString()).build());
       }
       String record = recordStringSer.get();
       processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()), getEventHeader(System.currentTimeMillis())),
-          false);
+        false);
       int sleepMs = 0;
       int tickMs = pollMs / (pollTicks + 1);
       for (int i = 0; i <= pollTicks; i++) {
         if (pollTicks > 0 && i < pollTicks) {
           processEvent(EventBuilder.withBody(record, Charset.forName(Charsets.UTF_8.name()), getEventHeader(System.currentTimeMillis())),
-              false);
+            false);
           if (i < pollTicks - 1) {
             if (LOG.isDebugEnabled()) {
               LOG.debug("Source [" + getName() + "] sleeping for next tick, ms [" + tickMs + "]");
@@ -235,6 +222,18 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     return status;
   }
 
+  @Override
+  public long getBackOffSleepIncrement() {
+    // TODO: Drive by configuration
+    return 50;
+  }
+
+  @Override
+  public long getMaxBackOffSleepInterval() {
+    // TODO: Drive by configuration
+    return 200;
+  }
+
   public static class Interceptor implements org.apache.flume.interceptor.Interceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(Interceptor.class);
@@ -243,6 +242,22 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
 
     public Interceptor(String recordType) {
       this.recordType = recordType;
+    }
+
+    private static String putHeader(Event event, String key, String value) {
+      return putHeader(event, key, value, false);
+    }
+
+    private static String putHeader(Event event, String key, String value, boolean force) {
+      String valuePrevious = event.getHeaders().get(key);
+      if (force || valuePrevious == null) {
+        event.getHeaders().put(key, value);
+        if (LOG.isTraceEnabled()) {
+          LOG.trace("Adding event header [" + key + "] with value [" + value + "]"
+            + (valuePrevious == null ? "" : " overwriting previous value [" + valuePrevious + "]"));
+        }
+      }
+      return force || valuePrevious == null ? value : valuePrevious;
     }
 
     @Override
@@ -275,7 +290,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     }
 
     private Event setEventHeaders(Event event, String timestamp, String batchId, int batchIndex, int batchSum, String batchTimestampStart,
-        String batchTimestampFinish) {
+                                  String batchTimestampFinish) {
       putHeader(event, HEADER_TIMESTAMP, "" + timestamp);
       putHeader(event, HEADER_BATCH_TYPE, recordType);
       putHeader(event, HEADER_BATCH_ID, batchId, true);
@@ -286,25 +301,14 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       return event;
     }
 
-    private static String putHeader(Event event, String key, String value) {
-      return putHeader(event, key, value, false);
-    }
-
-    private static String putHeader(Event event, String key, String value, boolean force) {
-      String valuePrevious = event.getHeaders().get(key);
-      if (force || valuePrevious == null) {
-        event.getHeaders().put(key, value);
-        if (LOG.isTraceEnabled()) {
-          LOG.trace("Adding event header [" + key + "] with value [" + value + "]"
-              + (valuePrevious == null ? "" : " overwriting previous value [" + valuePrevious + "]"));
-        }
-      }
-      return force || valuePrevious == null ? value : valuePrevious;
-    }
-
     public static class Builder implements org.apache.flume.interceptor.Interceptor.Builder {
 
       private String recordType;
+
+      @Override
+      public Interceptor build() {
+        return new Interceptor(recordType);
+      }
 
       @Override
       public void configure(Context context) {
@@ -312,13 +316,8 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
           recordType = context.getString(PROPERTY_RECORD_TYPE, RECORD_TYPE_DEFAULT);
         } catch (IllegalArgumentException exception) {
           throw new IllegalArgumentException("Interceptor [" + this.getClass().getName() + "] has illegal paramater ["
-              + PROPERTY_RECORD_TYPE + "] value [" + recordType + "]");
+            + PROPERTY_RECORD_TYPE + "] value [" + recordType + "]");
         }
-      }
-
-      @Override
-      public Interceptor build() {
-        return new Interceptor(recordType);
       }
 
     }

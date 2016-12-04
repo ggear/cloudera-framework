@@ -14,6 +14,9 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import com.cloudera.framework.testing.TestConstants;
+import com.cloudera.framework.testing.server.DfsServer;
+import com.cloudera.framework.testing.server.SparkServer;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
@@ -23,11 +26,6 @@ import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import org.junit.Test;
-
-import com.cloudera.framework.testing.TestConstants;
-import com.cloudera.framework.testing.server.DfsServer;
-import com.cloudera.framework.testing.server.SparkServer;
-
 import scala.Tuple2;
 
 @SuppressWarnings("serial")
@@ -55,7 +53,7 @@ public abstract class TestSparkServer implements Serializable, TestConstants {
     String dirOutput = "/tmp/wordcount/output";
     String fileInput = new Path(dirInput, "file1.txt").toString();
     BufferedWriter writer = new BufferedWriter(
-        new OutputStreamWriter(getDfsServer().getFileSystem().create(getDfsServer().getPath(fileInput))));
+      new OutputStreamWriter(getDfsServer().getFileSystem().create(getDfsServer().getPath(fileInput))));
     writer.write("a a a a a\n");
     writer.write("b b\n");
     writer.close();

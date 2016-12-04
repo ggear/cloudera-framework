@@ -16,8 +16,7 @@ public class FsUtil {
    * Provide a file listing of a group of <code>paths</code>, filtering out all
    * system files
    *
-   * @param paths
-   *          to list
+   * @param paths to list
    * @return the files
    */
   public static Iterable<File> listFiles(String... paths) {

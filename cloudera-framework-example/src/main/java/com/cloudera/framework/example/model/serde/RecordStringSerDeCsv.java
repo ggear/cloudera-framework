@@ -7,11 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import com.cloudera.framework.example.model.Record;
-import com.cloudera.framework.example.model.RecordKey;
-
 import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVWriter;
+import com.cloudera.framework.example.model.Record;
+import com.cloudera.framework.example.model.RecordKey;
 
 /**
  * A CSV {@link RecordStringSerDe} implementation.<br>
@@ -109,15 +108,15 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
       private void initialise() {
         if (serialiser == null) {
           serialiser = new CSVWriter(string = new StringWriter(size * RECORD_TYPICAL_SIZE), FIELD_DELIM, CSVWriter.NO_QUOTE_CHARACTER,
-              FIELD_ESCAPE, RECORD_DELIM);
+            FIELD_ESCAPE, RECORD_DELIM);
         }
       }
 
       @Override
       public void add(Record record) {
         initialise();
-        serialiser.writeNext(new String[] { record.getMyTimestamp() == null ? "" : FIELD_DATE.format(new Date(record.getMyTimestamp())),
-            "" + record.getMyInteger(), "" + record.getMyDouble(), "" + record.getMyBoolean(), "" + record.getMyString() });
+        serialiser.writeNext(new String[]{record.getMyTimestamp() == null ? "" : FIELD_DATE.format(new Date(record.getMyTimestamp())),
+          "" + record.getMyInteger(), "" + record.getMyDouble(), "" + record.getMyBoolean(), "" + record.getMyString()});
       }
 
       @Override

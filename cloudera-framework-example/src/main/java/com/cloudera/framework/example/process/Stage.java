@@ -4,6 +4,13 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
+import com.cloudera.framework.common.Driver;
+import com.cloudera.framework.common.util.DfsUtil;
+import com.cloudera.framework.example.Constants;
+import com.cloudera.framework.example.model.RecordCounter;
+import com.cloudera.framework.example.model.RecordKey;
+import com.cloudera.framework.example.model.RecordPartition;
+import com.cloudera.framework.example.model.input.RecordTextCombineInputFormat;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -20,14 +27,6 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cloudera.framework.common.Driver;
-import com.cloudera.framework.common.util.DfsUtil;
-import com.cloudera.framework.example.Constants;
-import com.cloudera.framework.example.model.RecordCounter;
-import com.cloudera.framework.example.model.RecordKey;
-import com.cloudera.framework.example.model.RecordPartition;
-import com.cloudera.framework.example.model.input.RecordTextCombineInputFormat;
-
 /**
  * Stage driver, take a set of text files with a known naming scheme and stage
  * their records into a consolidated ingest partitioned staging set, written as
@@ -39,8 +38,8 @@ import com.cloudera.framework.example.model.input.RecordTextCombineInputFormat;
  */
 public class Stage extends Driver {
 
-  public static final RecordCounter[] COUNTERS = new RecordCounter[] { RecordCounter.FILES, RecordCounter.FILES_CANONICAL,
-      RecordCounter.FILES_DUPLICATE, RecordCounter.FILES_MALFORMED };
+  public static final RecordCounter[] COUNTERS = new RecordCounter[]{RecordCounter.FILES, RecordCounter.FILES_CANONICAL,
+    RecordCounter.FILES_DUPLICATE, RecordCounter.FILES_MALFORMED};
 
   protected static final String OUTPUT_TEXT = "text";
   protected static final String OUTPUT_SEQUENCE = "sequence";
@@ -61,6 +60,10 @@ public class Stage extends Driver {
     super(confguration);
   }
 
+  public static void main(String... arguments) throws Exception {
+    System.exit(new Stage().runner(arguments));
+  }
+
   @Override
   public String description() {
     return "Stage my dataset";
@@ -68,20 +71,12 @@ public class Stage extends Driver {
 
   @Override
   public String[] options() {
-    return new String[] {};
+    return new String[]{};
   }
 
   @Override
   public String[] parameters() {
-    return new String[] { "input-path", "output-path" };
-  }
-
-  @Override
-  public void reset() {
-    super.reset();
-    for (RecordCounter counter : COUNTERS) {
-      incrementCounter(Stage.class.getCanonicalName(), counter, 0);
-    }
+    return new String[]{"input-path", "output-path"};
   }
 
   @Override
@@ -134,6 +129,14 @@ public class Stage extends Driver {
     return jobSuccess ? RETURN_SUCCESS : RETURN_FAILURE_RUNTIME;
   }
 
+  @Override
+  public void reset() {
+    super.reset();
+    for (RecordCounter counter : COUNTERS) {
+      incrementCounter(Stage.class.getCanonicalName(), counter, 0);
+    }
+  }
+
   /**
    * Mapper.<br>
    * <br>
@@ -143,11 +146,11 @@ public class Stage extends Driver {
   private static class Mapper extends org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, Text> {
 
     private final String PARTITION_BATCH_START = Path.SEPARATOR_CHAR + RecordPartition.BATCH_COL_ID_START_FINISH[0] + "="
-        + UUID.randomUUID() + Path.SEPARATOR_CHAR + RecordPartition.BATCH_COL_ID_START_FINISH[1] + "=";
+      + UUID.randomUUID() + Path.SEPARATOR_CHAR + RecordPartition.BATCH_COL_ID_START_FINISH[1] + "=";
     private final String PARTITION_FINISH = Path.SEPARATOR_CHAR + RecordPartition.BATCH_COL_ID_START_FINISH[2] + "=";
     private final String PARTITION_PATH_SUFFIX = Constants.DIR_ABS_MYDS;
     private final String PARTITION_PATH_PREFIX = Constants.DIR_REL_MYDS_CANONICAL + Path.SEPARATOR_CHAR + OUTPUT_SEQUENCE
-        + Path.SEPARATOR_CHAR;
+      + Path.SEPARATOR_CHAR;
     private final String MALFORMED_PATH_PREFIX = Constants.DIR_REL_MYDS_MALFORMED + Path.SEPARATOR_CHAR;
 
     private final String timestamp = "" + System.currentTimeMillis();
@@ -157,38 +160,34 @@ public class Stage extends Driver {
 
     @Override
     protected void setup(org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, Text>.Context context)
-        throws IOException, InterruptedException {
+      throws IOException, InterruptedException {
       multipleOutputs = new MultipleOutputs<>(context);
     }
 
     @Override
-    protected void cleanup(org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, Text>.Context context)
-        throws IOException, InterruptedException {
-      multipleOutputs.close();
-    }
-
-    @Override
     protected void map(RecordKey key, Text value, org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, Text>.Context context)
-        throws IOException, InterruptedException {
+      throws IOException, InterruptedException {
       string.setLength(0);
       context.getCounter(RecordCounter.FILES).increment(1);
       if (key.isValid()) {
         context.getCounter(RecordCounter.FILES_CANONICAL).increment(1);
         multipleOutputs.write(OUTPUT_SEQUENCE, key, value,
-            string.append(PARTITION_PATH_PREFIX).append(key.getType()).append(Path.SEPARATOR_CHAR).append(key.getCodec())
-                .append(PARTITION_BATCH_START).append(timestamp).append(PARTITION_FINISH).append(timestamp).append(PARTITION_PATH_SUFFIX)
-                .toString());
+          string.append(PARTITION_PATH_PREFIX).append(key.getType()).append(Path.SEPARATOR_CHAR).append(key.getCodec())
+            .append(PARTITION_BATCH_START).append(timestamp).append(PARTITION_FINISH).append(timestamp).append(PARTITION_PATH_SUFFIX)
+            .toString());
       } else {
         context.getCounter(RecordCounter.FILES_MALFORMED).increment(1);
         multipleOutputs.write(OUTPUT_TEXT, NullWritable.get(), value,
-            string.append(MALFORMED_PATH_PREFIX).append(key.getBatch()).toString());
+          string.append(MALFORMED_PATH_PREFIX).append(key.getBatch()).toString());
       }
     }
 
-  }
+    @Override
+    protected void cleanup(org.apache.hadoop.mapreduce.Mapper<RecordKey, Text, RecordKey, Text>.Context context)
+      throws IOException, InterruptedException {
+      multipleOutputs.close();
+    }
 
-  public static void main(String... arguments) throws Exception {
-    System.exit(new Stage().runner(arguments));
   }
 
 }

@@ -1,11 +1,10 @@
 package com.cloudera.framework.testing.server.test;
 
-import org.junit.ClassRule;
-import org.junit.runner.RunWith;
-
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.MrServer;
+import org.junit.ClassRule;
+import org.junit.runner.RunWith;
 
 @RunWith(TestRunner.class)
 public class TestMrServerCluster extends TestMrServer {

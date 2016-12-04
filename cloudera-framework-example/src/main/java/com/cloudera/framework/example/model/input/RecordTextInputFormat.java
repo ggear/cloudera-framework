@@ -2,6 +2,8 @@ package com.cloudera.framework.example.model.input;
 
 import java.io.IOException;
 
+import com.cloudera.framework.example.model.RecordKey;
+import com.cloudera.framework.example.model.input.RecordTextCombineInputFormat.RecordReaderText;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputFormat;
@@ -10,9 +12,6 @@ import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-
-import com.cloudera.framework.example.model.RecordKey;
-import com.cloudera.framework.example.model.input.RecordTextCombineInputFormat.RecordReaderText;
 
 /**
  * An {@link InputFormat} to act on text files, forming the {@link RecordKey

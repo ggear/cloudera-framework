@@ -3,16 +3,15 @@ package com.cloudera.framework.example.model.input;
 import java.io.IOException;
 import java.rmi.server.UID;
 
+import com.cloudera.framework.example.model.Record;
+import com.cloudera.framework.example.model.RecordKey;
+import com.cloudera.framework.example.model.serde.RecordStringSerDe;
+import com.cloudera.framework.example.model.serde.RecordStringSerDe.RecordStringDe;
 import org.apache.hadoop.hive.serde2.avro.AvroGenericRecordWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-
-import com.cloudera.framework.example.model.Record;
-import com.cloudera.framework.example.model.RecordKey;
-import com.cloudera.framework.example.model.serde.RecordStringSerDe;
-import com.cloudera.framework.example.model.serde.RecordStringSerDe.RecordStringDe;
 
 /**
  * A paramaterised {@link RecordReader} that can take in {@link Text} and form
@@ -21,16 +20,11 @@ import com.cloudera.framework.example.model.serde.RecordStringSerDe.RecordString
  */
 public abstract class RecordTextReader extends RecordReader<RecordKey, AvroGenericRecordWritable> {
 
-  public abstract RecordReader<RecordKey, Text> getRecordReader(InputSplit split, TaskAttemptContext context, Integer index)
-      throws IOException;
-
-  public abstract RecordStringSerDe getRecordStringSerDe() throws IOException;
-
   private Record record = new Record();
-  private RecordKey recordKey = new RecordKey();;
+  private RecordKey recordKey = new RecordKey();
   private AvroGenericRecordWritable recordWriteable = new AvroGenericRecordWritable(record);
   private UID recordReaderID = new UID();
-
+  ;
   private RecordKey recordsKey;
   private RecordStringDe recordStringDe;
   private RecordReader<RecordKey, Text> recordReader;
@@ -46,6 +40,11 @@ public abstract class RecordTextReader extends RecordReader<RecordKey, AvroGener
   public RecordTextReader(InputSplit split, TaskAttemptContext context, Integer index) throws IOException {
     recordReader = getRecordReader(split, context, index);
   }
+
+  public abstract RecordReader<RecordKey, Text> getRecordReader(InputSplit split, TaskAttemptContext context, Integer index)
+    throws IOException;
+
+  public abstract RecordStringSerDe getRecordStringSerDe() throws IOException;
 
   @Override
   public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {

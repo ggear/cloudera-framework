@@ -17,8 +17,7 @@ public class MrUtil {
   /**
    * Get the codec string associated with this <code>configuration</code>
    *
-   * @param configuration
-   *          the {@link Configuration}
+   * @param configuration the {@link Configuration}
    * @return the codec {@link String}
    */
   public static String getCodecString(Configuration configuration) {

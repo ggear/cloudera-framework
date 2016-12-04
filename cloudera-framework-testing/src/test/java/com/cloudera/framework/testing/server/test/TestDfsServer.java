@@ -16,32 +16,60 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.hadoop.fs.Path;
-import org.junit.Test;
-
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.google.common.collect.ImmutableMap;
+import org.apache.hadoop.fs.Path;
+import org.junit.Test;
 
 public abstract class TestDfsServer implements TestConstants {
 
-  public abstract DfsServer getDfsServer();
-
   public static final String COUNTER_GROUP = TestDfsServer.class.getCanonicalName();
+  public static final TestMetaData testMetaData1 = TestMetaData.getInstance() //
+    .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)));
+  public static final TestMetaData testMetaData2 = TestMetaData.getInstance() //
+    .parameters(Collections.EMPTY_MAP) //
+    .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)));
+  private static final String DIR_SOURCE = REL_DIR_CLASSES_TEST + "/data";
+  private static final String DIR_DESTINATION = "/tmp/data";
+  public static final TestMetaData testMetaData3 = TestMetaData.getInstance() //
+    .dataSetSourceDirs(DIR_SOURCE) //
+    .dataSetDestinationDirs(DIR_DESTINATION) //
+    .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 4L)));
+  public static final TestMetaData testMetaData4 = TestMetaData.getInstance() //
+    .dataSetSourceDirs(DIR_SOURCE) //
+    .dataSetNames("dataset-1") //
+    .dataSetDestinationDirs(DIR_DESTINATION) //
+    .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)));
+  public static final TestMetaData testMetaData5 = TestMetaData.getInstance() //
+    .dataSetSourceDirs(DIR_SOURCE) //
+    .dataSetNames("dataset-1") //
+    .dataSetSubsets(new String[][]{{"dataset-1-sub-1"}}) //
+    .dataSetDestinationDirs(DIR_DESTINATION) //
+    .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)));
+  public static final TestMetaData testMetaData6 = TestMetaData.getInstance() //
+    .dataSetSourceDirs(DIR_SOURCE) //
+    .dataSetNames("dataset-1") //
+    .dataSetSubsets(new String[][]{{"dataset-1-sub-1"}}) //
+    .dataSetLabels(new String[][][]{{{"dataset-1-sub-1-sub-1"},}}) //
+    .dataSetDestinationDirs(DIR_DESTINATION) //
+    .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)));
+  public static final TestMetaData testMetaData7 = TestMetaData.getInstance() //
+    .dataSetSourceDirs(DIR_SOURCE, DIR_SOURCE) //
+    .dataSetNames("dataset-1", "dataset-1") //
+    .dataSetSubsets(new String[][]{{"dataset-1-sub-1"}, {"dataset-1-sub-1"}}) //
+    .dataSetLabels(new String[][][]{{{"dataset-1-sub-1-sub-1"}}, {{"dataset-1-sub-1-sub-1"}}}) //
+    .dataSetDestinationDirs(DIR_DESTINATION + "/one", DIR_DESTINATION + "/two") //
+    .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 4L)));
 
-  public enum Counter {
-    COUNTER1, COUNTER2, COUNTER3, COUNTER4
-  }
+  public abstract DfsServer getDfsServer();
 
   @Test
   public void testGetDfsServer() {
     assertNotNull(getDfsServer());
     assertTrue(getDfsServer().isStarted());
   }
-
-  private static final String DIR_SOURCE = REL_DIR_CLASSES_TEST + "/data";
-  private static final String DIR_DESTINATION = "/tmp/data";
 
   /**
    * Test DFS mkdir and file touch
@@ -99,9 +127,9 @@ public abstract class TestDfsServer implements TestConstants {
   @Test
   public void testDfsGetPathUri() throws Exception {
     String regexScheme = getDfsServer().getRuntime().equals(DfsServer.Runtime.LOCAL_FS) ? "file:/.*" + DIR_DFS_LOCAL
-        : "hdfs://localhost:[0-9]+";
+      : "hdfs://localhost:[0-9]+";
     String regexSchemeRoot = getDfsServer().getRuntime().equals(DfsServer.Runtime.LOCAL_FS) ? "file:/.*" + DIR_DFS_LOCAL
-        : "hdfs://localhost:[0-9]+/";
+      : "hdfs://localhost:[0-9]+/";
     assertTrue(getDfsServer().getPathUri("").matches(regexSchemeRoot));
     assertTrue(getDfsServer().getPathUri("/").matches(regexSchemeRoot));
     assertTrue(getDfsServer().getPathUri("//").matches(regexSchemeRoot));
@@ -128,7 +156,7 @@ public abstract class TestDfsServer implements TestConstants {
     getDfsServer().copyFromLocalFile(DIR_SOURCE + "/dataset-2", DIR_DESTINATION);
     assertEquals(12, getDfsServer().listFilesDfs(DIR_DESTINATION).length);
     getDfsServer().copyFromLocalFile(DIR_SOURCE + "/dataset-3//dataset-3-sub-1/dataset-3-sub-1-sub-1/data",
-        DIR_DESTINATION + "/dataset-3/dataset-3-sub-1/dataset-3-sub-1-sub-1");
+      DIR_DESTINATION + "/dataset-3/dataset-3-sub-1/dataset-3-sub-1-sub-1");
     assertEquals(13, getDfsServer().listFilesDfs(DIR_DESTINATION).length);
   }
 
@@ -173,15 +201,15 @@ public abstract class TestDfsServer implements TestConstants {
     assertEquals(3, files.size());
     for (String dataset : files.keySet()) {
       assertArrayEquals(getDfsServer().copyFromLocalDir(DIR_SOURCE, DIR_DESTINATION, dataset),
-          DfsServer.listFilesLocal(DIR_SOURCE, dataset));
+        DfsServer.listFilesLocal(DIR_SOURCE, dataset));
       for (String subset : files.get(dataset).keySet()) {
         assertArrayEquals(getDfsServer().copyFromLocalDir(DIR_SOURCE, DIR_DESTINATION, dataset, subset),
-            DfsServer.listFilesLocal(DIR_SOURCE, dataset, subset));
+          DfsServer.listFilesLocal(DIR_SOURCE, dataset, subset));
         for (String label : files.get(dataset).get(subset).keySet()) {
           assertArrayEquals(getDfsServer().copyFromLocalDir(DIR_SOURCE, DIR_DESTINATION, dataset, subset, label),
-              DfsServer.listFilesLocal(DIR_SOURCE, dataset, subset, label));
+            DfsServer.listFilesLocal(DIR_SOURCE, dataset, subset, label));
           assertEquals(files.get(dataset).get(subset).get(label),
-              DfsServer.mapFilesLocal(DIR_SOURCE, dataset, subset, label).get(dataset).get(subset).get(label));
+            DfsServer.mapFilesLocal(DIR_SOURCE, dataset, subset, label).get(dataset).get(subset).get(label));
         }
       }
     }
@@ -190,79 +218,48 @@ public abstract class TestDfsServer implements TestConstants {
   @Test
   public void testAssertCounterEqualsLessThanGreaterThan() {
     assertCounterEquals(
-        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
-            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
-        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
-            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)));
+      ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
+        COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
+      ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
+        COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)));
     assertCounterLessThan(
-        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
-            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
-        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L, Counter.COUNTER3, 2L),
-            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L)));
+      ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
+        COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
+      ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L, Counter.COUNTER3, 2L),
+        COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 0L, Counter.COUNTER2, 1L)));
     assertCounterGreaterThan(
-        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
-            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
-        ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L, Counter.COUNTER3, 4L),
-            COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L)));
+      ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L, Counter.COUNTER3, 3L),
+        COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 1L, Counter.COUNTER2, 2L)),
+      ImmutableMap.of(COUNTER_GROUP + "1", ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L, Counter.COUNTER3, 4L),
+        COUNTER_GROUP + "2", ImmutableMap.of(Counter.COUNTER1, 2L, Counter.COUNTER2, 3L)));
     assertCounterEqualsLessThanGreaterThan(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)), Collections.EMPTY_MAP,
-        Collections.EMPTY_MAP, ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
+      Collections.EMPTY_MAP, ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
     assertCounterEqualsLessThanGreaterThan(Collections.EMPTY_MAP, ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)),
-        Collections.EMPTY_MAP, ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
+      Collections.EMPTY_MAP, ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
     assertCounterEqualsLessThanGreaterThan(Collections.EMPTY_MAP, Collections.EMPTY_MAP,
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)),
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
+      ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)),
+      ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
     assertCounterEqualsLessThanGreaterThan(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)),
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)),
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)),
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
+      ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)),
+      ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)),
+      ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 1L)));
   }
-
-  public static final TestMetaData testMetaData1 = TestMetaData.getInstance() //
-      .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)));
-  public static final TestMetaData testMetaData2 = TestMetaData.getInstance() //
-      .parameters(Collections.EMPTY_MAP) //
-      .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)));
-  public static final TestMetaData testMetaData3 = TestMetaData.getInstance() //
-      .dataSetSourceDirs(DIR_SOURCE) //
-      .dataSetDestinationDirs(DIR_DESTINATION) //
-      .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 4L)));
-  public static final TestMetaData testMetaData4 = TestMetaData.getInstance() //
-      .dataSetSourceDirs(DIR_SOURCE) //
-      .dataSetNames("dataset-1") //
-      .dataSetDestinationDirs(DIR_DESTINATION) //
-      .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)));
-  public static final TestMetaData testMetaData5 = TestMetaData.getInstance() //
-      .dataSetSourceDirs(DIR_SOURCE) //
-      .dataSetNames("dataset-1") //
-      .dataSetSubsets(new String[][] { { "dataset-1-sub-1" } }) //
-      .dataSetDestinationDirs(DIR_DESTINATION) //
-      .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)));
-  public static final TestMetaData testMetaData6 = TestMetaData.getInstance() //
-      .dataSetSourceDirs(DIR_SOURCE) //
-      .dataSetNames("dataset-1") //
-      .dataSetSubsets(new String[][] { { "dataset-1-sub-1" } }) //
-      .dataSetLabels(new String[][][] { { { "dataset-1-sub-1-sub-1" }, } }) //
-      .dataSetDestinationDirs(DIR_DESTINATION) //
-      .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)));
-  public static final TestMetaData testMetaData7 = TestMetaData.getInstance() //
-      .dataSetSourceDirs(DIR_SOURCE, DIR_SOURCE) //
-      .dataSetNames("dataset-1", "dataset-1") //
-      .dataSetSubsets(new String[][] { { "dataset-1-sub-1" }, { "dataset-1-sub-1" } }) //
-      .dataSetLabels(new String[][][] { { { "dataset-1-sub-1-sub-1" } }, { { "dataset-1-sub-1-sub-1" } } }) //
-      .dataSetDestinationDirs(DIR_DESTINATION + "/one", DIR_DESTINATION + "/two") //
-      .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 4L)));
 
   public void testDfs(TestMetaData testMetaData) throws Exception {
     assertNotNull(testMetaData);
     assertCounterEquals(testMetaData.getAsserts()[0],
-        ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, (long) getDfsServer().listFilesDfs("/").length)));
+      ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, (long) getDfsServer().listFilesDfs("/").length)));
   }
 
   private void assertCopyFromLocalDir(int countUpstream, int countDownstream, String sourcePath, String destinationPath,
-      String... sourceLabels) throws Exception {
+                                      String... sourceLabels) throws Exception {
     assertEquals(countUpstream, getDfsServer().listFilesDfs(destinationPath).length);
     assertTrue(getDfsServer().copyFromLocalDir(sourcePath, destinationPath, sourceLabels).length > 0);
     assertEquals(countDownstream, getDfsServer().listFilesDfs(destinationPath).length);
+  }
+
+  public enum Counter {
+    COUNTER1, COUNTER2, COUNTER3, COUNTER4
   }
 
 }

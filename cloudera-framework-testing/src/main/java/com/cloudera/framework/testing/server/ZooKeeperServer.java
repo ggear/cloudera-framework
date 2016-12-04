@@ -23,10 +23,18 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
 
   public static final int ZOOKEEPER_TICK_MS = 2000;
   public static final int ZOOKEEPER_TIMEOUT_MS = 5000;
+  private static final Logger LOG = LoggerFactory.getLogger(ZooKeeperServer.class);
 
-  public enum Runtime {
-    CLUSTER_SERVER // ZooKeeper servers, multi-threaded, heavy-weight
-  };
+  ;
+  private static ZooKeeperServer instance;
+  private int port;
+  private org.apache.zookeeper.server.ZooKeeperServer zooKeeper;
+  private NIOServerCnxnFactory factory;
+
+  private ZooKeeperServer(Runtime runtime) {
+    super(runtime);
+    port = CdhServer.getNextAvailablePort();
+  }
 
   /**
    * Get instance with default runtime
@@ -65,7 +73,7 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
     long time = log(LOG, "start");
     FileUtils.deleteDirectory(new File(ABS_DIR_ZOOKEEPER));
     zooKeeper = new org.apache.zookeeper.server.ZooKeeperServer(new File(ABS_DIR_ZOOKEEPER), new File(ABS_DIR_ZOOKEEPER),
-        ZOOKEEPER_TICK_MS);
+      ZOOKEEPER_TICK_MS);
     factory = new NIOServerCnxnFactory();
     factory.configure(new InetSocketAddress(CdhServer.SERVER_BIND_IP, port), 0);
     factory.startup(zooKeeper);
@@ -120,17 +128,8 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
     log(LOG, "stop", time);
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(ZooKeeperServer.class);
-
-  private static ZooKeeperServer instance;
-
-  private int port;
-  private org.apache.zookeeper.server.ZooKeeperServer zooKeeper;
-  private NIOServerCnxnFactory factory;
-
-  private ZooKeeperServer(Runtime runtime) {
-    super(runtime);
-    port = CdhServer.getNextAvailablePort();
+  public enum Runtime {
+    CLUSTER_SERVER // ZooKeeper servers, multi-threaded, heavy-weight
   }
 
 }

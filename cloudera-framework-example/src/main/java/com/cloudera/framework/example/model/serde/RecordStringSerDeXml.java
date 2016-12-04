@@ -15,11 +15,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
-
 import com.cloudera.framework.example.model.Record;
 import com.cloudera.framework.example.model.RecordKey;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 
 /**
  * An XML {@link RecordStringSerDe} implementation.
@@ -50,7 +49,7 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
         if (records == null && !corrupt) {
           try {
             records = ((RecordsXml) jaxbContext.createUnmarshaller()
-                .unmarshal(IOUtils.toInputStream(string.toString(), Charset.forName(Charsets.UTF_8.name())))).get();
+              .unmarshal(IOUtils.toInputStream(string.toString(), Charset.forName(Charsets.UTF_8.name())))).get();
           } catch (Exception exception) {
             corrupt = true;
           }
@@ -183,7 +182,7 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
 
     public Record get() {
       return Record.newBuilder().setMyTimestamp(my_timestamp).setMyInteger(my_integer).setMyDouble(my_double).setMyBoolean(my_boolean)
-          .setMyString(my_string).build();
+        .setMyString(my_string).build();
     }
 
   }

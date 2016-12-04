@@ -7,13 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.PythonServer;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(TestRunner.class)
 public class TestPythonServer implements TestConstants {
@@ -35,13 +34,13 @@ public class TestPythonServer implements TestConstants {
   public void testPythonRunFail() throws Exception {
     assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"), null, null, null, null, true) == 0);
     assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"),
-        Arrays.asList(new String[] { "--non-existant-param", "MY PARAMETER!" }), null, null, null, true) == 0);
+      Arrays.asList(new String[]{"--non-existant-param", "MY PARAMETER!"}), null, null, null, true) == 0);
   }
 
   @Test
   public void testPython() throws Exception {
     assertTrue(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"),
-        Arrays.asList(new String[] { "--param", "MY PARAMETER!" })) == 0);
+      Arrays.asList(new String[]{"--param", "MY PARAMETER!"})) == 0);
   }
 
   @Test

@@ -13,6 +13,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
+import com.cloudera.framework.testing.TestConstants;
+import com.cloudera.framework.testing.server.DfsServer;
+import com.cloudera.framework.testing.server.MrServer;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
@@ -26,10 +29,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.junit.Test;
-
-import com.cloudera.framework.testing.TestConstants;
-import com.cloudera.framework.testing.server.DfsServer;
-import com.cloudera.framework.testing.server.MrServer;
 
 public abstract class TestMrServer implements TestConstants {
 
@@ -55,7 +54,7 @@ public abstract class TestMrServer implements TestConstants {
     String dirOutput = "/tmp/wordcount/output";
     String fileInput = new Path(dirInput, "file1.txt").toString();
     BufferedWriter writer = new BufferedWriter(
-        new OutputStreamWriter(getDfsServer().getFileSystem().create(getDfsServer().getPath(fileInput))));
+      new OutputStreamWriter(getDfsServer().getFileSystem().create(getDfsServer().getPath(fileInput))));
     writer.write("a a a a a\n");
     writer.write("b b\n");
     writer.close();

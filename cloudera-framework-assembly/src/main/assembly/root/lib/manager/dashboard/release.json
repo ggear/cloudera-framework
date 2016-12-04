@@ -1,166 +1,166 @@
 {
-  "flexibleLayout":false,
-  "name":"Release",
-  "owner":"admin",
-  "suppressWarnings":false,
-  "userCreated":true,
-  "version":1,
-  "viewPlots":[
+  "flexibleLayout": false,
+  "name": "Release",
+  "owner": "admin",
+  "suppressWarnings": false,
+  "userCreated": true,
+  "version": 1,
+  "viewPlots": [
     {
-      "plot":{
-        "chartType":"line",
-        "description":"CPU utilisation across cluster",
-        "errorStyle":"auto",
-        "expandRange":false,
-        "facetting":"__single_plot__",
-        "height":250,
-        "hideIfNoSeries":false,
-        "interpolation":"linear",
-        "mustUseDesiredRollup":false,
-        "scale":"linear",
-        "showDescription":false,
-        "title":"Cluster CPU",
-        "titleResourceId":"message.plot.landing_page_cpu.title",
-        "tsquery":"select cpu_percent_across_hosts where category = CLUSTER",
-        "width":1000,
-        "ymax":100.0,
-        "ymin":0.0
+      "plot": {
+        "chartType": "line",
+        "description": "CPU utilisation across cluster",
+        "errorStyle": "auto",
+        "expandRange": false,
+        "facetting": "__single_plot__",
+        "height": 250,
+        "hideIfNoSeries": false,
+        "interpolation": "linear",
+        "mustUseDesiredRollup": false,
+        "scale": "linear",
+        "showDescription": false,
+        "title": "Cluster CPU",
+        "titleResourceId": "message.plot.landing_page_cpu.title",
+        "tsquery": "select cpu_percent_across_hosts where category = CLUSTER",
+        "width": 1000,
+        "ymax": 100.0,
+        "ymin": 0.0
       },
-      "position":{
-        "column":1,
-        "row":1
+      "position": {
+        "column": 1,
+        "row": 1
       }
     },
     {
-      "plot":{
-        "chartType":"stackarea",
-        "description":"HDFS IO utilisation across cluster",
-        "errorStyle":"auto",
-        "expandRange":false,
-        "facetting":"__single_plot__",
-        "height":250,
-        "hideIfNoSeries":true,
-        "interpolation":"linear",
-        "mustUseDesiredRollup":false,
-        "scale":"linear",
-        "showDescription":false,
-        "title":"Cluster HDFS",
-        "tsquery":"select total_bytes_read_rate_across_datanodes, total_bytes_written_rate_across_datanodes where category = SERVICE and serviceType = HDFS",
-        "width":1000
+      "plot": {
+        "chartType": "stackarea",
+        "description": "HDFS IO utilisation across cluster",
+        "errorStyle": "auto",
+        "expandRange": false,
+        "facetting": "__single_plot__",
+        "height": 250,
+        "hideIfNoSeries": true,
+        "interpolation": "linear",
+        "mustUseDesiredRollup": false,
+        "scale": "linear",
+        "showDescription": false,
+        "title": "Cluster HDFS",
+        "tsquery": "select total_bytes_read_rate_across_datanodes, total_bytes_written_rate_across_datanodes where category = SERVICE and serviceType = HDFS",
+        "width": 1000
       },
-      "position":{
-        "column":1,
-        "row":11
+      "position": {
+        "column": 1,
+        "row": 11
       }
     },
     {
-      "plot":{
-        "chartType":"line",
-        "description":"Cluster network utilisation across cluster",
-        "errorStyle":"auto",
-        "expandRange":false,
-        "facetting":"__single_plot__",
-        "height":250,
-        "hideIfNoSeries":false,
-        "interpolation":"linear",
-        "mustUseDesiredRollup":false,
-        "scale":"linear",
-        "showDescription":false,
-        "title":"Cluster Network",
-        "tsquery":"select total_bytes_receive_rate_across_network_interfaces, total_bytes_transmit_rate_across_network_interfaces where category = CLUSTER",
-        "width":1000
+      "plot": {
+        "chartType": "line",
+        "description": "Cluster network utilisation across cluster",
+        "errorStyle": "auto",
+        "expandRange": false,
+        "facetting": "__single_plot__",
+        "height": 250,
+        "hideIfNoSeries": false,
+        "interpolation": "linear",
+        "mustUseDesiredRollup": false,
+        "scale": "linear",
+        "showDescription": false,
+        "title": "Cluster Network",
+        "tsquery": "select total_bytes_receive_rate_across_network_interfaces, total_bytes_transmit_rate_across_network_interfaces where category = CLUSTER",
+        "width": 1000
       },
-      "position":{
-        "column":1,
-        "row":21
+      "position": {
+        "column": 1,
+        "row": 21
       }
     },
     {
-      "plot":{
-        "chartType":"line",
-        "description":"Kafka throughput across cluster",
-        "errorStyle":"auto",
-        "expandRange":false,
-        "facetting":"__single_plot__",
-        "height":250,
-        "hideIfNoSeries":false,
-        "interpolation":"linear",
-        "mustUseDesiredRollup":false,
-        "scale":"linear",
-        "showDescription":false,
-        "title":"Kafka IO",
-        "tsquery":"select total_kafka_bytes_received_rate_across_kafka_brokers where entityName RLIKE '.*KAFKA.*'",
-        "width":1000
+      "plot": {
+        "chartType": "line",
+        "description": "Kafka throughput across cluster",
+        "errorStyle": "auto",
+        "expandRange": false,
+        "facetting": "__single_plot__",
+        "height": 250,
+        "hideIfNoSeries": false,
+        "interpolation": "linear",
+        "mustUseDesiredRollup": false,
+        "scale": "linear",
+        "showDescription": false,
+        "title": "Kafka IO",
+        "tsquery": "select total_kafka_bytes_received_rate_across_kafka_brokers where entityName RLIKE '.*KAFKA.*'",
+        "width": 1000
       },
-      "position":{
-        "column":1,
-        "row":31
+      "position": {
+        "column": 1,
+        "row": 31
       }
     },
     {
-      "plot":{
-        "chartType":"stackarea",
-        "description":"YARN applications run across cluster",
-        "errorStyle":"auto",
-        "expandRange":false,
-        "facetting":"__single_plot__",
-        "height":250,
-        "hideIfNoSeries":false,
-        "interpolation":"linear",
-        "mustUseDesiredRollup":false,
-        "scale":"linear",
-        "showDescription":false,
-        "title":"YARN Applications",
-        "tsquery":"select apps_running_cumulative where category=YARN_POOL and queueName=root and serviceName RLIKE '.*YARN.*'",
-        "width":1000
+      "plot": {
+        "chartType": "stackarea",
+        "description": "YARN applications run across cluster",
+        "errorStyle": "auto",
+        "expandRange": false,
+        "facetting": "__single_plot__",
+        "height": 250,
+        "hideIfNoSeries": false,
+        "interpolation": "linear",
+        "mustUseDesiredRollup": false,
+        "scale": "linear",
+        "showDescription": false,
+        "title": "YARN Applications",
+        "tsquery": "select apps_running_cumulative where category=YARN_POOL and queueName=root and serviceName RLIKE '.*YARN.*'",
+        "width": 1000
       },
-      "position":{
-        "column":1,
-        "row":41
+      "position": {
+        "column": 1,
+        "row": 41
       }
     },
     {
-      "plot":{
-        "chartType":"stackarea",
-        "description":"YARN containers run across cluster",
-        "errorStyle":"auto",
-        "expandRange":false,
-        "facetting":"__single_plot__",
-        "height":250,
-        "hideIfNoSeries":false,
-        "interpolation":"linear",
-        "mustUseDesiredRollup":false,
-        "scale":"linear",
-        "showDescription":false,
-        "title":"YARN Containers",
-        "tsquery":"select total_containers_running_across_nodemanagers where entityName RLIKE '.*YARN.*'",
-        "width":1000
+      "plot": {
+        "chartType": "stackarea",
+        "description": "YARN containers run across cluster",
+        "errorStyle": "auto",
+        "expandRange": false,
+        "facetting": "__single_plot__",
+        "height": 250,
+        "hideIfNoSeries": false,
+        "interpolation": "linear",
+        "mustUseDesiredRollup": false,
+        "scale": "linear",
+        "showDescription": false,
+        "title": "YARN Containers",
+        "tsquery": "select total_containers_running_across_nodemanagers where entityName RLIKE '.*YARN.*'",
+        "width": 1000
       },
-      "position":{
-        "column":1,
-        "row":51
+      "position": {
+        "column": 1,
+        "row": 51
       }
     },
     {
-      "plot":{
-        "chartType":"stackarea",
-        "description":"Impala queries run across cluster",
-        "errorStyle":"auto",
-        "expandRange":true,
-        "facetting":"__single_plot__",
-        "height":250,
-        "hideIfNoSeries":true,
-        "interpolation":"linear",
-        "mustUseDesiredRollup":false,
-        "scale":"linear",
-        "showDescription":false,
-        "title":"Impala Queries",
-        "tsquery":"select total_num_queries_rate_across_impalads where category = SERVICE and serviceType = IMPALA",
-        "width":1000
+      "plot": {
+        "chartType": "stackarea",
+        "description": "Impala queries run across cluster",
+        "errorStyle": "auto",
+        "expandRange": true,
+        "facetting": "__single_plot__",
+        "height": 250,
+        "hideIfNoSeries": true,
+        "interpolation": "linear",
+        "mustUseDesiredRollup": false,
+        "scale": "linear",
+        "showDescription": false,
+        "title": "Impala Queries",
+        "tsquery": "select total_num_queries_rate_across_impalads where category = SERVICE and serviceType = IMPALA",
+        "width": 1000
       },
-      "position":{
-        "column":1,
-        "row":61
+      "position": {
+        "column": 1,
+        "row": 61
       }
     }
   ]

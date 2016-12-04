@@ -2,6 +2,10 @@ package com.cloudera.framework.example.model.input;
 
 import java.io.IOException;
 
+import com.cloudera.framework.example.model.Record;
+import com.cloudera.framework.example.model.RecordFactory;
+import com.cloudera.framework.example.model.RecordKey;
+import com.cloudera.framework.example.model.serde.RecordStringSerDe;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.serde2.avro.AvroGenericRecordWritable;
 import org.apache.hadoop.io.Text;
@@ -11,11 +15,6 @@ import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-
-import com.cloudera.framework.example.model.Record;
-import com.cloudera.framework.example.model.RecordFactory;
-import com.cloudera.framework.example.model.RecordKey;
-import com.cloudera.framework.example.model.serde.RecordStringSerDe;
 
 /**
  * An {@link InputFormat} to act on text files of {@link RecordKey RecordKeys}
@@ -31,7 +30,7 @@ public class RecordTextInputFormatXml extends FileInputFormat<RecordKey, AvroGen
 
   @Override
   public RecordReader<RecordKey, AvroGenericRecordWritable> createRecordReader(InputSplit split, TaskAttemptContext context)
-      throws IOException {
+    throws IOException {
     return new RecordReaderTextXml(split, context);
   }
 
