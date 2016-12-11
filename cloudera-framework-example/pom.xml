@@ -107,9 +107,9 @@
                             <source>
                                 import org.apache.commons.lang.StringUtils
 
-                                project.properties["parcel.name"] =    \
-								   StringUtils.upperCase(project.artifactId).replaceAll('-', '_') \
-								   + "-" + project.version
+                                project.properties["parcel.name"] =     \
+								    StringUtils.upperCase(project.artifactId).replaceAll('-', '_') \
+								    + "-" + project.version
                             </source>
                         </configuration>
                     </execution>
