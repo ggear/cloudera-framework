@@ -96,7 +96,7 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
     throws InterruptedException {
     boolean created = true;
     try {
-      AdminUtils.createTopic(getZooKeeperUtils(), topic, partitions, replicationFactor, properties);
+      AdminUtils.createTopic(getZooKeeperUtils(), topic, partitions, replicationFactor, properties, AdminUtils.createTopic$default$6());
     } catch (TopicExistsException topicExistsException) {
       created = false;
     }

@@ -75,14 +75,14 @@ core client bill-of-materials and test harness is seen below:
 		<dependency>
 			<groupId>com.cloudera.framework.library.client</groupId>
 			<artifactId>cloudera-framework-library-client-core</artifactId>
-			<version>1.5.1-cdh5.9.0</version>
+			<version>1.5.1-cdh5.10.0</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cloudera.framework</groupId>
 			<artifactId>cloudera-framework-testing</artifactId>
-			<version>1.5.1-cdh5.9.0</version>
+			<version>1.5.1-cdh5.10.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -98,7 +98,7 @@ up a simple, bare bones project for new cloudera-framework clients as so:
 ```bash
 # Change the following variables to appropriate values for the target environment
 export CF_VERSION=1.5.1
-export CDH_VERSION=5.9.0
+export CDH_VERSION=5.10.0
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate \
   -DarchetypeRepository=http://52.63.86.162/artifactory/libs-release-local \
@@ -120,9 +120,9 @@ To perform a release:
 ```bash
 # Change the following variables to appropriate values for the target environment
 export CF_VERSION_RELEASE=1.5.1
-export CDH_VERSION_RELEASE=5.9.0
+export CDH_VERSION_RELEASE=5.10.0
 export CF_VERSION_HEAD=1.5.1
-export CDH_VERSION_HEAD=5.10.0
+export CDH_VERSION_HEAD=5.10.1
 rm -rf ~/.m2/repository/com/cloudera/parcel/cloudera-* ~/.m2/repository/com/cloudera/cloudera-parcel ~/.m2/repository/com/cloudera/*framework*
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:perform -PPKG
