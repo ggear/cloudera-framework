@@ -23,7 +23,7 @@
                         <id>package-tar</id>
                         <phase>verify</phase>
                         <goals>
-                            <goal>attached</goal>
+                            <goal>single</goal>
                         </goals>
                         <configuration>
                             <descriptors>

@@ -144,9 +144,7 @@
                             <source>
                                 import org.apache.commons.lang.StringUtils
 
-                                project.properties["parcel.name"] =     \
-								    StringUtils.upperCase(project.artifactId).replaceAll('-', '_') \
-								    + "-" + project.version
+                                project.properties["parcel.name"] = StringUtils.upperCase(project.artifactId).replaceAll('-', '_') + "-" + project.version
                             </source>
                         </configuration>
                     </execution>
@@ -187,9 +185,7 @@
                                     <artifactId>\${artifactId}</artifactId>
                                     <version>\${version}</version>
                                     <classifier>el7</classifier>
-                                    <distributionRepositoryUrl>
-                                        scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/\${artifactId}/parcels
-                                    </distributionRepositoryUrl>
+                                    <distributionRepositoryUrl>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/\${artifactId}/parcels</distributionRepositoryUrl>
                                 </parcel>
                             </parcels>
                         </configuration>
@@ -207,9 +203,7 @@
                                     <artifactId>\${artifactId}</artifactId>
                                     <version>\${version}</version>
                                     <classifier>el7</classifier>
-                                    <distributionRepositoryUrl>
-                                        scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/\${artifactId}/parcels
-                                    </distributionRepositoryUrl>
+                                    <distributionRepositoryUrl>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/\${artifactId}/parcels</distributionRepositoryUrl>
                                 </parcel>
                             </parcels>
                         </configuration>
@@ -225,7 +219,7 @@
                         <id>package-tar</id>
                         <phase>verify</phase>
                         <goals>
-                            <goal>attached</goal>
+                            <goal>single</goal>
                         </goals>
                         <configuration>
                             <descriptors>

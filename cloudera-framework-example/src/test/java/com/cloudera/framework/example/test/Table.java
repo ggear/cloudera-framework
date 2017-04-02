@@ -40,14 +40,11 @@ import org.apache.hadoop.hive.serde2.RegexSerDe;
 import org.apache.hadoop.hive.serde2.avro.AvroSerDe;
 import org.apache.hadoop.mapred.TextInputFormat;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 /**
  * Test dataset tables
  */
-// TODO: Remove until I can resolve the issues with CDH5.9.0 and this test
-@Ignore
 @RunWith(TestRunner.class)
 public class Table extends TestBase {
 
@@ -59,8 +56,10 @@ public class Table extends TestBase {
 
   @ClassRule
   public static PythonServer pythonServer = PythonServer.getInstance();
+
   private static String MODEL_AVRO = new Scanner(Table.class.getResourceAsStream(Constants.MODEL_AVRO_FILE), Charsets.UTF_8.name())
     .useDelimiter("\\A").next();
+
   public final TestMetaData testMetaDataAll = super.testMetaDataAll //
     .parameters( //
       ImmutableMap.builder(). //

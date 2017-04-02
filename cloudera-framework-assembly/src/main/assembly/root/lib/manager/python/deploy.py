@@ -28,17 +28,17 @@ Options:
                                          Defaults to not defined
 '''
 
+import logging
+
 import getopt
 import glob
 import inspect
-import logging
 import os
 import re
 import subprocess
 import sys
 import textwrap
 import time
-
 from cm_api.api_client import ApiResource
 
 LOG = logging.getLogger(__name__)

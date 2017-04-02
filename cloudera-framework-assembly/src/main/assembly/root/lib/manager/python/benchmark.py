@@ -30,11 +30,12 @@ Options:
                                          Required, defaults to None
 '''
 
+import json
+import logging
+
 import datetime
 import getopt
 import inspect
-import json
-import logging
 import requests
 import sys
 import textwrap

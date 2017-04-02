@@ -41,10 +41,13 @@ public class Stream extends TestBase {
   private static final String KEY_FLUME_OUTPUT_DIR = "outputDir";
   private static final String KEY_FLUME_PROCESS_ITERATIONS = "iterations";
   private static final String KEY_FLUME_PROCESS_FILE_COUNT = "fileCount";
+
   @ClassRule
   public static DfsServer dfsServer = DfsServer.getInstance();
+
   @ClassRule
   public static FlumeServer flumeServer = FlumeServer.getInstance();
+
   public final TestMetaData testMetaDataCsvBatch = TestMetaData.getInstance() //
     .parameters( //
       ImmutableMap.of( //

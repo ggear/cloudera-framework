@@ -96,15 +96,15 @@
         <cdh-kudu.version>1.1.0-1.kudu1.1.0.p0.5</cdh-kudu.version>
 
         <snappy.version>1.1.1.7</snappy.version>
-        <elephantbird.version>4.9</elephantbird.version>
+        <elephantbird.version>4.15</elephantbird.version>
         <jasper.version>5.5.23</jasper.version>
-        <opencsv.version>2.3</opencsv.version>
+        <opencsv.version>2.4</opencsv.version>
         <slf4j.version>1.7.5</slf4j.version>
         <sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
         <zohhak.version>1.1.1</zohhak.version>
         <junit.version>4.12</junit.version>
 
-        <parcel-plugin.version>0.7.7</parcel-plugin.version>
+        <parcel-plugin.version>0.7.8</parcel-plugin.version>
 
         <java.version>1.7</java.version>
         <scala.version>2.10</scala.version>
@@ -189,7 +189,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.5.0</version>
+                    <version>1.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -199,12 +199,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-archetype-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -214,7 +214,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.6.1</version>
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
@@ -223,7 +223,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.10</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -248,7 +248,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.11</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -261,12 +261,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.0.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -281,7 +281,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.4</version>
+                    <version>3.5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

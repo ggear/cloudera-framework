@@ -45,7 +45,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   public static final String HS2_BINARY_MODE = "binary";
 
-  ;
   public static final String HS2_HTTP_MODE = "http";
   private static final String DIR_HOME = "usr/hive";
   private static final String DIR_SCRATCH = "scratch";

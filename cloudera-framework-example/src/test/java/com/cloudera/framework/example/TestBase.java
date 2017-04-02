@@ -123,10 +123,10 @@ public abstract class TestBase implements Constants, TestConstants {
       ImmutableMap.of( //
         com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
         ImmutableMap.of( //
-          RecordCounter.FILES, 93L, //
+          RecordCounter.FILES, 89L, //
           RecordCounter.FILES_CANONICAL, 56L, //
           RecordCounter.FILES_DUPLICATE, 0L, //
-          RecordCounter.FILES_MALFORMED, 37L //
+          RecordCounter.FILES_MALFORMED, 33L //
         ), //
         com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
         ImmutableMap.of(//
