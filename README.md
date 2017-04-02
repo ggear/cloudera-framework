@@ -1,6 +1,10 @@
 #Cloudera Framework
 
-Provide an example organisation wide Cloudera (i.e. Hadoop ecosystem) project framework, defining corporate standards on runtime components, datasets, libraries, testing and project structure to facilitate operating with a continuous deployment pipeline. This example includes [client](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-client), [runtime](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-runtime), [thirdparty](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-thirdparty) bill-of-materials, [utlitiy](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common) libraries, [driver](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common/Driver.java) and a unit test [harness](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/main/java/com/cloudera/framework/testing) with [examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/test/java/com/cloudera/framework/testing/server), providing full coverage against CDH, including:
+Provide an example organisation wide Cloudera (i.e. Hadoop ecosystem) project framework, 
+defining corporate standards on runtime components, datasets, libraries, testing and project 
+structure to facilitate operating with a continuous deployment pipeline. This example includes 
+[client](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-client), [runtime](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-runtime), [thirdparty](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-thirdparty) bill-of-materials, [utlitiy](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common) libraries, [driver](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common/Driver.java) and a unit test [harness](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/main/java/com/cloudera/framework/testing) with [examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/test/java/com/cloudera/framework/testing/server), 
+providing full coverage against CDH, including:
 
 * HDFS
 * YARN
@@ -12,9 +16,13 @@ Provide an example organisation wide Cloudera (i.e. Hadoop ecosystem) project fr
 * Flume
 * Kafka
 
-An [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) is also included, codifying the standards, providing an end to end data [streaming](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/stream), [ingest](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/ingest), [modeling](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/model), [testing](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/java/com/cloudera/framework/example) and synthetic [datasets](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/resources/data/mydataset) to exercise the codebase.
+An [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
+is also included, codifying the standards, providing an end to end data 
+[streaming](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/stream), [ingest](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/ingest), [modeling](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/model), [testing](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/java/com/cloudera/framework/example) and synthetic [datasets](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/resources/data/mydataset) 
+to exercise the codebase.
 
-Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) is also included to provide a bare bones starter client module.
+Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) 
+is also included to provide a bare bones starter client module.
 
 ##Requirements
 
@@ -33,7 +41,11 @@ To run the unit and integrations tests, binaries and meta-data are provided for 
 
 Some CDH components have additional coverage on other platforms and versions.
 
-Note that in addition to Maven dependencies, Cloudera [parcels](http://www.cloudera.com/documentation/enterprise/latest/topics/cm_ig_parcels.html) are used to manage platform dependent binaries. This project depends on the [cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/tree/master/cloudera-parcel-plugin) to help manage its parcel dependencies.
+Note that in addition to Maven dependencies, Cloudera 
+[parcels](http://www.cloudera.com/documentation/enterprise/latest/topics/cm_ig_parcels.html) 
+are used to manage platform dependent binaries. This project depends on the 
+[cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/tree/master/cloudera-parcel-plugin) 
+to help manage its parcel dependencies.
 
 ##Install
 
@@ -45,7 +57,8 @@ cd cloudera-framework
 mvn install
 ```
 
-Alternatively, the module can be included as a binary dependency in maven, an example of pulling in the core client bill-of-materials and test harness is seen below:
+Alternatively, the module can be included as a binary dependency in maven, an example of pulling in the 
+core client bill-of-materials and test harness is seen below:
 
 ```xml
 	<repositories>
@@ -62,14 +75,14 @@ Alternatively, the module can be included as a binary dependency in maven, an ex
 		<dependency>
 			<groupId>com.cloudera.framework.library.client</groupId>
 			<artifactId>cloudera-framework-library-client-core</artifactId>
-			<version>1.5.0-cdh5.9.0</version>
+			<version>1.5.1-cdh5.9.0</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cloudera.framework</groupId>
 			<artifactId>cloudera-framework-testing</artifactId>
-			<version>1.5.0-cdh5.9.0</version>
+			<version>1.5.1-cdh5.9.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -77,11 +90,14 @@ Alternatively, the module can be included as a binary dependency in maven, an ex
 
 ##Usage
 
-The cloudera-framework includes an [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) module which exercises the entire codebase. In addition, an archetype is available allowing you to stand up a simple, bare bones project for new cloudera-framework clients as so:
+The cloudera-framework includes an 
+[example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
+module which exercises the entire codebase. In addition, an archetype is available allowing one to stand 
+up a simple, bare bones project for new cloudera-framework clients as so:
 
 ```bash
-# Change the following variables to appropriate values for your target environment
-export CF_VERSION=1.5.0
+# Change the following variables to appropriate values for the target environment
+export CF_VERSION=1.5.1
 export CDH_VERSION=5.9.0
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate \
@@ -102,11 +118,11 @@ mvn -Declipse.workspace=$ECLIPSE_WORKSPACE eclipse:configure-workspace eclipse:e
 To perform a release:
 
 ```bash
-# Change the following variables to appropriate values for your target environment
-export CF_VERSION_RELEASE=1.5.0
+# Change the following variables to appropriate values for the target environment
+export CF_VERSION_RELEASE=1.5.1
 export CDH_VERSION_RELEASE=5.9.0
 export CF_VERSION_HEAD=1.5.1
-export CDH_VERSION_HEAD=5.9.0
+export CDH_VERSION_HEAD=5.10.0
 rm -rf ~/.m2/repository/com/cloudera/parcel/cloudera-* ~/.m2/repository/com/cloudera/cloudera-parcel ~/.m2/repository/com/cloudera/*framework*
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:perform -PPKG
