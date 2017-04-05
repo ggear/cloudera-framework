@@ -28,13 +28,14 @@ is also included to provide a bare bones starter client module.
 
 To compile, build and package from source, this project requires:
 
-* JDK 1.7
+* Java 8
+* Scala 2.10
 * Python 2.7
 * Maven 3
 
 To run the unit and integrations tests, binaries and meta-data are provided for all CDH componnents:
 
-* OS-X 10.11.x
+* OS-X 10.12.x
 * CentOS/RHEL 6.x
 * CentOS/RHEL 7.x
 * Ubuntu LTS 14.04.x
