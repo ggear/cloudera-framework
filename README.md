@@ -1,4 +1,4 @@
-#Cloudera Framework
+# Cloudera Framework
 
 Provide an example organisation wide Cloudera (i.e. Hadoop ecosystem) project framework, 
 defining corporate standards on runtime components, datasets, libraries, testing and project 
@@ -24,7 +24,7 @@ to exercise the codebase.
 Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) 
 is also included to provide a bare bones starter client module.
 
-##Requirements
+## Requirements
 
 To compile, build and package from source, this project requires:
 
@@ -47,7 +47,7 @@ are used to manage platform dependent binaries. This project depends on the
 [cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/tree/master/cloudera-parcel-plugin) 
 to help manage its parcel dependencies.
 
-##Install
+## Install
 
 This project can be installed to a local repository as per:
 
@@ -88,7 +88,7 @@ core client bill-of-materials and test harness is seen below:
 	</dependencies>
 ```
 
-##Usage
+## Usage
 
 The cloudera-framework includes an 
 [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
@@ -113,7 +113,7 @@ cd my-cloudera-project
 mvn -Declipse.workspace=$ECLIPSE_WORKSPACE eclipse:configure-workspace eclipse:eclipse clean install
 ```
 
-##Release
+## Release
 
 To perform a release:
 
