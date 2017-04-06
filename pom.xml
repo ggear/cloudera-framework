@@ -254,6 +254,7 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.5.3</version>
                     <configuration>
+                        <arguments>-Dmaven.javadoc.skip=true</arguments>
                         <preparationGoals>clean install</preparationGoals>
                     </configuration>
                 </plugin>
