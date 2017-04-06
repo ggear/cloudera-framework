@@ -35,7 +35,7 @@ To compile, build and package from source, this project requires:
 
 To run the unit and integrations tests, binaries and meta-data are provided for all CDH componnents:
 
-* OS-X 10.12.x
+* MacOS 10.12.x
 * CentOS/RHEL 6.x
 * CentOS/RHEL 7.x
 * Ubuntu LTS 14.04.x
