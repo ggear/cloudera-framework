@@ -52,8 +52,11 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   private static final String COMMAND_DELIMETER = ";";
   private static final int MAX_RESULTS_DEFAULT = 100;
   private static final AtomicLong DERBY_DB_COUNTER = new AtomicLong();
+
   private static Logger LOG = LoggerFactory.getLogger(HiveServer.class);
+
   private static HiveServer instance;
+
   private int httpPort;
   private int binaryPort;
   private HiveServer2 hiveServer;

@@ -65,7 +65,7 @@ core client bill-of-materials and test harness is seen below:
 	<repositories>
 		<repository>
 			<id>cloudera-framework</id>
-			<url>http://52.63.86.162:80/artifactory/libs-release-local</url>
+			<url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
 			<snapshots>
 				<enabled>false</enabled>
 				<updatePolicy>never</updatePolicy>
@@ -101,15 +101,15 @@ up a simple, bare bones project for new cloudera-framework clients as so:
 export CF_VERSION=1.5.1
 export CDH_VERSION=5.10.1
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
-mvn archetype:generate \
-  -DarchetypeRepository=http://52.63.86.162/artifactory/libs-release-local \
+mvn archetype:generate -B \
+  -DarchetypeRepository=http://52.63.86.162/artifactory/cloudera-framework-releases \
   -DarchetypeGroupId=com.cloudera.framework \
   -DarchetypeArtifactId=cloudera-framework-archetype \
   -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
   -DgroupId=com.cloudera.mytest \
   -DartifactId=cloudera-mytest \
   -Dversion=10.10.1000 \
-  -Dpackage="com.cloudera"
+  -Dpackage=com.cloudera
 cd my-cloudera-project
 mvn -Declipse.workspace=$ECLIPSE_WORKSPACE eclipse:configure-workspace eclipse:eclipse clean install
 ```

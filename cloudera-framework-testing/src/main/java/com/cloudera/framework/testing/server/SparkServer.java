@@ -15,8 +15,8 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
 
   private static final Logger LOG = LoggerFactory.getLogger(SparkServer.class);
 
-  ;
   private static SparkServer instance;
+
   private JavaSparkContext context;
 
   private SparkServer(Runtime runtime) {

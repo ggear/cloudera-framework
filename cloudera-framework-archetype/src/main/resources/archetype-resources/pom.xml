@@ -9,13 +9,32 @@
     <version>\${version}</version>
     <packaging>jar</packaging>
 
+
+    <distributionManagement>
+        <repository>
+            <id>cloudera-framework-releases</id>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>cloudera-framework-snapshots</id>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <repositories>
+        <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>cloudera</id>
             <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
         <repository>
@@ -23,48 +42,50 @@
             <url>http://conjars.org/repo</url>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
         <repository>
             <id>cloudera-framework</id>
-            <url>http://52.63.86.162:80/artifactory/libs-release-local</url>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
-            <id>cloudera-framework-plugins</id>
-            <url>http://52.63.86.162:80/artifactory/plugins-release-local</url>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
             </snapshots>
         </pluginRepository>
         <pluginRepository>
             <id>cloudera</id>
             <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
             <snapshots>
                 <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>cloudera-framework</id>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+            <releases>
                 <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>cloudera-framework</id>
-            <url>http://52.63.86.162:80/artifactory/libs-release-local</url>
-        </repository>
-        <snapshotRepository>
-            <id>cloudera-framework</id>
-            <url>http://52.63.86.162:80/artifactory/libs-snapshot-local</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

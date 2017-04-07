@@ -19,8 +19,8 @@ public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
 
   private static Logger LOG = LoggerFactory.getLogger(MrServer.class);
 
-  ;
   private static MrServer instance;
+
   private MiniMrShim miniMr;
 
   private MrServer(Runtime runtime) {

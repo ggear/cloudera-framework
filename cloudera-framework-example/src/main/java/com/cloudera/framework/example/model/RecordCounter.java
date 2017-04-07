@@ -13,6 +13,6 @@ public enum RecordCounter {
   RECORDS, //
   RECORDS_CANONICAL, //
   RECORDS_DUPLICATE, //
-  RECORDS_MALFORMED; //
+  RECORDS_MALFORMED //
 
 }

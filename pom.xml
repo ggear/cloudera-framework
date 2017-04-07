@@ -20,22 +20,29 @@
 
     <distributionManagement>
         <repository>
-            <id>cloudera-framework</id>
-            <url>http://52.63.86.162:80/artifactory/libs-release-local</url>
+            <id>cloudera-framework-releases</id>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
         </repository>
         <snapshotRepository>
-            <id>cloudera-framework</id>
-            <url>http://52.63.86.162:80/artifactory/libs-snapshot-local</url>
+            <id>cloudera-framework-snapshots</id>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
     <repositories>
         <repository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>cloudera</id>
             <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
         <repository>
@@ -43,34 +50,47 @@
             <url>http://conjars.org/repo</url>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
         <repository>
             <id>cloudera-framework</id>
-            <url>http://52.63.86.162:80/artifactory/libs-release-local</url>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
-            <id>cloudera-framework-plugins</id>
-            <url>http://52.63.86.162:80/artifactory/plugins-release-local</url>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>never</updatePolicy>
             </snapshots>
         </pluginRepository>
         <pluginRepository>
             <id>cloudera</id>
             <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
             <snapshots>
                 <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>cloudera-framework</id>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+            <releases>
                 <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
@@ -95,10 +115,12 @@
         <cdh-kudu-base.version>1.2.0</cdh-kudu-base.version>
         <cdh-kudu.version>1.2.0-1.cdh5.10.1.p0.66</cdh-kudu.version>
 
+        <paho.version>1.1.1</paho.version>
+        <moquette.version>0.9</moquette.version>
         <snappy.version>1.1.1.7</snappy.version>
         <elephantbird.version>4.15</elephantbird.version>
-        <jasper.version>5.5.23</jasper.version>
         <opencsv.version>2.4</opencsv.version>
+        <jasper.version>5.5.23</jasper.version>
         <slf4j.version>1.7.5</slf4j.version>
         <sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
         <zohhak.version>1.1.1</zohhak.version>

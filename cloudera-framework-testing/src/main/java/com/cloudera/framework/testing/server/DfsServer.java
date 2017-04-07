@@ -33,10 +33,11 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
 
   private static final Logger LOG = LoggerFactory.getLogger(DfsServer.class);
 
-  ;
   private static final Path PATH_ROOT = new Path("/");
   private static final FsPermission PERMISSION_ALL = new FsPermission(FsAction.ALL, FsAction.ALL, FsAction.ALL);
+
   private static DfsServer instance;
+
   private MiniDFSShim miniDfs;
   private FileSystem fileSystem;
 
