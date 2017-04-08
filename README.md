@@ -124,8 +124,9 @@ export CF_VERSION_RELEASE=1.5.1
 export CDH_VERSION_RELEASE=5.10.1
 export CF_VERSION_HEAD=1.5.2
 export CDH_VERSION_HEAD=5.10.1
-rm -rf ~/.m2/repository/com/cloudera/parcel/cloudera-* ~/.m2/repository/com/cloudera/cloudera-parcel ~/.m2/repository/com/cloudera/*framework*
-mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
+mvn release:prepare -B \
+  -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE \
+  -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:perform -PPKG
 git push --all
 git tag
