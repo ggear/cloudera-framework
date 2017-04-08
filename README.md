@@ -94,7 +94,7 @@ core client bill-of-materials and test harness is seen below:
 The cloudera-framework includes an 
 [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
 module which exercises the entire codebase. In addition, an archetype is available allowing one to stand 
-up a simple, bare bones project for new cloudera-framework clients as so:
+up a simple, bare bones project for new cloudera-framework clients as so (assuming Eclipse as the IDE):
 
 ```bash
 # Change the following variables to appropriate values for the target environment
@@ -110,7 +110,7 @@ mvn archetype:generate -B \
   -DartifactId=cloudera-mytest \
   -Dversion=10.10.1000 \
   -Dpackage=com.cloudera
-cd my-cloudera-project
+cd cloudera-mytest
 mvn -Declipse.workspace=$ECLIPSE_WORKSPACE eclipse:configure-workspace eclipse:eclipse clean install
 ```
 
