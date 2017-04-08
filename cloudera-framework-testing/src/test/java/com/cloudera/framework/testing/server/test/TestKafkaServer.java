@@ -52,7 +52,7 @@ public class TestKafkaServer implements TestConstants {
       }
       producer.flush();
       ConsumerRecords<String, String> records = null;
-      while ((records = consumer.poll(KafkaServer.KAFKA_POLL_MS * messageCount)).count() == 0) {
+      while ((records = consumer.poll(KafkaServer.KAFKA_POLL_MS * messageCount * 2)).count() == 0) {
         if (pollCount-- == 0) {
           throw new TimeoutException("Could not poll message batch");
         }
