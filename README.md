@@ -111,7 +111,8 @@ mvn archetype:generate -B \
   -Dversion=10.10.1000 \
   -Dpackage=com.cloudera
 cd cloudera-mytest
-mvn -Declipse.workspace=$ECLIPSE_WORKSPACE eclipse:configure-workspace eclipse:eclipse clean install
+mvn -Declipse.workspace=$ECLIPSE_WORKSPACE \
+  eclipse:configure-workspace eclipse:eclipse clean install
 ```
 
 ## Release
