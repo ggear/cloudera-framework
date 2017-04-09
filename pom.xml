@@ -110,17 +110,17 @@
         <maven.data-download.skip>true</maven.data-download.skip>
         <maven.package.skip>false</maven.package.skip>
 
-        <cdh-hadoop.version>2.6.0-cdh5.10.0</cdh-hadoop.version>
-        <cdh-spark.version>1.6.0-cdh5.10.0</cdh-spark.version>
-        <cdh-hive.version>1.1.0-cdh5.10.0</cdh-hive.version>
-        <cdh-flume.version>1.6.0-cdh5.10.0</cdh-flume.version>
+        <cdh-hadoop.version>2.6.0-cdh5.10.1</cdh-hadoop.version>
+        <cdh-spark.version>1.6.0-cdh5.10.1</cdh-spark.version>
+        <cdh-hive.version>1.1.0-cdh5.10.1</cdh-hive.version>
+        <cdh-flume.version>1.6.0-cdh5.10.1</cdh-flume.version>
         <cdh-avro-base.version>1.7.6</cdh-avro-base.version>
-        <cdh-avro.version>1.7.6-cdh5.10.0</cdh-avro.version>
-        <cdh-parquet.version>1.5.0-cdh5.10.0</cdh-parquet.version>
-        <cdh-zookeeper.version>3.4.5-cdh5.10.0</cdh-zookeeper.version>
-        <cdh-kafka.version>0.10.0-kafka-2.1.0</cdh-kafka.version>
+        <cdh-avro.version>1.7.6-cdh5.10.1</cdh-avro.version>
+        <cdh-parquet.version>1.5.0-cdh5.10.1</cdh-parquet.version>
+        <cdh-zookeeper.version>3.4.5-cdh5.10.1</cdh-zookeeper.version>
+        <cdh-kafka.version>0.10.0-kafka-2.1.1</cdh-kafka.version>
         <cdh-kudu-base.version>1.2.0</cdh-kudu-base.version>
-        <cdh-kudu.version>1.2.0-1.cdh5.10.0.p0.55</cdh-kudu.version>
+        <cdh-kudu.version>1.2.0-1.cdh5.10.1.p0.66</cdh-kudu.version>
 
         <snappy.version>1.1.1.7</snappy.version>
         <elephantbird.version>4.15</elephantbird.version>
@@ -133,13 +133,12 @@
 
         <parcel-plugin.version>0.7.8</parcel-plugin.version>
 
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <scala.version>2.10</scala.version>
 
         <os-platform.version />
 
         <project.runtime.heap.max>1024</project.runtime.heap.max>
-        <project.runtime.perm.heap.max>256</project.runtime.perm.heap.max>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     </properties>
@@ -323,7 +322,6 @@
                     <configuration>
                         <argLine>
                             -Xmx${project.runtime.heap.max}m
-                            -XX:MaxPermSize=${project.runtime.perm.heap.max}m
                         </argLine>
                     </configuration>
                 </plugin>
