@@ -82,7 +82,7 @@
             </snapshots>
         </pluginRepository>
         <pluginRepository>
-            <id>cloudera-framework</id>
+            <id>cloudera-framework-releases</id>
             <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
             <releases>
                 <updatePolicy>never</updatePolicy>
