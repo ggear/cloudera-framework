@@ -51,8 +51,6 @@ public class DriverTest {
     FILES_NUMBER
   }
 
-  ;
-
   private class CountFilesDriver extends Driver {
 
     private boolean iShouldFailOption;

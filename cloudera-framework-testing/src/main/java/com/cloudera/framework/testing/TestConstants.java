@@ -26,6 +26,7 @@ public interface TestConstants {
 
   // Runtime directories
   public static final String DIR_RUNTIME_KUDU = "runtime-kudu";
+  public static final String DIR_RUNTIME_MQTT = "runtime-mqtt";
   public static final String DIR_RUNTIME_MR = "MiniMRCluster_";
 
   // Relative directories
@@ -50,6 +51,7 @@ public interface TestConstants {
   public static final String ABS_DIR_DFS_TMP = ABS_DIR_TARGET + "/" + DIR_DFS_TMP;
   public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/" + DIR_DFS_LOCAL;
   public static final String ABS_DIR_KUDU = ABS_DIR_TARGET + "/" + DIR_RUNTIME_KUDU;
+  public static final String ABS_DIR_MQTT = ABS_DIR_TARGET + "/" + DIR_RUNTIME_MQTT;
   public static final String ABS_DIR_HIVE = ABS_DIR_TARGET + "/" + DIR_HIVE;
   public static final String ABS_DIR_KAFKA = ABS_DIR_TARGET + "/" + DIR_KAFKA;
   public static final String ABS_DIR_ZOOKEEPER = ABS_DIR_TARGET + "/" + DIR_ZOOKEEPER;

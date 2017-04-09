@@ -30,10 +30,11 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   public static final int KAFKA_POLL_MS = 100;
 
-  ;
   private static final Logger LOG = LoggerFactory.getLogger(KafkaServer.class);
   private static final String TOPIC_CONSUMER_OFFSETS = "__consumer_offsets";
+
   private static KafkaServer instance;
+
   private ZkUtils zooKeeperUtils;
   private ZkClient zooKeeperClient;
   private KafkaServerStartable kafka;

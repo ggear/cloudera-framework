@@ -24,7 +24,6 @@ public abstract class RecordTextReader extends RecordReader<RecordKey, AvroGener
   private RecordKey recordKey = new RecordKey();
   private AvroGenericRecordWritable recordWriteable = new AvroGenericRecordWritable(record);
   private UID recordReaderID = new UID();
-  ;
   private RecordKey recordsKey;
   private RecordStringDe recordStringDe;
   private RecordReader<RecordKey, Text> recordReader;

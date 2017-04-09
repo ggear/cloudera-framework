@@ -19,10 +19,11 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
 
   private static final Logger LOG = LoggerFactory.getLogger(KuduServer.class);
 
-  ;
   private static final int KUDU_MSERVER_NUM = 1;
   private static final int KUDU_TSERVER_NUM = 3;
+
   private static final String SYSTEM_PROPERTY_KUDU_HOME_BIN = "binDir";
+
   private static KuduServer instance;
   private MiniKuduCluster miniKudu;
 
