@@ -5,12 +5,12 @@
     <groupId>com.cloudera.framework.library</groupId>
     <artifactId>cloudera-framework-library-runtime</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.2-cdh5.10.1-SNAPSHOT</version>
+    <version>1.5.1-cdh5.9.0-SNAPSHOT</version>
 
     <parent>
         <groupId>com.cloudera.framework</groupId>
         <artifactId>cloudera-framework-library</artifactId>
-        <version>1.5.2-cdh5.10.1-SNAPSHOT</version>
+        <version>1.5.1-cdh5.9.0-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -761,16 +761,6 @@
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
             <version>${snappy.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.paho</groupId>
-            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-            <version>${paho.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.moquette</groupId>
-            <artifactId>moquette-broker</artifactId>
-            <version>${moquette.version}</version>
         </dependency>
     </dependencies>
 

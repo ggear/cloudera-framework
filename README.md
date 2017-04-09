@@ -1,4 +1,4 @@
-# Cloudera Framework
+#Cloudera Framework
 
 Provide an example organisation wide Cloudera (i.e. Hadoop ecosystem) project framework, 
 defining corporate standards on runtime components, datasets, libraries, testing and project 
@@ -24,18 +24,17 @@ to exercise the codebase.
 Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) 
 is also included to provide a bare bones starter client module.
 
-## Requirements
+##Requirements
 
 To compile, build and package from source, this project requires:
 
-* Java 8
-* Scala 2.10
+* JDK 1.7
 * Python 2.7
 * Maven 3
 
 To run the unit and integrations tests, binaries and meta-data are provided for all CDH componnents:
 
-* MacOS 10.12.x
+* OS-X 10.11.x
 * CentOS/RHEL 6.x
 * CentOS/RHEL 7.x
 * Ubuntu LTS 14.04.x
@@ -48,7 +47,7 @@ are used to manage platform dependent binaries. This project depends on the
 [cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/tree/master/cloudera-parcel-plugin) 
 to help manage its parcel dependencies.
 
-## Install
+##Install
 
 This project can be installed to a local repository as per:
 
@@ -65,7 +64,7 @@ core client bill-of-materials and test harness is seen below:
 	<repositories>
 		<repository>
 			<id>cloudera-framework</id>
-			<url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+			<url>http://52.63.86.162:80/artifactory/libs-release-local</url>
 			<snapshots>
 				<enabled>false</enabled>
 				<updatePolicy>never</updatePolicy>
@@ -76,20 +75,20 @@ core client bill-of-materials and test harness is seen below:
 		<dependency>
 			<groupId>com.cloudera.framework.library.client</groupId>
 			<artifactId>cloudera-framework-library-client-core</artifactId>
-			<version>1.5.1-cdh5.10.1</version>
+			<version>1.5.1-cdh5.9.0</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cloudera.framework</groupId>
 			<artifactId>cloudera-framework-testing</artifactId>
-			<version>1.5.1-cdh5.10.1</version>
+			<version>1.5.1-cdh5.9.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 ```
 
-## Usage
+##Usage
 
 The cloudera-framework includes an 
 [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
@@ -99,31 +98,31 @@ up a simple, bare bones project for new cloudera-framework clients as so:
 ```bash
 # Change the following variables to appropriate values for the target environment
 export CF_VERSION=1.5.1
-export CDH_VERSION=5.10.1
+export CDH_VERSION=5.9.0
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
-mvn archetype:generate -B \
-  -DarchetypeRepository=http://52.63.86.162/artifactory/cloudera-framework-releases \
+mvn archetype:generate \
+  -DarchetypeRepository=http://52.63.86.162/artifactory/libs-release-local \
   -DarchetypeGroupId=com.cloudera.framework \
   -DarchetypeArtifactId=cloudera-framework-archetype \
   -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
   -DgroupId=com.cloudera.mytest \
   -DartifactId=cloudera-mytest \
   -Dversion=10.10.1000 \
-  -Dpackage=com.cloudera
+  -Dpackage="com.cloudera"
 cd my-cloudera-project
 mvn -Declipse.workspace=$ECLIPSE_WORKSPACE eclipse:configure-workspace eclipse:eclipse clean install
 ```
 
-## Release
+##Release
 
 To perform a release:
 
 ```bash
 # Change the following variables to appropriate values for the target environment
 export CF_VERSION_RELEASE=1.5.1
-export CDH_VERSION_RELEASE=5.10.1
-export CF_VERSION_HEAD=1.5.2
-export CDH_VERSION_HEAD=5.10.1
+export CDH_VERSION_RELEASE=5.9.0
+export CF_VERSION_HEAD=1.5.1
+export CDH_VERSION_HEAD=5.10.0
 rm -rf ~/.m2/repository/com/cloudera/parcel/cloudera-* ~/.m2/repository/com/cloudera/cloudera-parcel ~/.m2/repository/com/cloudera/*framework*
 mvn release:prepare -B -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
 mvn release:perform -PPKG

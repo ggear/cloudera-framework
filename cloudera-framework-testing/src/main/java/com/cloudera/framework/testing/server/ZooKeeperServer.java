@@ -23,11 +23,10 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
 
   public static final int ZOOKEEPER_TICK_MS = 2000;
   public static final int ZOOKEEPER_TIMEOUT_MS = 5000;
-
   private static final Logger LOG = LoggerFactory.getLogger(ZooKeeperServer.class);
 
+  ;
   private static ZooKeeperServer instance;
-
   private int port;
   private org.apache.zookeeper.server.ZooKeeperServer zooKeeper;
   private NIOServerCnxnFactory factory;

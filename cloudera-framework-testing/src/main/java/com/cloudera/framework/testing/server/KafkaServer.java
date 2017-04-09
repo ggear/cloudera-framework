@@ -30,11 +30,10 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   public static final int KAFKA_POLL_MS = 100;
 
+  ;
   private static final Logger LOG = LoggerFactory.getLogger(KafkaServer.class);
   private static final String TOPIC_CONSUMER_OFFSETS = "__consumer_offsets";
-
   private static KafkaServer instance;
-
   private ZkUtils zooKeeperUtils;
   private ZkClient zooKeeperClient;
   private KafkaServerStartable kafka;
@@ -97,7 +96,7 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
     throws InterruptedException {
     boolean created = true;
     try {
-      AdminUtils.createTopic(getZooKeeperUtils(), topic, partitions, replicationFactor, properties, AdminUtils.createTopic$default$6());
+      AdminUtils.createTopic(getZooKeeperUtils(), topic, partitions, replicationFactor, properties);
     } catch (TopicExistsException topicExistsException) {
       created = false;
     }

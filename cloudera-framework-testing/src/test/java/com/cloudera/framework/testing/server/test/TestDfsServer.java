@@ -26,7 +26,6 @@ import org.junit.Test;
 public abstract class TestDfsServer implements TestConstants {
 
   public static final String COUNTER_GROUP = TestDfsServer.class.getCanonicalName();
-
   public static final TestMetaData testMetaData1 = TestMetaData.getInstance() //
     .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)));
   public static final TestMetaData testMetaData2 = TestMetaData.getInstance() //

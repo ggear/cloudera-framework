@@ -29,7 +29,6 @@ import org.junit.runner.RunWith;
 public class TestKafkaServer implements TestConstants {
 
   private static final String TOPIC_NAME_TEST = "mytopic";
-
   @ClassRule
   public static KafkaServer kafkaServer = KafkaServer.getInstance();
 

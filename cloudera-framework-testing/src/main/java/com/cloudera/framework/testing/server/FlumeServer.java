@@ -31,6 +31,7 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
 
   private static final Logger LOG = LoggerFactory.getLogger(FlumeServer.class);
 
+  ;
   private static FlumeServer instance;
 
   private FlumeServer(Runtime runtime) {
@@ -168,7 +169,8 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
   }
 
   public enum Runtime {
-    MANUALLY_CRANKED // Manually cranked Flume agent, inline-thread, light-weight
+    MANUALLY_CRANKED // Manually cranked Flume agent, inline-thread,
+    // light-weight
   }
 
 }

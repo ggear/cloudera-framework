@@ -20,6 +20,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
 
   private static Logger LOG = LoggerFactory.getLogger(PythonServer.class);
 
+  ;
   private static PythonServer instance;
 
   private PythonServer(Runtime runtime) {

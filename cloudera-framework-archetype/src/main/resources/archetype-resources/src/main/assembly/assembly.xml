@@ -79,7 +79,8 @@
             <outputDirectory></outputDirectory>
             <unpack>true</unpack>
             <includes>
-                <include>com.cloudera.framework:cloudera-framework-assembly:tar.gz:assembly</include>
+                <include>com.cloudera.framework:cloudera-framework-assembly:tar.gz:assembly
+                </include>
             </includes>
             <fileMode>0700</fileMode>
             <directoryMode>0755</directoryMode>
