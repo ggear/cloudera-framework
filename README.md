@@ -76,14 +76,14 @@ core client bill-of-materials and test harness is seen below:
 		<dependency>
 			<groupId>com.cloudera.framework.library.client</groupId>
 			<artifactId>cloudera-framework-library-client-core</artifactId>
-			<version>1.5.1-cdh5.10.1</version>
+			<version>1.5.2-cdh5.10.1</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.cloudera.framework</groupId>
 			<artifactId>cloudera-framework-testing</artifactId>
-			<version>1.5.1-cdh5.10.1</version>
+			<version>1.5.2-cdh5.10.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -98,7 +98,7 @@ up a simple, bare bones project for new cloudera-framework clients as so (assumi
 
 ```bash
 # Change the following variables to appropriate values for the target environment
-export CF_VERSION=1.5.1
+export CF_VERSION=1.5.2
 export CDH_VERSION=5.10.1
 export ECLIPSE_WORKSPACE=/tmp/eclipse/workspace
 mvn archetype:generate -B \
@@ -121,10 +121,10 @@ To perform a release:
 
 ```bash
 # Change the following variables to appropriate values for the target environment
-export CF_VERSION_RELEASE=1.5.1
+export CF_VERSION_RELEASE=1.5.2
 export CDH_VERSION_RELEASE=5.10.1
 export CF_VERSION_HEAD=1.5.2
-export CDH_VERSION_HEAD=5.10.1
+export CDH_VERSION_HEAD=5.11.0
 mvn release:prepare -B \
   -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE \
   -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
