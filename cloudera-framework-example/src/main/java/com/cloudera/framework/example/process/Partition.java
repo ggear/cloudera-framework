@@ -3,7 +3,6 @@ package com.cloudera.framework.example.process;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;

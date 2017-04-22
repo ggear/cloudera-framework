@@ -18,7 +18,6 @@ import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.MrServer;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathFilter;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;

@@ -19,7 +19,6 @@ import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.SparkServer;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathFilter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function;
