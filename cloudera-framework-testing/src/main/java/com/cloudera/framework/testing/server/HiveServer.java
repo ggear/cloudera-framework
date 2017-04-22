@@ -84,7 +84,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   /**
    * Process a <code>statement</code>
    *
-   * @param statement
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
    */
@@ -96,8 +95,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * Process a <code>statement</code>, making <code>hivevar</code> substitutions
    * from <code>parameters</code>
    *
-   * @param statement
-   * @param parameters
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
    */
@@ -110,9 +107,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * from <code>parameters</code> and session settings from
    * <code>configuration</code>
    *
-   * @param statement
-   * @param parameters
-   * @param configuration
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
    */
@@ -125,10 +119,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * from <code>parameters</code> and session settings from
    * <code>configuration</code>
    *
-   * @param statement
-   * @param parameters
-   * @param configuration
-   * @param maxResults
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
    */
@@ -142,11 +132,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * from <code>parameters</code> and session settings from
    * <code>configuration</code>
    *
-   * @param statement
-   * @param parameters
-   * @param configuration
-   * @param maxResults
-   * @param quiet
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
    */
@@ -196,7 +181,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * Process a set of <code>;</code> delimited statements from a
    * <code>file</code>
    *
-   * @param file
    * @return {@link List} of {@link List} of {@link String} results per
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
@@ -210,8 +194,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * <code>file</code>, making <code>hivevar</code> substitutions from
    * <code>parameters</code>
    *
-   * @param file
-   * @param parameters
    * @return {@link List} of {@link List} of {@link String} results per
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
@@ -226,9 +208,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * <code>parameters</code> and session settings from
    * <code>configuration</code>
    *
-   * @param file
-   * @param parameters
-   * @param configuration
    * @return {@link List} of {@link List} of {@link String} results per
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
@@ -243,10 +222,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * <code>parameters</code> and session settings from
    * <code>configuration</code>
    *
-   * @param file
-   * @param parameters
-   * @param configuration
-   * @param maxResults
    * @return {@link List} of {@link List} of {@link String} results per
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}

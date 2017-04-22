@@ -218,8 +218,6 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   /**
    * Copy local <code>sourcePath</code> to DFS <code>destinationPath</code>
    *
-   * @param sourcePath
-   * @param destinationPath
    * @return local files that have been copied
    */
   public File[] copyFromLocalFile(String sourcePath, String destinationPath) throws IOException {

@@ -85,8 +85,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
 
   /**
    * Set the {@link Configuration} associated with this {@link CdhServer}
-   *
-   * @param conf
    */
   protected synchronized void setConf(Configuration conf) {
     this.conf = conf;

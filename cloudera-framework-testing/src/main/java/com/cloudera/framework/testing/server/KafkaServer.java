@@ -79,10 +79,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   /**
    * Create topic
    *
-   * @param topic
-   * @param partitions
-   * @param replicationFactor
-   * @param properties
    * @return if the topic was created or not
    */
   public synchronized boolean createTopic(String topic, int partitions, int replicationFactor, Properties properties)
@@ -105,7 +101,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   /**
    * Delete topic
    *
-   * @param topic
    * @return if the topic was deleted or not
    */
   public synchronized boolean deleteTopic(String topic) {

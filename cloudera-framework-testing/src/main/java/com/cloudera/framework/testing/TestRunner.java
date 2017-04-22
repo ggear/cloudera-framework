@@ -68,10 +68,6 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
   /**
    * Dereference an instance <code>field</code> of <code>type</code> from an
    * <code>object</code>
-   *
-   * @param object
-   * @param field
-   * @param type
    */
   public static synchronized Object toObject(Object object, String field, Class<?> type) {
     Object dereferencedObject = null;
@@ -114,9 +110,6 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
   /**
    * Dereference an instance {@link TestMetaData} <code>field</code> from an
    * <code>object</code>
-   *
-   * @param object
-   * @param field
    */
   public static TestMetaData toCdhMetaData(Object object, String field) {
     TestMetaData cdhMetaData = (TestMetaData) toObject(object, field, TestMetaData.class);

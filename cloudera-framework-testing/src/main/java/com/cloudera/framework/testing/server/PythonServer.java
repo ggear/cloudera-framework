@@ -44,7 +44,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * Process a script from <code>file</code>, invoking with command line
    * <code>parameters</code>
    *
-   * @param file
    * @return the exit code
    */
   public int execute(File file) throws IOException, InterruptedException {
@@ -55,8 +54,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * Process a script from <code>file</code> sourced from
    * <code>directory</code>, invoking with command line <code>parameters</code>
    *
-   * @param file
-   * @param parameters
    * @return the exit code
    */
   public int execute(File file, List<String> parameters) throws IOException, InterruptedException {
@@ -67,9 +64,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * Process a script from <code>file</code> sourced from
    * <code>directory</code>, invoking with command line <code>parameters</code>
    *
-   * @param file
-   * @param parameters
-   * @param configuration
    * @return the exit code
    */
   public int execute(File file, List<String> parameters, Map<String, String> configuration) throws IOException, InterruptedException {
@@ -80,11 +74,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * Process a script from <code>file</code> sourced from
    * <code>directory</code>, invoking with command line <code>parameters</code>
    *
-   * @param file
-   * @param parameters
-   * @param configuration
-   * @param output
-   * @param error
    * @return the exit code
    */
   public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error)
@@ -96,12 +85,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * Process a script from <code>file</code> sourced from
    * <code>directory</code>, invoking with command line <code>parameters</code>
    *
-   * @param file
-   * @param parameters
-   * @param configuration
-   * @param output
-   * @param error
-   * @param quiet
    * @return the exit code
    */
   public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error,

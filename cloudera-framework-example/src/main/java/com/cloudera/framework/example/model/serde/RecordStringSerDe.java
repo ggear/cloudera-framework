@@ -17,17 +17,11 @@ public abstract class RecordStringSerDe {
 
   /**
    * Get a de-serializer
-   *
-   * @param recordKey
-   * @param record
-   * @param string
    */
   public abstract RecordStringDe getDeserializer(final RecordKey recordKey, final Record record, final String string);
 
   /**
    * Get a serializer
-   *
-   * @param size
    */
   public abstract RecordStringSer getSerializer(final int size);
 
@@ -45,8 +39,6 @@ public abstract class RecordStringSerDe {
 
     /**
      * Get the next key and record
-     *
-     * @param recordsKey
      */
     boolean next(RecordKey recordsKey) throws IOException;
 
@@ -61,8 +53,6 @@ public abstract class RecordStringSerDe {
 
     /**
      * Add a record
-     *
-     * @param record
      */
     void add(Record record) throws IOException;
 
