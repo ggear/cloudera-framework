@@ -196,7 +196,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
     }
   }
 
-  @SuppressWarnings("rawtypes")
+  @SuppressWarnings({"rawtypes", "LoopStatementThatDoesntLoop"})
   private boolean assertTestRunner(String testClass) {
     try {
       RunWith runWith = Class.forName(testClass).getAnnotation(RunWith.class);
