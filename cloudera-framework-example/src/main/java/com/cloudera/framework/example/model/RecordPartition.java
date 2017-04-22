@@ -35,11 +35,11 @@ public class RecordPartition {
   };
 
   public static String getPartitionPathString(Path path, String[] partition, int index) {
-    String partitionPathString = path.getName();
+    StringBuilder partitionPathString = new StringBuilder(path.getName());
     for (int i = 1; i < partition.length + index; i++) {
-      partitionPathString = (path = path.getParent()).getName() + Path.SEPARATOR_CHAR + partitionPathString;
+      partitionPathString.insert(0, (path = path.getParent()).getName() + Path.SEPARATOR_CHAR);
     }
-    return partitionPathString;
+    return partitionPathString.toString();
   }
 
   public static String getPartitionPathName(Path path, String[] partition, int index) {

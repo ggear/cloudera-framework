@@ -3,6 +3,7 @@ package com.cloudera.framework.testing;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -190,9 +191,7 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
     servers.addAll(getTestClass().getAnnotatedFieldValues(target, ClassRule.class, CdhServer.class));
     List<CdhServer> dependencies = new ArrayList<>();
     for (CdhServer server : servers) {
-      for (CdhServer dependency : server.getDependencies()) {
-        dependencies.add(dependency);
-      }
+      Collections.addAll(dependencies, server.getDependencies());
     }
     servers.addAll(dependencies);
     List<TestRule> rules = new ArrayList<>();

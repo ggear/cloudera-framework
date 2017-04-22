@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -301,16 +302,15 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       + (sourcePaths.length <= 2 ? "*" : sourcePaths[2])).replace(ABS_DIR_WORKING, ".");
     getFileSystem().mkdirs(getPath(destinationPath));
     for (File file : listFilesLocal(sourcePath, false, sourcePaths)) {
-      copyFromLocalFile(Arrays.asList(new Path(file.getPath())), getPath(destinationPath));
+      copyFromLocalFile(Collections.singletonList(new Path(file.getPath())), getPath(destinationPath));
       if (file.isFile()) {
         files.add(file);
       } else {
         files.addAll(FileUtils.listFiles(file, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE));
       }
-      filesString.append("\n").append("/")
-        .append(file.getParentFile().getParentFile().getParentFile().getName() + "/" + file.getParentFile().getParentFile().getName()
-          + "/" + file.getParentFile().getName() + "/" + file.getName() + (file.isDirectory() ? "/" : ""))
-        .append(" -> ").append(destinationPath).append("/").append(file.getName());
+      filesString.append("\n").append("/").append(file.getParentFile().getParentFile().getParentFile().getName()).append("/").
+        append(file.getParentFile().getParentFile().getName()).append("/").append(file.getParentFile().getName()).append("/").
+        append(file.getName()).append(file.isDirectory() ? "/" : "").append(" -> ").append(destinationPath).append("/").append(file.getName());
     }
     log(LOG, "copy", "cp -rvf /" + sourcePathGlob + "/* " + destinationPath + (filesString.length() > 0 ? filesString.toString() : ":\n  "),
       true);

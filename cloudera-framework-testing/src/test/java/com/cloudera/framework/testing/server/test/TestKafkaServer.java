@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +46,7 @@ public class TestKafkaServer implements TestConstants {
     Producer<String, String> producer = new KafkaProducer<>(kafkaServer.getProducerProperties());
     KafkaConsumer<String, String> consumer = new KafkaConsumer<>(kafkaServer.getConsumerProperties());
     try {
-      consumer.subscribe(Arrays.asList(TOPIC_NAME_TEST));
+      consumer.subscribe(Collections.singletonList(TOPIC_NAME_TEST));
       for (int i = 0; i < messageCount; i++) {
         producer.send(new ProducerRecord<>(TOPIC_NAME_TEST, "" + i, "" + i)).get(KafkaServer.KAFKA_POLL_MS, TimeUnit.MILLISECONDS);
       }

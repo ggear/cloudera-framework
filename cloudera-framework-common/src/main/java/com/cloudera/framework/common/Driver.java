@@ -221,7 +221,7 @@ public abstract class Driver extends Configured implements Tool {
       if (LOG.isInfoEnabled()) {
         StringBuilder optionsAndParameters = new StringBuilder(256);
         for (int i = 0; i < options().length; i++) {
-          optionsAndParameters.append(" [-D" + options()[i] + "]");
+          optionsAndParameters.append(" [-D").append(options()[i]).append("]");
         }
         for (int i = 0; i < parameters().length; i++) {
           optionsAndParameters.append(options().length == 0 ? "" : " " + "<" + parameters()[i] + ">");

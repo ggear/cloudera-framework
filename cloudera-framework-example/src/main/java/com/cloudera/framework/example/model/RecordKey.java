@@ -176,13 +176,7 @@ public class RecordKey implements WritableComparable<RecordKey> {
 
   @Override
   public boolean equals(Object that) {
-    if (this == that)
-      return true;
-    if (that == null)
-      return false;
-    if (getClass() != that.getClass())
-      return false;
-    return this.hash == ((RecordKey) that).hash;
+    return this == that || that != null && getClass() == that.getClass() && this.hash == ((RecordKey) that).hash;
   }
 
   @Override
