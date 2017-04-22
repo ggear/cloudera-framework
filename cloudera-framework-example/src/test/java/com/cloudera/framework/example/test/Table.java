@@ -230,10 +230,10 @@ public class Table extends TestBase {
           new File(DDL_DIR, (String) testMetaData.getParameters()[i].get(DDL_VAR_FILE)), ImmutableMap.<String, String>builder()
             .putAll(testMetaData.getParameters()[i]).put(DDL_VAR_SCHEMA, MODEL_AVRO).put(DDL_VAR_DATABASE, DIR_REL_MYDS).build(),
           ImmutableMap.of(Constants.CONFIG_INPUT_PATH, inputPath)));
-      assertNotNull(testName, hiveServer.execute("DESCRIBE " + (String) testMetaData.getParameters()[i].get(DDL_VAR_NAME)));
+      assertNotNull(testName, hiveServer.execute("DESCRIBE " + testMetaData.getParameters()[i].get(DDL_VAR_NAME)));
       assertEquals(testName, testMetaData.getParameters()[i].get(DDL_VAR_ROWS),
-        hiveServer.execute("SELECT * FROM " + (String) testMetaData.getParameters()[i].get(DDL_VAR_NAME),
-          Collections.<String, String>emptyMap(), ImmutableMap.of(Constants.CONFIG_INPUT_PATH, inputPath,
+        hiveServer.execute("SELECT * FROM " + testMetaData.getParameters()[i].get(DDL_VAR_NAME),
+          Collections.emptyMap(), ImmutableMap.of(Constants.CONFIG_INPUT_PATH, inputPath,
             HiveConf.ConfVars.HIVEINPUTFORMAT.varname, HiveInputFormat.class.getName()),
           1000).size());
     }

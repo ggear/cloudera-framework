@@ -34,13 +34,13 @@ public class TestPythonServer implements TestConstants {
   public void testPythonRunFail() throws Exception {
     assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"), null, null, null, null, true) == 0);
     assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"),
-      Arrays.asList(new String[]{"--non-existant-param", "MY PARAMETER!"}), null, null, null, true) == 0);
+      Arrays.asList("--non-existant-param", "MY PARAMETER!"), null, null, null, true) == 0);
   }
 
   @Test
   public void testPython() throws Exception {
     assertTrue(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"),
-      Arrays.asList(new String[]{"--param", "MY PARAMETER!"})) == 0);
+      Arrays.asList("--param", "MY PARAMETER!")) == 0);
   }
 
   @Test

@@ -288,7 +288,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    *
    * @param sourcePath      the source path relative to the module root
    * @param destinationPath the destination path relative to the DFS root
-   * @param paths           optional list of dataset, subset and label paths to include, if
+   * @param sourcePaths     optional list of dataset, subset and label paths to include, if
    *                        not specified all paths at that level will be included
    * @return local files that have been copied
    */

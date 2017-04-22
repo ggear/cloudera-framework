@@ -127,7 +127,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
     if (!file.canExecute()) {
       file.setExecutable(true);
     }
-    List<String> command = new ArrayList<>(parameters == null ? Collections.<String>emptyList() : parameters);
+    List<String> command = new ArrayList<>(parameters == null ? Collections.emptyList() : parameters);
     command.add(0, file.getAbsolutePath());
     Process process = new ProcessBuilder(command).start();
     IOUtils.closeQuietly(process.getOutputStream());

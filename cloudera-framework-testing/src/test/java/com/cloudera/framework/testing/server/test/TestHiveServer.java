@@ -66,7 +66,7 @@ public abstract class TestHiveServer implements TestConstants {
     assertEquals("3", getHiveServer().execute("SELECT count(1) AS cnt FROM somedata").get(0));
     assertEquals("2", getHiveServer().execute("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
     assertEquals(2, getHiveServer()
-      .execute("SELECT * FROM somedata", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), 2).size());
+      .execute("SELECT * FROM somedata", Collections.emptyMap(), Collections.emptyMap(), 2).size());
     assertEquals(1, getHiveServer().execute("SHOW TABLES").size());
     assertEquals(0, getHiveServer().execute("CREATE DATABASE somedb").size());
     assertEquals(0, getHiveServer().execute("USE somedb").size());

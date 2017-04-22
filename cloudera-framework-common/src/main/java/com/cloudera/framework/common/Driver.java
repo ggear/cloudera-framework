@@ -245,7 +245,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Map<Enum<?>, Long> getCounters(String group) {
-    return counters.get(group) == null ? Collections.<Enum<?>, Long>emptyMap() : new LinkedHashMap<>(counters.get(group));
+    return counters.get(group) == null ? Collections.emptyMap() : new LinkedHashMap<>(counters.get(group));
   }
 
   public Set<String> getCountersGroups() {

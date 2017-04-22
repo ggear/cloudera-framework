@@ -94,7 +94,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @throws Exception
    */
   public List<String> execute(String statement) throws Exception {
-    return execute(statement, Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap());
+    return execute(statement, Collections.emptyMap(), Collections.emptyMap());
   }
 
   /**
@@ -108,7 +108,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @throws Exception
    */
   public List<String> execute(String statement, Map<String, String> parameters) throws Exception {
-    return execute(statement, parameters, Collections.<String, String>emptyMap());
+    return execute(statement, parameters, Collections.emptyMap());
   }
 
   /**
@@ -212,7 +212,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @throws Exception
    */
   public List<List<String>> execute(File file) throws Exception {
-    return execute(file, Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap());
+    return execute(file, Collections.emptyMap(), Collections.emptyMap());
   }
 
   /**
@@ -228,7 +228,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @throws Exception
    */
   public List<List<String>> execute(File file, Map<String, String> parameters) throws Exception {
-    return execute(file, parameters, Collections.<String, String>emptyMap());
+    return execute(file, parameters, Collections.emptyMap());
   }
 
   /**
@@ -333,17 +333,17 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   @Override
   public synchronized void clean() throws Exception {
     long time = log(LOG, "clean");
-    for (String table : execute("SHOW TABLES", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(),
+    for (String table : execute("SHOW TABLES", Collections.emptyMap(), Collections.emptyMap(),
       MAX_RESULTS_DEFAULT, true)) {
       if (table.length() > 0) {
-        execute("DROP TABLE " + table, Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(),
+        execute("DROP TABLE " + table, Collections.emptyMap(), Collections.emptyMap(),
           MAX_RESULTS_DEFAULT, true);
       }
     }
-    for (String database : execute("SHOW DATABASES", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(),
+    for (String database : execute("SHOW DATABASES", Collections.emptyMap(), Collections.emptyMap(),
       MAX_RESULTS_DEFAULT, true)) {
       if (database.length() > 0 && !database.equals("default")) {
-        execute("DROP DATABASE " + database + " CASCADE", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(),
+        execute("DROP DATABASE " + database + " CASCADE", Collections.emptyMap(), Collections.emptyMap(),
           MAX_RESULTS_DEFAULT, true);
       }
     }
@@ -354,7 +354,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   public synchronized void state() throws Exception {
     long time = log(LOG, "state", true);
     log(LOG, "state", "tables:\n" + StringUtils.join(
-      execute("SHOW TABLES", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), MAX_RESULTS_DEFAULT, true)
+      execute("SHOW TABLES", Collections.emptyMap(), Collections.emptyMap(), MAX_RESULTS_DEFAULT, true)
         .toArray(),
       "\n"), true);
     log(LOG, "state", time, true);
