@@ -159,7 +159,7 @@ public class RecordKey implements WritableComparable<RecordKey> {
     container = WritableUtils.readString(in);
     timestamp = WritableUtils.readVLong(in);
     batch = WritableUtils.readString(in);
-    valid = WritableUtils.readVInt(in) == 0 ? false : true;
+    valid = WritableUtils.readVInt(in) != 0;
   }
 
   @Override

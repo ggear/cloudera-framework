@@ -169,7 +169,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       RecordStringSer recordStringSer = recordStringSerDe.getSerialiser(recordNumber);
       for (int i = 0; i < recordNumber; i++) {
         recordStringSer.add(Record.newBuilder().setMyTimestamp(System.currentTimeMillis()).setMyInteger((int) (Math.random() * 10))
-          .setMyDouble(Math.round(Math.random() * 10000000) / 100D).setMyBoolean(Math.random() < 0.5 ? true : false)
+          .setMyDouble(Math.round(Math.random() * 10000000) / 100D).setMyBoolean(Math.random() < 0.5)
           .setMyString(UUID.randomUUID().toString()).build());
       }
       String record = recordStringSer.get();
@@ -208,8 +208,6 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       if (LOG.isInfoEnabled()) {
         LOG.info("Source [" + getName() + "] interupted");
       }
-    } catch (Error error) {
-      throw error;
     } catch (Exception exception) {
       if (LOG.isErrorEnabled()) {
         LOG.error("Source [" + getName() + "] encountered exception processing event, " + "backing off and retrying", exception);

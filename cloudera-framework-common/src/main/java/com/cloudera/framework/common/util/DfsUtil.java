@@ -44,10 +44,7 @@ public class DfsUtil {
         return true;
       }
     }
-    if (user.equals(status.getOwner()) && permission.getUserAction().implies(action)) {
-      return true;
-    }
-    return false;
+    return user.equals(status.getOwner()) && permission.getUserAction().implies(action);
   }
 
   /**

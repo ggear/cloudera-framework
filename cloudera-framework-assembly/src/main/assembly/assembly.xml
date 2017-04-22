@@ -8,7 +8,7 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <outputDirectory></outputDirectory>
+            <outputDirectory />
             <directory>src/main/assembly/root</directory>
             <excludes>
                 <exclude>**/*.sh</exclude>
@@ -18,7 +18,7 @@
             <directoryMode>0755</directoryMode>
         </fileSet>
         <fileSet>
-            <outputDirectory></outputDirectory>
+            <outputDirectory />
             <directory>src/main/assembly/root</directory>
             <includes>
                 <include>**/*.sh</include>

@@ -46,10 +46,12 @@ public class Cleanse extends Driver {
 
   private static final Logger LOG = LoggerFactory.getLogger(Cleanse.class);
 
+  @SuppressWarnings("FieldCanBeLocal")
   private Path inputPath;
   private Path outputPath;
   private Set<Path> inputPaths;
 
+  @SuppressWarnings("FieldCanBeLocal")
   private FileSystem hdfs;
 
   public Cleanse() {

@@ -49,7 +49,7 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
         if (records == null && !corrupt) {
           try {
             records = ((RecordsXml) jaxbContext.createUnmarshaller()
-              .unmarshal(IOUtils.toInputStream(string.toString(), Charset.forName(Charsets.UTF_8.name())))).get();
+              .unmarshal(IOUtils.toInputStream(string, Charset.forName(Charsets.UTF_8.name())))).get();
           } catch (Exception exception) {
             corrupt = true;
           }
