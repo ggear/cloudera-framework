@@ -52,6 +52,7 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
         return index + 1 < records.length;
       }
 
+      @SuppressWarnings("ConstantConditions")
       @Override
       public boolean next(RecordKey recordsKey) throws IOException {
         initialise();

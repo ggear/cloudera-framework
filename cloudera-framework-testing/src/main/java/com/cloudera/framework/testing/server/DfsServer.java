@@ -123,6 +123,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     return files;
   }
 
+  @SuppressWarnings("ConstantConditions")
   private static File[] listFilesLocal(String path, boolean explode, String... paths) {
     final File pathFile = new File(ABS_DIR_WORKING + "/" + path);
     if (!pathFile.exists() || !pathFile.isDirectory()) {
@@ -388,6 +389,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     log(LOG, "stop", time);
   }
 
+  @SuppressWarnings("ConstantConditions")
   private boolean copyFromLocalFile(List<Path> sources, Path destination) throws IOException {
     FileSystem fileSystem = getFileSystem();
     for (Path source : sources) {

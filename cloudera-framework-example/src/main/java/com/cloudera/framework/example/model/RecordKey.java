@@ -164,6 +164,7 @@ public class RecordKey implements WritableComparable<RecordKey> {
     valid = WritableUtils.readVInt(in) != 0;
   }
 
+  @SuppressWarnings("NullableProblems")
   @Override
   public int compareTo(RecordKey that) {
     return Integer.compare(this.hash, that.hash);

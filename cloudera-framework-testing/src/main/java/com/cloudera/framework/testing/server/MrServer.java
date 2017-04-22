@@ -54,6 +54,7 @@ public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
     return new CdhServer<?, ?>[]{DfsServer.getInstance()};
   }
 
+  @SuppressWarnings("ConstantConditions")
   @Override
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");

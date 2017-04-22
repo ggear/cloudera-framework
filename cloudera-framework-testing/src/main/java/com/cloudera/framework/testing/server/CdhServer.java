@@ -148,6 +148,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
     return runtime;
   }
 
+  @SuppressWarnings("NullableProblems")
   @Override
   public int compareTo(CdhServer<CdhServer<?, ?>, V> that) {
     return getIndex() < that.getIndex() ? 1 : getIndex() > that.getIndex() ? -1 : 0;
