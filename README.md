@@ -3,8 +3,12 @@
 Provide an example organisation wide Cloudera (i.e. Hadoop ecosystem) project framework, 
 defining corporate standards on runtime components, datasets, libraries, testing and project 
 structure to facilitate operating with a continuous deployment pipeline. This example includes 
-[client](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-client), [runtime](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-runtime), [thirdparty](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-thirdparty) bill-of-materials, [utlitiy](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common) libraries, [driver](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common/Driver.java) and a unit test [harness](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/main/java/com/cloudera/framework/testing) with [examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/test/java/com/cloudera/framework/testing/server), 
-providing full coverage against CDH, including:
+[client](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-client)/[runtime](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-runtime)/[thirdparty](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-thirdparty)
+bill-of-materials,
+[utlitiy](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common)/[driver](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common/Driver.java)
+libraries and a unit test [harness](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/main/java/com/cloudera/framework/testing)
+with [examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/test/java/com/cloudera/framework/testing/server),
+providing full coverage against CDH:
 
 * HDFS
 * YARN
@@ -17,12 +21,13 @@ providing full coverage against CDH, including:
 * Kafka
 
 An [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
-is also included, codifying the standards, providing an end to end data 
-[streaming](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/stream), [ingest](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/ingest), [modeling](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/model), [testing](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/java/com/cloudera/framework/example) and synthetic [datasets](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/resources/data/mydataset) 
+is included, codifying the standards, providing an end to end data 
+[streaming](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/stream), [ingest](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/ingest), [modeling](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/model), [testing](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/java/com/cloudera/framework/example)
+pipeline, with synthetic [datasets](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/resources/data/mydataset) 
 to exercise the codebase.
 
 Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) 
-is also included to provide a bare bones starter client module.
+is included to provide a bare bones starter client module.
 
 ## Requirements
 
@@ -33,7 +38,7 @@ To compile, build and package from source, this project requires:
 * Python 2.7
 * Maven 3
 
-To run the unit and integrations tests, binaries and meta-data are provided for all CDH componnents:
+To run the unit and integrations tests, binaries and meta-data are provided for all CDH components:
 
 * MacOS 10.12.x
 * CentOS/RHEL 6.x
@@ -58,8 +63,8 @@ cd cloudera-framework
 mvn install
 ```
 
-Alternatively, the module can be included as a binary dependency in maven, an example of pulling in the 
-core client bill-of-materials and test harness is seen below:
+Alternatively, the module can be included as a binary dependency in maven, for example pulling in the 
+core client bill-of-materials and test harness can be achieved as so:
 
 ```xml
 	<repositories>
