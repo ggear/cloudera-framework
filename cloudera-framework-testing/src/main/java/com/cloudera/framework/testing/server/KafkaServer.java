@@ -46,7 +46,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   /**
    * Get instance with default runtime
    *
-   * @return
    */
   public static synchronized KafkaServer getInstance() {
     return getInstance(instance == null ? Runtime.CLUSTER_BROKER : instance.getRuntime());
@@ -55,7 +54,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   /**
    * Get instance with specific <code>runtime</code>
    *
-   * @return
    */
   public static synchronized KafkaServer getInstance(Runtime runtime) {
     return instance == null ? instance = new KafkaServer(runtime) : instance.assertRuntime(runtime);
@@ -65,7 +63,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
    * Get connect string
    *
    * @return formatted as <code>host:post</code>
-   * @throws IOException
    */
   public synchronized String getConnectString() throws IOException {
     if (kafka == null) {
@@ -77,7 +74,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   /**
    * Get the ZooKeeper Utils
    *
-   * @return
    */
   public synchronized ZkUtils getZooKeeperUtils() {
     return zooKeeperUtils;
@@ -91,7 +87,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
    * @param replicationFactor
    * @param properties
    * @return if the topic was created or not
-   * @throws InterruptedException
    */
   public synchronized boolean createTopic(String topic, int partitions, int replicationFactor, Properties properties)
     throws InterruptedException {
@@ -115,7 +110,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
    *
    * @param topic
    * @return if the topic was deleted or not
-   * @throws InterruptedException
    */
   public synchronized boolean deleteTopic(String topic) {
     boolean deleted = true;
@@ -130,8 +124,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   /**
    * Get standard producer properties
    *
-   * @return
-   * @throws IOException
    */
   public synchronized Properties getProducerProperties() throws IOException {
     Properties properties = new Properties();
@@ -149,8 +141,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
   /**
    * Get standard consumer properties
    *
-   * @return
-   * @throws IOException
    */
   public synchronized Properties getConsumerProperties() throws IOException {
     Properties properties = new Properties();

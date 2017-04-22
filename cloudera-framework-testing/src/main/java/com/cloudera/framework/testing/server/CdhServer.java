@@ -48,7 +48,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   /**
    * Get the next available port
    *
-   * @return
    */
   public static int getNextAvailablePort() {
     while (SERVER_BIND_PORT_START.get() < SERVER_BIND_PORT_FINISH) {
@@ -68,7 +67,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
    * dependency pipeline, the lower the index the earlier in the dependency tree
    * <code>this</code> object will be
    *
-   * @return
    */
   public abstract int getIndex();
 
@@ -76,7 +74,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
    * Get the list of {@link CdhServer} dependencies, override if there are
    * dependencies
    *
-   * @return
    */
   public CdhServer<?, ?>[] getDependencies() {
     return new CdhServer<?, ?>[0];
@@ -85,7 +82,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   /**
    * Get the {@link Configuration} associated with this {@link CdhServer}
    *
-   * @return
    */
   public synchronized Configuration getConf() {
     return conf;
@@ -103,7 +99,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   /**
    * Test to see if this {@link CdhServer} is started
    *
-   * @return
    */
   public synchronized boolean isStarted() {
     return semaphore > 0;
@@ -112,14 +107,12 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   /**
    * Start the {@link CdhServer}
    *
-   * @throws Exception
    */
   public abstract void start() throws Exception;
 
   /**
    * Clean-up all state persisted by this {@link CdhServer}
    *
-   * @throws Exception
    */
   public void clean() throws Exception {
   }
@@ -127,7 +120,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   /**
    * Report on the state persisted by this {@link CdhServer}
    *
-   * @throws Exception
    */
   public void state() throws Exception {
   }
@@ -135,14 +127,12 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   /**
    * Stop the {@link CdhServer}
    *
-   * @throws Exception
    */
   public abstract void stop() throws Exception;
 
   /**
    * Get the configured runtime
    *
-   * @return
    */
   public synchronized V getRuntime() {
     return runtime;

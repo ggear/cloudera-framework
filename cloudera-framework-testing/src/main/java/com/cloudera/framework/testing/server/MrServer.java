@@ -29,7 +29,6 @@ public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
   /**
    * Get instance with default runtime
    *
-   * @return
    */
   public static synchronized MrServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_JOB : instance.getRuntime());
@@ -38,7 +37,6 @@ public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
   /**
    * Get instance with specific <code>runtime</code>
    *
-   * @return
    */
   public static synchronized MrServer getInstance(Runtime runtime) {
     return instance == null ? instance = new MrServer(runtime) : instance.assertRuntime(runtime);

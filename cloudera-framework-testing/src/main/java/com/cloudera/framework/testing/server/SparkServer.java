@@ -26,7 +26,6 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   /**
    * Get instance with default runtime
    *
-   * @return
    */
   public static synchronized SparkServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_CONTEXT : instance.getRuntime());
@@ -35,7 +34,6 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   /**
    * Get instance with specific <code>runtime</code>
    *
-   * @return
    */
   public static synchronized SparkServer getInstance(Runtime runtime) {
     return instance == null ? instance = new SparkServer(runtime) : instance.assertRuntime(runtime);
@@ -44,7 +42,6 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   /**
    * Get {@link JavaSparkContext}
    *
-   * @return
    */
   public synchronized JavaSparkContext getContext() {
     return context;

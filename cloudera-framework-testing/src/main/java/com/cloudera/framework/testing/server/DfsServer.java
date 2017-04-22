@@ -49,7 +49,6 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   /**
    * Get instance with default runtime
    *
-   * @return
    */
   public static synchronized DfsServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_FS : instance.getRuntime());
@@ -58,7 +57,6 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   /**
    * Get instance with specific <code>runtime</code>
    *
-   * @return
    */
   public static synchronized DfsServer getInstance(Runtime runtime) {
     return instance == null ? instance = new DfsServer(runtime) : instance.assertRuntime(runtime);
@@ -225,7 +223,6 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    * @param sourcePath
    * @param destinationPath
    * @return local files that have been copied
-   * @throws IOException
    */
   public File[] copyFromLocalFile(String sourcePath, String destinationPath) throws IOException {
     File file = new File(getPathLocal(sourcePath).toString());

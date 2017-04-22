@@ -34,7 +34,6 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
   /**
    * Get instance with default runtime
    *
-   * @return
    */
   public static synchronized KuduServer getInstance() {
     return getInstance(instance == null ? Runtime.CLUSTER_DEAMONS : instance.getRuntime());
@@ -43,7 +42,6 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
   /**
    * Get instance with specific <code>runtime</code>
    *
-   * @return
    */
   public static synchronized KuduServer getInstance(Runtime runtime) {
     return instance == null ? instance = new KuduServer(runtime) : instance.assertRuntime(runtime);
@@ -52,7 +50,6 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
   /**
    * Get master addresses
    *
-   * @return
    */
   public synchronized String getMasterAddresses() {
     return miniKudu.getMasterAddresses();

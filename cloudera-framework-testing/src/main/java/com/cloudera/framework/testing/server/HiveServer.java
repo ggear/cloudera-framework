@@ -70,7 +70,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   /**
    * Get instance with default runtime
    *
-   * @return
    */
   public static synchronized HiveServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_MR2 : instance.getRuntime());
@@ -79,7 +78,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   /**
    * Get instance with specific <code>runtime</code>
    *
-   * @return
    */
   public static synchronized HiveServer getInstance(Runtime runtime) {
     return instance == null ? instance = new HiveServer(runtime) : instance.assertRuntime(runtime);
@@ -91,7 +89,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param statement
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
-   * @throws Exception
    */
   public List<String> execute(String statement) throws Exception {
     return execute(statement, Collections.emptyMap(), Collections.emptyMap());
@@ -105,7 +102,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param parameters
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
-   * @throws Exception
    */
   public List<String> execute(String statement, Map<String, String> parameters) throws Exception {
     return execute(statement, parameters, Collections.emptyMap());
@@ -121,7 +117,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param configuration
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
-   * @throws Exception
    */
   public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration) throws Exception {
     return execute(statement, parameters, configuration, MAX_RESULTS_DEFAULT);
@@ -138,7 +133,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param maxResults
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
-   * @throws Exception
    */
   public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults)
     throws Exception {
@@ -157,7 +151,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @param quiet
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
-   * @throws Exception
    */
   public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults,
                               boolean quiet) throws Exception {
@@ -209,7 +202,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @return {@link List} of {@link List} of {@link String} results per
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
-   * @throws Exception
    */
   public List<List<String>> execute(File file) throws Exception {
     return execute(file, Collections.emptyMap(), Collections.emptyMap());
@@ -225,7 +217,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @return {@link List} of {@link List} of {@link String} results per
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
-   * @throws Exception
    */
   public List<List<String>> execute(File file, Map<String, String> parameters) throws Exception {
     return execute(file, parameters, Collections.emptyMap());
@@ -243,7 +234,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @return {@link List} of {@link List} of {@link String} results per
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
-   * @throws Exception
    */
   public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration) throws Exception {
     return execute(file, parameters, configuration, MAX_RESULTS_DEFAULT);
@@ -262,7 +252,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
    * @return {@link List} of {@link List} of {@link String} results per
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
-   * @throws Exception
    */
   public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration, int maxResults)
     throws Exception {

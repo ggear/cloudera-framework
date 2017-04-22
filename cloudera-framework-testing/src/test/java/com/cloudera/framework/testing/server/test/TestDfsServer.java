@@ -75,7 +75,6 @@ public abstract class TestDfsServer implements TestConstants {
   /**
    * Test DFS mkdir and file touch
    *
-   * @throws IOException
    */
   @Test
   public void testDfsMkDir() throws Exception {
@@ -88,7 +87,6 @@ public abstract class TestDfsServer implements TestConstants {
   /**
    * Test DFS is clean
    *
-   * @throws IOException
    */
   @Test
   public void testDfsClean() {
@@ -98,7 +96,6 @@ public abstract class TestDfsServer implements TestConstants {
   /**
    * Test DFS path generation
    *
-   * @throws Exception
    */
   @Test
   public void testDfsGetPath() throws Exception {
@@ -123,7 +120,6 @@ public abstract class TestDfsServer implements TestConstants {
   /**
    * Test DFS path generation
    *
-   * @throws Exception
    */
   @Test
   public void testDfsGetPathUri() throws Exception {

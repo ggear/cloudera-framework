@@ -35,7 +35,6 @@ public class MqttServer extends CdhServer<MqttServer, MqttServer.Runtime> {
   /**
    * Get instance with default runtime
    *
-   * @return
    */
   public static synchronized MqttServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_BROKER : instance.getRuntime());
@@ -44,7 +43,6 @@ public class MqttServer extends CdhServer<MqttServer, MqttServer.Runtime> {
   /**
    * Get instance with specific <code>runtime</code>
    *
-   * @return
    */
   public static synchronized MqttServer getInstance(Runtime runtime) {
     return instance == null ? instance = new MqttServer(runtime) : instance.assertRuntime(runtime);
@@ -53,7 +51,6 @@ public class MqttServer extends CdhServer<MqttServer, MqttServer.Runtime> {
   /**
    * Get connect {@link String}
    *
-   * @return
    */
   public String getConnectString() {
     return "tcp://localhost:" + MQTT_BROKER_PORT;

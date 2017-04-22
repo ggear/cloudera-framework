@@ -29,7 +29,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   /**
    * Get instance with default runtime
    *
-   * @return
    */
   public static synchronized PythonServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_CPYTHON : instance.getRuntime());
@@ -38,7 +37,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   /**
    * Get instance with specific <code>runtime</code>
    *
-   * @return
    */
   public static synchronized PythonServer getInstance(Runtime runtime) {
     return instance == null ? instance = new PythonServer(runtime) : instance.assertRuntime(runtime);
@@ -50,8 +48,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    *
    * @param file
    * @return the exit code
-   * @throws InterruptedException
-   * @throws Exception
    */
   public int execute(File file) throws IOException, InterruptedException {
     return execute(file, null);
@@ -64,8 +60,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * @param file
    * @param parameters
    * @return the exit code
-   * @throws InterruptedException
-   * @throws Exception
    */
   public int execute(File file, List<String> parameters) throws IOException, InterruptedException {
     return execute(file, parameters, null);
@@ -79,8 +73,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * @param parameters
    * @param configuration
    * @return the exit code
-   * @throws InterruptedException
-   * @throws Exception
    */
   public int execute(File file, List<String> parameters, Map<String, String> configuration) throws IOException, InterruptedException {
     return execute(file, parameters, configuration, null, null);
@@ -96,8 +88,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * @param output
    * @param error
    * @return the exit code
-   * @throws InterruptedException
-   * @throws Exception
    */
   public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error)
     throws IOException, InterruptedException {
@@ -115,8 +105,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * @param error
    * @param quiet
    * @return the exit code
-   * @throws InterruptedException
-   * @throws Exception
    */
   public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error,
                      boolean quiet) throws IOException, InterruptedException {

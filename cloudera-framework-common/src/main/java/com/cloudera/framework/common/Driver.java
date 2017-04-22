@@ -74,7 +74,6 @@ public abstract class Driver extends Configured implements Tool {
   /**
    * Provide a brief description of the driver for printing as part of the usage
    *
-   * @return
    */
   public String description() {
     return "";
@@ -108,7 +107,6 @@ public abstract class Driver extends Configured implements Tool {
    *                  {@link #getConf()}
    * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
    * failure
-   * @throws Exception
    */
   @SuppressWarnings("SameReturnValue")
   public int prepare(String... arguments) throws Exception {
@@ -120,7 +118,6 @@ public abstract class Driver extends Configured implements Tool {
    *
    * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
    * failure
-   * @throws Exception
    */
   public abstract int execute() throws Exception;
 
@@ -129,7 +126,6 @@ public abstract class Driver extends Configured implements Tool {
    *
    * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
    * failure
-   * @throws Exception
    */
   @SuppressWarnings("SameReturnValue")
   public int cleanup() {

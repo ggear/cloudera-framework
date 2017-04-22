@@ -21,7 +21,6 @@ public abstract class RecordStringSerDe {
    * @param recordKey
    * @param record
    * @param string
-   * @return
    */
   public abstract RecordStringDe getDeserializer(final RecordKey recordKey, final Record record, final String string);
 
@@ -29,7 +28,6 @@ public abstract class RecordStringSerDe {
    * Get a serializer
    *
    * @param size
-   * @return
    */
   public abstract RecordStringSer getSerializer(final int size);
 
@@ -43,18 +41,14 @@ public abstract class RecordStringSerDe {
     /**
      * Determines if the de-serializer is exhausted
      *
-     * @return
-     * @throws IOException
-     */
+         */
     boolean hasNext();
 
     /**
      * Get the next key and record
      *
      * @param recordsKey
-     * @return
-     * @throws IOException
-     */
+         */
     boolean next(RecordKey recordsKey) throws IOException;
 
   }
@@ -70,16 +64,13 @@ public abstract class RecordStringSerDe {
      * Add a record
      *
      * @param record
-     * @throws IOException
-     */
+       */
     void add(Record record) throws IOException;
 
     /**
      * Get the string
      *
-     * @return
-     * @throws IOException
-     */
+         */
     String get() throws IOException;
 
   }

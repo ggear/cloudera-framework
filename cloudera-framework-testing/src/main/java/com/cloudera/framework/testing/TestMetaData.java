@@ -59,7 +59,6 @@ public class TestMetaData {
   /**
    * Get an {@link TestMetaData}
    *
-   * @return
    */
   public static TestMetaData getInstance() {
     return new TestMetaData();
@@ -69,7 +68,6 @@ public class TestMetaData {
    * Set the source directories relative to the module root
    *
    * @param dataSetSourceDirs
-   * @return
    */
   public TestMetaData dataSetSourceDirs(String... dataSetSourceDirs) {
     this.dataSetSourceDirs = dataSetSourceDirs;
@@ -80,7 +78,6 @@ public class TestMetaData {
    * Set dataset names, <code>null</code> will match all dataset directories
    *
    * @param dataSetNames
-   * @return
    */
   public TestMetaData dataSetNames(String... dataSetNames) {
     this.dataSetNames = dataSetNames;
@@ -92,7 +89,6 @@ public class TestMetaData {
    * indexed dataset
    *
    * @param dataSetSubsets
-   * @return
    */
   public TestMetaData dataSetSubsets(String[][] dataSetSubsets) {
     this.dataSetSubsets = dataSetSubsets;
@@ -104,7 +100,6 @@ public class TestMetaData {
    * this indexed dataset subset
    *
    * @param dataSetLabels
-   * @return
    */
   public TestMetaData dataSetLabels(String[][][] dataSetLabels) {
     this.dataSetLabels = dataSetLabels;
@@ -115,7 +110,6 @@ public class TestMetaData {
    * Set the destination paths relative to the DFS root
    *
    * @param dataSetDestinationDirs
-   * @return
    */
   public TestMetaData dataSetDestinationDirs(String... dataSetDestinationDirs) {
     this.dataSetDestinationDirs = dataSetDestinationDirs;
@@ -126,7 +120,6 @@ public class TestMetaData {
    * Set the parameters to parametrise this test
    *
    * @param parameters
-   * @return
    */
   public TestMetaData parameters(Map... parameters) {
     this.parameters = parameters;
@@ -137,7 +130,6 @@ public class TestMetaData {
    * Set the asserts to use for {@link Assert} methods
    *
    * @param asserts
-   * @return
    */
   public TestMetaData asserts(Map... asserts) {
     this.asserts = asserts;
