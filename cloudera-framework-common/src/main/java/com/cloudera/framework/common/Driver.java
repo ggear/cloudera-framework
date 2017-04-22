@@ -73,7 +73,6 @@ public abstract class Driver extends Configured implements Tool {
 
   /**
    * Provide a brief description of the driver for printing as part of the usage
-   *
    */
   public String description() {
     return "";

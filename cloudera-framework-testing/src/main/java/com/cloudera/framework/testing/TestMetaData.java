@@ -58,7 +58,6 @@ public class TestMetaData {
 
   /**
    * Get an {@link TestMetaData}
-   *
    */
   public static TestMetaData getInstance() {
     return new TestMetaData();

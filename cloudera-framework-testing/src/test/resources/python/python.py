@@ -8,10 +8,9 @@ Options:
                                          Required
 '''
 
-import logging
-
 import getopt
 import inspect
+import logging
 import sys
 import textwrap
 

@@ -21,11 +21,10 @@ import org.junit.runner.RunWith;
 @RunWith(TestRunner.class)
 public class TestMqttServer implements TestConstants {
 
-  private static final int MQTT_TIMEOUT_MS = 1000;
-  private static final String TOPIC_NAME_TEST = "mytopic";
-
   @ClassRule
   public static final MqttServer mqttServer = MqttServer.getInstance();
+  private static final int MQTT_TIMEOUT_MS = 1000;
+  private static final String TOPIC_NAME_TEST = "mytopic";
 
   @Test
   public void testMqtt() throws MqttException, InterruptedException {

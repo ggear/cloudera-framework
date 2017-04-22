@@ -39,7 +39,6 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
 
   /**
    * Get instance with default runtime
-   *
    */
   public static synchronized FlumeServer getInstance() {
     return getInstance(instance == null ? Runtime.MANUALLY_CRANKED : instance.getRuntime());
@@ -47,7 +46,6 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
 
   /**
    * Get instance with specific <code>runtime</code>
-   *
    */
   public static synchronized FlumeServer getInstance(Runtime runtime) {
     return instance == null ? instance = new FlumeServer(runtime) : instance.assertRuntime(runtime);

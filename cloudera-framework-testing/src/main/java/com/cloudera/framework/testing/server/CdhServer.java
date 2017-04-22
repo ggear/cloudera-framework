@@ -47,7 +47,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
 
   /**
    * Get the next available port
-   *
    */
   public static int getNextAvailablePort() {
     while (SERVER_BIND_PORT_START.get() < SERVER_BIND_PORT_FINISH) {
@@ -66,14 +65,12 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
    * Define the index that defines <code>this</code> objects order within the
    * dependency pipeline, the lower the index the earlier in the dependency tree
    * <code>this</code> object will be
-   *
    */
   public abstract int getIndex();
 
   /**
    * Get the list of {@link CdhServer} dependencies, override if there are
    * dependencies
-   *
    */
   public CdhServer<?, ?>[] getDependencies() {
     return new CdhServer<?, ?>[0];
@@ -81,7 +78,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
 
   /**
    * Get the {@link Configuration} associated with this {@link CdhServer}
-   *
    */
   public synchronized Configuration getConf() {
     return conf;
@@ -98,7 +94,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
 
   /**
    * Test to see if this {@link CdhServer} is started
-   *
    */
   public synchronized boolean isStarted() {
     return semaphore > 0;
@@ -106,33 +101,28 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
 
   /**
    * Start the {@link CdhServer}
-   *
    */
   public abstract void start() throws Exception;
 
   /**
    * Clean-up all state persisted by this {@link CdhServer}
-   *
    */
   public void clean() throws Exception {
   }
 
   /**
    * Report on the state persisted by this {@link CdhServer}
-   *
    */
   public void state() throws Exception {
   }
 
   /**
    * Stop the {@link CdhServer}
-   *
    */
   public abstract void stop() throws Exception;
 
   /**
    * Get the configured runtime
-   *
    */
   public synchronized V getRuntime() {
     return runtime;

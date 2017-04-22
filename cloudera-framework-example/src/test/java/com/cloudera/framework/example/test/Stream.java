@@ -33,6 +33,10 @@ import org.junit.runner.RunWith;
 @SuppressWarnings("unchecked")
 public class Stream extends TestBase {
 
+  @ClassRule
+  public static final DfsServer dfsServer = DfsServer.getInstance();
+  @ClassRule
+  public static final FlumeServer flumeServer = FlumeServer.getInstance();
   private static final String FLUME_CONFIG_FILE = "flume/flume-conf.properties";
   private static final String FLUME_AGENT_NAME = "mydataset";
   private static final String FLUME_SOURCE_POLL_MS = "25";
@@ -41,13 +45,6 @@ public class Stream extends TestBase {
   private static final String KEY_FLUME_OUTPUT_DIR = "outputDir";
   private static final String KEY_FLUME_PROCESS_ITERATIONS = "iterations";
   private static final String KEY_FLUME_PROCESS_FILE_COUNT = "fileCount";
-
-  @ClassRule
-  public static final DfsServer dfsServer = DfsServer.getInstance();
-
-  @ClassRule
-  public static final FlumeServer flumeServer = FlumeServer.getInstance();
-
   public final TestMetaData testMetaDataCsvBatch = TestMetaData.getInstance() //
     .parameters( //
       ImmutableMap.of( //

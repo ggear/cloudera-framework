@@ -40,15 +40,14 @@ public abstract class RecordStringSerDe {
 
     /**
      * Determines if the de-serializer is exhausted
-     *
-         */
+     */
     boolean hasNext();
 
     /**
      * Get the next key and record
      *
      * @param recordsKey
-         */
+     */
     boolean next(RecordKey recordsKey) throws IOException;
 
   }
@@ -64,13 +63,12 @@ public abstract class RecordStringSerDe {
      * Add a record
      *
      * @param record
-       */
+     */
     void add(Record record) throws IOException;
 
     /**
      * Get the string
-     *
-         */
+     */
     String get() throws IOException;
 
   }

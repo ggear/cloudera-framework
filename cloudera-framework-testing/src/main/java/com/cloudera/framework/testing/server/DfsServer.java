@@ -48,7 +48,6 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
 
   /**
    * Get instance with default runtime
-   *
    */
   public static synchronized DfsServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_FS : instance.getRuntime());
@@ -56,7 +55,6 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
 
   /**
    * Get instance with specific <code>runtime</code>
-   *
    */
   public static synchronized DfsServer getInstance(Runtime runtime) {
     return instance == null ? instance = new DfsServer(runtime) : instance.assertRuntime(runtime);

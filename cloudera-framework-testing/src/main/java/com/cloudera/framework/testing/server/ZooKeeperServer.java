@@ -37,7 +37,6 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
 
   /**
    * Get instance with default runtime
-   *
    */
   public static synchronized ZooKeeperServer getInstance() {
     return getInstance(instance == null ? Runtime.CLUSTER_SERVER : instance.getRuntime());
@@ -45,7 +44,6 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
 
   /**
    * Get instance with specific <code>runtime</code>
-   *
    */
   public static synchronized ZooKeeperServer getInstance(Runtime runtime) {
     return instance == null ? instance = new ZooKeeperServer(runtime) : instance.assertRuntime(runtime);
@@ -53,7 +51,6 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
 
   /**
    * Get connect {@link String}
-   *
    */
   public String getConnectString() {
     return CdhServer.SERVER_BIND_IP + ":" + port;

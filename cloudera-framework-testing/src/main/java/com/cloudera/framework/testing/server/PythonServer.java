@@ -28,7 +28,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
 
   /**
    * Get instance with default runtime
-   *
    */
   public static synchronized PythonServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_CPYTHON : instance.getRuntime());
@@ -36,7 +35,6 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
 
   /**
    * Get instance with specific <code>runtime</code>
-   *
    */
   public static synchronized PythonServer getInstance(Runtime runtime) {
     return instance == null ? instance = new PythonServer(runtime) : instance.assertRuntime(runtime);

@@ -69,7 +69,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   /**
    * Get instance with default runtime
-   *
    */
   public static synchronized HiveServer getInstance() {
     return getInstance(instance == null ? Runtime.LOCAL_MR2 : instance.getRuntime());
@@ -77,7 +76,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   /**
    * Get instance with specific <code>runtime</code>
-   *
    */
   public static synchronized HiveServer getInstance(Runtime runtime) {
     return instance == null ? instance = new HiveServer(runtime) : instance.assertRuntime(runtime);

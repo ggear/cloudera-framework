@@ -28,10 +28,9 @@ import org.junit.runner.RunWith;
 @RunWith(TestRunner.class)
 public class TestKafkaServer implements TestConstants {
 
-  private static final String TOPIC_NAME_TEST = "mytopic";
-
   @ClassRule
   public static final KafkaServer kafkaServer = KafkaServer.getInstance();
+  private static final String TOPIC_NAME_TEST = "mytopic";
 
   @Test
   public void testImplicitDependencies() {

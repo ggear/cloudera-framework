@@ -45,7 +45,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   /**
    * Get instance with default runtime
-   *
    */
   public static synchronized KafkaServer getInstance() {
     return getInstance(instance == null ? Runtime.CLUSTER_BROKER : instance.getRuntime());
@@ -53,7 +52,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   /**
    * Get instance with specific <code>runtime</code>
-   *
    */
   public static synchronized KafkaServer getInstance(Runtime runtime) {
     return instance == null ? instance = new KafkaServer(runtime) : instance.assertRuntime(runtime);
@@ -73,7 +71,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   /**
    * Get the ZooKeeper Utils
-   *
    */
   public synchronized ZkUtils getZooKeeperUtils() {
     return zooKeeperUtils;
@@ -123,7 +120,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   /**
    * Get standard producer properties
-   *
    */
   public synchronized Properties getProducerProperties() throws IOException {
     Properties properties = new Properties();
@@ -140,7 +136,6 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
 
   /**
    * Get standard consumer properties
-   *
    */
   public synchronized Properties getConsumerProperties() throws IOException {
     Properties properties = new Properties();

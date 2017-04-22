@@ -11,7 +11,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +73,6 @@ public abstract class TestDfsServer implements TestConstants {
 
   /**
    * Test DFS mkdir and file touch
-   *
    */
   @Test
   public void testDfsMkDir() throws Exception {
@@ -86,7 +84,6 @@ public abstract class TestDfsServer implements TestConstants {
 
   /**
    * Test DFS is clean
-   *
    */
   @Test
   public void testDfsClean() {
@@ -95,7 +92,6 @@ public abstract class TestDfsServer implements TestConstants {
 
   /**
    * Test DFS path generation
-   *
    */
   @Test
   public void testDfsGetPath() throws Exception {
@@ -119,7 +115,6 @@ public abstract class TestDfsServer implements TestConstants {
 
   /**
    * Test DFS path generation
-   *
    */
   @Test
   public void testDfsGetPathUri() throws Exception {

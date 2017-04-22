@@ -44,7 +44,6 @@ public abstract class TestHiveServer implements TestConstants {
 
   /**
    * Test Hive
-   *
    */
   @Test
   public void testHiveCreateSelect() throws Exception {
