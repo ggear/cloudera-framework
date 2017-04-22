@@ -22,10 +22,10 @@ import org.junit.runner.RunWith;
 public class TestFlumeServer implements TestConstants {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance();
+  public static final DfsServer dfsServer = DfsServer.getInstance();
 
   @ClassRule
-  public static FlumeServer flumeServer = FlumeServer.getInstance();
+  public static final FlumeServer flumeServer = FlumeServer.getInstance();
 
   @Test
   public void testFlume() throws InterruptedException, IOException, EventDeliveryException {

@@ -53,12 +53,12 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   private static final int MAX_RESULTS_DEFAULT = 100;
   private static final AtomicLong DERBY_DB_COUNTER = new AtomicLong();
 
-  private static Logger LOG = LoggerFactory.getLogger(HiveServer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HiveServer.class);
 
   private static HiveServer instance;
 
-  private int httpPort;
-  private int binaryPort;
+  private final int httpPort;
+  private final int binaryPort;
   private HiveServer2 hiveServer;
 
   private HiveServer(Runtime runtime) {
@@ -268,7 +268,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     throws Exception {
     List<List<String>> results = new ArrayList<>();
     if (file == null) {
-      throw new IOException("File [" + file + "] not found");
+      throw new IOException("File [null] not found");
     }
     log(LOG, "execute", "script [" + file.getAbsolutePath() + "]");
     for (String statement : FileUtils.readFileToString(file).split(COMMAND_DELIMETER)) {
@@ -380,8 +380,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     String dbName = "default";
     String sessionConfExt = "";
     String hiveConfExt = "";
-    sessionConfExt = sessionConfExt == null ? "" : sessionConfExt;
-    hiveConfExt = hiveConfExt == null ? "" : hiveConfExt;
     if (isHttpTransportMode()) {
       hiveConfExt = "hive.server2.transport.mode=http;hive.server2.thrift.http.path=cliservice;" + hiveConfExt;
     }
@@ -413,7 +411,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     long pollPeriod = 100L;
     long startupTimeout = 1000L * 1000L;
     CLIServiceClient hiveClient = getClient();
-    SessionHandle sessionHandle = null;
+    SessionHandle sessionHandle;
     do {
       Thread.sleep(pollPeriod);
       waitTime += pollPeriod;

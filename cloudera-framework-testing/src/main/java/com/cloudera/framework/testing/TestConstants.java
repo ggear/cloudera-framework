@@ -8,56 +8,56 @@ import java.io.File;
 public interface TestConstants {
 
   // Directories
-  public static final String DIR_TARGET = "target";
-  public static final String DIR_DATASET = "data";
-  public static final String DIR_DATA = "test-data";
-  public static final String DIR_CLASSES = "classes";
-  public static final String DIR_CLASSES_TEST = "test-classes";
-  public static final String DIR_DERBY = "test-derby";
-  public static final String DIR_DERBY_DB = "test-db";
-  public static final String DIR_DERBY_LOG = "derby.log";
-  public static final String DIR_DFS = "test-dfs";
-  public static final String DIR_DFS_TMP = "test-dfs-tmp";
-  public static final String DIR_DFS_LOCAL = "test-dfs-local";
-  public static final String DIR_KUDU = "test-kudu";
-  public static final String DIR_HIVE = "test-hive";
-  public static final String DIR_KAFKA = "test-kafka";
-  public static final String DIR_ZOOKEEPER = "test-zookeper";
+  String DIR_TARGET = "target";
+  String DIR_DATASET = "data";
+  String DIR_DATA = "test-data";
+  String DIR_CLASSES = "classes";
+  String DIR_CLASSES_TEST = "test-classes";
+  String DIR_DERBY = "test-derby";
+  String DIR_DERBY_DB = "test-db";
+  String DIR_DERBY_LOG = "derby.log";
+  String DIR_DFS = "test-dfs";
+  String DIR_DFS_TMP = "test-dfs-tmp";
+  String DIR_DFS_LOCAL = "test-dfs-local";
+  String DIR_KUDU = "test-kudu";
+  String DIR_HIVE = "test-hive";
+  String DIR_KAFKA = "test-kafka";
+  String DIR_ZOOKEEPER = "test-zookeper";
 
   // Runtime directories
-  public static final String DIR_RUNTIME_KUDU = "runtime-kudu";
-  public static final String DIR_RUNTIME_MQTT = "runtime-mqtt";
-  public static final String DIR_RUNTIME_MR = "MiniMRCluster_";
+  String DIR_RUNTIME_KUDU = "runtime-kudu";
+  String DIR_RUNTIME_MQTT = "runtime-mqtt";
+  String DIR_RUNTIME_MR = "MiniMRCluster_";
 
   // Relative directories
-  public static final String REL_DIR_DATA = DIR_TARGET + "/" + DIR_DATA;
-  public static final String REL_DIR_CLASSES = DIR_TARGET + "/" + DIR_CLASSES;
-  public static final String REL_DIR_CLASSES_TEST = DIR_TARGET + "/" + DIR_CLASSES_TEST;
-  public static final String REL_DIR_DATASET = REL_DIR_CLASSES_TEST + "/" + DIR_DATASET;
-  public static final String REL_DIR_DFS_LOCAL = DIR_TARGET + "/" + DIR_DFS_LOCAL;
-  public static final String REL_DIR_DFS = DIR_TARGET + "/" + DIR_DFS;
-  public static final String REL_DIR_KUDU = DIR_TARGET + "/" + DIR_KUDU;
+  String REL_DIR_DATA = DIR_TARGET + "/" + DIR_DATA;
+  String REL_DIR_CLASSES = DIR_TARGET + "/" + DIR_CLASSES;
+  String REL_DIR_CLASSES_TEST = DIR_TARGET + "/" + DIR_CLASSES_TEST;
+  String REL_DIR_DATASET = REL_DIR_CLASSES_TEST + "/" + DIR_DATASET;
+  String REL_DIR_DFS_LOCAL = DIR_TARGET + "/" + DIR_DFS_LOCAL;
+  String REL_DIR_DFS = DIR_TARGET + "/" + DIR_DFS;
+  String REL_DIR_KUDU = DIR_TARGET + "/" + DIR_KUDU;
 
   // Absolute directories
-  public static final String ABS_DIR_WORKING = new File(".").getAbsolutePath().substring(0, new File(".").getAbsolutePath().length() - 2);
-  public static final String ABS_DIR_TARGET = ABS_DIR_WORKING + "/" + DIR_TARGET;
-  public static final String ABS_DIR_CLASSES = ABS_DIR_TARGET + "/" + DIR_CLASSES;
-  public static final String ABS_DIR_CLASSES_TEST = ABS_DIR_TARGET + "/" + DIR_CLASSES_TEST;
-  public static final String ABS_DIR_DATA = ABS_DIR_TARGET + "/" + DIR_DATA;
-  public static final String ABS_DIR_DERBY = ABS_DIR_TARGET + "/" + DIR_DERBY;
-  public static final String ABS_DIR_DERBY_DB = ABS_DIR_DERBY + "/" + DIR_DERBY_DB;
-  public static final String ABS_DIR_DERBY_LOG = ABS_DIR_DERBY + "/" + DIR_DERBY_LOG;
-  public static final String ABS_DIR_DFS = ABS_DIR_TARGET + "/" + DIR_DFS;
-  public static final String ABS_DIR_DFS_TMP = ABS_DIR_TARGET + "/" + DIR_DFS_TMP;
-  public static final String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/" + DIR_DFS_LOCAL;
-  public static final String ABS_DIR_KUDU = ABS_DIR_TARGET + "/" + DIR_RUNTIME_KUDU;
-  public static final String ABS_DIR_MQTT = ABS_DIR_TARGET + "/" + DIR_RUNTIME_MQTT;
-  public static final String ABS_DIR_HIVE = ABS_DIR_TARGET + "/" + DIR_HIVE;
-  public static final String ABS_DIR_KAFKA = ABS_DIR_TARGET + "/" + DIR_KAFKA;
-  public static final String ABS_DIR_ZOOKEEPER = ABS_DIR_TARGET + "/" + DIR_ZOOKEEPER;
-  public static final String ABS_DIR_PYTHON = ABS_DIR_CLASSES + "/python";
-  public static final String ABS_DIR_HIVE_QUERY = ABS_DIR_CLASSES + "/hive/query";
-  public static final String ABS_DIR_HIVE_SCHEMA = ABS_DIR_CLASSES + "/hive/schema";
-  public static final String ABS_DIR_HIVE_REFRESH = ABS_DIR_CLASSES + "/hive/refresh";
+  String ABS_DIR_WORKING = new File(".").getAbsolutePath().substring(0, new File(".").getAbsolutePath().length() - 2);
+  String ABS_DIR_TARGET = ABS_DIR_WORKING + "/" + DIR_TARGET;
+  String ABS_DIR_CLASSES = ABS_DIR_TARGET + "/" + DIR_CLASSES;
+  String ABS_DIR_CLASSES_TEST = ABS_DIR_TARGET + "/" + DIR_CLASSES_TEST;
+  String ABS_DIR_DATA = ABS_DIR_TARGET + "/" + DIR_DATA;
+  String ABS_DIR_DERBY = ABS_DIR_TARGET + "/" + DIR_DERBY;
+  String ABS_DIR_DERBY_DB = ABS_DIR_DERBY + "/" + DIR_DERBY_DB;
+  String ABS_DIR_DERBY_LOG = ABS_DIR_DERBY + "/" + DIR_DERBY_LOG;
+  String ABS_DIR_DFS = ABS_DIR_TARGET + "/" + DIR_DFS;
+  String ABS_DIR_DFS_TMP = ABS_DIR_TARGET + "/" + DIR_DFS_TMP;
+  String ABS_DIR_DFS_LOCAL = ABS_DIR_TARGET + "/" + DIR_DFS_LOCAL;
+  String ABS_DIR_KUDU = ABS_DIR_TARGET + "/" + DIR_RUNTIME_KUDU;
+  String ABS_DIR_MQTT = ABS_DIR_TARGET + "/" + DIR_RUNTIME_MQTT;
+  String ABS_DIR_HIVE = ABS_DIR_TARGET + "/" + DIR_HIVE;
+  String ABS_DIR_KAFKA = ABS_DIR_TARGET + "/" + DIR_KAFKA;
+  String ABS_DIR_ZOOKEEPER = ABS_DIR_TARGET + "/" + DIR_ZOOKEEPER;
+  String ABS_DIR_PYTHON = ABS_DIR_CLASSES + "/python";
+  String ABS_DIR_HIVE_QUERY = ABS_DIR_CLASSES + "/hive/query";
+  String ABS_DIR_HIVE_SCHEMA = ABS_DIR_CLASSES + "/hive/schema";
+  String ABS_DIR_HIVE_REFRESH = ABS_DIR_CLASSES + "/hive/refresh";
 
 }

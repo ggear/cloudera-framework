@@ -27,7 +27,7 @@ public class TestTestRunner implements TestConstants {
   public static final TestMetaData testMetaData1 = TestMetaData.getInstance().parameters(ImmutableMap.of("metadata", "1"));
   public static final TestMetaData testMetaData2 = TestMetaData.getInstance().parameters(ImmutableMap.of("metadata", "2"));
   private static final AtomicInteger COUNTER = new AtomicInteger();
-  private static Logger LOG = LoggerFactory.getLogger(DfsServer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DfsServer.class);
   @ClassRule
   public static CdhServer cdhServerClass = new CdhServer(null) {
 

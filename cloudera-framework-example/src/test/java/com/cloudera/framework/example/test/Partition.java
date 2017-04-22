@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 public class Partition extends TestBase {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance();
+  public static final DfsServer dfsServer = DfsServer.getInstance();
 
   @ClassRule
   public static MrServer mrServer = MrServer.getInstance();

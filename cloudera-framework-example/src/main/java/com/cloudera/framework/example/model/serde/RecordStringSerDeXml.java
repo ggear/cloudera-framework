@@ -45,7 +45,7 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
       private boolean corrupt;
       private List<Record> records;
 
-      private void initialise() throws IOException {
+      private void initialise() {
         if (records == null && !corrupt) {
           try {
             records = ((RecordsXml) jaxbContext.createUnmarshaller()

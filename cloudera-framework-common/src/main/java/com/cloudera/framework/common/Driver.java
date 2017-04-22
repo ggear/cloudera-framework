@@ -33,7 +33,7 @@ public abstract class Driver extends Configured implements Tool {
   private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
   private static final int FORMAT_TIME_FACTOR = 10;
 
-  private Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
+  private final Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
 
   public Driver() {
     super();
@@ -130,7 +130,7 @@ public abstract class Driver extends Configured implements Tool {
    * failure
    * @throws Exception
    */
-  public int cleanup() throws Exception {
+  public int cleanup() {
     return RETURN_SUCCESS;
   }
 
@@ -208,7 +208,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   final public int runner(String[] arguments) {
-    int returnValue = 0;
+    int returnValue;
     try {
       returnValue = ToolRunner.run(this, arguments);
     } catch (Exception exception) {
@@ -280,7 +280,7 @@ public abstract class Driver extends Configured implements Tool {
     importCounters(this.getClass().getCanonicalName(), job, values);
   }
 
-  protected void importCounters(String group, Job job, Enum<?>[] values) throws IOException, InterruptedException {
+  protected void importCounters(String group, Job job, Enum<?>[] values) throws IOException {
     this.counters.computeIfAbsent(group, k -> new LinkedHashMap<>());
     Counters counters = job.getCounters();
     for (Enum<?> value : values) {

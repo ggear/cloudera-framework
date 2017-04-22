@@ -11,10 +11,10 @@ import org.junit.runner.RunWith;
 public class TestSparkServerLocal extends TestSparkServer {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.LOCAL_FS);
+  public static final DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.LOCAL_FS);
 
   @ClassRule
-  public static SparkServer sparkServer = SparkServer.getInstance();
+  public static final SparkServer sparkServer = SparkServer.getInstance();
 
   @Override
   public DfsServer getDfsServer() {

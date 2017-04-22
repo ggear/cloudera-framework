@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.cloudera.framework.testing.TestRunner;
@@ -21,7 +20,7 @@ import org.junit.runner.RunWith;
 public class DfsUtilTest {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance();
+  public static final DfsServer dfsServer = DfsServer.getInstance();
 
   @Test
   public void testCanDoAction() throws IllegalArgumentException, IOException {
@@ -36,7 +35,7 @@ public class DfsUtilTest {
   }
 
   @Test
-  public void testListFiles() throws FileNotFoundException, IllegalArgumentException, IOException {
+  public void testListFiles() throws IllegalArgumentException, IOException {
     assertEquals(0, DfsUtil.listFiles(dfsServer.getFileSystem(), dfsServer.getPath("/tmq/t"), false, false).size());
     assertEquals(0, DfsUtil.listFiles(dfsServer.getFileSystem(), dfsServer.getPath("/tmq/t"), false, false).size());
     assertEquals(0, DfsUtil.listFiles(dfsServer.getFileSystem(), dfsServer.getPath("/tmq/t"), true, false).size());
@@ -57,7 +56,7 @@ public class DfsUtilTest {
   }
 
   @Test
-  public void testListDirs() throws FileNotFoundException, IllegalArgumentException, IOException {
+  public void testListDirs() throws IllegalArgumentException, IOException {
     assertEquals(0, DfsUtil.listDirs(dfsServer.getFileSystem(), dfsServer.getPath("/tmq/t"), false, false).size());
     assertEquals(0, DfsUtil.listDirs(dfsServer.getFileSystem(), dfsServer.getPath("/tmq/t"), false, false).size());
     assertEquals(0, DfsUtil.listDirs(dfsServer.getFileSystem(), dfsServer.getPath("/tmq/t"), true, false).size());

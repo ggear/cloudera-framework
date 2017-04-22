@@ -31,7 +31,7 @@ public class TestKafkaServer implements TestConstants {
   private static final String TOPIC_NAME_TEST = "mytopic";
 
   @ClassRule
-  public static KafkaServer kafkaServer = KafkaServer.getInstance();
+  public static final KafkaServer kafkaServer = KafkaServer.getInstance();
 
   @Test
   public void testImplicitDependencies() {
@@ -51,7 +51,7 @@ public class TestKafkaServer implements TestConstants {
         producer.send(new ProducerRecord<>(TOPIC_NAME_TEST, "" + i, "" + i)).get(KafkaServer.KAFKA_POLL_MS, TimeUnit.MILLISECONDS);
       }
       producer.flush();
-      ConsumerRecords<String, String> records = null;
+      ConsumerRecords<String, String> records;
       while ((records = consumer.poll(KafkaServer.KAFKA_POLL_MS * messageCount * 2)).count() == 0) {
         if (pollCount-- == 0) {
           throw new TimeoutException("Could not poll message batch");

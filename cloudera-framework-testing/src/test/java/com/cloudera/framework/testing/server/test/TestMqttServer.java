@@ -25,7 +25,7 @@ public class TestMqttServer implements TestConstants {
   private static final String TOPIC_NAME_TEST = "mytopic";
 
   @ClassRule
-  public static MqttServer mqttServer = MqttServer.getInstance();
+  public static final MqttServer mqttServer = MqttServer.getInstance();
 
   @Test
   public void testMqtt() throws MqttException, InterruptedException {

@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
 public class TestMrServerDefault extends TestMrServer {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance();
+  public static final DfsServer dfsServer = DfsServer.getInstance();
 
   @ClassRule
-  public static MrServer mrServer = MrServer.getInstance();
+  public static final MrServer mrServer = MrServer.getInstance();
 
   @Override
   public DfsServer getDfsServer() {

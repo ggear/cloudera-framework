@@ -57,7 +57,7 @@ public class Process extends Driver {
 
   @Override
   public int execute() throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
-    int returnValue = RETURN_FAILURE_RUNTIME;
+    int returnValue;
     Driver stageDriver = new Stage(getConf());
     Driver partitionDriver = new Partition(getConf());
     Driver cleanseDriver = new Cleanse(getConf());
@@ -76,7 +76,7 @@ public class Process extends Driver {
   }
 
   @Override
-  public int cleanup() throws IOException {
+  public int cleanup() {
     return RETURN_SUCCESS;
   }
 

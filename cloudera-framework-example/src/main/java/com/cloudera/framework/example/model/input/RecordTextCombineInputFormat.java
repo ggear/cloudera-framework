@@ -27,7 +27,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
  */
 public class RecordTextCombineInputFormat extends CombineFileInputFormat<RecordKey, Text> {
 
-  public static int SPLIT_SIZE_BYTES_MAX = 128 * 1024 * 1024;
+  public static final int SPLIT_SIZE_BYTES_MAX = 128 * 1024 * 1024;
 
   public RecordTextCombineInputFormat() {
     setMaxSplitSize(SPLIT_SIZE_BYTES_MAX);

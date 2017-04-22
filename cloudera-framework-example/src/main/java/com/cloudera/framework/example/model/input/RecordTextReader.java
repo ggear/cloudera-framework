@@ -20,10 +20,10 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
  */
 public abstract class RecordTextReader extends RecordReader<RecordKey, AvroGenericRecordWritable> {
 
-  private Record record = new Record();
-  private RecordKey recordKey = new RecordKey();
-  private AvroGenericRecordWritable recordWriteable = new AvroGenericRecordWritable(record);
-  private UID recordReaderID = new UID();
+  private final Record record = new Record();
+  private final RecordKey recordKey = new RecordKey();
+  private final AvroGenericRecordWritable recordWriteable = new AvroGenericRecordWritable(record);
+  private final UID recordReaderID = new UID();
   private RecordKey recordsKey;
   private RecordStringDe recordStringDe;
   private RecordReader<RecordKey, Text> recordReader;

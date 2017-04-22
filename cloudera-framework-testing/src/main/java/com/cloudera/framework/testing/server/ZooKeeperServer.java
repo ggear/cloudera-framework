@@ -26,7 +26,7 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
 
   private static ZooKeeperServer instance;
 
-  private int port;
+  private final int port;
   private org.apache.zookeeper.server.ZooKeeperServer zooKeeper;
   private NIOServerCnxnFactory factory;
 

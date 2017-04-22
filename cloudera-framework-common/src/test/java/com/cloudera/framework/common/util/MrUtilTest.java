@@ -17,7 +17,7 @@ import org.junit.runner.RunWith;
 public class MrUtilTest {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance();
+  public static final DfsServer dfsServer = DfsServer.getInstance();
 
   @Test
   public void testGetCodecString() {

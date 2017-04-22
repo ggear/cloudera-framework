@@ -22,7 +22,7 @@ public class MqttServer extends CdhServer<MqttServer, MqttServer.Runtime> {
   public static final int MQTT_BROKER_PORT = 1883;
   public static final String MQTT_BROKER_STORE_NAME = "store";
 
-  private static Logger LOG = LoggerFactory.getLogger(MqttServer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(MqttServer.class);
 
   private static MqttServer instance;
 

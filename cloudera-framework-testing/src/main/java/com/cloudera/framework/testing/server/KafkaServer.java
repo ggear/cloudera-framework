@@ -117,7 +117,7 @@ public class KafkaServer extends CdhServer<KafkaServer, KafkaServer.Runtime> {
    * @return if the topic was deleted or not
    * @throws InterruptedException
    */
-  public synchronized boolean deleteTopic(String topic) throws InterruptedException {
+  public synchronized boolean deleteTopic(String topic) {
     boolean deleted = true;
     try {
       AdminUtils.deleteTopic(getZooKeeperUtils(), topic);

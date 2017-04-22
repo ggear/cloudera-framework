@@ -46,7 +46,7 @@ public abstract class RecordStringSerDe {
      * @return
      * @throws IOException
      */
-    public boolean hasNext() throws IOException;
+    boolean hasNext() throws IOException;
 
     /**
      * Get the next key and record
@@ -55,7 +55,7 @@ public abstract class RecordStringSerDe {
      * @return
      * @throws IOException
      */
-    public boolean next(RecordKey recordsKey) throws IOException;
+    boolean next(RecordKey recordsKey) throws IOException;
 
   }
 
@@ -72,7 +72,7 @@ public abstract class RecordStringSerDe {
      * @param record
      * @throws IOException
      */
-    public void add(Record record) throws IOException;
+    void add(Record record) throws IOException;
 
     /**
      * Get the string
@@ -80,7 +80,7 @@ public abstract class RecordStringSerDe {
      * @return
      * @throws IOException
      */
-    public String get() throws IOException;
+    String get() throws IOException;
 
   }
 

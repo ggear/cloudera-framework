@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
 public class TestMrServerLocal extends TestMrServer {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.LOCAL_FS);
+  public static final DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.LOCAL_FS);
 
   @ClassRule
-  public static MrServer mrServer = MrServer.getInstance(MrServer.Runtime.LOCAL_JOB);
+  public static final MrServer mrServer = MrServer.getInstance(MrServer.Runtime.LOCAL_JOB);
 
   @Override
   public DfsServer getDfsServer() {

@@ -236,7 +236,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
 
     private static final Logger LOG = LoggerFactory.getLogger(Interceptor.class);
 
-    private String recordType;
+    private final String recordType;
 
     public Interceptor(String recordType) {
       this.recordType = recordType;

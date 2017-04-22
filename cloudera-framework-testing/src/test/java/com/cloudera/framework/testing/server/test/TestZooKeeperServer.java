@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 public class TestZooKeeperServer implements TestConstants {
 
   @ClassRule
-  public static ZooKeeperServer zooKeeperServer = ZooKeeperServer.getInstance();
+  public static final ZooKeeperServer zooKeeperServer = ZooKeeperServer.getInstance();
 
   @Test
   public void testZookeeper() throws IOException, InterruptedException, KeeperException {

@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 public class TestHiveServerMrDefault extends TestHiveServer {
 
   @ClassRule
-  public static HiveServer hiveServer = HiveServer.getInstance();
+  public static final HiveServer hiveServer = HiveServer.getInstance();
 
   @Override
   public HiveServer getHiveServer() {

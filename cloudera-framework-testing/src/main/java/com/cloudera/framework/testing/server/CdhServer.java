@@ -34,7 +34,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   public static final AtomicInteger SERVER_BIND_PORT_START = new AtomicInteger(25000);
   public static final int SERVER_BIND_PORT_FINISH = 25100;
 
-  private static Logger LOG = LoggerFactory.getLogger(DfsServer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DfsServer.class);
 
   private V runtime;
   private int semaphore;

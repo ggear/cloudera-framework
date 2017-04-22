@@ -84,7 +84,7 @@ public abstract class TestMrServer implements TestConstants {
   private static class MapClass extends Mapper<LongWritable, Text, Text, IntWritable> {
 
     private final static IntWritable one = new IntWritable(1);
-    private Text word = new Text();
+    private final Text word = new Text();
 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {

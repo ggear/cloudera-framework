@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 public class TestPythonServer implements TestConstants {
 
   @ClassRule
-  public static PythonServer pythonServer = PythonServer.getInstance();
+  public static final PythonServer pythonServer = PythonServer.getInstance();
 
   @Test(expected = IOException.class)
   public void testPythonNullFile() throws Exception {

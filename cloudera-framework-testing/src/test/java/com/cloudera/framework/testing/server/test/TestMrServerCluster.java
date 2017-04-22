@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
 public class TestMrServerCluster extends TestMrServer {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS);
+  public static final DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS);
 
   @ClassRule
-  public static MrServer mrServer = MrServer.getInstance(MrServer.Runtime.CLUSTER_JOB);
+  public static final MrServer mrServer = MrServer.getInstance(MrServer.Runtime.CLUSTER_JOB);
 
   @Override
   public DfsServer getDfsServer() {

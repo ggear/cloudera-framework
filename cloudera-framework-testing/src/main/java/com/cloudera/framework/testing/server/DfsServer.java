@@ -344,7 +344,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   }
 
   @Override
-  public synchronized void clean() throws FileNotFoundException, IOException {
+  public synchronized void clean() throws IOException {
     long time = log(LOG, "clean");
     if (!fileSystem.exists(getPath("/"))) {
       FileSystem.mkdirs(getFileSystem(), getPath("/"), PERMISSION_ALL);

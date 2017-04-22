@@ -58,7 +58,7 @@ public class DfsUtil {
    * @return the {@link Set set} of file {@link Path paths}
    */
   public static Set<Path> listFiles(FileSystem hdfs, Path path, boolean recurse, boolean filterMetaData)
-    throws FileNotFoundException, IOException {
+    throws IOException {
     Set<Path> files = new HashSet<>();
     try {
       RemoteIterator<LocatedFileStatus> filesIterator = hdfs.listFiles(path, recurse);
@@ -85,7 +85,7 @@ public class DfsUtil {
    * @return the {@link Set set} of directory {@link Path paths}
    */
   public static Set<Path> listDirs(FileSystem hdfs, Path path, boolean recurse, boolean filterMetaData)
-    throws FileNotFoundException, IOException {
+    throws IOException {
     Map<Path, Boolean> dirs = new HashMap<>();
     try {
       RemoteIterator<LocatedFileStatus> filesIterator = hdfs.listFiles(path, recurse);

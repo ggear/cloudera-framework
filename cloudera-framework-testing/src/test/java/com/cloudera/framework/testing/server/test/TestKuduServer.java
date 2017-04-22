@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 public class TestKuduServer implements TestConstants {
 
   @ClassRule
-  public static KuduServer kuduServer = KuduServer.getInstance();
+  public static final KuduServer kuduServer = KuduServer.getInstance();
 
   @Test
   public void testKudu() throws Exception {

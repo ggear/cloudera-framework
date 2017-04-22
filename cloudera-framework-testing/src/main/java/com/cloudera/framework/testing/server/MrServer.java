@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
 
-  private static Logger LOG = LoggerFactory.getLogger(MrServer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(MrServer.class);
 
   private static MrServer instance;
 

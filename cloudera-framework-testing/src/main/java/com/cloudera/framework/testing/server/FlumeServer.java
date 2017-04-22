@@ -83,7 +83,7 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
    */
   public synchronized int crankPipeline(Map<String, String> substitutions, String configFile, Map<String, String> configSourceOverlay,
                                         Map<String, String> configSinkOverlay, String agentName, String sourceName, String sinkName, PollableSource source, Sink sink,
-                                        String outputPath, int iterations) throws IOException, EventDeliveryException, InterruptedException {
+                                        String outputPath, int iterations) throws IOException, EventDeliveryException {
     Properties config = new Properties();
     if (configFile != null) {
       InputStream configStream = FlumeServer.class.getClassLoader().getResourceAsStream(configFile);

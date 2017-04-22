@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> {
 
-  private static Logger LOG = LoggerFactory.getLogger(PythonServer.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PythonServer.class);
 
   private static PythonServer instance;
 
@@ -120,7 +120,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    */
   public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error,
                      boolean quiet) throws IOException, InterruptedException {
-    int exit = -1;
+    int exit;
     if (file == null || !file.exists()) {
       throw new IOException("Could not find file [" + file + "]");
     }

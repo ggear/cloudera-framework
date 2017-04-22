@@ -43,10 +43,10 @@ public class Stream extends TestBase {
   private static final String KEY_FLUME_PROCESS_FILE_COUNT = "fileCount";
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance();
+  public static final DfsServer dfsServer = DfsServer.getInstance();
 
   @ClassRule
-  public static FlumeServer flumeServer = FlumeServer.getInstance();
+  public static final FlumeServer flumeServer = FlumeServer.getInstance();
 
   public final TestMetaData testMetaDataCsvBatch = TestMetaData.getInstance() //
     .parameters( //

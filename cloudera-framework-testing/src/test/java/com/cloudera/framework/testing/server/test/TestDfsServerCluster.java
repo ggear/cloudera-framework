@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 public class TestDfsServerCluster extends TestDfsServer {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS);
+  public static final DfsServer dfsServer = DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS);
 
   @Override
   public DfsServer getDfsServer() {

@@ -229,6 +229,7 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
     return result;
   }
 
+  @SuppressWarnings("SuspiciousMethodCalls")
   private Statement withMethodRules(FrameworkMethod method, List<TestRule> testRules, Object target, Statement result) {
     for (org.junit.rules.MethodRule each : rules(target)) {
       if (!testRules.contains(each)) {

@@ -49,15 +49,15 @@ import org.junit.runner.RunWith;
 public class Table extends TestBase {
 
   @ClassRule
-  public static DfsServer dfsServer = DfsServer.getInstance();
+  public static final DfsServer dfsServer = DfsServer.getInstance();
 
   @ClassRule
-  public static HiveServer hiveServer = HiveServer.getInstance();
+  public static final HiveServer hiveServer = HiveServer.getInstance();
 
   @ClassRule
-  public static PythonServer pythonServer = PythonServer.getInstance();
+  public static final PythonServer pythonServer = PythonServer.getInstance();
 
-  private static String MODEL_AVRO = new Scanner(Table.class.getResourceAsStream(Constants.MODEL_AVRO_FILE), Charsets.UTF_8.name())
+  private static final String MODEL_AVRO = new Scanner(Table.class.getResourceAsStream(Constants.MODEL_AVRO_FILE), Charsets.UTF_8.name())
     .useDelimiter("\\A").next();
 
   public final TestMetaData testMetaDataAll = super.testMetaDataAll //
