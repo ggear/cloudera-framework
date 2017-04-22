@@ -110,6 +110,7 @@ public abstract class Driver extends Configured implements Tool {
    * failure
    * @throws Exception
    */
+  @SuppressWarnings("SameReturnValue")
   public int prepare(String... arguments) throws Exception {
     return RETURN_SUCCESS;
   }
@@ -130,6 +131,7 @@ public abstract class Driver extends Configured implements Tool {
    * failure
    * @throws Exception
    */
+  @SuppressWarnings("SameReturnValue")
   public int cleanup() {
     return RETURN_SUCCESS;
   }
@@ -276,7 +278,7 @@ public abstract class Driver extends Configured implements Tool {
     }
   }
 
-  protected void importCounters(Job job, Enum<?>[] values) throws IOException, InterruptedException {
+  protected void importCounters(Job job, Enum<?>[] values) throws IOException {
     importCounters(this.getClass().getCanonicalName(), job, values);
   }
 

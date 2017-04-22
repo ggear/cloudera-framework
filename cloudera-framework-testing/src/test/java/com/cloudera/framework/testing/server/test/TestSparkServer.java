@@ -47,7 +47,7 @@ public abstract class TestSparkServer implements Serializable, TestConstants {
   }
 
   @Test
-  public void testSpark() throws InterruptedException, IOException {
+  public void testSpark() throws IOException {
     String dirInput = "/tmp/wordcount/input";
     String dirOutput = "/tmp/wordcount/output";
     String fileInput = new Path(dirInput, "file1.txt").toString();
@@ -68,7 +68,7 @@ public abstract class TestSparkServer implements Serializable, TestConstants {
   }
 
   @Test
-  public void testSparkAgain() throws InterruptedException, IOException {
+  public void testSparkAgain() throws IOException {
     testSpark();
   }
 

@@ -62,7 +62,7 @@ public class Cleanse extends Driver {
     super(configuration);
   }
 
-  public static void main(String... arguments) throws Exception {
+  public static void main(String... arguments) {
     System.exit(new Cleanse().runner(arguments));
   }
 

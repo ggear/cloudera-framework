@@ -24,7 +24,7 @@ public class Process extends Driver {
     super(configuration);
   }
 
-  public static void main(String... arguments) throws Exception {
+  public static void main(String... arguments) {
     System.exit(new Process().runner(arguments));
   }
 

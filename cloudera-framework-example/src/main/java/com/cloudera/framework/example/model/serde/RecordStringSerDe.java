@@ -46,7 +46,7 @@ public abstract class RecordStringSerDe {
      * @return
      * @throws IOException
      */
-    boolean hasNext() throws IOException;
+    boolean hasNext();
 
     /**
      * Get the next key and record

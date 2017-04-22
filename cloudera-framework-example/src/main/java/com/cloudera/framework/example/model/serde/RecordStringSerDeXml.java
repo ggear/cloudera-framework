@@ -57,7 +57,7 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
       }
 
       @Override
-      public boolean hasNext() throws IOException {
+      public boolean hasNext() {
         initialise();
         return index == -1 || records != null && index + 1 < records.size();
       }

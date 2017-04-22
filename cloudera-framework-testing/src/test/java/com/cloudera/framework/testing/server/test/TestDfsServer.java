@@ -91,7 +91,7 @@ public abstract class TestDfsServer implements TestConstants {
    * @throws IOException
    */
   @Test
-  public void testDfsClean() throws IOException {
+  public void testDfsClean() {
     assertFalse(new File(getDfsServer().getPath("/some_dir/some_file").toString()).exists());
   }
 

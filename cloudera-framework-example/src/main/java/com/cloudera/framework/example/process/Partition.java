@@ -72,7 +72,7 @@ public class Partition extends Driver {
     super(configuration);
   }
 
-  public static void main(String... arguments) throws Exception {
+  public static void main(String... arguments) {
     System.exit(new Partition().runner(arguments));
   }
 

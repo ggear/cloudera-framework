@@ -60,7 +60,7 @@ public class Stage extends Driver {
     super(configuration);
   }
 
-  public static void main(String... arguments) throws Exception {
+  public static void main(String... arguments) {
     System.exit(new Stage().runner(arguments));
   }
 
