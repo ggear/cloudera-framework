@@ -303,8 +303,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     derbyDir.mkdirs();
     DfsServer.getInstance().getFileSystem().mkdirs(hiveHomePath);
     DfsServer.getInstance().getFileSystem().mkdirs(hiveWarehousePath);
-    FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveWarehousePath, new FsPermission((short) 00777));
-    FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveScratchPath, new FsPermission((short) 00733));
+    FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveWarehousePath, new FsPermission((short) 511));
+    FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveScratchPath, new FsPermission((short) 475));
     switch (getRuntime()) {
       case LOCAL_MR2:
       case CLUSTER_MR2:
