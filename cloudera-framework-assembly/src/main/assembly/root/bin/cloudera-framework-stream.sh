@@ -42,7 +42,7 @@ def main(argv):
     for service in cluster.get_all_services():
       if service.type == 'FLUME':
         if service.serviceState == 'STARTED':
-          print 'Stoping flume agents ...'
+          print 'Stopping flume agents ...'
           service.stop().wait()
         print 'Flume agents stopped'
         for group in service.get_all_role_config_groups():

@@ -58,8 +58,8 @@ public class Cleanse extends Driver {
     super();
   }
 
-  public Cleanse(Configuration confguration) {
-    super(confguration);
+  public Cleanse(Configuration configuration) {
+    super(configuration);
   }
 
   public static void main(String... arguments) throws Exception {

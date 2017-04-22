@@ -201,7 +201,7 @@ public abstract class Driver extends Configured implements Tool {
     }
     if (LOG.isInfoEnabled()) {
       LOG.info(
-        "Driver [" + this.getClass().getSimpleName() + "] finshed " + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully")
+        "Driver [" + this.getClass().getSimpleName() + "] finished " + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully")
           + " with exit value [" + exitValue + "] in " + formatTime(timeTotal));
     }
     return exitValue;
@@ -291,22 +291,22 @@ public abstract class Driver extends Configured implements Tool {
     }
   }
 
-  public Long incrementCounter(Enum<?> counter, int incrament) {
-    return incrementCounter(this.getClass().getCanonicalName(), counter, incrament);
+  public Long incrementCounter(Enum<?> counter, int increment) {
+    return incrementCounter(this.getClass().getCanonicalName(), counter, increment);
   }
 
-  public Long incrementCounter(String group, Enum<?> counter, int incrament) {
+  public Long incrementCounter(String group, Enum<?> counter, int increment) {
     this.counters.computeIfAbsent(group, k -> new LinkedHashMap<>());
-    return counters.get(group).put(counter, (counters.get(group).get(counter) == null ? 0 : counters.get(group).get(counter)) + incrament);
+    return counters.get(group).put(counter, (counters.get(group).get(counter) == null ? 0 : counters.get(group).get(counter)) + increment);
   }
 
-  public Long incrementCounter(Enum<?> counter, int incrament, String tag, Set<String> set) {
-    return incrementCounter(this.getClass().getCanonicalName(), counter, incrament, tag, set);
+  public Long incrementCounter(Enum<?> counter, int increment, String tag, Set<String> set) {
+    return incrementCounter(this.getClass().getCanonicalName(), counter, increment, tag, set);
   }
 
-  public Long incrementCounter(String group, Enum<?> counter, int incrament, String tag, Set<String> set) {
+  public Long incrementCounter(String group, Enum<?> counter, int increment, String tag, Set<String> set) {
     if (set.add(tag)) {
-      return incrementCounter(group, counter, incrament);
+      return incrementCounter(group, counter, increment);
     }
     return counters.get(group).get(counter);
   }

@@ -213,7 +213,7 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
               server.state();
             }
           } catch (Exception exception) {
-            throw new RuntimeException("Failue to run state", exception);
+            throw new RuntimeException("Failure to run state", exception);
           }
         }
       }

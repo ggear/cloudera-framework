@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Model test meta data used in paramaterised unit tests, including copying
- * datasets to DFS, unit test paramaterisation and unit test expects for
+ * Model test meta data used in parametrised unit tests, including copying
+ * datasets to DFS, unit test parametrisation and unit test expects for
  * asserts.
  * <p>
  * Usage is as so:
@@ -123,7 +123,7 @@ public class TestMetaData {
   }
 
   /**
-   * Set the parameters to paramaterise this test
+   * Set the parameters to parametrise this test
    *
    * @param parameters
    * @return

@@ -27,10 +27,10 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
   private static final char FIELD_DELIM = ',';
   private static final char FIELD_QUOTE = '"';
   private static final char FIELD_ESCAPE = '\\';
-  private static final CSVParser FIELD_DESERIALISER = new CSVParser(FIELD_DELIM, FIELD_QUOTE, FIELD_ESCAPE, false, true);
+  private static final CSVParser FIELD_DESERIALIZER = new CSVParser(FIELD_DELIM, FIELD_QUOTE, FIELD_ESCAPE, false, true);
 
   @Override
-  public RecordStringDe getDeserialiser(final RecordKey recordKey, final Record record, final String string) {
+  public RecordStringDe getDeserializer(final RecordKey recordKey, final Record record, final String string) {
     return new RecordStringDe() {
 
       private int index = -1;
@@ -56,7 +56,7 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
       public boolean next(RecordKey recordsKey) throws IOException {
         initialise();
         recordKey.set(recordsKey);
-        String[] fields = FIELD_DESERIALISER.parseLine(records[++index]);
+        String[] fields = FIELD_DESERIALIZER.parseLine(records[++index]);
         recordKey.setValid(recordKey.isValid() && fields != null && fields.length == RecordKey.FIELDS_NUMBER);
         if (recordKey.isValid()) {
           record.setIngestId(UUID.randomUUID().toString());
@@ -99,15 +99,15 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
   }
 
   @Override
-  public RecordStringSer getSerialiser(final int size) {
+  public RecordStringSer getSerializer(final int size) {
     return new RecordStringSer() {
 
       private StringWriter string = null;
-      private CSVWriter serialiser = null;
+      private CSVWriter serializer = null;
 
       private void initialise() {
-        if (serialiser == null) {
-          serialiser = new CSVWriter(string = new StringWriter(size * RECORD_TYPICAL_SIZE), FIELD_DELIM, CSVWriter.NO_QUOTE_CHARACTER,
+        if (serializer == null) {
+          serializer = new CSVWriter(string = new StringWriter(size * RECORD_TYPICAL_SIZE), FIELD_DELIM, CSVWriter.NO_QUOTE_CHARACTER,
             FIELD_ESCAPE, RECORD_DELIM);
         }
       }
@@ -115,7 +115,7 @@ public class RecordStringSerDeCsv extends RecordStringSerDe {
       @Override
       public void add(Record record) {
         initialise();
-        serialiser.writeNext(new String[]{record.getMyTimestamp() == null ? "" : FIELD_DATE.format(new Date(record.getMyTimestamp())),
+        serializer.writeNext(new String[]{record.getMyTimestamp() == null ? "" : FIELD_DATE.format(new Date(record.getMyTimestamp())),
           "" + record.getMyInteger(), "" + record.getMyDouble(), "" + record.getMyBoolean(), "" + record.getMyString()});
       }
 

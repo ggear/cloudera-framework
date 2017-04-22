@@ -109,14 +109,14 @@ def do_call(user, password, man_host, man_port, cluster_name, parcel_name, parce
             print 'Cluster [PRE_INIT] starting ... '
             for script in glob.glob(init_pre_dir + '/*.sh'):
                 subprocess.call([script])
-            print 'Cluster [PRE_INIT] finihsed'
+            print 'Cluster [PRE_INIT] finished'
         if not parcel_already_activated:
             print 'Cluster [CONFIG_DEPLOYMENT] starting ... '
             cluster.deploy_client_config()
             cmd = cluster.deploy_client_config()
             if not cmd.wait(TIMEOUT_SEC).success:
                 raise Exception('Failed to deploy client configs')
-            print 'Cluster [CONFIG_DEPLOYMENT] finihsed'
+            print 'Cluster [CONFIG_DEPLOYMENT] finished'
             print 'Cluster [RESTART] starting ... '
             for service in cluster.get_all_services():
                 if service.type == 'FLUME':
@@ -125,12 +125,12 @@ def do_call(user, password, man_host, man_port, cluster_name, parcel_name, parce
                     service.restart().wait()
                 if service.type == 'YARN':
                     service.restart().wait()
-            print 'Cluster [RESTART] finihsed'
+            print 'Cluster [RESTART] finished'
         if init_post_dir is not None and os.path.isdir(init_post_dir):
             print 'Cluster [POST_INIT] starting ... '
             for script in glob.glob(init_post_dir + '/*.sh'):
                 subprocess.call([script])
-            print 'Cluster [POST_INIT] finihsed'
+            print 'Cluster [POST_INIT] finished'
         print 'Cluster [DEPLOYMENT] finished'
 
 

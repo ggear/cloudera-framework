@@ -56,13 +56,13 @@ public class DriverTest {
     private boolean iShouldFailOption;
     private String iShouldFailParameter;
 
-    public CountFilesDriver(Configuration confguration) {
-      super(confguration);
+    public CountFilesDriver(Configuration configuration) {
+      super(configuration);
     }
 
     @Override
     public String description() {
-      return "A dummy driver that counts the numer of files stored in DFS";
+      return "A dummy driver that counts the number of files stored in DFS";
     }
 
     @Override

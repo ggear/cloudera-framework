@@ -14,7 +14,7 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
 /**
- * A paramaterised {@link RecordReader} that can take in {@link Text} and form
+ * A parametrised {@link RecordReader} that can take in {@link Text} and form
  * {@link AvroGenericRecordWritable} wrapped {@link Record Records} based on the
  * {@link #getRecordReader} implementation
  */
@@ -60,7 +60,7 @@ public abstract class RecordTextReader extends RecordReader<RecordKey, AvroGener
     }
     if (recordReader.nextKeyValue()) {
       recordsKey = recordReader.getCurrentKey();
-      recordStringDe = getRecordStringSerDe().getDeserialiser(recordKey, record, recordReader.getCurrentValue().toString());
+      recordStringDe = getRecordStringSerDe().getDeserializer(recordKey, record, recordReader.getCurrentValue().toString());
       return nextKeyValue();
     }
     return false;

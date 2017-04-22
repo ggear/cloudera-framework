@@ -38,7 +38,7 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
   }
 
   @Override
-  public RecordStringDe getDeserialiser(final RecordKey recordKey, final Record record, final String string) {
+  public RecordStringDe getDeserializer(final RecordKey recordKey, final Record record, final String string) {
     return new RecordStringDe() {
 
       private int index = -1;
@@ -88,18 +88,18 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
   }
 
   @Override
-  public RecordStringSer getSerialiser(final int size) {
+  public RecordStringSer getSerializer(final int size) {
     return new RecordStringSer() {
 
       private RecordsXml records;
-      private Marshaller serialiser;
+      private Marshaller serializer;
 
       private void initialise() throws IOException {
         if (records == null) {
           try {
             records = new RecordsXml(size);
-            serialiser = jaxbContext.createMarshaller();
-            serialiser.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            serializer = jaxbContext.createMarshaller();
+            serializer.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
           } catch (Exception exception) {
             throw new IOException("Could not initialise JAXB", exception);
           }
@@ -117,7 +117,7 @@ public class RecordStringSerDeXml extends RecordStringSerDe {
         initialise();
         StringWriter string = new StringWriter(size * RECORD_TYPICAL_SIZE);
         try {
-          serialiser.marshal(records, string);
+          serializer.marshal(records, string);
         } catch (Exception exception) {
           throw new IOException("Could not marshall XML", exception);
         }

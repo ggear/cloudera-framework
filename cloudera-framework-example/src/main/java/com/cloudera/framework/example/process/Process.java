@@ -20,8 +20,8 @@ public class Process extends Driver {
     super();
   }
 
-  public Process(Configuration confguration) {
-    super(confguration);
+  public Process(Configuration configuration) {
+    super(configuration);
   }
 
   public static void main(String... arguments) throws Exception {

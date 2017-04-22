@@ -60,7 +60,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
         // ignore
       }
     }
-    throw new RuntimeException("Could not find avialable port");
+    throw new RuntimeException("Could not find available port");
   }
 
   /**
@@ -74,7 +74,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
 
   /**
    * Get the list of {@link CdhServer} dependencies, override if there are
-   * dependecies
+   * dependencies
    *
    * @return
    */
@@ -158,7 +158,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
     if (isStarted() && !this.runtime.equals(runtime)) {
       throw new IllegalArgumentException("A server pipeline runtime dependency inconsistency has been detected, please decorate all ["
         + this.getClass().getSimpleName() + "] server instances with [" + runtime
-        + "] runtime, explicitly if this server has been created implicitly by a depedant service");
+        + "] runtime, explicitly if this server has been created implicitly by a dependent service");
     }
     this.runtime = runtime;
     return (U) this;

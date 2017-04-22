@@ -56,8 +56,8 @@ public class Stage extends Driver {
     super();
   }
 
-  public Stage(Configuration confguration) {
-    super(confguration);
+  public Stage(Configuration configuration) {
+    super(configuration);
   }
 
   public static void main(String... arguments) throws Exception {

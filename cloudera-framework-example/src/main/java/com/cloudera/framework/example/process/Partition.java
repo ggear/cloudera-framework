@@ -68,8 +68,8 @@ public class Partition extends Driver {
     super();
   }
 
-  public Partition(Configuration confguration) {
-    super(confguration);
+  public Partition(Configuration configuration) {
+    super(configuration);
   }
 
   public static void main(String... arguments) throws Exception {

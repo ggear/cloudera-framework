@@ -70,27 +70,27 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     pollMs = context.getInteger(PROPERTY_POLL_MS, pollMs);
     if (pollMs <= 0) {
       throw new IllegalArgumentException(
-        "Source [" + getName() + "] has illegal paramater [" + PROPERTY_POLL_MS + "] value [" + pollMs + "]");
+        "Source [" + getName() + "] has illegal parameter [" + PROPERTY_POLL_MS + "] value [" + pollMs + "]");
     }
     pollTicks = context.getInteger(PROPERTY_POLL_TICKS, pollTicks);
     if (pollTicks < 0) {
       throw new IllegalArgumentException(
-        "Source [" + getName() + "] has illegal paramater [" + PROPERTY_POLL_TICKS + "] value [" + pollTicks + "]");
+        "Source [" + getName() + "] has illegal parameter [" + PROPERTY_POLL_TICKS + "] value [" + pollTicks + "]");
     }
     batchSize = context.getInteger(PROPERTY_BATCH_SIZE, batchSize);
     if (batchSize < 1) {
       throw new IllegalArgumentException(
-        "Source [" + getName() + "] has illegal paramater [" + PROPERTY_BATCH_SIZE + "] value [" + batchSize + "]");
+        "Source [" + getName() + "] has illegal parameter [" + PROPERTY_BATCH_SIZE + "] value [" + batchSize + "]");
     }
     try {
       recordStringSerDe = RecordFactory.getRecordStringSerDe(recordType = context.getString(PROPERTY_RECORD_TYPE, recordType));
     } catch (IOException exception) {
-      throw new IllegalArgumentException("Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_TYPE + "].", exception);
+      throw new IllegalArgumentException("Source [" + getName() + "] has illegal parameter [" + PROPERTY_RECORD_TYPE + "].", exception);
     }
     recordNumber = context.getInteger(PROPERTY_RECORD_NUMBER, recordNumber);
     if (recordNumber < 1) {
       throw new IllegalArgumentException(
-        "Source [" + getName() + "] has illegal paramater [" + PROPERTY_RECORD_NUMBER + "] value [" + recordNumber + "]");
+        "Source [" + getName() + "] has illegal parameter [" + PROPERTY_RECORD_NUMBER + "] value [" + recordNumber + "]");
     }
     if (sourceCounter == null) {
       sourceCounter = new SourceCounter(getName());
@@ -166,7 +166,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
     }
     Status status = Status.BACKOFF;
     try {
-      RecordStringSer recordStringSer = recordStringSerDe.getSerialiser(recordNumber);
+      RecordStringSer recordStringSer = recordStringSerDe.getSerializer(recordNumber);
       for (int i = 0; i < recordNumber; i++) {
         recordStringSer.add(Record.newBuilder().setMyTimestamp(System.currentTimeMillis()).setMyInteger((int) (Math.random() * 10))
           .setMyDouble(Math.round(Math.random() * 10000000) / 100D).setMyBoolean(Math.random() < 0.5)
@@ -206,7 +206,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
       status = Status.READY;
     } catch (InterruptedException interruptedException) {
       if (LOG.isInfoEnabled()) {
-        LOG.info("Source [" + getName() + "] interupted");
+        LOG.info("Source [" + getName() + "] interrupted");
       }
     } catch (Exception exception) {
       if (LOG.isErrorEnabled()) {
@@ -313,7 +313,7 @@ public class Stream extends AbstractSource implements Configurable, PollableSour
         try {
           recordType = context.getString(PROPERTY_RECORD_TYPE, RECORD_TYPE_DEFAULT);
         } catch (IllegalArgumentException exception) {
-          throw new IllegalArgumentException("Interceptor [" + this.getClass().getName() + "] has illegal paramater ["
+          throw new IllegalArgumentException("Interceptor [" + this.getClass().getName() + "] has illegal parameter ["
             + PROPERTY_RECORD_TYPE + "] value [" + recordType + "]");
         }
       }
