@@ -150,15 +150,12 @@ public abstract class Driver extends Configured implements Tool {
       LOG.info("Driver [" + this.getClass().getSimpleName() + "] started");
     }
     long timeTotal = System.currentTimeMillis();
-    ShutdownHookManager.get().addShutdownHook(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          cleanup();
-        } catch (Exception exception) {
-          if (LOG.isErrorEnabled()) {
-            LOG.error("Exception raised executing shutdown handler", exception);
-          }
+    ShutdownHookManager.get().addShutdownHook(() -> {
+      try {
+        cleanup();
+      } catch (Exception exception) {
+        if (LOG.isErrorEnabled()) {
+          LOG.error("Exception raised executing shutdown handler", exception);
         }
       }
     }, RunJar.SHUTDOWN_HOOK_PRIORITY + 1);
@@ -270,9 +267,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   protected void importCounters(String group, Map<Enum<?>, Long> counters) {
-    if (this.counters.get(group) == null) {
-      this.counters.put(group, new LinkedHashMap<Enum<?>, Long>());
-    }
+    this.counters.computeIfAbsent(group, k -> new LinkedHashMap<>());
     for (Enum<?> value : counters.keySet()) {
       if (counters.get(value) != null) {
         this.counters.get(group).put(value,
@@ -286,9 +281,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   protected void importCounters(String group, Job job, Enum<?>[] values) throws IOException, InterruptedException {
-    if (this.counters.get(group) == null) {
-      this.counters.put(group, new LinkedHashMap<Enum<?>, Long>());
-    }
+    this.counters.computeIfAbsent(group, k -> new LinkedHashMap<>());
     Counters counters = job.getCounters();
     for (Enum<?> value : values) {
       if (counters.findCounter(value) != null) {
@@ -303,9 +296,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public Long incrementCounter(String group, Enum<?> counter, int incrament) {
-    if (this.counters.get(group) == null) {
-      this.counters.put(group, new LinkedHashMap<Enum<?>, Long>());
-    }
+    this.counters.computeIfAbsent(group, k -> new LinkedHashMap<>());
     return counters.get(group).put(counter, (counters.get(group).get(counter) == null ? 0 : counters.get(group).get(counter)) + incrament);
   }
 

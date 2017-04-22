@@ -79,12 +79,9 @@ public class ZooKeeperServer extends CdhServer<ZooKeeperServer, ZooKeeperServer.
     factory.configure(new InetSocketAddress(CdhServer.SERVER_BIND_IP, port), 0);
     factory.startup(zooKeeper);
     final CountDownLatch connected = new CountDownLatch(1);
-    ZooKeeper zooKeeper = new ZooKeeper(getConnectString(), ZOOKEEPER_TIMEOUT_MS, new Watcher() {
-      @Override
-      public void process(WatchedEvent event) {
-        if (event.getState() == KeeperState.SyncConnected) {
-          connected.countDown();
-        }
+    ZooKeeper zooKeeper = new ZooKeeper(getConnectString(), ZOOKEEPER_TIMEOUT_MS, event -> {
+      if (event.getState() == KeeperState.SyncConnected) {
+        connected.countDown();
       }
     });
     try {

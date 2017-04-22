@@ -92,7 +92,7 @@ public class DfsUtil {
       while (filesIterator.hasNext()) {
         Path file = filesIterator.next().getPath();
         Path dir = file.getParent();
-        dirs.put(dir, (dirs.containsKey(dir) ? dirs.get(dir) : false) || file.getName().startsWith(FILE_METADATA_PREFIX));
+        dirs.put(dir, (dirs.getOrDefault(dir, false)) || file.getName().startsWith(FILE_METADATA_PREFIX));
       }
     } catch (FileNotFoundException exception) {
       // ignore

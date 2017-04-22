@@ -20,7 +20,7 @@ public class FsUtil {
    * @return the files
    */
   public static Iterable<File> listFiles(String... paths) {
-    List<File> files = new ArrayList<File>();
+    List<File> files = new ArrayList<>();
     for (String path : paths) {
       File pathFile = new File(path);
       if (pathFile.exists() && pathFile.isDirectory()) {

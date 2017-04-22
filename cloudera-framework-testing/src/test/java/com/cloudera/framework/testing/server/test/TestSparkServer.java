@@ -57,33 +57,8 @@ public abstract class TestSparkServer implements Serializable, TestConstants {
     writer.write("a a a a a\n");
     writer.write("b b\n");
     writer.close();
-    getSparkServer().getContext().textFile(getDfsServer().getPathUri(fileInput)).cache().flatMap(new FlatMapFunction<String, String>() {
-      @Override
-      public Iterable<String> call(String s) {
-        return Arrays.asList(s.split(" "));
-      }
-    }).mapToPair(new PairFunction<String, String, Integer>() {
-      @Override
-      public Tuple2<String, Integer> call(String s) {
-        return new Tuple2<>(s, 1);
-      }
-    }).reduceByKey(new Function2<Integer, Integer, Integer>() {
-      @Override
-      public Integer call(Integer a, Integer b) {
-        return a + b;
-      }
-    }).map(new Function<Tuple2<String, Integer>, String>() {
-      @Override
-      public String call(Tuple2<String, Integer> t) throws Exception {
-        return t._1 + "\t" + t._2;
-      }
-    }).saveAsTextFile(getDfsServer().getPathUri(dirOutput));
-    Path[] outputFiles = FileUtil.stat2Paths(getDfsServer().getFileSystem().listStatus(getDfsServer().getPath(dirOutput), new PathFilter() {
-      @Override
-      public boolean accept(Path path) {
-        return !path.getName().equals(FileOutputCommitter.SUCCEEDED_FILE_NAME);
-      }
-    }));
+    getSparkServer().getContext().textFile(getDfsServer().getPathUri(fileInput)).cache().flatMap((FlatMapFunction<String, String>) s -> Arrays.asList(s.split(" "))).mapToPair((PairFunction<String, String, Integer>) s -> new Tuple2<>(s, 1)).reduceByKey((Function2<Integer, Integer, Integer>) (a, b) -> a + b).map((Function<Tuple2<String, Integer>, String>) t -> t._1 + "\t" + t._2).saveAsTextFile(getDfsServer().getPathUri(dirOutput));
+    Path[] outputFiles = FileUtil.stat2Paths(getDfsServer().getFileSystem().listStatus(getDfsServer().getPath(dirOutput), path -> !path.getName().equals(FileOutputCommitter.SUCCEEDED_FILE_NAME)));
     assertEquals(1, outputFiles.length);
     InputStream in = getDfsServer().getFileSystem().open(outputFiles[0]);
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));

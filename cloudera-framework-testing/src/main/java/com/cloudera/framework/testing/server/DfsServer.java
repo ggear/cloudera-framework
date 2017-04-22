@@ -109,15 +109,9 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       String pathDataset = file.getParentFile().getParentFile().getParentFile().getName();
       String pathSubset = file.getParentFile().getParentFile().getName();
       String pathLabel = file.getParentFile().getName();
-      if (files.get(pathDataset) == null) {
-        files.put(pathDataset, new TreeMap<String, Map<String, List<File>>>());
-      }
-      if (files.get(pathDataset).get(pathSubset) == null) {
-        files.get(pathDataset).put(pathSubset, new TreeMap<String, List<File>>());
-      }
-      if (files.get(pathDataset).get(pathSubset).get(pathLabel) == null) {
-        files.get(pathDataset).get(pathSubset).put(pathLabel, new ArrayList<File>());
-      }
+      files.computeIfAbsent(pathDataset, k -> new TreeMap<>());
+      files.get(pathDataset).computeIfAbsent(pathSubset, k -> new TreeMap<>());
+      files.get(pathDataset).get(pathSubset).computeIfAbsent(pathLabel, k -> new ArrayList<>());
       if (file.isFile()) {
         files.get(pathDataset).get(pathSubset).get(pathLabel).add(file);
       } else {

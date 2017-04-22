@@ -242,9 +242,7 @@ public class Partition extends Driver {
                           org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
       throws IOException, InterruptedException {
       records.clear();
-      Iterator<AvroValue<Record>> valuesIterator = values.iterator();
-      while (valuesIterator.hasNext()) {
-        AvroValue<Record> record = valuesIterator.next();
+      for (AvroValue<Record> record : values) {
         context.getCounter(RecordCounter.RECORDS).increment(1);
         RecordCounter counter = records.add(record) ? RecordCounter.RECORDS_CANONICAL : RecordCounter.RECORDS_DUPLICATE;
         context.getCounter(counter).increment(1);
