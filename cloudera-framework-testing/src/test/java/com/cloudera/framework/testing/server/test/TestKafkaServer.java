@@ -30,6 +30,7 @@ public class TestKafkaServer implements TestConstants {
 
   @ClassRule
   public static final KafkaServer kafkaServer = KafkaServer.getInstance();
+
   private static final String TOPIC_NAME_TEST = "mytopic";
 
   @Test
