@@ -211,14 +211,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   }
 
   protected void log(Logger log, String method, String message, boolean debug) {
-    String detail = logPrefix() + " [" + method + "] " + message;
-    if (debug) {
-      if (log.isDebugEnabled()) {
-        log.debug(detail);
-      }
-    } else if (log.isInfoEnabled()) {
-      log.info(detail);
-    }
+    logDetail(log, debug, logPrefix() + " [" + method + "] " + message);
   }
 
   protected long log(Logger log, String method) {
@@ -226,14 +219,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   }
 
   protected long log(Logger log, String method, boolean debug) {
-    String detail = logPrefix() + " [" + method + "] starting ... ";
-    if (debug) {
-      if (log.isDebugEnabled()) {
-        log.debug(detail);
-      }
-    } else if (log.isInfoEnabled()) {
-      log.info(detail);
-    }
+    logDetail(log, debug, logPrefix() + " [" + method + "] starting ... ");
     return System.currentTimeMillis();
   }
 
@@ -242,7 +228,10 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   }
 
   protected void log(Logger log, String method, long start, boolean debug) {
-    String detail = logPrefix() + " [" + method + "] finished in [" + (System.currentTimeMillis() - start) + "] ms";
+    logDetail(log, debug, logPrefix() + " [" + method + "] finished in [" + (System.currentTimeMillis() - start) + "] ms");
+  }
+
+  private void logDetail(Logger log, boolean debug, String detail) {
     if (debug) {
       if (log.isDebugEnabled()) {
         log.debug(detail);
