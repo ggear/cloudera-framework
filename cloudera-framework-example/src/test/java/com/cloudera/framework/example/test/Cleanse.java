@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.example.TestBase;
+import com.cloudera.framework.example.process.Partition;
 import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
@@ -33,7 +34,7 @@ public class Cleanse extends TestBase {
   public void testCleanse(TestMetaData testMetaData) throws Exception {
     assertEquals(Driver.RETURN_SUCCESS, new com.cloudera.framework.example.process.Stage(dfsServer.getConf()).runner(
       new String[]{dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString()}));
-    assertEquals(Driver.RETURN_SUCCESS, new com.cloudera.framework.example.process.Partition(dfsServer.getConf()).runner(new String[]{
+    assertEquals(Driver.RETURN_SUCCESS, new Partition(dfsServer.getConf()).runner(new String[]{
       dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString()}));
     Driver driver = new com.cloudera.framework.example.process.Cleanse(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED_CANONICAL).toString(),

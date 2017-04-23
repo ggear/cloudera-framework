@@ -8,7 +8,7 @@ set -x -e
 
 $ROOT_DIR/bin/cloudera-framework-hadoop.sh "\
   jar $ROOT_DIR/lib/jar/*.jar \
-  com.cloudera.framework.example.process.Process \
+  com.cloudera.framework.example.process.stage.Process \
   -libjars $LIBJARS \
   $ROOT_DIR_HDFS_RAW \
   $ROOT_DIR_HDFS_STAGED \

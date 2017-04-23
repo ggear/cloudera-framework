@@ -3,9 +3,9 @@ package com.cloudera.framework.example.process;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.example.Constants;
 import com.cloudera.framework.example.model.RecordCounter;
+import com.cloudera.framework.example.Driver;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 

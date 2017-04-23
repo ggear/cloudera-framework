@@ -1,18 +1,15 @@
 package com.cloudera.framework.example.process;
 
 import java.io.IOException;
-import java.util.Set;
 import java.util.UUID;
 
-import com.cloudera.framework.common.Driver;
-import com.cloudera.framework.common.util.DfsUtil;
 import com.cloudera.framework.example.Constants;
 import com.cloudera.framework.example.model.RecordCounter;
 import com.cloudera.framework.example.model.RecordKey;
 import com.cloudera.framework.example.model.RecordPartition;
 import com.cloudera.framework.example.model.input.RecordTextCombineInputFormat;
+import com.cloudera.framework.example.Driver;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -46,12 +43,6 @@ public class Stage extends Driver {
 
   private static final Logger LOG = LoggerFactory.getLogger(Stage.class);
 
-  private Path inputPath;
-  private Path outputPath;
-  private Set<Path> inputPaths;
-
-  private FileSystem hdfs;
-
   public Stage() {
     super();
   }
@@ -77,25 +68,6 @@ public class Stage extends Driver {
   @Override
   public String[] parameters() {
     return new String[]{"input-path", "output-path"};
-  }
-
-  @Override
-  public int prepare(String... arguments) throws Exception {
-    if (arguments == null || arguments.length != 2) {
-      throw new Exception("Invalid number of arguments");
-    }
-    hdfs = FileSystem.newInstance(getConf());
-    inputPath = hdfs.makeQualified(new Path(arguments[0]));
-    if (LOG.isInfoEnabled()) {
-      LOG.info("Input path [" + inputPath + "] validated");
-    }
-    inputPaths = DfsUtil.listDirs(hdfs, inputPath, true, true);
-    outputPath = hdfs.makeQualified(new Path(arguments[1]));
-    hdfs.mkdirs(outputPath.getParent());
-    if (LOG.isInfoEnabled()) {
-      LOG.info("Output path [" + outputPath + "] validated");
-    }
-    return RETURN_SUCCESS;
   }
 
   @Override

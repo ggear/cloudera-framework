@@ -1,6 +1,8 @@
 package com.cloudera.framework.example;
 
 import com.cloudera.framework.example.model.RecordCounter;
+import com.cloudera.framework.example.process.Partition;
+import com.cloudera.framework.example.process.Stage;
 import com.cloudera.framework.testing.TestMetaData;
 import com.google.common.collect.ImmutableMap;
 
@@ -17,14 +19,14 @@ public abstract class TestBase implements Constants, TestConstants {
     .dataSetDestinationDirs(DIR_ABS_MYDS_RAW_CANONICAL_CSV) //
     .asserts( //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
+        Stage.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.FILES, 1L, //
           RecordCounter.FILES_CANONICAL, 1L, //
           RecordCounter.FILES_DUPLICATE, 0L, //
           RecordCounter.FILES_MALFORMED, 0L //
         ), //
-        com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
+        Partition.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.RECORDS, 1L, //
           RecordCounter.RECORDS_CANONICAL, 1L, //
@@ -39,14 +41,14 @@ public abstract class TestBase implements Constants, TestConstants {
           RecordCounter.RECORDS_MALFORMED, 0L //
         )), //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
+        Stage.class.getCanonicalName(),
         ImmutableMap.of(//
           RecordCounter.FILES, 0L, //
           RecordCounter.FILES_CANONICAL, 0L, //
           RecordCounter.FILES_DUPLICATE, 0L, //
           RecordCounter.FILES_MALFORMED, 0L //
         ), //
-        com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
+        Partition.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.RECORDS, 0L, //
           RecordCounter.RECORDS_CANONICAL, 0L, //
@@ -69,14 +71,14 @@ public abstract class TestBase implements Constants, TestConstants {
     .dataSetDestinationDirs(DIR_ABS_MYDS_RAW_CANONICAL_XML) //
     .asserts( //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
+        Stage.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.FILES, 1L, //
           RecordCounter.FILES_CANONICAL, 1L, //
           RecordCounter.FILES_DUPLICATE, 0L, //
           RecordCounter.FILES_MALFORMED, 0L //
         ), //
-        com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
+        Partition.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.RECORDS, 1L, //
           RecordCounter.RECORDS_CANONICAL, 1L, //
@@ -91,14 +93,14 @@ public abstract class TestBase implements Constants, TestConstants {
           RecordCounter.RECORDS_MALFORMED, 0L //
         )), //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
+        Stage.class.getCanonicalName(),
         ImmutableMap.of(//
           RecordCounter.FILES, 0L, //
           RecordCounter.FILES_CANONICAL, 0L, //
           RecordCounter.FILES_DUPLICATE, 0L, //
           RecordCounter.FILES_MALFORMED, 0L //
         ), //
-        com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
+        Partition.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.RECORDS, 0L, //
           RecordCounter.RECORDS_CANONICAL, 0L, //
@@ -121,14 +123,14 @@ public abstract class TestBase implements Constants, TestConstants {
     .dataSetDestinationDirs(DIR_ABS_MYDS_RAW_CANONICAL_CSV, DIR_ABS_MYDS_RAW_CANONICAL_XML) //
     .asserts( //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
+        Stage.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.FILES, 89L, //
           RecordCounter.FILES_CANONICAL, 56L, //
           RecordCounter.FILES_DUPLICATE, 0L, //
           RecordCounter.FILES_MALFORMED, 33L //
         ), //
-        com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
+        Partition.class.getCanonicalName(),
         ImmutableMap.of(//
           RecordCounter.RECORDS, 493L, //
           RecordCounter.RECORDS_CANONICAL, 332L, //
@@ -143,14 +145,14 @@ public abstract class TestBase implements Constants, TestConstants {
           RecordCounter.RECORDS_MALFORMED, 0L //
         )), //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
+        Stage.class.getCanonicalName(),
         ImmutableMap.of(//
           RecordCounter.FILES, 0L, //
           RecordCounter.FILES_CANONICAL, 0L, //
           RecordCounter.FILES_DUPLICATE, 0L, //
           RecordCounter.FILES_MALFORMED, 0L //
         ), //
-        com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
+        Partition.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.RECORDS, 0L, //
           RecordCounter.RECORDS_CANONICAL, 0L, //

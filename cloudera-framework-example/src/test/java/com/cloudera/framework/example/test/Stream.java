@@ -14,6 +14,8 @@ import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.example.TestBase;
 import com.cloudera.framework.example.model.RecordCounter;
 import com.cloudera.framework.example.model.RecordFactory;
+import com.cloudera.framework.example.process.Partition;
+import com.cloudera.framework.example.process.Stage;
 import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
@@ -35,8 +37,10 @@ public class Stream extends TestBase {
 
   @ClassRule
   public static final DfsServer dfsServer = DfsServer.getInstance();
+
   @ClassRule
   public static final FlumeServer flumeServer = FlumeServer.getInstance();
+
   private static final String FLUME_CONFIG_FILE = "flume/flume-conf.properties";
   private static final String FLUME_AGENT_NAME = "mydataset";
   private static final String FLUME_SOURCE_POLL_MS = "25";
@@ -45,6 +49,7 @@ public class Stream extends TestBase {
   private static final String KEY_FLUME_OUTPUT_DIR = "outputDir";
   private static final String KEY_FLUME_PROCESS_ITERATIONS = "iterations";
   private static final String KEY_FLUME_PROCESS_FILE_COUNT = "fileCount";
+
   public final TestMetaData testMetaDataCsvBatch = TestMetaData.getInstance() //
     .parameters( //
       ImmutableMap.of( //
@@ -64,7 +69,7 @@ public class Stream extends TestBase {
         KEY_FLUME_PROCESS_FILE_COUNT, 1)) //
     .asserts( //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
+        Stage.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.FILES, 0L, //
           RecordCounter.FILES_CANONICAL, 0L, //
@@ -72,7 +77,7 @@ public class Stream extends TestBase {
           RecordCounter.FILES_MALFORMED, 0L //
         )), //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
+        Partition.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.RECORDS, 10000L, //
           RecordCounter.RECORDS_CANONICAL, 6000L, //
@@ -106,7 +111,7 @@ public class Stream extends TestBase {
         KEY_FLUME_PROCESS_FILE_COUNT, 1)) //
     .asserts( //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Stage.class.getCanonicalName(),
+        Stage.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.FILES, 0L, //
           RecordCounter.FILES_CANONICAL, 0L, //
@@ -114,7 +119,7 @@ public class Stream extends TestBase {
           RecordCounter.FILES_MALFORMED, 0L //
         )), //
       ImmutableMap.of( //
-        com.cloudera.framework.example.process.Partition.class.getCanonicalName(),
+        Partition.class.getCanonicalName(),
         ImmutableMap.of( //
           RecordCounter.RECORDS, 10000L, //
           RecordCounter.RECORDS_CANONICAL, 6000L, //
@@ -147,11 +152,11 @@ public class Stream extends TestBase {
         (String) testMetaData.getParameters()[2].get(KEY_FLUME_SINK_NAME), new com.cloudera.framework.example.stream.Stream(),
         new HDFSEventSink(), (String) testMetaData.getParameters()[2].get(KEY_FLUME_OUTPUT_DIR),
         (Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_ITERATIONS)));
-    Driver driverStage = new com.cloudera.framework.example.process.Stage(dfsServer.getConf());
+    Driver driverStage = new Stage(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driverStage.runner(
       new String[]{dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString()}));
     assertCounterEquals(testMetaData.getAsserts()[0], driverStage.getCounters());
-    Driver driverPartition = new com.cloudera.framework.example.process.Partition(dfsServer.getConf());
+    Driver driverPartition = new Partition(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driverPartition.runner(new String[]{dfsServer.getPath(DIR_ABS_MYDS_STAGED_CANONICAL).toString(),
       dfsServer.getPath(DIR_ABS_MYDS_PARTITIONED).toString()}));
     assertCounterEquals(testMetaData.getAsserts()[1], driverPartition.getCounters());
