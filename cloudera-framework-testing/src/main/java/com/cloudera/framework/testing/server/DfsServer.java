@@ -1,9 +1,12 @@
 package com.cloudera.framework.testing.server;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +26,7 @@ import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hive.shims.HadoopShims.MiniDFSShim;
 import org.apache.hadoop.hive.shims.ShimLoader;
+import org.apache.hadoop.io.IOUtils;
 import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -314,6 +318,29 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     log(LOG, "copy", time, true);
     return files.toArray(new File[files.size()]);
   }
+
+  /**
+   * Read the contents of a DFS file at <code>path</code> into a {@link String}
+   *
+   * @param path the DFS path
+   * @return the contents of <code>path</code>
+   */
+  public String readFileAsString(String path) throws IOException {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    IOUtils.copyBytes(getFileSystem().open(getPath(path)), outputStream, getFileSystem().getConf());
+    return outputStream.toString();
+  }
+
+  /**
+   * Write a <code>string</code> to the DFS file at <code>path</code>
+   *
+   * @param path   the DFS path
+   * @param string the string to write
+   */
+  public void writeFileAsString(String path, String string) throws IOException {
+    IOUtils.copyBytes(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)), getFileSystem().create(getPath(path)), getFileSystem().getConf());
+  }
+
 
   @Override
   public int getIndex() {

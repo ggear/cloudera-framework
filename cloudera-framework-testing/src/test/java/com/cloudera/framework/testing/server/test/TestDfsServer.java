@@ -11,6 +11,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.google.common.collect.ImmutableMap;
 import org.apache.hadoop.fs.Path;
+import org.junit.Assert;
 import org.junit.Test;
 
 public abstract class TestDfsServer implements TestConstants {
@@ -136,6 +139,21 @@ public abstract class TestDfsServer implements TestConstants {
     assertTrue(getDfsServer().getFileSystem().exists(new Path(getDfsServer().getPathUri(""))));
     assertTrue(getDfsServer().getFileSystem().exists(new Path(getDfsServer().getPathUri("/"))));
     assertTrue(getDfsServer().getFileSystem().exists(new Path(getDfsServer().getPathUri("///tmp/"))));
+  }
+
+  @Test
+  public void testDfsReadAndWriteFileAsString() throws IOException {
+    String file = "/tmp/my_file.txt";
+    String fileContents = "Some text to write";
+    boolean fileNotFound = false;
+    try {
+      assertEquals("", getDfsServer().readFileAsString(file));
+    } catch (FileNotFoundException e) {
+      fileNotFound = true;
+    }
+    Assert.assertTrue("File found", fileNotFound);
+    getDfsServer().writeFileAsString(file,fileContents);
+    assertEquals(fileContents, getDfsServer().readFileAsString(file));
   }
 
   @Test
