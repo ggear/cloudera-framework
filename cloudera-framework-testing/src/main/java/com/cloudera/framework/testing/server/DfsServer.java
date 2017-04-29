@@ -325,9 +325,9 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    * @param path the DFS path
    * @return the contents of <code>path</code>
    */
-  public String readFileAsString(String path) throws IOException {
+  public String readFileAsString(Path path) throws IOException {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    IOUtils.copyBytes(getFileSystem().open(getPath(path)), outputStream, getFileSystem().getConf());
+    IOUtils.copyBytes(getFileSystem().open(path), outputStream, getFileSystem().getConf());
     return outputStream.toString();
   }
 
@@ -337,11 +337,10 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    * @param path   the DFS path
    * @param string the string to write
    */
-  public void writeFileAsString(String path, String string) throws IOException {
-    IOUtils.copyBytes(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)), getFileSystem().create(getPath(path)), getFileSystem().getConf());
+  public void writeFileAsString(Path path, String string) throws IOException {
+    IOUtils.copyBytes(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)), getFileSystem().create(path), getFileSystem().getConf());
   }
-
-
+  
   @Override
   public int getIndex() {
     return 10;

@@ -143,17 +143,17 @@ public abstract class TestDfsServer implements TestConstants {
 
   @Test
   public void testDfsReadAndWriteFileAsString() throws IOException {
-    String file = "/tmp/my_file.txt";
+    Path path = getDfsServer().getPath("/tmp/my_file.txt");
     String fileContents = "Some text to write";
     boolean fileNotFound = false;
     try {
-      assertEquals("", getDfsServer().readFileAsString(file));
+      assertEquals("", getDfsServer().readFileAsString(path));
     } catch (FileNotFoundException e) {
       fileNotFound = true;
     }
     Assert.assertTrue("File found", fileNotFound);
-    getDfsServer().writeFileAsString(file, fileContents);
-    assertEquals(fileContents, getDfsServer().readFileAsString(file));
+    getDfsServer().writeFileAsString(path, fileContents);
+    assertEquals(fileContents, getDfsServer().readFileAsString(path));
   }
 
   @Test
