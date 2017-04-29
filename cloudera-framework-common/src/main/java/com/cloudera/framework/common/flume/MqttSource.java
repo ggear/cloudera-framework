@@ -26,20 +26,15 @@ import org.slf4j.LoggerFactory;
  */
 public class MqttSource extends AbstractPollableSource {
 
-  private static final Logger LOG = LoggerFactory.getLogger(MqttSource.class);
-
   public static final String CONFIG_USER_NAME = "userName";
   public static final String CONFIG_USER_NAME_DEFAULT = "";
-
   public static final String CONFIG_PASSWORD_FILE = "passwordFile";
   public static final String CONFIG_PASSWORD_FILE_DEFAULT = "";
-
   public static final String CONFIG_PROVIDER_URL = "providerURL";
   public static final String CONFIG_PROVIDER_URL_DEFAULT = "tcp://localhost:1883";
-
   public static final String CONFIG_DESTINATION_NAME = "destinationName";
   public static final String CONFIG_DESTINATION_NAME_DEFAULT = "";
-
+  private static final Logger LOG = LoggerFactory.getLogger(MqttSource.class);
   private String providerUrl;
   private String destinationName;
 
@@ -127,23 +122,6 @@ public class MqttSource extends AbstractPollableSource {
   }
 
   @Override
-  protected synchronized Status doProcess() throws EventDeliveryException {
-    if (client != null) {
-      boolean connected = client.isConnected();
-      doStart();
-      if (connected && client.isConnected()) {
-        try {
-          Thread.sleep(getMaxBackOffSleepInterval());
-        } catch (InterruptedException e) {
-          // ignore
-        }
-      }
-      return client.isConnected() ? Status.READY : Status.BACKOFF;
-    }
-    return Status.READY;
-  }
-
-  @Override
   protected synchronized void doStop() throws FlumeException {
     if (client != null) {
       try {
@@ -159,6 +137,23 @@ public class MqttSource extends AbstractPollableSource {
         }
       }
     }
+  }
+
+  @Override
+  protected synchronized Status doProcess() throws EventDeliveryException {
+    if (client != null) {
+      boolean connected = client.isConnected();
+      doStart();
+      if (connected && client.isConnected()) {
+        try {
+          Thread.sleep(getMaxBackOffSleepInterval());
+        } catch (InterruptedException e) {
+          // ignore
+        }
+      }
+      return client.isConnected() ? Status.READY : Status.BACKOFF;
+    }
+    return Status.READY;
   }
 
 }

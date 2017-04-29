@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cloudera.framework.example.Constants;
+import com.cloudera.framework.example.Driver;
 import com.cloudera.framework.example.model.Record;
 import com.cloudera.framework.example.model.RecordCounter;
 import com.cloudera.framework.example.model.RecordKey;
 import com.cloudera.framework.example.model.RecordPartition;
-import com.cloudera.framework.example.Driver;
 import org.apache.avro.mapred.AvroKey;
 import org.apache.avro.mapreduce.AvroJob;
 import org.apache.avro.mapreduce.AvroKeyInputFormat;

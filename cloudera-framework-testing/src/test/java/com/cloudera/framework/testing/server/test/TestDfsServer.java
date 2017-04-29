@@ -152,7 +152,7 @@ public abstract class TestDfsServer implements TestConstants {
       fileNotFound = true;
     }
     Assert.assertTrue("File found", fileNotFound);
-    getDfsServer().writeFileAsString(file,fileContents);
+    getDfsServer().writeFileAsString(file, fileContents);
     assertEquals(fileContents, getDfsServer().readFileAsString(file));
   }
 

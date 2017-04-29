@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.UUID;
 
 import com.cloudera.framework.example.Constants;
+import com.cloudera.framework.example.Driver;
 import com.cloudera.framework.example.model.RecordCounter;
 import com.cloudera.framework.example.model.RecordKey;
 import com.cloudera.framework.example.model.RecordPartition;
 import com.cloudera.framework.example.model.input.RecordTextCombineInputFormat;
-import com.cloudera.framework.example.Driver;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;

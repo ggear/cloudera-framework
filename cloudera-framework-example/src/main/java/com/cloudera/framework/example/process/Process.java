@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import com.cloudera.framework.example.Constants;
-import com.cloudera.framework.example.model.RecordCounter;
 import com.cloudera.framework.example.Driver;
+import com.cloudera.framework.example.model.RecordCounter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 
@@ -41,18 +41,6 @@ public class Process extends Driver {
   @Override
   public String[] parameters() {
     return new String[]{"input-path-raw", "input-path-staged", "input-path-partitioned", "input-path-cleansed"};
-  }
-
-  @Override
-  public int prepare(String... arguments) throws Exception {
-    if (arguments == null || arguments.length != 4) {
-      throw new Exception("Invalid number of arguments");
-    }
-    pathRaw = arguments[0];
-    pathStaged = arguments[1];
-    pathPartitioned = arguments[2];
-    pathCleansed = arguments[3];
-    return RETURN_SUCCESS;
   }
 
   @Override
@@ -92,6 +80,18 @@ public class Process extends Driver {
     for (RecordCounter counter : Cleanse.COUNTERS) {
       incrementCounter(Cleanse.class.getCanonicalName(), counter, 0);
     }
+  }
+
+  @Override
+  public int prepare(String... arguments) throws Exception {
+    if (arguments == null || arguments.length != 4) {
+      throw new Exception("Invalid number of arguments");
+    }
+    pathRaw = arguments[0];
+    pathStaged = arguments[1];
+    pathPartitioned = arguments[2];
+    pathCleansed = arguments[3];
+    return RETURN_SUCCESS;
   }
 
 }

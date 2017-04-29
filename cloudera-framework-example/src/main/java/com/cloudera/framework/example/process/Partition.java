@@ -8,13 +8,13 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import com.cloudera.framework.example.Constants;
+import com.cloudera.framework.example.Driver;
 import com.cloudera.framework.example.model.Record;
 import com.cloudera.framework.example.model.RecordCounter;
 import com.cloudera.framework.example.model.RecordFactory;
 import com.cloudera.framework.example.model.RecordFilter;
 import com.cloudera.framework.example.model.RecordKey;
 import com.cloudera.framework.example.model.RecordPartition;
-import com.cloudera.framework.example.Driver;
 import org.apache.avro.mapred.AvroKey;
 import org.apache.avro.mapred.AvroValue;
 import org.apache.avro.mapreduce.AvroJob;
