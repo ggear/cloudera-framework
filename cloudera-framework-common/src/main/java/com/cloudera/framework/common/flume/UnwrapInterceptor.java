@@ -25,9 +25,9 @@ import org.slf4j.LoggerFactory;
  * Use this {@link Interceptor} to unwrap a Flume encoded event from a direct
  * {@link Source source} {@link Channel channel} (ie Kafka).
  */
-public class FlumeEventUnwrapInterceptor implements Interceptor {
+public class UnwrapInterceptor implements Interceptor {
 
-  private final static Logger LOG = LoggerFactory.getLogger(FlumeEventUnwrapInterceptor.class);
+  private final static Logger LOG = LoggerFactory.getLogger(UnwrapInterceptor.class);
 
   private BinaryDecoder decoder = null;
   private SpecificDatumReader<AvroFlumeEvent> reader = null;
@@ -46,7 +46,7 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
     decoder = DecoderFactory.get().directBinaryDecoder(new ByteArrayInputStream(new byte[0]), decoder);
     reader = new SpecificDatumReader<>(AvroFlumeEvent.class);
     if (LOG.isInfoEnabled()) {
-      LOG.info("Flume Event Unwrap Interceptor initialised");
+      LOG.info("Event Unwrap Interceptor initialised");
     }
   }
 
@@ -70,7 +70,7 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
 
   public Event unwrap(Event event) {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Attempting to unwrap Flume Event, body [" + event.getBody().length + "] bytes");
+      LOG.debug("Attempting to unwrap event, body [" + event.getBody().length + "] bytes");
     }
     Event eventUnwrapped = event;
     InputStream eventWrappedStream = new ByteArrayInputStream(event.getBody());
@@ -80,12 +80,12 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
       eventUnwrapped = EventBuilder.withBody(eventUnwrappedAvro.getBody().array(),
         toStringMap(eventUnwrappedAvro.getHeaders(), event.getHeaders()));
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Flume Event successfully unwrapped, header [" + eventUnwrappedAvro.getHeaders().size() + "] fields, body ["
+        LOG.debug("Event successfully unwrapped, header [" + eventUnwrappedAvro.getHeaders().size() + "] fields, body ["
           + eventUnwrapped.getBody().length + "] bytes");
       }
     } catch (Exception exception) {
       if (LOG.isWarnEnabled()) {
-        LOG.warn("Failed to unwrap Flume Event, " + "perhaps this source is not connected to a sinkless connector?", exception);
+        LOG.warn("Failed to unwrap event, " + "perhaps this source is not connected to a sinkless connector?", exception);
       }
     } finally {
       IOUtils.closeQuietly(eventWrappedStream);
@@ -101,7 +101,7 @@ public class FlumeEventUnwrapInterceptor implements Interceptor {
 
     @Override
     public Interceptor build() {
-      return new FlumeEventUnwrapInterceptor();
+      return new UnwrapInterceptor();
     }
 
   }

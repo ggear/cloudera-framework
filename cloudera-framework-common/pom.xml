@@ -23,6 +23,13 @@
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework.library.client</groupId>
+            <artifactId>cloudera-framework-library-client-mqtt</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudera.framework.library.client</groupId>
             <artifactId>cloudera-framework-library-client-flume</artifactId>
             <version>${project.version}</version>
             <type>pom</type>

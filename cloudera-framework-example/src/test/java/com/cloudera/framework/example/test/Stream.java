@@ -151,7 +151,8 @@ public class Stream extends TestBase {
         FLUME_AGENT_NAME, (String) testMetaData.getParameters()[2].get(KEY_FLUME_SOURCE_NAME),
         (String) testMetaData.getParameters()[2].get(KEY_FLUME_SINK_NAME), new com.cloudera.framework.example.stream.Stream(),
         new HDFSEventSink(), (String) testMetaData.getParameters()[2].get(KEY_FLUME_OUTPUT_DIR),
-        (Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_ITERATIONS)));
+        (Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_ITERATIONS), iterations -> {
+        }));
     Driver driverStage = new Stage(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driverStage.runner(
       new String[]{dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString()}));

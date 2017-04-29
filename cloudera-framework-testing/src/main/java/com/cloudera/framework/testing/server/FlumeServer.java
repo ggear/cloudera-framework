@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.model.Parameter.Source;
@@ -73,13 +75,11 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
    * @param outputPath          the optional (can be <code>null</code>) root DFS output path for
    *                            the sink
    * @param iterations          the number of iterations to run the source and sink for
-   * @return the number of files existing post-process under
-   * <code>outputPath</code>, 0 if <code>outputPath</code> is
-   * <code>null</code>
+   * @return the number of files existing post-process under <code>outputPath</code>, 0 if <code>outputPath</code> is <code>null</code>
    */
   public synchronized int crankPipeline(Map<String, String> substitutions, String configFile, Map<String, String> configSourceOverlay,
                                         Map<String, String> configSinkOverlay, String agentName, String sourceName, String sinkName, PollableSource source, Sink sink,
-                                        String outputPath, int iterations) throws IOException, EventDeliveryException {
+                                        String outputPath, int iterations, Consumer<Integer> preProcess) throws IOException, EventDeliveryException {
     Properties config = new Properties();
     if (configFile != null) {
       InputStream configStream = FlumeServer.class.getClassLoader().getResourceAsStream(configFile);
@@ -130,6 +130,7 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
     source.setChannelProcessor(channelProcessor);
     source.start();
     for (int i = 0; i < iterations; i++) {
+      preProcess.accept(i);
       source.process();
     }
     for (int i = 0; i < iterations; i++) {

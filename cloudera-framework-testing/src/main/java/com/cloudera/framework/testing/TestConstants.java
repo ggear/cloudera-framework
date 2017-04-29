@@ -22,6 +22,7 @@ public interface TestConstants {
   String DIR_KUDU = "test-kudu";
   String DIR_HIVE = "test-hive";
   String DIR_KAFKA = "test-kafka";
+  String DIR_FLUME = "test-flume";
   String DIR_ZOOKEEPER = "test-zookeper";
 
   // Runtime directories
@@ -54,6 +55,7 @@ public interface TestConstants {
   String ABS_DIR_MQTT = ABS_DIR_TARGET + "/" + DIR_RUNTIME_MQTT;
   String ABS_DIR_HIVE = ABS_DIR_TARGET + "/" + DIR_HIVE;
   String ABS_DIR_KAFKA = ABS_DIR_TARGET + "/" + DIR_KAFKA;
+  String ABS_DIR_FLUME = ABS_DIR_TARGET + "/" + DIR_FLUME;
   String ABS_DIR_ZOOKEEPER = ABS_DIR_TARGET + "/" + DIR_ZOOKEEPER;
   String ABS_DIR_PYTHON = ABS_DIR_CLASSES + "/python";
   String ABS_DIR_HIVE_QUERY = ABS_DIR_CLASSES + "/hive/query";

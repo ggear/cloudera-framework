@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(TestRunner.class)
-public class DfsUtilTest {
+public class TestDfsUtil {
 
   @ClassRule
   public static final DfsServer dfsServer = DfsServer.getInstance();

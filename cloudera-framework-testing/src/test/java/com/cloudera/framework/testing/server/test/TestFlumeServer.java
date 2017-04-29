@@ -32,10 +32,12 @@ public class TestFlumeServer implements TestConstants {
     assertEquals(1,
       flumeServer.crankPipeline(ImmutableMap.of("HDFS_ROOT", dfsServer.getPathUri("/")), "flume/flume-conf.properties",
         Collections.emptyMap(), Collections.emptyMap(), "agent1", "source1", "sink1",
-        new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink1", 1));
+        new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink1", 1, iterations -> {
+        }));
     assertTrue(flumeServer.crankPipeline(ImmutableMap.of("HDFS_ROOT", dfsServer.getPathUri("/")), "flume/flume-conf.properties",
       ImmutableMap.of("batchSize", "3"), Collections.emptyMap(), "agent1", "source1", "sink2",
-      new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink2", 5) >= 1);
+      new SequenceGeneratorSource(), new HDFSEventSink(), "/tmp/flume-sink2", 5, iterations -> {
+      }) >= 1);
   }
 
   @Test

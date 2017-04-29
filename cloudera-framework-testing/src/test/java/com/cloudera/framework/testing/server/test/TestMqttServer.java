@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,7 @@ public class TestMqttServer implements TestConstants {
   @Test
   public void testMqtt() throws MqttException, InterruptedException {
     final CountDownLatch messageReceived = new CountDownLatch(1);
-    MqttClient client = new MqttClient(mqttServer.getConnectString(), UUID.randomUUID().toString());
+    MqttClient client = new MqttClient(mqttServer.getConnectString(), UUID.randomUUID().toString(), new MemoryPersistence());
     client.connect();
     client.setCallback(new MqttCallback() {
       @Override
@@ -47,9 +48,7 @@ public class TestMqttServer implements TestConstants {
       }
     });
     client.subscribe(TOPIC_NAME_TEST);
-    MqttMessage message = new MqttMessage();
-    message.setPayload(UUID.randomUUID().toString().getBytes());
-    client.publish(TOPIC_NAME_TEST, message);
+    client.publish(TOPIC_NAME_TEST, UUID.randomUUID().toString().getBytes(), 0, false);
     assertTrue(messageReceived.await(MQTT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     client.disconnect();
   }
