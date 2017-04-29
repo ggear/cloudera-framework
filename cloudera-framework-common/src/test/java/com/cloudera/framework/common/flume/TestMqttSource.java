@@ -66,7 +66,7 @@ public class TestMqttSource implements TestConstants {
         "flume/flume-conf.properties", Collections.emptyMap(), Collections.emptyMap(),
         "agent", "mqtt", "hdfs",
         new MqttSource(), new HDFSEventSink(),
-        "/tmp/flume-mqtt", 10, iteration -> mqttClientSendMessage(iteration)));
+        "/tmp/flume-mqtt", 10, this::mqttClientSendMessage));
   }
 
 }
