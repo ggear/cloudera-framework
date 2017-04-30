@@ -34,7 +34,9 @@ public class MqttSource extends AbstractPollableSource {
   public static final String CONFIG_PROVIDER_URL_DEFAULT = "tcp://localhost:1883";
   public static final String CONFIG_DESTINATION_NAME = "destinationName";
   public static final String CONFIG_DESTINATION_NAME_DEFAULT = "";
+
   private static final Logger LOG = LoggerFactory.getLogger(MqttSource.class);
+
   private String providerUrl;
   private String destinationName;
 
@@ -85,8 +87,8 @@ public class MqttSource extends AbstractPollableSource {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-              if (LOG.isDebugEnabled()) {
-                LOG.debug("MQTT client received message from broker [" + providerUrl + "] and topic [" + destinationName + "] of size [" +
+              if (LOG.isTraceEnabled()) {
+                LOG.trace("MQTT client received message from broker [" + providerUrl + "] and topic [" + destinationName + "] of size [" +
                   message.getPayload().length + "]");
               }
               try {
