@@ -19,11 +19,9 @@ providing full coverage against CDH:
 * Spark & Spark2
 * Hive/MR & Hive/Spark
 
-An [example](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
-is included, codifying the standards, providing an end to end data 
-[streaming](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/stream), [ingest](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/ingest), [modeling](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/main/java/com/cloudera/framework/example/model), [testing](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/java/com/cloudera/framework/example)
-pipeline, with synthetic [datasets](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/src/test/resources/data/mydataset) 
-to exercise the codebase.
+[Examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
+are included, codifying the standards, providing end to end data streaming, ingest, modeling, testing
+pipelines, with synthetic datasets to exercise the codebase.
 
 Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) 
 is included to provide a bare bones starter client module.
