@@ -55,7 +55,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   private static final int MAX_RESULTS_DEFAULT = 100;
   private static final AtomicLong DERBY_DB_COUNTER = new AtomicLong();
   private static final String HIVE_CONF_SPARK_MASTER = "spark.master";
-  private static final String HIVE_CONF_SPARK_MULTI_CONTEXTS = "spark.driver.allowMultipleContexts";
 
   private static final Logger LOG = LoggerFactory.getLogger(HiveServer.class);
 
@@ -287,7 +286,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     hiveConf.setBoolVar(ConfVars.LOCALMODEAUTO, Boolean.FALSE);
     hiveConf.setBoolVar(ConfVars.HIVECONVERTJOIN, Boolean.FALSE);
     hiveConf.setBoolVar(ConfVars.HIVEIGNOREMAPJOINHINT, Boolean.FALSE);
-    hiveConf.set(HIVE_CONF_SPARK_MULTI_CONTEXTS, "true");
+    hiveConf.set(SparkServer.SPARK_CONF_MULTI_CONTEXTS, "true");
     switch (getRuntime()) {
       case LOCAL_MR2:
         break;

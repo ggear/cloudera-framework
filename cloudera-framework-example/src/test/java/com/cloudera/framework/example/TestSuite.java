@@ -34,6 +34,6 @@ public class TestSuite {
     .outerRule(DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS)) //
     .around(MrServer.getInstance(MrServer.Runtime.CLUSTER_JOB)) //
     .around(PythonServer.getInstance(PythonServer.Runtime.LOCAL_CPYTHON)) //
-    .around(HiveServer.getInstance(HiveServer.Runtime.CLUSTER_MR2));
+    .around(HiveServer.getInstance(HiveServer.Runtime.LOCAL_MR2));
 
 }

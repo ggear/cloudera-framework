@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
 
+  public static final String SPARK_CONF_MULTI_CONTEXTS = "spark.driver.allowMultipleContexts";
+
   private static final Logger LOG = LoggerFactory.getLogger(SparkServer.class);
 
   private static SparkServer instance;
@@ -57,7 +59,10 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   @Override
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
-    context = new JavaSparkContext("local", "unit-test", new SparkConf().setAppName("Spark Unit-Test"));
+    SparkConf sparkConf = new SparkConf();
+    sparkConf.setAppName("spark-unit-test");
+    sparkConf.set(SPARK_CONF_MULTI_CONTEXTS, "true");
+    context = new JavaSparkContext("local", "unit-test", sparkConf);
     log(LOG, "start", time);
   }
 
