@@ -2,11 +2,13 @@ package com.cloudera.framework.testing.server;
 
 import com.cloudera.framework.testing.server.test.TestDfsServerDefault;
 import com.cloudera.framework.testing.server.test.TestFlumeServer;
+import com.cloudera.framework.testing.server.test.TestHiveServerMrDefault;
 import com.cloudera.framework.testing.server.test.TestKafkaServer;
 import com.cloudera.framework.testing.server.test.TestKuduServer;
 import com.cloudera.framework.testing.server.test.TestMqttServer;
 import com.cloudera.framework.testing.server.test.TestMrServerDefault;
 import com.cloudera.framework.testing.server.test.TestPythonServer;
+import com.cloudera.framework.testing.server.test.TestSparkServerDefault;
 import com.cloudera.framework.testing.server.test.TestZooKeeperServer;
 import org.junit.ClassRule;
 import org.junit.rules.RuleChain;
@@ -24,11 +26,8 @@ import org.junit.runners.Suite.SuiteClasses;
   TestMqttServer.class, //
   TestFlumeServer.class, //
   TestMrServerDefault.class, //
-
-  // TODO: Re-enable once Spark local is re-entrant
-  // TestSparkServerDefault.class, //
-  // TestHiveServerMrDefault.class, //
-
+  TestSparkServerDefault.class, //
+  TestHiveServerMrDefault.class, //
   TestPythonServer.class, //
 })
 

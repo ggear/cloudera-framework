@@ -22,7 +22,9 @@ import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.conf.HiveConf.ConfVars;
 import org.apache.hadoop.hive.ql.Driver;
 import org.apache.hadoop.hive.ql.QueryPlan;
+import org.apache.hadoop.hive.ql.exec.spark.session.SparkSessionManagerImpl;
 import org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+import org.apache.hadoop.hive.ql.metadata.HiveException;
 import org.apache.hadoop.hive.ql.processors.CommandProcessor;
 import org.apache.hadoop.hive.ql.processors.CommandProcessorFactory;
 import org.apache.hadoop.hive.ql.session.SessionState;
@@ -53,6 +55,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   private static final int MAX_RESULTS_DEFAULT = 100;
   private static final AtomicLong DERBY_DB_COUNTER = new AtomicLong();
   private static final String HIVE_CONF_SPARK_MASTER = "spark.master";
+  private static final String HIVE_CONF_SPARK_MULTI_CONTEXTS = "spark.driver.allowMultipleContexts";
 
   private static final Logger LOG = LoggerFactory.getLogger(HiveServer.class);
 
@@ -284,6 +287,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     hiveConf.setBoolVar(ConfVars.LOCALMODEAUTO, Boolean.FALSE);
     hiveConf.setBoolVar(ConfVars.HIVECONVERTJOIN, Boolean.FALSE);
     hiveConf.setBoolVar(ConfVars.HIVEIGNOREMAPJOINHINT, Boolean.FALSE);
+    hiveConf.set(HIVE_CONF_SPARK_MULTI_CONTEXTS, "true");
     switch (getRuntime()) {
       case LOCAL_MR2:
         break;
@@ -334,17 +338,19 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   }
 
   @Override
-  public synchronized void stop() throws IOException {
+  public synchronized void stop() throws IOException, HiveException {
     long time = log(LOG, "stop");
     switch (getRuntime()) {
       case LOCAL_MR2:
+        break;
       case LOCAL_SPARK:
-        if (hiveServer != null) {
-          hiveServer.stop();
-        }
+        SparkSessionManagerImpl.getInstance().shutdown();
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
+    }
+    if (hiveServer != null) {
+      hiveServer.stop();
     }
     log(LOG, "stop", time);
   }
