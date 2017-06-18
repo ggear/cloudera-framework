@@ -112,6 +112,7 @@
 
         <cdh-hadoop.version>2.6.0-cdh5.11.0</cdh-hadoop.version>
         <cdh-spark.version>1.6.0-cdh5.11.0</cdh-spark.version>
+        <cdh-spark2.version>2.1.0.cloudera1</cdh-spark2.version>
         <cdh-hive.version>1.1.0-cdh5.11.0</cdh-hive.version>
         <cdh-flume.version>1.6.0-cdh5.11.0</cdh-flume.version>
         <cdh-avro-base.version>1.7.6</cdh-avro-base.version>
@@ -136,7 +137,8 @@
         <parcel-plugin.version>0.7.8</parcel-plugin.version>
 
         <java.version>1.8</java.version>
-        <scala.version>2.10</scala.version>
+        <scala-spark.version>2.10</scala-spark.version>
+        <scala-spark2.version>2.11</scala-spark2.version>
 
         <os-platform.version />
 

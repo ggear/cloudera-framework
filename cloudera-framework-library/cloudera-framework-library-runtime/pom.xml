@@ -151,7 +151,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_${scala.version}</artifactId>
+            <artifactId>spark-core_${scala-spark.version}</artifactId>
             <version>${cdh-spark.version}</version>
             <exclusions>
                 <exclusion>
