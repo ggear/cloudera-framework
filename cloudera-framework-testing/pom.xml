@@ -13,10 +13,54 @@
         <version>1.5.4-cdh5.11.1-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <test-spark.version>spark</test-spark.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>SPARK1</id>
+            <properties>
+                <test-spark.version>spark</test-spark.version>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>SPARK2</id>
+            <properties>
+                <test-spark.version>spark2</test-spark.version>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <argLine>-Xmx${project.runtime.heap.max}m</argLine>
+                            <excludes>
+                                <exclude>**/*TestCdhSuite*</exclude>
+                                <exclude>**/*Hive*Spark*</exclude>
+                                <exclude>**/*Kafka*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
-            <groupId>com.cloudera.framework.library</groupId>
-            <artifactId>cloudera-framework-library-runtime</artifactId>
+            <groupId>com.cloudera.framework.library.runtime</groupId>
+            <artifactId>cloudera-framework-library-runtime-${test-spark.version}</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudera.framework.library.runtime</groupId>
+            <artifactId>cloudera-framework-library-runtime-core</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>

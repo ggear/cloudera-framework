@@ -1,31 +1,18 @@
 package com.cloudera.framework.testing.server.test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.util.Arrays;
 
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.SparkServer;
-import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.api.java.function.PairFunction;
 import org.junit.Test;
-import scala.Tuple2;
 
 @SuppressWarnings("serial")
 public abstract class TestSparkServer implements Serializable, TestConstants {
@@ -48,23 +35,21 @@ public abstract class TestSparkServer implements Serializable, TestConstants {
 
   @Test
   public void testSpark() throws IOException {
-    String dirInput = "/tmp/wordcount/input";
-    String dirOutput = "/tmp/wordcount/output";
-    String fileInput = new Path(dirInput, "file1.txt").toString();
+    int SAMPLES = 1000;
+    String dirInput = "/tmp/pi/input";
+    String fileInput = new Path(dirInput, "samples.txt").toString();
     BufferedWriter writer = new BufferedWriter(
       new OutputStreamWriter(getDfsServer().getFileSystem().create(getDfsServer().getPath(fileInput))));
-    writer.write("a a a a a\n");
-    writer.write("b b\n");
+    for (int i = 0; i < SAMPLES; i++) {
+      writer.write(i + "\n");
+    }
     writer.close();
-    getSparkServer().getContext().textFile(getDfsServer().getPathUri(fileInput)).cache().flatMap((FlatMapFunction<String, String>) s -> Arrays.asList(s.split(" "))).mapToPair((PairFunction<String, String, Integer>) s -> new Tuple2<>(s, 1)).reduceByKey((Function2<Integer, Integer, Integer>) (a, b) -> a + b).map((Function<Tuple2<String, Integer>, String>) t -> t._1 + "\t" + t._2).saveAsTextFile(getDfsServer().getPathUri(dirOutput));
-    Path[] outputFiles = FileUtil.stat2Paths(getDfsServer().getFileSystem().listStatus(getDfsServer().getPath(dirOutput), path -> !path.getName().equals(FileOutputCommitter.SUCCEEDED_FILE_NAME)));
-    assertEquals(1, outputFiles.length);
-    InputStream in = getDfsServer().getFileSystem().open(outputFiles[0]);
-    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-    assertEquals("a\t5", reader.readLine());
-    assertEquals("b\t2", reader.readLine());
-    assertNull(reader.readLine());
-    reader.close();
+    double piEstimate = getSparkServer().getContext().textFile(getDfsServer().getPathUri(fileInput)).cache().filter(i -> {
+      double x = Math.random();
+      double y = Math.random();
+      return x * x + y * y < 1;
+    }).count() * 4F / 1000;
+    assertTrue(piEstimate > 2 && piEstimate < 5);
   }
 
   @Test

@@ -1,0 +1,74 @@
+{
+  "namespace": "com.cloudera.framework.example.one.model",
+  "type": "record",
+  "name": "Record",
+  "fields": [
+    {
+      "name": "ingest_id",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "order": "ignore"
+    },
+    {
+      "name": "ingest_batch",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "order": "ignore"
+    },
+    {
+      "name": "ingest_timestamp",
+      "type": [
+        "null",
+        "long"
+      ],
+      "default": null,
+      "order": "ignore"
+    },
+    {
+      "name": "my_timestamp",
+      "type": [
+        "null",
+        "long"
+      ],
+      "default": null
+    },
+    {
+      "name": "my_integer",
+      "type": [
+        "null",
+        "int"
+      ],
+      "default": null
+    },
+    {
+      "name": "my_double",
+      "type": [
+        "null",
+        "double"
+      ],
+      "default": null
+    },
+    {
+      "name": "my_boolean",
+      "type": [
+        "null",
+        "boolean"
+      ],
+      "default": null
+    },
+    {
+      "name": "my_string",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    }
+  ]
+}

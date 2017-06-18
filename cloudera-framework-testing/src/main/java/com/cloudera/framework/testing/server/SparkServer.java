@@ -76,7 +76,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   }
 
   public enum Runtime {
-    LOCAL_CONTEXT // Local Spark context, inline-thread, light-weight
+    LOCAL_CONTEXT // Local Spark context, single-thread, light-weight
   }
 
 }

@@ -48,7 +48,7 @@ public class TestKafkaServer implements TestConstants {
     try {
       consumer.subscribe(Collections.singletonList(TOPIC_NAME_TEST));
       for (int i = 0; i < messageCount; i++) {
-        producer.send(new ProducerRecord<>(TOPIC_NAME_TEST, "" + i, "" + i)).get(KafkaServer.KAFKA_POLL_MS, TimeUnit.MILLISECONDS);
+        producer.send(new ProducerRecord<>(TOPIC_NAME_TEST, "" + i, "" + i)).get(KafkaServer.KAFKA_POLL_MS * 2, TimeUnit.MILLISECONDS);
       }
       producer.flush();
       ConsumerRecords<String, String> records;
