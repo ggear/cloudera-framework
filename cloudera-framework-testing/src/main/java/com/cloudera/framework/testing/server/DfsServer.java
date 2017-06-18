@@ -340,7 +340,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   public void writeFileAsString(Path path, String string) throws IOException {
     IOUtils.copyBytes(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)), getFileSystem().create(path), getFileSystem().getConf());
   }
-  
+
   @Override
   public int getIndex() {
     return 10;
