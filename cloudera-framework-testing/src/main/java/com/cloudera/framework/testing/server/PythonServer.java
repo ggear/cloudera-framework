@@ -87,6 +87,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    *
    * @return the exit code
    */
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error,
                      boolean quiet) throws IOException, InterruptedException {
     int exit;

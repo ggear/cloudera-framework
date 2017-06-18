@@ -63,6 +63,7 @@ public class MqttServer extends CdhServer<MqttServer, MqttServer.Runtime> {
     return new CdhServer<?, ?>[0];
   }
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   @Override
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");

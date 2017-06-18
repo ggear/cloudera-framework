@@ -45,6 +45,7 @@ public abstract class TestHiveServer implements TestConstants {
   /**
    * Test Hive
    */
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   @Test
   public void testHiveCreateSelect() throws Exception {
     new File(REL_DIR_DATA).mkdirs();

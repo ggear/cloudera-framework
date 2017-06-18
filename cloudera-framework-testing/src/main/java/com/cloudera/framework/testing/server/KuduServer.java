@@ -57,6 +57,7 @@ public class KuduServer extends CdhServer<KuduServer, KuduServer.Runtime> {
     return 20;
   }
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   @Override
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");

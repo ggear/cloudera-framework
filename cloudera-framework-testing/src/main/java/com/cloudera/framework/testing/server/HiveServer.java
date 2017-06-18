@@ -253,6 +253,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     return new CdhServer<?, ?>[]{DfsServer.getInstance(), MrServer.getInstance()};
   }
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   @Override
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
