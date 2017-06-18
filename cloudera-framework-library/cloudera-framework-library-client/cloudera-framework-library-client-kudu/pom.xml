@@ -5,12 +5,12 @@
     <groupId>com.cloudera.framework.library.client</groupId>
     <artifactId>cloudera-framework-library-client-kudu</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.4-cdh5.11.0-SNAPSHOT</version>
+    <version>1.5.4-cdh5.11.1-SNAPSHOT</version>
 
     <parent>
         <groupId>com.cloudera.framework.library</groupId>
         <artifactId>cloudera-framework-library-client</artifactId>
-        <version>1.5.4-cdh5.11.0-SNAPSHOT</version>
+        <version>1.5.4-cdh5.11.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>
