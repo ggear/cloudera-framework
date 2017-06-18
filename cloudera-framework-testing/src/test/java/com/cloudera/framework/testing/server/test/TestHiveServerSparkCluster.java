@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 public class TestHiveServerSparkCluster extends TestHiveServer {
 
   @ClassRule
-  public static final HiveServer hiveServer = HiveServer.getInstance(HiveServer.Runtime.CLUSTER_SPARK);
+  public static final HiveServer hiveServer = HiveServer.getInstance(HiveServer.Runtime.LOCAL_SPARK);
 
   @Override
   public HiveServer getHiveServer() {

@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -22,7 +21,8 @@ import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.conf.HiveConf.ConfVars;
 import org.apache.hadoop.hive.ql.Driver;
-import org.apache.hadoop.hive.ql.exec.CopyTask;
+import org.apache.hadoop.hive.ql.QueryPlan;
+import org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
 import org.apache.hadoop.hive.ql.processors.CommandProcessor;
 import org.apache.hadoop.hive.ql.processors.CommandProcessorFactory;
 import org.apache.hadoop.hive.ql.session.SessionState;
@@ -52,6 +52,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   private static final String COMMAND_DELIMETER = ";";
   private static final int MAX_RESULTS_DEFAULT = 100;
   private static final AtomicLong DERBY_DB_COUNTER = new AtomicLong();
+  private static final String HIVE_CONF_SPARK_MASTER = "spark.master";
 
   private static final Logger LOG = LoggerFactory.getLogger(HiveServer.class);
 
@@ -142,6 +143,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       log(LOG, "execute", true);
     }
     HiveConf confSession = new HiveConf((HiveConf) getConf());
+    confSession.set(HiveConf.ConfVars.HIVEQUERYID.varname, QueryPlan.makeQueryId());
     for (String key : configuration.keySet()) {
       confSession.set(key, configuration.get(key));
     }
@@ -267,30 +269,36 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     DfsServer.getInstance().getFileSystem().mkdirs(hiveWarehousePath);
     FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveWarehousePath, new FsPermission((short) 511));
     FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveScratchPath, new FsPermission((short) 475));
-    //TODO: Implement Hive-on-Spark and Hive-on-Cluster
+    HiveConf hiveConf = new HiveConf(HiveServer.class);
+    hiveConf.setVar(ConfVars.METASTOREWAREHOUSE, hiveWarehousePath.toString());
+    hiveConf.setVar(ConfVars.METASTORECONNECTURLKEY, hiveDerbyConnectString);
+    hiveConf.setVar(ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, "localhost");
+    hiveConf.setIntVar(ConfVars.HIVE_SERVER2_THRIFT_PORT, binaryPort);
+    hiveConf.setIntVar(ConfVars.HIVE_SERVER2_THRIFT_HTTP_PORT, httpPort);
+    hiveConf.setVar(ConfVars.SCRATCHDIR, hiveScratchPath.toString());
+    hiveConf.setVar(ConfVars.LOCALSCRATCHDIR, hiveScratchLocalPath.getAbsolutePath());
+    hiveConf.set(CommonConfigurationKeysPublic.HADOOP_SHELL_MISSING_DEFAULT_FS_WARNING_KEY, "false");
+    hiveConf.setVar(ConfVars.HIVEINPUTFORMAT, CombineHiveInputFormat.class.getName());
+    hiveConf.setBoolVar(ConfVars.HIVE_SUPPORT_CONCURRENCY, Boolean.FALSE);
+    hiveConf.setBoolVar(ConfVars.LOCALMODEAUTO, Boolean.FALSE);
+    hiveConf.setBoolVar(ConfVars.HIVECONVERTJOIN, Boolean.FALSE);
+    hiveConf.setBoolVar(ConfVars.HIVEIGNOREMAPJOINHINT, Boolean.FALSE);
     switch (getRuntime()) {
       case LOCAL_MR2:
-      case CLUSTER_SPARK:
-      case CLUSTER_MR2:
-        HiveConf hiveConf = new HiveConf(new Configuration(), CopyTask.class);
-        hiveConf.setVar(ConfVars.METASTOREWAREHOUSE, hiveWarehousePath.toString());
-        hiveConf.setVar(HiveConf.ConfVars.METASTORECONNECTURLKEY, hiveDerbyConnectString);
-        hiveConf.setVar(ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST, "localhost");
-        hiveConf.setIntVar(ConfVars.HIVE_SERVER2_THRIFT_PORT, binaryPort);
-        hiveConf.setIntVar(ConfVars.HIVE_SERVER2_THRIFT_HTTP_PORT, httpPort);
-        hiveConf.setVar(ConfVars.SCRATCHDIR, hiveScratchPath.toString());
-        hiveConf.setVar(ConfVars.LOCALSCRATCHDIR, hiveScratchLocalPath.getAbsolutePath());
-        hiveConf.set(CommonConfigurationKeysPublic.HADOOP_SHELL_MISSING_DEFAULT_FS_WARNING_KEY, "false");
-        hiveServer = new HiveServer2();
-        hiveServer.init(hiveConf);
-        hiveServer.start();
-        waitForStart();
-        SessionState.start(new SessionState(hiveConf));
-        setConf(hiveConf);
+        break;
+      case LOCAL_SPARK:
+        hiveConf.setVar(ConfVars.HIVE_EXECUTION_ENGINE, "spark");
+        hiveConf.set(HIVE_CONF_SPARK_MASTER, "local");
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
+    hiveServer = new HiveServer2();
+    hiveServer.init(hiveConf);
+    hiveServer.start();
+    waitForStart();
+    SessionState.start(new SessionState(hiveConf));
+    setConf(hiveConf);
     log(LOG, "start", time);
   }
 
@@ -329,7 +337,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     long time = log(LOG, "stop");
     switch (getRuntime()) {
       case LOCAL_MR2:
-      case CLUSTER_MR2:
+      case LOCAL_SPARK:
         if (hiveServer != null) {
           hiveServer.stop();
         }
@@ -395,8 +403,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   public enum Runtime {
     LOCAL_MR2, // Local MR2 job runner backed Hive, inline-thread, light-weight
-    CLUSTER_MR2, // Mini MR2 cluster backed Hive, multi-threaded, heavy-weight
-    CLUSTER_SPARK // Spark submit backed Hive, multi-threaded, heavy-weight
+    LOCAL_SPARK // Spark local backed Hive, single-threaded, light-weight
   }
 
 }
