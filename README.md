@@ -67,33 +67,33 @@ Alternatively, the module can be included as a binary dependency in maven, for e
 core client bill-of-materials and test harness can be achieved as so:
 
 ```xml
-  <project>
-    <repositories>
-      <repository>
-        <id>cloudera-framework</id>
-        <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
-        <snapshots>
-          <enabled>false</enabled>
-          <updatePolicy>never</updatePolicy>
-        </snapshots>
-      </repository>
-    </repositories>
-    <dependencies>
-      <dependency>
-        <groupId>com.cloudera.framework.library.client</groupId>
-        <artifactId>cloudera-framework-library-client-core</artifactId>
-        <version>1.5.3-cdh5.11.1</version>
-        <type>pom</type>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.cloudera.framework</groupId>
-        <artifactId>cloudera-framework-testing</artifactId>
-        <version>1.5.3-cdh5.11.1</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
-	</project>
+<project>
+  <repositories>
+    <repository>
+      <id>cloudera-framework</id>
+      <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>never</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>com.cloudera.framework.library.client</groupId>
+      <artifactId>cloudera-framework-library-client-core</artifactId>
+      <version>1.5.3-cdh5.11.1</version>
+      <type>pom</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.cloudera.framework</groupId>
+      <artifactId>cloudera-framework-testing</artifactId>
+      <version>1.5.3-cdh5.11.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
 ```
 
 ## Usage
