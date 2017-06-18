@@ -28,7 +28,7 @@ import org.junit.runners.Suite.SuiteClasses;
   // TODO: Re-enable once Spark local is re-entrant
   // TestSparkServerDefault.class, //
   // TestHiveServerMrDefault.class, //
-  
+
   TestPythonServer.class, //
 })
 
