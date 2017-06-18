@@ -6,7 +6,7 @@ import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 
 @RunWith(TestRunner.class)
-public class TestHiveServerSparkCluster extends TestHiveServer {
+public class TestHiveServerSparkLocal extends TestHiveServer {
 
   @ClassRule
   public static final HiveServer hiveServer = HiveServer.getInstance(HiveServer.Runtime.LOCAL_SPARK);
