@@ -267,8 +267,10 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     DfsServer.getInstance().getFileSystem().mkdirs(hiveWarehousePath);
     FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveWarehousePath, new FsPermission((short) 511));
     FileSystem.mkdirs(DfsServer.getInstance().getFileSystem(), hiveScratchPath, new FsPermission((short) 475));
+    //TODO: Implement Hive-on-Spark and Hive-on-Cluster
     switch (getRuntime()) {
       case LOCAL_MR2:
+      case CLUSTER_SPARK:
       case CLUSTER_MR2:
         HiveConf hiveConf = new HiveConf(new Configuration(), CopyTask.class);
         hiveConf.setVar(ConfVars.METASTOREWAREHOUSE, hiveWarehousePath.toString());
@@ -393,7 +395,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   public enum Runtime {
     LOCAL_MR2, // Local MR2 job runner backed Hive, inline-thread, light-weight
-    CLUSTER_MR2 // Mini MR2 cluster backed Hive, multi-threaded, heavy-weight
+    CLUSTER_MR2, // Mini MR2 cluster backed Hive, multi-threaded, heavy-weight
+    CLUSTER_SPARK // Spark submit backed Hive, multi-threaded, heavy-weight
   }
 
 }
