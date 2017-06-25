@@ -85,6 +85,15 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   }
 
   /**
+   * Rollup the counts of the results
+   */
+  public static List<Integer> count(List<List<String>> results) {
+    List<Integer> counts = new ArrayList<>();
+    results.forEach(result -> counts.add(result.size()));
+    return counts;
+  }
+
+  /**
    * Process a <code>statement</code>
    *
    * @return {@link List} of {@link String} results, no result will be indicated
@@ -355,16 +364,6 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       hiveServer.stop();
     }
     log(LOG, "stop", time);
-  }
-
-  /**
-   * Rollup the counts of the results
-   *
-   */
-  public static List<Integer> count(List<List<String>> results) {
-    List<Integer> counts = new ArrayList<>();
-    results.forEach(result -> counts.add(result.size()));
-    return counts;
   }
 
   private String getJdbcURL() {

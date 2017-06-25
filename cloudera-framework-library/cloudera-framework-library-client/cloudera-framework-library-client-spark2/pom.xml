@@ -19,6 +19,11 @@
             <artifactId>spark-core_${scala-spark2.version}</artifactId>
             <version>${cdh-spark2.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala-spark2.version}</artifactId>
+            <version>${cdh-spark2.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

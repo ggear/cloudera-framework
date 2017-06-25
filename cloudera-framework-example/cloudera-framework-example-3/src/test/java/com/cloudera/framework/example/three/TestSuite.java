@@ -2,7 +2,6 @@ package com.cloudera.framework.example.three;
 
 import com.cloudera.framework.example.three.test.Process;
 import com.cloudera.framework.testing.server.DfsServer;
-import com.cloudera.framework.testing.server.KafkaServer;
 import com.cloudera.framework.testing.server.KuduServer;
 import com.cloudera.framework.testing.server.SparkServer;
 import org.junit.ClassRule;
