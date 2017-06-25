@@ -15,6 +15,7 @@ import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.HiveServer;
 import com.cloudera.framework.testing.server.HiveServer.Runtime;
+import com.cloudera.framework.testing.server.KafkaServer;
 import com.cloudera.framework.testing.server.SparkServer;
 import com.googlecode.zohhak.api.Coercion;
 import com.googlecode.zohhak.api.TestWith;
@@ -28,10 +29,13 @@ import org.junit.runner.RunWith;
 @RunWith(TestRunner.class)
 public class Process implements TestConstants {
 
-  // TODO: Provide an implementation that leverages Impala and S3
+  // TODO: Provide an implementation that leverages Kafka, Impala and S3
 
   @ClassRule
   public static final DfsServer dfsServer = DfsServer.getInstance();
+
+  @ClassRule
+  public static final KafkaServer kafkaServer = KafkaServer.getInstance();
 
   @ClassRule
   public static final HiveServer hiveServer = HiveServer.getInstance(Runtime.LOCAL_SPARK);

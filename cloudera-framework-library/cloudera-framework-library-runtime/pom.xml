@@ -15,8 +15,8 @@
 
     <modules>
         <module>cloudera-framework-library-runtime-core</module>
-        <module>cloudera-framework-library-runtime-spark</module>
-        <module>cloudera-framework-library-runtime-spark2</module>
+        <module>cloudera-framework-library-runtime-scala_2.10</module>
+        <module>cloudera-framework-library-runtime-scala_2.11</module>
     </modules>
 
 </project>

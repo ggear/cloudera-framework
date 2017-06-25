@@ -15,7 +15,7 @@ import com.googlecode.zohhak.api.Coercion;
 import com.googlecode.zohhak.api.TestWith;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.DataTypes;
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 @RunWith(TestRunner.class)
 public class Process implements TestConstants {
 
-  // TODO: Extract to a Driver and provide an implementation that leverages Kafka, Spark Streaming, Kudu and HDFS
+  // TODO: Extract to a Driver and provide an implementation that leverages Kafka, Spark2 Streaming, Kudu and HDFS
 
   @ClassRule
   public static final DfsServer dfsServer = DfsServer.getInstance();
@@ -56,11 +56,11 @@ public class Process implements TestConstants {
   @TestWith({"testMetaDataAll"})
   public void testProcess(TestMetaData testMetaData) throws Exception {
     JavaSparkContext sparkContext = new JavaSparkContext(new SparkConf());
-    DataFrame dataframe = new SQLContext(sparkContext).createDataFrame(
+    Dataset dataset = new SQLContext(sparkContext).createDataFrame(
       sparkContext.textFile(dfsServer.getPathUri(DATASET_INPUT_DIR)).map(RowFactory::create),
       DataTypes.createStructType(Collections.singletonList(DataTypes.createStructField("myfields", DataTypes.StringType, true))));
-    assertEquals(4, dataframe.filter(dataframe.col("myfields").isNotNull()).count());
-    assertEquals(1, dataframe.filter(dataframe.col("myfields").like("%0.1293083612314587%")).count());
+    assertEquals(4, dataset.filter(dataset.col("myfields").isNotNull()).count());
+    assertEquals(1, dataset.filter(dataset.col("myfields").like("%0.1293083612314587%")).count());
   }
 
   @Coercion

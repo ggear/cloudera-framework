@@ -14,23 +14,23 @@
     </parent>
 
     <properties>
-        <test-spark.version>spark</test-spark.version>
+        <scala-test.version>2.10</scala-test.version>
     </properties>
 
     <profiles>
         <profile>
-            <id>SPARK1</id>
+            <id>SCALA_2.10</id>
             <properties>
-                <test-spark.version>spark</test-spark.version>
+                <test-spark.version>2.10</test-spark.version>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
         <profile>
-            <id>SPARK2</id>
+            <id>SCALA_2.11</id>
             <properties>
-                <test-spark.version>spark2</test-spark.version>
+                <test-spark.version>2.11</test-spark.version>
             </properties>
             <build>
                 <plugins>
@@ -54,7 +54,7 @@
     <dependencies>
         <dependency>
             <groupId>com.cloudera.framework.library.runtime</groupId>
-            <artifactId>cloudera-framework-library-runtime-${test-spark.version}</artifactId>
+            <artifactId>cloudera-framework-library-runtime-scala_${scala-test.version}</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>

@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework.library.runtime</groupId>
-            <artifactId>cloudera-framework-library-runtime-spark2</artifactId>
+            <artifactId>cloudera-framework-library-runtime-scala_2.11</artifactId>
             <version>${project.parent.version}</version>
             <type>pom</type>
             <scope>test</scope>
@@ -57,7 +57,7 @@
             <exclusions>
                 <exclusion>
                     <groupId>com.cloudera.framework.library.runtime</groupId>
-                    <artifactId>cloudera-framework-library-runtime-spark</artifactId>
+                    <artifactId>cloudera-framework-library-runtime-scala_2.10</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
