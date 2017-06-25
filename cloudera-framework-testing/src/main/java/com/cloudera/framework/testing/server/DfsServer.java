@@ -389,7 +389,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     Arrays.sort(files);
     StringBuilder filesString = new StringBuilder();
     for (Path file : files) {
-      if (!file.toString().contains(DIR_RUNTIME_MR)) {
+      if (!file.toString().contains(DIR_RUNTIME_MR) && !file.toString().contains(HiveServer.HIVE_DIR_SCRATCH)) {
         filesString.append("\n")
           .append(Path.getPathWithoutSchemeAndAuthority(file).toString().replace(getPathLocal(REL_DIR_DFS_LOCAL).toUri().toString(), ""));
       }

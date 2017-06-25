@@ -22,6 +22,7 @@ import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.types.DataTypes;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 
@@ -54,6 +55,11 @@ public class Process implements TestConstants {
     .dataSetSourceDirs(DATASET_TABLE_SOURCE) //
     .dataSetDestinationDirs(DATASET_TABLE_DESTINATION);
 
+  @Before
+  public void setupDatabase() throws Exception {
+    hiveServer.execute("CREATE DATABASE IF NOT EXISTS " + DATASET + " LOCATION '" + dfsServer.getPathUri(DATASET_DATABASE_DESTINATION) + "'");
+  }
+
   /**
    * Test process
    */
@@ -62,7 +68,6 @@ public class Process implements TestConstants {
 
     // TODO: Provide an implementation that leverages Impala and S3
 
-    hiveServer.execute("CREATE DATABASE IF NOT EXISTS " + DATASET + " LOCATION '" + dfsServer.getPathUri(DATASET_DATABASE_DESTINATION) + "'");
     executeSpark();
     executeHive();
     executeSpark();
