@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 @RunWith(TestRunner.class)
 public class Process implements TestConstants {
 
-  // TODO: Provide an implementation that leverages Spark2, Kudu and HDFS
+  // TODO: Extract to a Driver and provide an implementation that leverages Spark2, Kudu and HDFS
 
   @ClassRule
   public static final DfsServer dfsServer = DfsServer.getInstance();
