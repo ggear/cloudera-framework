@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.package$;
 import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,8 +76,12 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
     log(LOG, "stop", time);
   }
 
+  @Override
+  protected String logPrefix() {
+    return (package$.MODULE$.SPARK_VERSION().charAt(0) == '1' ? "SparkServer" : "Spark2Server") + "." + (getRuntime() == null ? "DEFAULT" : getRuntime());
+  }
+
   public enum Runtime {
     LOCAL_CONTEXT // Local Spark context, single-thread, light-weight
   }
-
 }
