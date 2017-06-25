@@ -57,9 +57,9 @@ public class Process extends Driver {
           .run(new String[]{pathPartitioned + Path.SEPARATOR_CHAR + Constants.DIR_REL_MYDS_CANONICAL, pathCleansed});
       }
     }
-    importCountersAll(stageDriver.getCounters());
-    importCountersAll(partitionDriver.getCounters());
-    importCountersAll(cleanseDriver.getCounters());
+    addCountersAll(stageDriver.getCounters());
+    addCountersAll(partitionDriver.getCounters());
+    addCountersAll(cleanseDriver.getCounters());
     return returnValue;
   }
 

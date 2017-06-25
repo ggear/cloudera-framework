@@ -100,7 +100,7 @@ public class Cleanse extends Driver {
     }
     for (Job job : jobs) {
       jobSuccess = jobSuccess && job.waitForCompletion(LOG.isInfoEnabled());
-      importCounters(job, COUNTERS);
+      addCounters(job, COUNTERS);
     }
     if (jobSuccess) {
       for (Path path : inputPaths) {

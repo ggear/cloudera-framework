@@ -19,10 +19,11 @@ WHERE
   myint is not NULL;
 
 SELECT
-  from_unixtime(unix_timestamp(mydate), 'EEEE') as myday,
-  sum(myint)
+  from_unixtime(unix_timestamp(mydate), 'E') as myday,
+  sum(myint) as myint
 FROM mytable
 WHERE
   mydate is not NULL and
   myint is not NULL
-GROUP BY mydate;
+GROUP BY mydate
+ORDER BY myint;

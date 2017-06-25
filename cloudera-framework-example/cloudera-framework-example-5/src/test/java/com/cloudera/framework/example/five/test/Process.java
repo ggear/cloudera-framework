@@ -26,6 +26,8 @@ import org.junit.runner.RunWith;
 @RunWith(TestRunner.class)
 public class Process implements TestConstants {
 
+  // TODO: Provide an implementation that leverages PySpark, Spark2, HDFS
+
   @ClassRule
   public static final DfsServer dfsServer = DfsServer.getInstance();
 
@@ -33,30 +35,24 @@ public class Process implements TestConstants {
   public static final SparkServer sparkServer = SparkServer.getInstance();
 
   private static final String DATASET = "mydataset";
-  private static final String DATASET_FIELDS = "myfields";
-  private static final String DATASET_DATABASE_DESTINATION = "/" + DATASET;
-  private static final String DATASET_TABLE_SOURCE = REL_DIR_DATASET;
-  private static final String DATASET_TABLE_DESTINATION = DATASET_DATABASE_DESTINATION + "/mytable";
-  private static final String DATASET_TABLE_DESTINATION_FILE = DATASET_TABLE_DESTINATION + "/mydataset_pristine.csv";
+  private static final String DATASET_DIR = "/" + DATASET;
+  private static final String DATASET_INPUT_DIR = DATASET_DIR + "/mytable";
 
   public final TestMetaData testMetaDataAll = TestMetaData.getInstance() //
-    .dataSetSourceDirs(DATASET_TABLE_SOURCE) //
-    .dataSetDestinationDirs(DATASET_TABLE_DESTINATION);
+    .dataSetSourceDirs(REL_DIR_DATASET) //
+    .dataSetDestinationDirs(DATASET_INPUT_DIR);
 
   /**
    * Test process
    */
   @TestWith({"testMetaDataAll"})
   public void testProcess(TestMetaData testMetaData) throws Exception {
-
-    // TODO: Provide an implementation that leverages PySpark, Spark2, HDFS
-
     JavaSparkContext sparkContext = new JavaSparkContext(new SparkConf());
     Dataset dataset = new SQLContext(sparkContext).createDataFrame(
-      sparkContext.textFile(dfsServer.getPathUri(DATASET_TABLE_DESTINATION_FILE)).map(RowFactory::create),
-      DataTypes.createStructType(Collections.singletonList(DataTypes.createStructField(DATASET_FIELDS, DataTypes.StringType, true))));
-    assertEquals(4, dataset.filter(dataset.col(DATASET_FIELDS).isNotNull()).count());
-    assertEquals(1, dataset.filter(dataset.col(DATASET_FIELDS).like("%0.1293083612314587%")).count());
+      sparkContext.textFile(dfsServer.getPathUri(DATASET_INPUT_DIR)).map(RowFactory::create),
+      DataTypes.createStructType(Collections.singletonList(DataTypes.createStructField("myfields", DataTypes.StringType, true))));
+    assertEquals(4, dataset.filter(dataset.col("myfields").isNotNull()).count());
+    assertEquals(1, dataset.filter(dataset.col("myfields").like("%0.1293083612314587%")).count());
   }
 
   @Coercion

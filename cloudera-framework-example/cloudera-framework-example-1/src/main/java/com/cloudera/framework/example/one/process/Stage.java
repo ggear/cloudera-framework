@@ -96,7 +96,7 @@ public class Stage extends Driver {
       for (Path path : inputPaths) {
         hdfs.createNewFile(new Path(path, FileOutputCommitter.SUCCEEDED_FILE_NAME));
       }
-      importCounters(job, COUNTERS);
+      addCounters(job, COUNTERS);
     }
     return jobSuccess ? RETURN_SUCCESS : RETURN_FAILURE_RUNTIME;
   }

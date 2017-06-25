@@ -3,9 +3,11 @@ package com.cloudera.framework.common;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -32,8 +34,8 @@ public abstract class Driver extends Configured implements Tool {
   public static final String CONF_SETTINGS = "driver-site.xml";
   private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
   private static final int FORMAT_TIME_FACTOR = 10;
-
   private final Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
+  private List<String> results = null;
 
   public Driver() {
     super();
@@ -135,6 +137,7 @@ public abstract class Driver extends Configured implements Tool {
    * Reset the driver to be used again, should be called if overridden
    */
   public void reset() {
+    results = null;
     counters.clear();
   }
 
@@ -195,8 +198,10 @@ public abstract class Driver extends Configured implements Tool {
           }
         }
       }
-    }
-    if (LOG.isInfoEnabled()) {
+      if (results != null) {
+        LOG.info("Driver [" + this.getClass().getCanonicalName() + "] results:");
+        results.forEach(result -> LOG.info("\t" + result));
+      }
       LOG.info(
         "Driver [" + this.getClass().getSimpleName() + "] finished " + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully")
           + " with exit value [" + exitValue + "] in " + formatTime(timeTotal));
@@ -237,6 +242,21 @@ public abstract class Driver extends Configured implements Tool {
     return returnValue;
   }
 
+  public List<String> getResults() {
+    return results == null ? Collections.emptyList() : results;
+  }
+
+  public void addResults(List<String> results) {
+    results.forEach(this::addResult);
+  }
+
+  public void addResult(String result) {
+    if (results == null) {
+      results = new ArrayList<>();
+    }
+    results.add(result);
+  }
+
   public Map<String, Map<Enum<?>, Long>> getCounters() {
     return new LinkedHashMap<>(counters);
   }
@@ -253,17 +273,17 @@ public abstract class Driver extends Configured implements Tool {
     return counters.get(group) == null || counters.get(group).get(counter) == null ? null : counters.get(group).get(counter);
   }
 
-  protected void importCountersAll(Map<String, Map<Enum<?>, Long>> counters) {
+  protected void addCountersAll(Map<String, Map<Enum<?>, Long>> counters) {
     for (String group : counters.keySet()) {
-      importCounters(group, counters.get(group));
+      addCounters(group, counters.get(group));
     }
   }
 
-  protected void importCounters(Map<Enum<?>, Long> counters) {
-    importCounters(this.getClass().getCanonicalName(), counters);
+  protected void addCounters(Map<Enum<?>, Long> counters) {
+    addCounters(this.getClass().getCanonicalName(), counters);
   }
 
-  protected void importCounters(String group, Map<Enum<?>, Long> counters) {
+  protected void addCounters(String group, Map<Enum<?>, Long> counters) {
     this.counters.computeIfAbsent(group, k -> new LinkedHashMap<>());
     for (Enum<?> value : counters.keySet()) {
       if (counters.get(value) != null) {
@@ -273,11 +293,11 @@ public abstract class Driver extends Configured implements Tool {
     }
   }
 
-  protected void importCounters(Job job, Enum<?>[] values) throws IOException {
-    importCounters(this.getClass().getCanonicalName(), job, values);
+  protected void addCounters(Job job, Enum<?>[] values) throws IOException {
+    addCounters(this.getClass().getCanonicalName(), job, values);
   }
 
-  protected void importCounters(String group, Job job, Enum<?>[] values) throws IOException {
+  protected void addCounters(String group, Job job, Enum<?>[] values) throws IOException {
     this.counters.computeIfAbsent(group, k -> new LinkedHashMap<>());
     Counters counters = job.getCounters();
     for (Enum<?> value : values) {

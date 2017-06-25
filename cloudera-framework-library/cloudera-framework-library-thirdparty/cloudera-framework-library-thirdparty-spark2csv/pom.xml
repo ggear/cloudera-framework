@@ -2,27 +2,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.cloudera.framework.library.client</groupId>
-    <artifactId>cloudera-framework-library-client-spark</artifactId>
+    <groupId>com.cloudera.framework.library.thirdparty</groupId>
+    <artifactId>cloudera-framework-library-thirdparty-spark2csv</artifactId>
     <packaging>pom</packaging>
     <version>1.5.4-cdh5.11.1-SNAPSHOT</version>
 
     <parent>
         <groupId>com.cloudera.framework.library</groupId>
-        <artifactId>cloudera-framework-library-client</artifactId>
+        <artifactId>cloudera-framework-library-thirdparty</artifactId>
         <version>1.5.4-cdh5.11.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.10</artifactId>
-            <version>${cdh-spark.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.10</artifactId>
-            <version>${cdh-spark.version}</version>
+            <groupId>com.databricks</groupId>
+            <artifactId>spark-csv_2.11</artifactId>
+            <version>${sparkcsv.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

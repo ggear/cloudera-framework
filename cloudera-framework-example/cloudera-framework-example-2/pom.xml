@@ -16,6 +16,20 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.cloudera.framework.library.client</groupId>
+            <artifactId>cloudera-framework-library-client-core</artifactId>
+            <version>${project.parent.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudera.framework.library.client</groupId>
+            <artifactId>cloudera-framework-library-client-spark</artifactId>
+            <version>${project.parent.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-assembly</artifactId>
             <version>${project.parent.version}</version>

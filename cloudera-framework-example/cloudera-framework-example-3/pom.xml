@@ -50,6 +50,12 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.cloudera.framework.library.thirdparty</groupId>
+            <artifactId>cloudera-framework-library-thirdparty-spark2csv</artifactId>
+            <version>${project.parent.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
             <groupId>com.cloudera.framework.library.runtime</groupId>
             <artifactId>cloudera-framework-library-runtime-spark2</artifactId>
             <version>${project.parent.version}</version>

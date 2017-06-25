@@ -128,6 +128,7 @@
         <snappy.version>1.1.1.7</snappy.version>
         <elephantbird.version>4.15</elephantbird.version>
         <opencsv.version>2.3</opencsv.version>
+        <sparkcsv.version>1.5.0</sparkcsv.version>
         <jasper.version>5.5.23</jasper.version>
         <slf4j.version>1.7.5</slf4j.version>
         <sysout-over-slf4j.version>1.0.2</sysout-over-slf4j.version>
@@ -137,8 +138,6 @@
         <parcel-plugin.version>0.7.8</parcel-plugin.version>
 
         <java.version>1.8</java.version>
-        <scala-spark.version>2.10</scala-spark.version>
-        <scala-spark2.version>2.11</scala-spark2.version>
 
         <os-platform.version />
 

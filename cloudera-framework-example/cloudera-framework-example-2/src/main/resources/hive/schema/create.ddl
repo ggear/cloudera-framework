@@ -10,7 +10,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS mytable (
   mydate DATE,
   myint INT,
   mydouble DOUBLE,
-  myboolean STRING,
+  myboolean BOOLEAN,
   mystring STRING
 )
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
