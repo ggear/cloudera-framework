@@ -77,4 +77,34 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.cloudera.parcel</groupId>
+                <artifactId>cloudera-parcel-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>explode</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>explode</goal>
+                        </goals>
+                        <configuration>
+                            <parcels>
+                                <parcel>
+                                    <groupId>com.cloudera.parcel</groupId>
+                                    <artifactId>KUDU</artifactId>
+                                    <version>${cdh-kudu.version}</version>
+                                    <classifier>${os-platform.version}</classifier>
+                                    <repositoryUrl>http://52.63.86.162/tmph3l7m2vv103/sbin/kudu/parcels</repositoryUrl>
+                                    <linkDirectory>${project.build.directory}/runtime-kudu</linkDirectory>
+                                </parcel>
+                            </parcels>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

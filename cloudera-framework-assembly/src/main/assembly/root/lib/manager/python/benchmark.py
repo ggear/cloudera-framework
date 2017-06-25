@@ -35,11 +35,10 @@ import getopt
 import inspect
 import json
 import logging
+import requests
 import sys
 import textwrap
 import urllib
-
-import requests
 from cm_api.api_client import ApiResource, ApiException
 from cm_api.endpoints.dashboards import ApiDashboard, create_dashboards
 from tabulate import tabulate

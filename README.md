@@ -4,8 +4,7 @@ Provide an example organisation wide Cloudera (i.e. Hadoop ecosystem) project fr
 defining corporate standards on runtime components, datasets, libraries, testing and project 
 structure to facilitate operating with a continuous deployment pipeline. This example includes 
 [client](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-client)/[runtime](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-runtime)/[thirdparty](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-thirdparty)
-bill-of-materials,
-[utility](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common)/[driver](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common/Driver.java)
+bill-of-materials, [utility](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common)/[driver](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common/Driver.java)
 libraries and a unit test [harness](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/main/java/com/cloudera/framework/testing)
 with [examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/test/java/com/cloudera/framework/testing/server),
 providing full coverage against CDH:
@@ -16,6 +15,7 @@ providing full coverage against CDH:
 * Flume
 * Kafka
 * Impala
+* ZooKeeper
 * Spark & Spark2
 * Hive/MR & Hive/Spark
 
@@ -97,11 +97,18 @@ core client bill-of-materials and test harness can be achieved as so:
 
 The cloudera-framework includes a set of 
 [examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
-which exercise the entire codebase:
+which exercise the entire framework:
 
-* [Example 1](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-1) (Flume, MR, Hive/MR, Impala, HDFS)
-* [Example 2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-2) (Hive/Spark, Impala, S3)
-* [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-3) (Kafka, Spark2, Kudu)
+* [Example 1](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-1) 
+  (Java, HSQL, Flume, Kafka, MR, Hive/MR, Impala, HDFS)
+* [Example 2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-2)
+  (HSQL, Hive/Spark, Impala, S3)
+* [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-3) 
+  (Java, Spark2, Kudu, HDFS)
+* [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-4) 
+  (Scala, Kafka, Spark Streaming, Kudu, HDFS)
+* [Example 5](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-5) 
+  (PySpark, Spark2, HDFS)
 
 In addition, an archetype is available allowing one to stand up a simple, bare bones project for 
 new cloudera-framework clients as so (assuming Eclipse as the IDE):

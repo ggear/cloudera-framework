@@ -123,7 +123,7 @@ public abstract class TestDfsServer implements TestConstants {
   public void testDfsGetPathUri() throws Exception {
     String regexScheme = getDfsServer().getRuntime().equals(DfsServer.Runtime.LOCAL_FS) ? "file:/.*" + DIR_DFS_LOCAL
       : "hdfs://localhost:[0-9]+";
-    String regexSchemeRoot = getDfsServer().getRuntime().equals(DfsServer.Runtime.LOCAL_FS) ? "file:/.*" + DIR_DFS_LOCAL
+    String regexSchemeRoot = getDfsServer().getRuntime().equals(DfsServer.Runtime.LOCAL_FS) ? "file:/.*" + DIR_DFS_LOCAL + "/"
       : "hdfs://localhost:[0-9]+/";
     assertTrue(getDfsServer().getPathUri("").matches(regexSchemeRoot));
     assertTrue(getDfsServer().getPathUri("/").matches(regexSchemeRoot));
@@ -132,10 +132,10 @@ public abstract class TestDfsServer implements TestConstants {
     assertTrue(getDfsServer().getPathUri("/tmp").matches(regexScheme + "/tmp"));
     assertTrue(getDfsServer().getPathUri("//tmp").matches(regexScheme + "/tmp"));
     assertTrue(getDfsServer().getPathUri("///tmp").matches(regexScheme + "/tmp"));
-    assertTrue(getDfsServer().getPathUri("///tmp/").matches(regexScheme + "/tmp"));
+    assertTrue(getDfsServer().getPathUri("///tmp/").matches(regexScheme + "/tmp/"));
     assertTrue(getDfsServer().getPathUri("///tmp//tmp").matches(regexScheme + "/tmp/tmp"));
-    assertTrue(getDfsServer().getPathUri("///tmp//tmp/").matches(regexScheme + "/tmp/tmp"));
-    assertTrue(getDfsServer().getPathUri("///tmp//tmp//").matches(regexScheme + "/tmp/tmp"));
+    assertTrue(getDfsServer().getPathUri("///tmp//tmp/").matches(regexScheme + "/tmp/tmp/"));
+    assertTrue(getDfsServer().getPathUri("///tmp//tmp//").matches(regexScheme + "/tmp/tmp/"));
     assertTrue(getDfsServer().getFileSystem().exists(new Path(getDfsServer().getPathUri(""))));
     assertTrue(getDfsServer().getFileSystem().exists(new Path(getDfsServer().getPathUri("/"))));
     assertTrue(getDfsServer().getFileSystem().exists(new Path(getDfsServer().getPathUri("///tmp/"))));

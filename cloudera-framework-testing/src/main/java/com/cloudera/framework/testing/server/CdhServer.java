@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Base class for all {@link ClassRule} and {@link Rule} annotated
+ * Base class for all {@link ClassRule} and {@link org.junit.Rule} annotated
  * {@link TestRule TestRules}.
  *
  * @param <U> Specialised class

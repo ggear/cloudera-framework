@@ -1,6 +1,8 @@
 --
 -- Table create
 --
+-- noinspection SqlDialectInspectionForFile
+-- noinspection SqlNoDataSourceInspectionForFile
 
 USE ${hivevar:my.database.name};
 

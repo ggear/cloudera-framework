@@ -196,7 +196,11 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    * @return the DFS path URI {@link String}
    */
   public String getPathUri(String path) {
-    return getPath(path).makeQualified(getFileSystem().getUri(), PATH_ROOT).toString();
+    String pathUri = getPath(path).makeQualified(getFileSystem().getUri(), PATH_ROOT).toString();
+    if ((path.equals("") || path.endsWith("/")) && !pathUri.endsWith("/")) {
+      pathUri += "/";
+    }
+    return pathUri;
   }
 
   /**

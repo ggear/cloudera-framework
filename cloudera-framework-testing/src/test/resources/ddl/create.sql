@@ -1,6 +1,8 @@
 --
 -- Create and describe table
 --
+-- noinspection SqlDialectInspectionForFile
+-- noinspection SqlNoDataSourceInspectionForFile
 
 CREATE TABLE IF NOT EXISTS ${hivevar:test.table.name} (
 	col1 INT,

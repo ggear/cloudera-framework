@@ -149,9 +149,12 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     for (String key : configuration.keySet()) {
       confSession.set(key, configuration.get(key));
     }
+    statement = new StrSubstitutor(parameters, "${hivevar:", "}")
+      .replace(statement.trim())
+      .replaceAll("(?i)LOCATION '/", "LOCATION '" + DfsServer.getInstance().getPathUri("/"));
     List<String> results = new ArrayList<>();
     CommandProcessor commandProcessor = CommandProcessorFactory.getForHiveCommand(
-      (statement = new StrSubstitutor(parameters, "${hivevar:", "}").replace(statement.trim())).split("\\s+"), confSession);
+      statement.split("\\s+"), confSession);
     if (commandProcessor == null) {
       ((Driver) (commandProcessor = new Driver(confSession))).setMaxRows(maxResults);
     }
@@ -352,6 +355,16 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       hiveServer.stop();
     }
     log(LOG, "stop", time);
+  }
+
+  /**
+   * Rollup the counts of the results
+   *
+   */
+  public static List<Integer> count(List<List<String>> results) {
+    List<Integer> counts = new ArrayList<>();
+    results.forEach(result -> counts.add(result.size()));
+    return counts;
   }
 
   private String getJdbcURL() {
