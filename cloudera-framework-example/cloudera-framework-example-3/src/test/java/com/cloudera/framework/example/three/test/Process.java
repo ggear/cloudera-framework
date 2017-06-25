@@ -3,7 +3,7 @@ package com.cloudera.framework.example.three.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestMetaData;
@@ -13,6 +13,8 @@ import com.cloudera.framework.testing.server.KuduServer;
 import com.cloudera.framework.testing.server.SparkServer;
 import com.googlecode.zohhak.api.Coercion;
 import com.googlecode.zohhak.api.TestWith;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
@@ -54,9 +56,10 @@ public class Process implements TestConstants {
 
     // TODO: Provide an implementation that leverages Spark2, Kudu and HDFS
 
-    Dataset dataset = new SQLContext(SparkServer.getInstance().getContext()).createDataFrame(
-      SparkServer.getInstance().getContext().textFile(DfsServer.getInstance().getPathUri(DATASET_TABLE_DESTINATION_FILE)).map(RowFactory::create),
-      DataTypes.createStructType(Arrays.asList(DataTypes.createStructField(DATASET_FIELDS, DataTypes.StringType, true))));
+    JavaSparkContext sparkContext = new JavaSparkContext(new SparkConf());
+    Dataset dataset = new SQLContext(sparkContext).createDataFrame(
+      sparkContext.textFile(dfsServer.getPathUri(DATASET_TABLE_DESTINATION_FILE)).map(RowFactory::create),
+      DataTypes.createStructType(Collections.singletonList(DataTypes.createStructField(DATASET_FIELDS, DataTypes.StringType, true))));
     assertEquals(4, dataset.filter(dataset.col(DATASET_FIELDS).isNotNull()).count());
     assertEquals(1, dataset.filter(dataset.col(DATASET_FIELDS).like("%0.1293083612314587%")).count());
   }

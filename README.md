@@ -102,7 +102,7 @@ which exercise the entire framework:
 * [Example 1](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-1) 
   (Java, HSQL, Flume, Kafka, MR, Hive/MR, Impala, HDFS)
 * [Example 2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-2)
-  (HSQL, Hive/Spark, Impala, S3)
+  (Java, HSQL, Hive/Spark, Spark, Impala, S3)
 * [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-3) 
   (Java, Spark2, Kudu, HDFS)
 * [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-4) 

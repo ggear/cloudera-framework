@@ -12,6 +12,8 @@ import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.SparkServer;
 import org.apache.hadoop.fs.Path;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.junit.Test;
 
 @SuppressWarnings("serial")
@@ -44,11 +46,13 @@ public abstract class TestSparkServer implements Serializable, TestConstants {
       writer.write(i + "\n");
     }
     writer.close();
-    double piEstimate = getSparkServer().getContext().textFile(getDfsServer().getPathUri(fileInput)).cache().filter(i -> {
+    JavaSparkContext sparkContext = new JavaSparkContext(new SparkConf());
+    double piEstimate = sparkContext.textFile(getDfsServer().getPathUri(fileInput)).cache().filter(i -> {
       double x = Math.random();
       double y = Math.random();
       return x * x + y * y < 1;
     }).count() * 4F / 1000;
+    sparkContext.close();
     assertTrue(piEstimate > 2 && piEstimate < 5);
   }
 

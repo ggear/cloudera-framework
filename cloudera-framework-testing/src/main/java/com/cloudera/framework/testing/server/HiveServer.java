@@ -190,6 +190,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
       throw new SQLException("Statement executed with error response code [" + responseCode + "]"
         + (responseErrorMessage != null ? " and error message [" + responseErrorMessage + " ]" : ""));
     }
+    if (SessionState.get().getSparkSession() != null)
+      SessionState.get().getSparkSession().close();
     return results;
   }
 
@@ -264,7 +266,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   @Override
   public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[]{DfsServer.getInstance(), MrServer.getInstance()};
+    return new CdhServer<?, ?>[]{DfsServer.getInstance(), (getRuntime() == null || getRuntime().equals(Runtime.LOCAL_MR2)) ? MrServer.getInstance() : SparkServer.getInstance()};
   }
 
   @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -298,13 +300,12 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     hiveConf.setBoolVar(ConfVars.LOCALMODEAUTO, Boolean.FALSE);
     hiveConf.setBoolVar(ConfVars.HIVECONVERTJOIN, Boolean.FALSE);
     hiveConf.setBoolVar(ConfVars.HIVEIGNOREMAPJOINHINT, Boolean.FALSE);
-    hiveConf.set(SparkServer.SPARK_CONF_MULTI_CONTEXTS, "true");
     switch (getRuntime()) {
       case LOCAL_MR2:
         break;
       case LOCAL_SPARK:
         hiveConf.setVar(ConfVars.HIVE_EXECUTION_ENGINE, "spark");
-        hiveConf.set(HIVE_CONF_SPARK_MASTER, "local");
+        hiveConf.set(HIVE_CONF_SPARK_MASTER, "local[*]");
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
@@ -421,7 +422,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   public enum Runtime {
     LOCAL_MR2, // Local MR2 job runner backed Hive, inline-thread, light-weight
-    LOCAL_SPARK // Spark local backed Hive, single-threaded, light-weight
+    LOCAL_SPARK // Spark local backed Hive, multi-threaded, light-weight
   }
 
 }

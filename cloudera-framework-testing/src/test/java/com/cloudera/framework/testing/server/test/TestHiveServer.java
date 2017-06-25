@@ -11,7 +11,9 @@ import java.util.Collections;
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.HiveServer;
+import com.cloudera.framework.testing.server.HiveServer.Runtime;
 import com.cloudera.framework.testing.server.MrServer;
+import com.cloudera.framework.testing.server.SparkServer;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -29,7 +31,7 @@ public abstract class TestHiveServer implements TestConstants {
   @Test
   public void testImplicitDependencies() {
     assertTrue(DfsServer.getInstance().isStarted());
-    assertTrue(MrServer.getInstance().isStarted());
+    assertTrue((getHiveServer().getRuntime().equals(Runtime.LOCAL_MR2) ? MrServer.getInstance() : SparkServer.getInstance()).isStarted());
   }
 
   @Test(expected = IOException.class)
