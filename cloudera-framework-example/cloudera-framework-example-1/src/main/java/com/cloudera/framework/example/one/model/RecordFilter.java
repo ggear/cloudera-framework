@@ -5,6 +5,8 @@ package com.cloudera.framework.example.one.model;
  */
 public class RecordFilter {
 
+  // TODO: Implement filters on process
+
   public static final String CONF_RECORD_FILTER = "record.filter";
 
   public static final String CONF_RECORD_FILTER_PASS_THROUGH = "pass-through";
