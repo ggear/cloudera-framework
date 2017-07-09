@@ -84,8 +84,8 @@
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>3.2.2</version>
                 <configuration>
-                    <scalaVersion>${scala_2.11.version}.${scala_2.11-minor.version}</scalaVersion>
-                    <scalaCompatVersion>${scala_2.11.version}</scalaCompatVersion>
+                    <scalaVersion>${scala_2.11.version}</scalaVersion>
+                    <scalaCompatVersion>${scala_2.11-base.version}</scalaCompatVersion>
                     <javacArgs>
                         <javacArg>-source</javacArg>
                         <javacArg>${java.version}</javacArg>

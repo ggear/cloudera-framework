@@ -143,10 +143,8 @@
         <cloudera-framework-module.repo>http://52.63.86.162:80/artifactory/cloudera-framework-releases</cloudera-framework-module.repo>
 
         <java.version>1.8</java.version>
-        <scala_2.10.version>2.10</scala_2.10.version>
-        <scala_2.10-minor.version>5</scala_2.10-minor.version>
-        <scala_2.11.version>2.11</scala_2.11.version>
-        <scala_2.11-minor.version>8</scala_2.11-minor.version>
+        <scala_2.10.version>2.10.5</scala_2.10.version>
+        <scala_2.11.version>2.11.8</scala_2.11.version>
 
         <os-platform.version />
 
@@ -348,7 +346,33 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>regex-property</id>
+                        <id>scala_2.10-base.version</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>scala_2.10-base.version</name>
+                            <value>${scala_2.10.version}</value>
+                            <regex>^([0-9]+\.[0-9]+).*</regex>
+                            <replacement>$1</replacement>
+                            <failIfNoMatch>true</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>scala_2.11-base.version</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>scala_2.11-base.version</name>
+                            <value>${scala_2.11.version}</value>
+                            <regex>^([0-9]+\.[0-9]+).*</regex>
+                            <replacement>$1</replacement>
+                            <failIfNoMatch>true</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>cdh-kudu-base-version</id>
                         <goals>
                             <goal>regex-property</goal>
                         </goals>

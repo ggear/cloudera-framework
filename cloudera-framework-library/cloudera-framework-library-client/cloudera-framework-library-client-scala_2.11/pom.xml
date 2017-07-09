@@ -17,18 +17,18 @@
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>${scala_2.11.version}.${scala_2.11-minor.version}</version>
+            <version>${scala_2.11.version}</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scalap</artifactId>
-            <version>${scala_2.11.version}.${scala_2.11-minor.version}</version>
+            <version>${scala_2.11.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-compiler</artifactId>
-            <version>${scala_2.10.version}.${scala_2.10-minor.version}</version>
+            <version>${scala_2.10.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
