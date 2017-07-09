@@ -104,9 +104,9 @@ which exercise the entire framework:
 * [Example 2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-2)
   (Java, HSQL, Kafka, Hive/Spark, Spark, Impala, S3)
 * [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-3) 
-  (Java, Spark2, Kudu, HDFS)
+  (Scala, Spark2, MLlib, PMML, HDFS)
 * [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-4) 
-  (Scala, Kafka, Spark2 Streaming, Kudu, HDFS)
+  (Java, Kafka, Spark2 Streaming, Kudu, HDFS)
 * [Example 5](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-5) 
   (PySpark, Spark2, HDFS)
 

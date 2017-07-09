@@ -1,4 +1,4 @@
-package com.cloudera.framework.example.two.process;
+package com.cloudera.framework.example.two;
 
 
 import java.text.SimpleDateFormat;
@@ -19,32 +19,32 @@ import org.apache.spark.sql.types.DataTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Process extends Driver {
+public class Query extends Driver {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Process.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Query.class);
   protected Path inputPath;
   private JavaSparkContext sparkContext;
 
-  public Process() {
+  public Query() {
     super();
   }
 
-  public Process(Configuration configuration) {
+  public Query(Configuration configuration) {
     super(configuration);
   }
 
   public static void main(String... arguments) {
-    System.exit(new Process().runner(arguments));
+    System.exit(new Query().runner(arguments));
   }
 
   @Override
   public String description() {
-    return "Process my dataset";
+    return "Query my dataset";
   }
 
   @Override
   public String[] parameters() {
-    return new String[]{"input-file"};
+    return new String[]{"input-path"};
   }
 
   @Override

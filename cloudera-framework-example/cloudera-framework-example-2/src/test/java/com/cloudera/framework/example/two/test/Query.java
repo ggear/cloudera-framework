@@ -24,10 +24,10 @@ import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 
 /**
- * Test process
+ * Test query
  */
 @RunWith(TestRunner.class)
-public class Process implements TestConstants {
+public class Query implements TestConstants {
 
   // TODO: Provide an implementation that leverages Kafka, Impala and S3
 
@@ -58,24 +58,24 @@ public class Process implements TestConstants {
   }
 
   /**
-   * Test process
+   * Test query
    */
   @TestWith({"testMetaDataAll"})
-  public void testProcessSingle(TestMetaData testMetaData) throws Exception {
+  public void testQuerySingle(TestMetaData testMetaData) throws Exception {
     assertEquals(executeHive(), executeSpark());
   }
 
   /**
-   * Test process
+   * Test query interleaved Spark and Hive-on-Spark interleavings
    */
   @TestWith({"testMetaDataAll"})
-  public void testProcessInterleaved(TestMetaData testMetaData) throws Exception {
+  public void testQueryInterleaved(TestMetaData testMetaData) throws Exception {
     assertEquals(executeSpark(), executeHive());
     assertEquals(executeHive(), executeSpark());
   }
 
   private List<String> executeSpark() {
-    Driver driver = new com.cloudera.framework.example.two.process.Process(dfsServer.getConf());
+    Driver driver = new com.cloudera.framework.example.two.Query(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{dfsServer.getPath(DATASET_INPUT_DIR).toString()}));
     return driver.getResults();
   }

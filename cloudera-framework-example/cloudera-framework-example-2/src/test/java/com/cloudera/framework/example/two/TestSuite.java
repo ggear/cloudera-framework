@@ -1,6 +1,6 @@
 package com.cloudera.framework.example.two;
 
-import com.cloudera.framework.example.two.test.Process;
+import com.cloudera.framework.example.two.test.Query;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.HiveServer;
 import com.cloudera.framework.testing.server.HiveServer.Runtime;
@@ -15,7 +15,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ //
-  Process.class, //
+  Query.class, //
 })
 
 public class TestSuite {

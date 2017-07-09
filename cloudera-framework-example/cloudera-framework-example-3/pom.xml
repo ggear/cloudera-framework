@@ -31,7 +31,14 @@
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-kudu</artifactId>
+            <artifactId>cloudera-framework-library-client-pmml</artifactId>
+            <version>${project.parent.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudera.framework.library.client</groupId>
+            <artifactId>cloudera-framework-library-client-scala_2.11</artifactId>
             <version>${project.parent.version}</version>
             <type>pom</type>
             <scope>provided</scope>
@@ -48,12 +55,6 @@
             <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-common</artifactId>
             <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.thirdparty</groupId>
-            <artifactId>cloudera-framework-library-thirdparty-spark2csv</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework.library.runtime</groupId>
@@ -79,27 +80,33 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.cloudera.parcel</groupId>
-                <artifactId>cloudera-parcel-plugin</artifactId>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <scalaVersion>${scala_2.11.version}.${scala_2.11-minor.version}</scalaVersion>
+                    <scalaCompatVersion>${scala_2.11.version}</scalaCompatVersion>
+                    <javacArgs>
+                        <javacArg>-source</javacArg>
+                        <javacArg>${java.version}</javacArg>
+                        <javacArg>-target</javacArg>
+                        <javacArg>${java.version}</javacArg>
+                    </javacArgs>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>explode</id>
-                        <phase>validate</phase>
+                        <id>scala-compile</id>
+                        <phase>compile</phase>
                         <goals>
-                            <goal>explode</goal>
+                            <goal>compile</goal>
                         </goals>
-                        <configuration>
-                            <parcels>
-                                <parcel>
-                                    <groupId>com.cloudera.parcel</groupId>
-                                    <artifactId>KUDU</artifactId>
-                                    <version>${cdh-kudu.version}</version>
-                                    <classifier>${os-platform.version}</classifier>
-                                    <repositoryUrl>http://52.63.86.162/tmph3l7m2vv103/sbin/kudu/parcels</repositoryUrl>
-                                    <linkDirectory>${project.build.directory}/runtime-kudu</linkDirectory>
-                                </parcel>
-                            </parcels>
-                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

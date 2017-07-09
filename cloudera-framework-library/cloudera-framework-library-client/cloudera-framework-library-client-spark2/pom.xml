@@ -24,6 +24,21 @@
             <artifactId>spark-sql_2.11</artifactId>
             <version>${cdh-spark2.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.11</artifactId>
+            <version>${cdh-spark2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jpmml</groupId>
+                    <artifactId>pmml-model</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jpmml</groupId>
+                    <artifactId>pmml-schema</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
 </project>

@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.cloudera.framework.library.client</groupId>
-    <artifactId>cloudera-framework-library-client-scala_2.11</artifactId>
+    <artifactId>cloudera-framework-library-client-pmml</artifactId>
     <packaging>pom</packaging>
     <version>1.5.5-cdh5.11.1-SNAPSHOT</version>
 
@@ -15,21 +15,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>${scala_2.11.version}.${scala_2.11-minor.version}</version>
+            <groupId>org.jpmml</groupId>
+            <artifactId>jpmml-sparkml</artifactId>
+            <version>${sparkpmml.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scalap</artifactId>
-            <version>${scala_2.11.version}.${scala_2.11-minor.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-compiler</artifactId>
-            <version>${scala_2.10.version}.${scala_2.10-minor.version}</version>
-            <scope>provided</scope>
+            <groupId>org.jpmml</groupId>
+            <artifactId>pmml-evaluator</artifactId>
+            <version>${pmml.version}</version>
         </dependency>
     </dependencies>
 
