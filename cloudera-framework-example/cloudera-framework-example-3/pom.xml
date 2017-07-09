@@ -57,6 +57,11 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commonscsv.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.cloudera.framework.library.runtime</groupId>
             <artifactId>cloudera-framework-library-runtime-scala_2.11</artifactId>
             <version>${project.parent.version}</version>

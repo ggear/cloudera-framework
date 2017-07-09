@@ -5,8 +5,6 @@
 
 package com.cloudera.framework.example.three
 
-import java.io.OutputStream
-
 import org.apache.hadoop.conf.Configuration
 
 /**
@@ -48,8 +46,6 @@ object Model {
 
     import sparkSession.implicits._
 
-    var hdfs: FileSystem = null
-    var pmmlOutputStream: OutputStream = null
     try {
 
       // Prepare training data from raw source
@@ -110,22 +106,91 @@ object Model {
       // Export model as PMML to HDFS
       val pmml = ConverterUtil.toPMML(training.schema, pipelineModel)
       pmml.getHeader.setApplication(new Application("Occupancy Detection"))
-      hdfs = FileSystem.newInstance(conf)
-      pmmlOutputStream = hdfs.create(new Path(modelPath, "occupancy.pmml"))
-      JAXBUtil.marshalPMML(pmml, new StreamResult(pmmlOutputStream))
+      val pmmlStream = FileSystem.newInstance(conf).create(new Path(modelPath, "occupancy.pmml"))
+      try {
+        JAXBUtil.marshalPMML(pmml, new StreamResult(pmmlStream))
+      } finally {
+        pmmlStream.close()
+      }
 
-      ///////////////////////////////////////////////////////////////////////////////
-      //
-      // End the CDSW session
-      //
-      ///////////////////////////////////////////////////////////////////////////////
-
-    }
-    finally {
-      if (pmmlOutputStream != null) pmmlOutputStream.close()
-      if (hdfs != null) hdfs.close()
+    } finally {
       sparkSession.close()
     }
+
+    ///////////////////////////////////////////////////////////////////////////////
+    //
+    // End the CDSW session
+    //
+    ///////////////////////////////////////////////////////////////////////////////
+
+  }
+
+  def accuracy(conf: Configuration, testPath: String, modelPath: String): Double = {
+
+    ///////////////////////////////////////////////////////////////////////////////
+    //
+    // Start CDSW session
+    //
+    // conf: Configuration
+    // testPath: String
+    // modelPath: String
+    //
+    ///////////////////////////////////////////////////////////////////////////////
+
+    import java.io.{BufferedReader, InputStreamReader}
+
+    import org.apache.commons.csv.CSVFormat
+    import org.apache.hadoop.fs.{FileSystem, Path}
+    import org.dmg.pmml.FieldName
+    import org.jpmml.evaluator.{ModelEvaluatorFactory, ProbabilityDistribution}
+    import org.jpmml.model.PMMLUtil
+
+    import scala.collection.JavaConverters._
+
+    // Get model from HDFS
+    val pmmlStream = FileSystem.newInstance(conf).open(new Path(modelPath, "occupancy.pmml"))
+    val pmml =
+      try {
+        PMMLUtil.unmarshal(pmmlStream)
+      } finally {
+        pmmlStream.close()
+      }
+
+    // Verify model
+    val evaluator = ModelEvaluatorFactory.newInstance().newModelEvaluator(pmml)
+    evaluator.verify()
+
+    // Test accuracy of model based on test data
+    var total = 0
+    var correct = 0
+    val testStream = FileSystem.newInstance(conf).open(new Path(testPath, "sample.txt"))
+    try {
+      CSVFormat.RFC4180.withFirstRecordAsHeader().parse(new BufferedReader(new InputStreamReader(testStream)))
+        .asScala.foreach { record =>
+        val inputMap = record.toMap.asScala.
+          filterKeys(_ != "Occupancy").
+          map { case (field, fieldValue) => (new FieldName(field), fieldValue) }.asJava
+        val outputMap = evaluator.evaluate(inputMap)
+        val expected = record.get("Occupancy").toInt
+        val actual = outputMap.get(new FieldName("Occupancy")).
+          asInstanceOf[ProbabilityDistribution].getResult.toString.toInt
+        if (expected == actual) {
+          correct += 1
+        }
+        total += 1
+      }
+    } finally {
+      testStream.close()
+    }
+
+    return correct.toDouble / total
+
+    ///////////////////////////////////////////////////////////////////////////////
+    //
+    // End the CDSW session
+    //
+    ///////////////////////////////////////////////////////////////////////////////
+
   }
 
 }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory
 object Driver {
 
   val RawLabel = "raw"
+  val TestLabel = "test"
   val TrainLabel = "train"
   val ModelLabel = "model"
 

@@ -1,7 +1,11 @@
 package com.cloudera.framework.example.three.test;
 
 
+import static com.cloudera.framework.example.three.Driver.ModelLabel;
+import static com.cloudera.framework.example.three.Driver.RawLabel;
+import static com.cloudera.framework.example.three.Driver.TestLabel;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.testing.TestConstants;
@@ -28,11 +32,16 @@ public class Model implements TestConstants {
   @ClassRule
   public static final SparkServer sparkServer = SparkServer.getInstance();
 
-  private static final String DATASET_DIR = "/roomsensors";
+  private static final String DATASET = "roomsensors";
+  private static final String DATASET_RAW = "raw";
+  private static final String DATASET_TEST = "test";
 
   public final TestMetaData testMetaDataAll = TestMetaData.getInstance() //
-    .dataSetSourceDirs(REL_DIR_DATASET) //
-    .dataSetDestinationDirs(DATASET_DIR + "/" + com.cloudera.framework.example.three.Driver.RawLabel());
+    .dataSetSourceDirs(REL_DIR_DATASET, REL_DIR_DATASET) //
+    .dataSetNames(DATASET, DATASET) //
+    .dataSetSubsets(new String[][]{{DATASET_RAW}, {DATASET_TEST}}) //
+    .dataSetLabels(new String[][][]{{{null},}, {{null},}}) //
+    .dataSetDestinationDirs("/" + DATASET + "/" + RawLabel(), "/" + DATASET + "/" + TestLabel());
 
   /**
    * Test model
@@ -40,7 +49,10 @@ public class Model implements TestConstants {
   @TestWith({"testMetaDataAll"})
   public void testModel(TestMetaData testMetaData) throws Exception {
     Driver driver = new com.cloudera.framework.example.three.Driver(dfsServer.getConf());
-    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{dfsServer.getPath(DATASET_DIR).toString()}));
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{dfsServer.getPath(DATASET).toString()}));
+    assertTrue(0.9 < com.cloudera.framework.example.three.Model.accuracy(dfsServer.getConf(),
+      dfsServer.getPath("/" + DATASET + "/" + TestLabel()).toString(),
+      dfsServer.getPath("/" + DATASET + "/" + ModelLabel()).toString()));
   }
 
   @Coercion
