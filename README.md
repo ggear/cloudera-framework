@@ -30,10 +30,10 @@ is included to provide a bare bones starter client module.
 
 To compile, build and package from source, this project requires:
 
-* Java 8
-* Scala 2.10
-* Python 2.7
 * Maven 3
+* Java 8
+* Python 2.7
+* Scala 2.10 or 2.11
 
 To run the unit and integrations tests, binaries and meta-data are provided for all CDH components:
 

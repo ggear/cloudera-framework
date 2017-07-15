@@ -35,7 +35,7 @@ public abstract class Driver extends Configured implements Tool {
   private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
   private static final int FORMAT_TIME_FACTOR = 10;
   private final Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
-  private List<String> results = null;
+  private List<Object> results = null;
 
   public Driver() {
     super();
@@ -242,15 +242,15 @@ public abstract class Driver extends Configured implements Tool {
     return returnValue;
   }
 
-  public List<String> getResults() {
+  public List<Object> getResults() {
     return results == null ? Collections.emptyList() : results;
   }
 
-  public void addResults(List<String> results) {
+  public void addResults(List<Object> results) {
     results.forEach(this::addResult);
   }
 
-  public void addResult(String result) {
+  public void addResult(Object result) {
     if (results == null) {
       results = new ArrayList<>();
     }

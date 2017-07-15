@@ -6,6 +6,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.common.util.FsUtil;
@@ -77,7 +79,9 @@ public class Query implements TestConstants {
   private List<String> executeSpark() {
     Driver driver = new com.cloudera.framework.example.two.Query(dfsServer.getConf());
     assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{dfsServer.getPath(DATASET_INPUT_DIR).toString()}));
-    return driver.getResults();
+    return driver.getResults().stream()
+      .map(object -> Objects.toString(object, null))
+      .collect(Collectors.toList());
   }
 
   private List<String> executeHive() throws Exception {

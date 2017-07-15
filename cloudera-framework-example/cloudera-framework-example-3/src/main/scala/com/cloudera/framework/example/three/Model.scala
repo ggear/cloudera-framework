@@ -6,6 +6,7 @@
 package com.cloudera.framework.example.three
 
 import org.apache.hadoop.conf.Configuration
+import org.dmg.pmml.PMML
 
 /**
   * The object definition here is boilerplate to allow the project to be built and
@@ -13,21 +14,30 @@ import org.apache.hadoop.conf.Configuration
   */
 object Model {
 
-  def build(conf: Configuration, rawPath: String, trainPath: String, modelPath: String): Unit = {
+  def build(version: String, conf: Configuration, trainPath: String, testPath: String, modelPath: String): PMML = {
 
     ///////////////////////////////////////////////////////////////////////////////
     //
     // Start CDSW session
     //
-    // conf: Configuration
-    // rawPath: String
-    // trainPath: String
-    // modelPath: String
-    //
     ///////////////////////////////////////////////////////////////////////////////
 
+    /*
+    %AddJar https://repo.maven.apache.org/maven2/org/apache/commons/commons-csv/1.4/commons-csv-1.4.jar
+    %AddJar https://repo.maven.apache.org/maven2/org/jpmml/jpmml-sparkml/1.1.7/jpmml-sparkml-1.1.7.jar
+    %AddJar https://repo.maven.apache.org/maven2/org/jpmml/pmml-evaluator/1.3.5/pmml-evaluator-1.3.5.jar
+    val version = "0.0.1-SNAPSHOT"
+    val conf = new org.apache.hadoop.conf.Configuration()
+    val trainPath = "/roomsensors/train"
+    val testPath = "/roomsensors/test"
+    val modelPath = "/roomsensors/model"
+     */
+    import java.io.{BufferedReader, InputStreamReader}
     import javax.xml.transform.stream.StreamResult
 
+    import org.apache.hadoop.conf.Configuration
+    import org.dmg.pmml.PMML
+    import org.apache.commons.csv.CSVFormat
     import org.apache.hadoop.fs.{FileSystem, Path}
     import org.apache.spark.SparkConf
     import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
@@ -36,34 +46,24 @@ object Model {
     import org.apache.spark.ml.tuning.{ParamGridBuilder, TrainValidationSplit}
     import org.apache.spark.ml.{Pipeline, PipelineModel}
     import org.apache.spark.sql.SparkSession
-    import org.dmg.pmml.Application
+    import org.dmg.pmml.{Application, Extension, FieldName}
+    import org.jpmml.evaluator.{ModelEvaluatorFactory, ProbabilityDistribution}
     import org.jpmml.model.JAXBUtil
     import org.jpmml.sparkml.ConverterUtil
 
+    import scala.collection.JavaConverters._
     import scala.util.Random
 
     val sparkSession = SparkSession.builder().config(new SparkConf).getOrCreate()
 
-    import sparkSession.implicits._
-
     try {
 
-      // Prepare training data from raw source
-      sparkSession.read.textFile(rawPath).
-        map { line =>
-          if (line.startsWith("\"date\"")) {
-            line
-          } else {
-            line.substring(line.indexOf(',') + 1)
-          }
-        }.
-        repartition(1).
-        write.text(trainPath)
+      // Load the training data from raw source
       val training = sparkSession.read.
         option("inferSchema", value = true).
         option("header", value = true).
         csv(trainPath).
-        drop("date").cache()
+        drop("Date").cache()
 
       // Train a logistic regression model
       val assembler = new VectorAssembler().
@@ -80,13 +80,13 @@ object Model {
         addGrid(logisticRegression.regParam, Seq(0.00001, 0.001, 0.1)).
         addGrid(logisticRegression.elasticNetParam, Seq(1.0)).
         build()
-      val evaluator = new BinaryClassificationEvaluator().
+      val evaluatorClassification = new BinaryClassificationEvaluator().
         setLabelCol("Occupancy").
         setRawPredictionCol("rawPrediction")
       val validator = new TrainValidationSplit().
         setSeed(Random.nextLong()).
         setEstimator(pipeline).
-        setEvaluator(evaluator).
+        setEvaluator(evaluatorClassification).
         setEstimatorParamMaps(tuning).
         setTrainRatio(0.9)
       val validatorModel = validator.fit(training)
@@ -103,87 +103,63 @@ object Model {
       // Validation metric (accuracy)
       validatorModel.validationMetrics.max
 
-      // Export model as PMML to HDFS
+      // Build PMML
       val pmml = ConverterUtil.toPMML(training.schema, pipelineModel)
+      pmml.getHeader.setModelVersion(version)
       pmml.getHeader.setApplication(new Application("Occupancy Detection"))
-      val pmmlStream = FileSystem.newInstance(conf).create(new Path(modelPath, "occupancy.pmml"))
-      try {
-        JAXBUtil.marshalPMML(pmml, new StreamResult(pmmlStream))
-      } finally {
-        pmmlStream.close()
+
+      // Verify model
+      val evaluator = ModelEvaluatorFactory.newInstance().newModelEvaluator(pmml)
+      evaluator.verify()
+
+      // Test accuracy of model based on test data
+      var total = 0
+      var correct = 0
+
+      val testFiles = FileSystem.newInstance(conf).listFiles(new Path(testPath), true)
+      while (testFiles.hasNext) {
+        val testStream = FileSystem.newInstance(conf).open(testFiles.next().getPath)
+        try {
+          CSVFormat.RFC4180.withFirstRecordAsHeader().parse(new BufferedReader(new InputStreamReader(testStream)))
+            .asScala.foreach { record =>
+            val inputMap = record.toMap.asScala.
+              filterKeys(_ != "Date").
+              filterKeys(_ != "Occupancy").
+              map { case (field, fieldValue) => (new FieldName(field), fieldValue) }.asJava
+            val outputMap = evaluator.evaluate(inputMap)
+            val expected = record.get("Occupancy").toInt
+            val actual = outputMap.get(new FieldName("Occupancy")).
+              asInstanceOf[ProbabilityDistribution].getResult.toString.toInt
+            if (expected == actual) {
+              correct += 1
+            }
+            total += 1
+          }
+        } finally {
+          testStream.close()
+        }
       }
+      val accuracy = correct.toDouble / total
+
+      // Store accuracy in PMML header
+      val accuracyExtension = new Extension()
+      accuracyExtension.setName("Accuracy")
+      accuracyExtension.addContent("" + accuracy)
+      pmml.getHeader.addExtensions(accuracyExtension)
+
+      // Export PMML to HDFS
+      val pmmlOutputStream = FileSystem.newInstance(conf).create(new Path(modelPath, "occupancy.pmml"))
+      try {
+        JAXBUtil.marshalPMML(pmml, new StreamResult(pmmlOutputStream))
+      } finally {
+        pmmlOutputStream.close()
+      }
+
+      pmml
 
     } finally {
       sparkSession.close()
     }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    //
-    // End the CDSW session
-    //
-    ///////////////////////////////////////////////////////////////////////////////
-
-  }
-
-  def accuracy(conf: Configuration, testPath: String, modelPath: String): Double = {
-
-    ///////////////////////////////////////////////////////////////////////////////
-    //
-    // Start CDSW session
-    //
-    // conf: Configuration
-    // testPath: String
-    // modelPath: String
-    //
-    ///////////////////////////////////////////////////////////////////////////////
-
-    import java.io.{BufferedReader, InputStreamReader}
-
-    import org.apache.commons.csv.CSVFormat
-    import org.apache.hadoop.fs.{FileSystem, Path}
-    import org.dmg.pmml.FieldName
-    import org.jpmml.evaluator.{ModelEvaluatorFactory, ProbabilityDistribution}
-    import org.jpmml.model.PMMLUtil
-
-    import scala.collection.JavaConverters._
-
-    // Get model from HDFS
-    val pmmlStream = FileSystem.newInstance(conf).open(new Path(modelPath, "occupancy.pmml"))
-    val pmml =
-      try {
-        PMMLUtil.unmarshal(pmmlStream)
-      } finally {
-        pmmlStream.close()
-      }
-
-    // Verify model
-    val evaluator = ModelEvaluatorFactory.newInstance().newModelEvaluator(pmml)
-    evaluator.verify()
-
-    // Test accuracy of model based on test data
-    var total = 0
-    var correct = 0
-    val testStream = FileSystem.newInstance(conf).open(new Path(testPath, "sample.txt"))
-    try {
-      CSVFormat.RFC4180.withFirstRecordAsHeader().parse(new BufferedReader(new InputStreamReader(testStream)))
-        .asScala.foreach { record =>
-        val inputMap = record.toMap.asScala.
-          filterKeys(_ != "Occupancy").
-          map { case (field, fieldValue) => (new FieldName(field), fieldValue) }.asJava
-        val outputMap = evaluator.evaluate(inputMap)
-        val expected = record.get("Occupancy").toInt
-        val actual = outputMap.get(new FieldName("Occupancy")).
-          asInstanceOf[ProbabilityDistribution].getResult.toString.toInt
-        if (expected == actual) {
-          correct += 1
-        }
-        total += 1
-      }
-    } finally {
-      testStream.close()
-    }
-
-    return correct.toDouble / total
 
     ///////////////////////////////////////////////////////////////////////////////
     //

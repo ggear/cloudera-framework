@@ -2,6 +2,7 @@ package com.cloudera.framework.example.two;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.cloudera.framework.common.Driver;
@@ -73,9 +74,9 @@ public class Query extends Driver {
         DataTypes.createStructField("myint", DataTypes.IntegerType, true))
       ));
     inputDataFrame.registerTempTable("mytable");
-    addResults(sqlContext.sql(
+    addResults(new ArrayList<>(sqlContext.sql(
       "SELECT myday, sum(myint) as myint FROM mytable WHERE myday is not NULL and myint is not NULL GROUP BY myday ORDER BY myint"
-    ).javaRDD().map(new RowToTsv()).collect());
+    ).javaRDD().map(new RowToTsv()).collect()));
     return RETURN_SUCCESS;
   }
 
