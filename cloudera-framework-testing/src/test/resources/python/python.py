@@ -11,8 +11,9 @@ Options:
 import getopt
 import inspect
 import logging
-import sys
 import textwrap
+
+import sys
 
 LOG = logging.getLogger(__name__)
 

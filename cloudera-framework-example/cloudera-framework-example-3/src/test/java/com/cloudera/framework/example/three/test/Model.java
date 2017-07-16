@@ -16,6 +16,7 @@ import com.googlecode.zohhak.api.Coercion;
 import com.googlecode.zohhak.api.TestWith;
 import org.dmg.pmml.PMML;
 import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -40,6 +41,16 @@ public class Model implements TestConstants {
     .dataSetSubsets(new String[][]{{DATASET_TRAIN}, {DATASET_TEST}}) //
     .dataSetLabels(new String[][][]{{{null},}, {{null},}}) //
     .dataSetDestinationDirs("/" + DATASET + "/" + TrainDir(), "/" + DATASET + "/" + TestDir());
+
+  /**
+   * Test model with no data
+   */
+  @Test
+  public void testModelNoData() throws Exception {
+    dfsServer.getFileSystem().mkdirs(dfsServer.getPath(DATASET));
+    Driver driver = new com.cloudera.framework.example.three.Driver(dfsServer.getConf());
+    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{dfsServer.getPath(DATASET).toString()}));
+  }
 
   /**
    * Test model

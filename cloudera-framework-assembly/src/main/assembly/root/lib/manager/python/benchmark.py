@@ -30,16 +30,16 @@ Options:
                                          Required, defaults to None
 '''
 
-import datetime
 import getopt
 import inspect
 import json
 import logging
-import sys
 import textwrap
 import urllib
 
+import datetime
 import requests
+import sys
 from cm_api.api_client import ApiResource, ApiException
 from cm_api.endpoints.dashboards import ApiDashboard, create_dashboards
 from tabulate import tabulate

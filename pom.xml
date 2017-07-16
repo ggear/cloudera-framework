@@ -143,6 +143,19 @@
         <cloudera-framework-parcel.repo>http://52.63.86.162/tmph3l7m2vv103/sbin</cloudera-framework-parcel.repo>
         <cloudera-framework-module.repo>http://52.63.86.162:80/artifactory/cloudera-framework-releases</cloudera-framework-module.repo>
 
+        <script2source.RAW>FILTERED</script2source.RAW>
+        <script2source.RAW_EDIT_AS_SCRIPT>FILTERED_DO_NOT_EDIT</script2source.RAW_EDIT_AS_SCRIPT>
+        <script2source.uncomment.open>/* CLOSE UNCOMMENT SOURCE</script2source.uncomment.open>
+        <script2source.uncomment.close>OPEN UNCOMMENT SOURCE */</script2source.uncomment.close>
+        <script2source.comment.open>
+            // OPEN COMMENT SOURCE
+            /*
+        </script2source.comment.open>
+        <script2source.comment.close>
+            // CLOSE COMMENT SOURCE
+            */
+        </script2source.comment.close>
+
         <java.version>1.8</java.version>
         <scala_2.10.version>2.10.5</scala_2.10.version>
         <scala_2.11.version>2.11.8</scala_2.11.version>

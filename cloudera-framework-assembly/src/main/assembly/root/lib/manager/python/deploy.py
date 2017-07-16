@@ -35,10 +35,10 @@ import logging
 import os
 import re
 import subprocess
-import sys
 import textwrap
-import time
 
+import sys
+import time
 from cm_api.api_client import ApiResource
 
 LOG = logging.getLogger(__name__)
