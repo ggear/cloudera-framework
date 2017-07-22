@@ -1,8 +1,8 @@
 /*
-***
-# **PRE-PROCESSED SCRIPT - DO NOT EDIT**
+${TEMPLATE.PRE-PROCESSOR.SPACER}
+${TEMPLATE.PRE-PROCESSOR.RAW_TEMPLATE}
 
-This file is in the *SCRIPT* pre-processed state with template available by the
+This file is in the ${TEMPLATE.PRE-PROCESSOR.STATE} pre-processed state with template available by the
 same package and file name under the modules src/main/template directory.
 
 When editing the template directly (as indicated by the presence of the
@@ -19,17 +19,17 @@ from then on the template can be used for direct editing and distribution via
 the source code control system.
 
 The library can be tested during the standard maven compile and test phases.
-***
+${TEMPLATE.PRE-PROCESSOR.SPACER}
 */
 
 /*
-%AddJar https://repo.maven.apache.org/maven2/org/jpmml/pmml-evaluator/1.3.5/pmml-evaluator-1.3.5.jar
-%AddJar https://repo.maven.apache.org/maven2/org/jpmml/jpmml-sparkml/1.1.7/jpmml-sparkml-1.1.7.jar
-%AddJar https://repo.maven.apache.org/maven2/org/apache/commons/commons-csv/1.4/commons-csv-1.4.jar
+%AddJar https://repo.maven.apache.org/maven2/org/jpmml/pmml-evaluator/${pmml.version}/pmml-evaluator-${pmml.version}.jar
+%AddJar https://repo.maven.apache.org/maven2/org/jpmml/jpmml-sparkml/${sparkpmml.version}/jpmml-sparkml-${sparkpmml.version}.jar
+%AddJar https://repo.maven.apache.org/maven2/org/apache/commons/commons-csv/${commonscsv.version}/commons-csv-${commonscsv.version}.jar
 */
 
 /*
-**IGNORE LIBRARY BOILERPLATE - START**
+${TEMPLATE.PRE-PROCESSOR.UNCLOSE}
 
 package com.cloudera.framework.example.three
 
@@ -40,7 +40,7 @@ object Model {
 
   def build(version: String, conf: Configuration, trainPath: String, testPath: String, modelPath: String): PMML = {
 
-**IGNORE LIBRARY BOILERPLATE - FINISH**
+${TEMPLATE.PRE-PROCESSOR.UNOPEN}
 */
 
 import java.io.{BufferedReader, InputStreamReader, PrintStream}
@@ -65,19 +65,19 @@ import scala.collection.JavaConverters._
 import scala.io.Source
 import scala.util.Random
 
-//
+//${TEMPLATE.PRE-PROCESSOR.OPEN}
 // Provide example parameters
 val version = "0.0.1-CDSW"
 val trainPath = "/tmp/roomsensors/train"
 val testPath = "/tmp/roomsensors/test"
 val modelPath = "/tmp/roomsensors/model"
 val conf = new org.apache.hadoop.conf.Configuration()
-//
+//${TEMPLATE.PRE-PROCESSOR.CLOSE}
 
 /*
-***
+${TEMPLATE.PRE-PROCESSOR.SPACER}
 Build a model to predict if a hotel room is occupied or not based on data collected from sensors accross the hotels rooms
-***
+${TEMPLATE.PRE-PROCESSOR.SPACER}
 */
 
 val hdfs = FileSystem.newInstance(conf)
@@ -92,7 +92,7 @@ try {
   if (hdfs.exists(new Path(modelPath))) hdfs.delete(new Path(modelPath), true)
   hdfs.mkdirs(new Path(modelPath))
 
-  //
+  //${TEMPLATE.PRE-PROCESSOR.OPEN}
   // Load data
   val testDataPrintStream = new PrintStream(hdfs.create(new Path(testPath, "sample.csv")))
   try {
@@ -108,7 +108,7 @@ try {
   } finally {
     trainDataPrintStream.close()
   }
-  //
+  //${TEMPLATE.PRE-PROCESSOR.CLOSE}
 
   if (hdfs.listFiles(new Path(testPath), true).hasNext && hdfs.listFiles(new Path(trainPath), true).hasNext) {
 
@@ -220,7 +220,7 @@ try {
   hdfs.close()
 }
 
-//
+//${TEMPLATE.PRE-PROCESSOR.OPEN}
 // Assert accuracy of the model
 try {
   val accuracy = pmml.getHeader.getExtensions.get(0).getContent.get(0).toString.toDouble
@@ -229,13 +229,13 @@ try {
   case t: Throwable =>
     throw new AssertionError("Model build failed, could not determine accuracy", t)
 }
-//
+//${TEMPLATE.PRE-PROCESSOR.CLOSE}
 
 /*
-**IGNORE LIBRARY BOILERPLATE - START**
+${TEMPLATE.PRE-PROCESSOR.UNCLOSE}
 
   }
 }
 
-**IGNORE LIBRARY BOILERPLATE - FINISH**
+${TEMPLATE.PRE-PROCESSOR.UNOPEN}
 */

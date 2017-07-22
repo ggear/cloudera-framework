@@ -137,7 +137,7 @@ mvn -Declipse.workspace=$ECLIPSE_WORKSPACE \
 To perform a release:
 
 ```bash
-# Change the following variables to appropriate values for the target environment
+# Change the following variables to appropriate values for the target release
 export CF_VERSION_RELEASE=1.5.5
 export CDH_VERSION_RELEASE=5.12.0
 export CF_VERSION_HEAD=1.5.6
