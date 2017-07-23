@@ -13,8 +13,8 @@ CF_DIR=$(mktemp -d)
 echo "" && echo "###############################################################################"
 CF_VERSION_JAVA=1.8
 if [ -z ${JAVA_OPTS+x} ]; then
-  export JAVA_OPTS="-Xmx512m"
-  #export JAVA_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
+  export JAVA_OPTS="-Xmx512m -Dmaven.artifact.threads=15"
+  #export JAVA_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -Dmaven.artifact.threads=15"
 fi
 if [ $(java -version 2>&1 | grep ${CF_VERSION_JAVA} | wc -l) -eq 0 ]; then
   echo "Unable to install system dependent Java "${CF_VERSION_JAVA}", please do so manually"
