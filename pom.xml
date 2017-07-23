@@ -106,8 +106,6 @@
 
         <maven.test.skip>false</maven.test.skip>
         <maven.system-test.skip>false</maven.system-test.skip>
-        <maven.integration-test.skip>true</maven.integration-test.skip>
-        <maven.data-download.skip>true</maven.data-download.skip>
         <maven.package.skip>false</maven.package.skip>
 
         <cdh-hadoop.version>2.6.0-cdh5.12.0</cdh-hadoop.version>
@@ -162,7 +160,6 @@
             <properties>
                 <maven.test.skip>true</maven.test.skip>
                 <maven.system-test.skip>true</maven.system-test.skip>
-                <maven.data-download.skip>true</maven.data-download.skip>
                 <maven.package.skip>true</maven.package.skip>
             </properties>
         </profile>
@@ -171,7 +168,6 @@
             <properties>
                 <maven.test.skip>false</maven.test.skip>
                 <maven.system-test.skip>false</maven.system-test.skip>
-                <maven.data-download.skip>true</maven.data-download.skip>
                 <maven.package.skip>true</maven.package.skip>
             </properties>
             <activation>
@@ -183,7 +179,6 @@
             <properties>
                 <maven.test.skip>true</maven.test.skip>
                 <maven.system-test.skip>true</maven.system-test.skip>
-                <maven.data-download.skip>true</maven.data-download.skip>
                 <maven.package.skip>false</maven.package.skip>
             </properties>
         </profile>
@@ -192,7 +187,6 @@
             <properties>
                 <maven.test.skip>false</maven.test.skip>
                 <maven.system-test.skip>false</maven.system-test.skip>
-                <maven.data-download.skip>false</maven.data-download.skip>
                 <maven.package.skip>false</maven.package.skip>
             </properties>
         </profile>

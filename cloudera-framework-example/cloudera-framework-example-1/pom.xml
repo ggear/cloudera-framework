@@ -150,6 +150,7 @@
                                     <classifier>el7</classifier>
                                 </parcel>
                             </parcels>
+                            <skip>${maven.test.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -168,6 +169,7 @@
                                     <distributionRepositoryUrl>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</distributionRepositoryUrl>
                                 </parcel>
                             </parcels>
+                            <skip>${maven.test.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -186,6 +188,7 @@
                                     <distributionRepositoryUrl>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</distributionRepositoryUrl>
                                 </parcel>
                             </parcels>
+                            <skip>${maven.test.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>

@@ -149,6 +149,7 @@
                                     <linkDirectory>${project.build.directory}/runtime-kudu</linkDirectory>
                                 </parcel>
                             </parcels>
+                            <skip>${maven.test.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
