@@ -154,7 +154,8 @@ public class Partition extends Driver {
 
     @Override
     protected void map(RecordKey key, AvroGenericRecordWritable value,
-                       org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context context)
+                       org.apache.hadoop.mapreduce.Mapper<RecordKey, AvroGenericRecordWritable, RecordKey, AvroValue<Record>>.Context
+                         context)
       throws IOException, InterruptedException {
       if (key.isValid()) {
         key.setHash(recordValue.hashCode());
@@ -208,7 +209,8 @@ public class Partition extends Driver {
 
     @Override
     protected void reduce(RecordKey key, Iterable<AvroValue<Record>> values,
-                          org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>.Context context)
+                          org.apache.hadoop.mapreduce.Reducer<RecordKey, AvroValue<Record>, NullWritable, AvroValue<Record>>
+                            .Context context)
       throws IOException, InterruptedException {
       records.clear();
       for (AvroValue<Record> record : values) {

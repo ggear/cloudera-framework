@@ -75,7 +75,8 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
 
   @Override
   protected String logPrefix() {
-    return (package$.MODULE$.SPARK_VERSION().charAt(0) == '1' ? "SparkServer" : "Spark2Server") + "." + (getRuntime() == null ? "DEFAULT" : getRuntime());
+    return (package$.MODULE$.SPARK_VERSION().charAt(0) == '1' ? "SparkServer" : "Spark2Server") + "." + (getRuntime() == null ? "DEFAULT" :
+      getRuntime());
   }
 
   public enum Runtime {

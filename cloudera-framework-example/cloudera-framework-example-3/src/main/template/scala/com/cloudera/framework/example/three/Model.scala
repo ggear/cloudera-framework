@@ -26,9 +26,11 @@ libraries) or check them in and note changes post Maven build (eg scripts)
 ${TEMPLATE.PRE-PROCESSOR.SPACER}
 */
 
+// @formatter:off
 /*
 %AddJar http://52.63.86.162/artifactory/cloudera-framework-releases/com/jag/maven-templater/maven-templater-assembly/${templater.version}/maven-templater-assembly-${templater.version}.jar
 */
+// @formatter:on
 
 /*
 ${TEMPLATE.PRE-PROCESSOR.UNCLOSE}
@@ -37,7 +39,8 @@ package com.cloudera.framework.example.three
 
 object Model {
 
-  def build(hdfs: org.apache.hadoop.fs.FileSystem, version: String, trainPath: String, testPath: String, modelPath: String): Option[String] = {
+  def build(hdfs: org.apache.hadoop.fs.FileSystem, version: String, trainPath: String,
+    testPath: String, modelPath: String): Option[String] = {
 
 ${TEMPLATE.PRE-PROCESSOR.UNOPEN}
 */

@@ -61,7 +61,8 @@ def update_metadata(user, password, nav_host, nav_port, app_namespace, property_
                       auth=(user, password), data='[{"name":"' + property['name'] + '","namespace":"' + property_namespace + '"}]')
     app_database = ''
     try:
-        app_database = requests.get(nav_uri(nav_host, nav_port, 'entities/?query=' + app_namespace + '%20%26%26%20type%3Adatabase&limit=1&offset=0'), \
+        app_database = requests.get(nav_uri(nav_host, nav_port, 'entities/?query=' + app_namespace +
+                                            '%20%26%26%20type%3Adatabase&limit=1&offset=0'), \
                                     auth=(user, password)).json()[0]['identity']
     except IndexError:
         pass
@@ -79,10 +80,12 @@ def update_metadata(user, password, nav_host, nav_port, app_namespace, property_
                     property_values[property_name] = property['value'][property_name]
         if not app_report_only:
             requests.put(nav_uri(nav_host, nav_port, 'entities/' + app_database), \
-                         auth=(user, password), data='{"customProperties":{"' + property_namespace + '":' + json.dumps(property_values) + '}}')
+                         auth=(user, password),
+                         data='{"customProperties":{"' + property_namespace + '":' + json.dumps(property_values) + '}}')
     app_properties = {'database': app_database, 'properties': []}
     app_entities = requests.get(
-        nav_uri(nav_host, nav_port, 'entities/?query=' + app_namespace.split('_')[0] + '*%20%26%26%20type%3Adatabase&limit=9999&offset=0'), \
+        nav_uri(nav_host, nav_port, 'entities/?query=' + app_namespace.split('_')[0] +
+                '*%20%26%26%20type%3Adatabase&limit=9999&offset=0'), \
         auth=(user, password)).json()
     for app_entities_properties in app_entities:
         try:
@@ -109,7 +112,8 @@ def compress_bins(bins, normalising_factor):
     return int(bins_sum / bins_num)
 
 
-def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, app_version, app_namespace, app_time, app_start, app_end, app_dashboard,
+def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, app_version, app_namespace, app_time, app_start, app_end,
+            app_dashboard,
             app_report_only):
     cpu = 0
     hdfs = 0
@@ -158,8 +162,10 @@ def do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, ap
     app_table = [['Application', app_name + '-' + app_version]]
     if not app_report_only:
         app_table.append(['Run', app_time + 's (' + str((int(app_time) / 60)) + 'm)'])
-        app_table.append(['Start', datetime.datetime.fromtimestamp(float(app_start)).strftime('%Y-%m-%d %H:%M:%S') + ' (' + app_start + '000)'])
-        app_table.append(['Finish', datetime.datetime.fromtimestamp(float(app_end)).strftime('%Y-%m-%d %H:%M:%S') + ' (' + app_end + '000)'])
+        app_table.append(
+            ['Start', datetime.datetime.fromtimestamp(float(app_start)).strftime('%Y-%m-%d %H:%M:%S') + ' (' + app_start + '000)'])
+        app_table.append(
+            ['Finish', datetime.datetime.fromtimestamp(float(app_end)).strftime('%Y-%m-%d %H:%M:%S') + ' (' + app_end + '000)'])
     if app_properties['database']:
         app_table.append(['Metadata', 'http://localhost:7187/?view=detailsView&id=' + app_properties['database']])
         app_dashbaord_uri = 'http://localhost:7180/cmf/views/view?viewName=' + urllib.quote_plus(dashboard_name)
@@ -205,8 +211,9 @@ def main(argv):
     app_report_only = False
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'h',
-                                   ['help', 'user=', 'password=', 'man_host=', 'man_port=', 'nav_host=', 'nav_port=', 'app_name=', 'app_version=',
-                                    'app_namespace=', 'app_time=', 'app_start=', 'app_end=', 'app_dashboard=', 'app_report_only='])
+                                   ['help', 'user=', 'password=', 'man_host=', 'man_port=', 'nav_host=', 'nav_port=', 'app_name=',
+                                    'app_version=', 'app_namespace=', 'app_time=', 'app_start=', 'app_end=', 'app_dashboard=',
+                                    'app_report_only='])
     except getopt.GetoptError, err:
         print >> sys.stderr, err
         usage()
@@ -248,11 +255,15 @@ def main(argv):
             print >> sys.stderr, 'Unknown option or flag: ' + option
             usage()
             return -1
-    if app_name is None or app_version is None or app_namespace is None or app_time is None or app_start is None or app_end is None or app_dashboard is None:
-        print >> sys.stderr, 'Required parameters [app_name, app_version, app_namespace, app_time, app_start, app_end, app_dashboard] not passed on command line'
+    if app_name is None or app_version is None or app_namespace is None or app_time is None or app_start is None or app_end is None or \
+                    app_dashboard is None:
+        print >> sys.stderr, \
+            'Required parameters [app_name, app_version, app_namespace, app_time, app_start, app_end, app_dashboard]' + \
+            ' not passed on command line'
         usage()
         return -1
-    do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, app_version, app_namespace, app_time, app_start, app_end, app_dashboard,
+    do_call(user, password, man_host, man_port, nav_host, nav_port, app_name, app_version, app_namespace, app_time, app_start, app_end,
+            app_dashboard,
             app_report_only)
     return 0
 

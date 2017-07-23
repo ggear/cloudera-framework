@@ -71,10 +71,13 @@ def do_call(user, password, man_host, man_port, cluster_name, parcel_name, parce
         parcel_repo += '/'
     if re.match(REGEX_VERSION, parcel_version) is None or re.match(REGEX_VERSION, parcel_version).group() != parcel_version:
         raise Exception(
-            'Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] expected to match regular expression [' + REGEX_VERSION + ']')
+            'Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] expected to match regular expression [' +
+            REGEX_VERSION + ']')
     if not parcel_repo.endswith(parcel_version + '/'):
         raise Exception(
-            'Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] when compared with repository [' + parcel_repo + ']')
+            'Parcel [' + parcel_name + '] is qualified by invalid version [' + parcel_version + '] when compared with repository [' +
+            parcel_repo +
+            ']')
     cm_config = api.get_cloudera_manager().get_config(view='full')
     repo_config = cm_config['REMOTE_PARCEL_REPO_URLS']
     repo_list = repo_config.value or repo_config.default
@@ -158,7 +161,8 @@ def main(argv):
     init_post_dir = None
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'h',
-                                   ['help', 'user=', 'password=', 'man_host=', 'man_port=', 'cluster_name=', 'parcel_name=', 'parcel_version=',
+                                   ['help', 'user=', 'password=', 'man_host=', 'man_port=', 'cluster_name=', 'parcel_name=',
+                                    'parcel_version=',
                                     'parcel_repo=', 'init_pre_dir=', 'init_post_dir='])
     except getopt.GetoptError, err:
         print >> sys.stderr, err

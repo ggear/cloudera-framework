@@ -23,8 +23,9 @@ public class RecordFactory {
   private static final Map<String, ? extends RecordStringSerDe> RECORD_STRING_SERDES = ImmutableMap.of(RECORD_STRING_SERDE_CSV,
     new RecordStringSerDeCsv(), RECORD_STRING_SERDE_XML, new RecordStringSerDeXml());
 
-  private static final Map<String, Class<? extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable>>> RECORD_INPUT_FORMATS = ImmutableMap
-    .of(RECORD_STRING_SERDE_CSV, RecordSequenceInputFormatCsv.class, RECORD_STRING_SERDE_XML, RecordSequenceInputFormatXml.class);
+  private static final Map<String, Class<? extends SequenceFileInputFormat<RecordKey, AvroGenericRecordWritable>>> RECORD_INPUT_FORMATS =
+    ImmutableMap
+      .of(RECORD_STRING_SERDE_CSV, RecordSequenceInputFormatCsv.class, RECORD_STRING_SERDE_XML, RecordSequenceInputFormatXml.class);
 
   /**
    * Get a {@link RecordStringSerDe} from a <code>type</code>

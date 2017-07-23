@@ -53,7 +53,8 @@ public class Process implements TestConstants {
   @TestWith({"testMetaDataAll"})
   public void testProcess(TestMetaData testMetaData) throws Exception {
     SparkContext sparkContext = new SparkContext(new SparkConf());
-    Dataset<Row> dataset = new SparkSession(sparkContext).read().format("com.databricks.spark.csv").load(dfsServer.getPathUri(DATASET_INPUT_DIR));
+    Dataset<Row> dataset = new SparkSession(sparkContext).read().format("com.databricks.spark.csv").load(dfsServer.getPathUri
+      (DATASET_INPUT_DIR));
     assertEquals(4, dataset.filter(dataset.col("_c0").isNotNull()).count());
     assertEquals(1, dataset.filter(dataset.col("_c2").like("%0.1293083612314587%")).count());
   }

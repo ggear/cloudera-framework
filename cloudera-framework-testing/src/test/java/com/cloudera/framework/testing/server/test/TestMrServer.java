@@ -66,7 +66,8 @@ public abstract class TestMrServer implements TestConstants {
     FileInputFormat.setInputPaths(job, getDfsServer().getPathUri(dirInput));
     FileOutputFormat.setOutputPath(job, new Path(getDfsServer().getPathUri(dirOutput)));
     assertTrue(job.waitForCompletion(true));
-    Path[] outputFiles = FileUtil.stat2Paths(getDfsServer().getFileSystem().listStatus(getDfsServer().getPath(dirOutput), path -> !path.getName().equals(FileOutputCommitter.SUCCEEDED_FILE_NAME)));
+    Path[] outputFiles = FileUtil.stat2Paths(getDfsServer().getFileSystem().listStatus(getDfsServer().getPath(dirOutput), path -> !path
+      .getName().equals(FileOutputCommitter.SUCCEEDED_FILE_NAME)));
     assertEquals(1, outputFiles.length);
     InputStream in = getDfsServer().getFileSystem().open(outputFiles[0]);
     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -84,6 +85,7 @@ public abstract class TestMrServer implements TestConstants {
   private static class MapClass extends Mapper<LongWritable, Text, Text, IntWritable> {
 
     private final static IntWritable one = new IntWritable(1);
+
     private final Text word = new Text();
 
     @Override

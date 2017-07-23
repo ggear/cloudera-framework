@@ -26,9 +26,11 @@ libraries) or check them in and note changes post Maven build (eg scripts)
 ***
 */
 
+// @formatter:off
 /*
 %AddJar http://52.63.86.162/artifactory/cloudera-framework-releases/com/jag/maven-templater/maven-templater-assembly/1.2.3/maven-templater-assembly-1.2.3.jar
 */
+// @formatter:on
 
 /*
 **IGNORE LIBRARY BOILERPLATE - START**
@@ -37,7 +39,8 @@ package com.cloudera.framework.example.three
 
 object Model {
 
-  def build(hdfs: org.apache.hadoop.fs.FileSystem, version: String, trainPath: String, testPath: String, modelPath: String): Option[String] = {
+  def build(hdfs: org.apache.hadoop.fs.FileSystem, version: String, trainPath: String,
+    testPath: String, modelPath: String): Option[String] = {
 
 **IGNORE LIBRARY BOILERPLATE - FINISH**
 */

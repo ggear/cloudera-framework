@@ -268,7 +268,9 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   @Override
   public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[]{DfsServer.getInstance(), (getRuntime() == null || getRuntime().equals(Runtime.LOCAL_MR2)) ? MrServer.getInstance() : SparkServer.getInstance()};
+    return new CdhServer<?, ?>[]{DfsServer.getInstance(), (getRuntime() == null || getRuntime().equals(Runtime.LOCAL_MR2)) ? MrServer
+      .getInstance()
+      : SparkServer.getInstance()};
   }
 
   @SuppressWarnings("ResultOfMethodCallIgnored")

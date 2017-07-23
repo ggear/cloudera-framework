@@ -75,9 +75,8 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    */
   protected static Path getPathLocal(String path) {
     String pathRelativeToModuleRootSansLeadingSlashes = stripLeadingSlashes(path);
-    return new Path(
-      pathRelativeToModuleRootSansLeadingSlashes.equals("")
-        ? ABS_DIR_WORKING.length() < 2 ? "/" : ABS_DIR_WORKING.substring(0, ABS_DIR_WORKING.length() - 2) : ABS_DIR_WORKING,
+    return new Path(pathRelativeToModuleRootSansLeadingSlashes.equals("")
+      ? ABS_DIR_WORKING.length() < 2 ? "/" : ABS_DIR_WORKING.substring(0, ABS_DIR_WORKING.length() - 2) : ABS_DIR_WORKING,
       pathRelativeToModuleRootSansLeadingSlashes);
   }
 
@@ -314,7 +313,8 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       }
       filesString.append("\n").append("/").append(file.getParentFile().getParentFile().getParentFile().getName()).append("/").
         append(file.getParentFile().getParentFile().getName()).append("/").append(file.getParentFile().getName()).append("/").
-        append(file.getName()).append(file.isDirectory() ? "/" : "").append(" -> ").append(destinationPath).append("/").append(file.getName());
+        append(file.getName()).append(file.isDirectory() ? "/" : "").append(" -> ").append(destinationPath).append("/").append(file
+        .getName());
     }
     log(LOG, "copy", "cp -rvf /" + sourcePathGlob + "/* " + destinationPath + (filesString.length() > 0 ? filesString.toString() : ":\n  "),
       true);
@@ -344,7 +344,8 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    * @param string the string to write
    */
   public void writeFileAsString(Path path, String string) throws IOException {
-    IOUtils.copyBytes(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)), getFileSystem().create(path), getFileSystem().getConf());
+    IOUtils.copyBytes(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)), getFileSystem().create(path), getFileSystem()
+      .getConf());
   }
 
   @Override

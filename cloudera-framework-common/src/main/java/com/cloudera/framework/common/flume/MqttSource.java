@@ -55,7 +55,8 @@ public class MqttSource extends AbstractPollableSource {
       clientOptions = new MqttConnectOptions();
       if (!userName.isEmpty()) {
         clientOptions.setUserName(userName);
-        clientOptions.setPassword((passwordFile.isEmpty() ? "" : Files.toString(new File(passwordFile), Charsets.UTF_8).trim()).toCharArray());
+        clientOptions.setPassword((passwordFile.isEmpty()
+          ? "" : Files.toString(new File(passwordFile), Charsets.UTF_8).trim()).toCharArray());
       }
       clientOptions.setCleanSession(false);
       clientOptions.setAutomaticReconnect(false);
@@ -66,7 +67,8 @@ public class MqttSource extends AbstractPollableSource {
       throw new FlumeException("Could not create MQTT client with broker [" + providerUrl + "] and client ID [" + getName() + "]", e);
     }
     if (LOG.isInfoEnabled()) {
-      LOG.info("MQTT client configured with broker [" + providerUrl + "], topic [" + destinationName + "] and client ID [" + getName() + "]");
+      LOG.info("MQTT client configured with broker [" + providerUrl + "], topic [" +
+        destinationName + "] and client ID [" + getName() + "]");
     }
   }
 
@@ -88,8 +90,8 @@ public class MqttSource extends AbstractPollableSource {
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
               if (LOG.isTraceEnabled()) {
-                LOG.trace("MQTT client received message from broker [" + providerUrl + "] and topic [" + destinationName + "] of size [" +
-                  message.getPayload().length + "]");
+                LOG.trace("MQTT client received message from broker [" + providerUrl + "] and topic [" +
+                  destinationName + "] of size [" + message.getPayload().length + "]");
               }
               try {
                 Event event = new SimpleEvent();
@@ -101,7 +103,8 @@ public class MqttSource extends AbstractPollableSource {
                 sourceCounter.incrementAppendAcceptedCount();
               } catch (Exception e) {
                 if (LOG.isWarnEnabled()) {
-                  LOG.warn("Failed to push message to channel(s), rolling back MQTT client transaction, disconnecting and backing-off MQTT client", e);
+                  LOG.warn("Failed to push message to channel(s), rolling back MQTT client transaction,"
+                    + " disconnecting and " + "backing-off " + "MQTT client", e);
                 }
                 throw e;
               }

@@ -59,7 +59,8 @@ public class MrServer extends CdhServer<MrServer, MrServer.Runtime> {
         getConf().set(MRConfig.FRAMEWORK_NAME, MRConfig.LOCAL_FRAMEWORK_NAME);
         break;
       case CLUSTER_JOB:
-        for (File file : new File(ABS_DIR_TARGET).listFiles(pathname -> pathname.isDirectory() && pathname.getName().startsWith(DIR_RUNTIME_MR))) {
+        for (File file : new File(ABS_DIR_TARGET).listFiles(pathname -> pathname.isDirectory() && pathname.getName().startsWith
+          (DIR_RUNTIME_MR))) {
           FileUtils.deleteDirectory(file);
         }
         miniMr = ShimLoader.getHadoopShims().getMiniMrCluster(getConf(), 1, DfsServer.getInstance().getFileSystem().getUri().toString(), 1);

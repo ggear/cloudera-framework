@@ -78,7 +78,8 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
   }
 
   /**
-   * Execute a <code>file</code> with <code>parameters</code> and <code>environment</code>, writing stdout and stderr to <code>output</code>,
+   * Execute a <code>file</code> with <code>parameters</code> and <code>environment</code>, writing stdout and stderr to
+   * <code>output</code>,
    * suppressing all logging if <code>quiet</code>
    *
    * @return the exit code

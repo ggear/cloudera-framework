@@ -36,7 +36,8 @@ object ModelPmml {
   ConverterUtil.putConverterClazz(classOf[VectorAssembler], classOf[VectorAssemblerConverter])
   ConverterUtil.putConverterClazz(classOf[LogisticRegressionModel], classOf[LogisticRegressionModelConverter])
 
-  def export(hdfs: FileSystem, version: String, testPath: String, modelPath: String, schema: StructType, model: PipelineModel): Option[String] = {
+  def export(hdfs: FileSystem, version: String, testPath: String, modelPath: String, schema: StructType, model: PipelineModel):
+  Option[String] = {
 
     var pmmlString = None: Option[String]
 
