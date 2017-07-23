@@ -84,7 +84,8 @@ val modelPath = "/tmp/roomsensors/model"
 
 /*
 ***
-Build a model to predict if a hotel room is occupied or not based on data collected from sensors across the hotels rooms
+Build a model to predict if a hotel room is occupied or not based on data collected
+from sensors across the hotels rooms
 ***
 */
 val hdfs = FileSystem.newInstance(ScriptUtil.getHadoopConf)
@@ -101,13 +102,18 @@ try {
 
   //
   // Load data
-  ScriptUtil.copyFromUrl(hdfs, new Path(testPath, "sample.csv"), "https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
-    "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data/roomsensors/test/sample/sample.csv")
-  ScriptUtil.copyFromUrl(hdfs, new Path(trainPath, "sample.csv"), "https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
-    "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data/roomsensors/train/sample/sample.csv")
+  ScriptUtil.copyFromUrl(hdfs, new Path(testPath, "sample.csv"),
+    "https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
+      "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data" +
+      "/roomsensors/test/sample/sample.csv")
+  ScriptUtil.copyFromUrl(hdfs, new Path(trainPath, "sample.csv"),
+    "https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
+      "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data" +
+      "/roomsensors/train/sample/sample.csv")
   //
 
-  if (hdfs.listFiles(new Path(testPath), true).hasNext && hdfs.listFiles(new Path(trainPath), true).hasNext) {
+  if (hdfs.listFiles(new Path(testPath), true).hasNext &&
+    hdfs.listFiles(new Path(trainPath), true).hasNext) {
 
     // Load the training data
     val training = sparkSession.read.
@@ -155,7 +161,8 @@ try {
     validatorModel.validationMetrics.max
 
     // Convert model to PMML
-    pmmlString = ModelPmml.export(hdfs, version, testPath, modelPath, training.schema, pipelineModel)
+    pmmlString = ModelPmml.export(hdfs, version, testPath, modelPath,
+      training.schema, pipelineModel)
 
     // Write PMML to HDFS
     if (pmmlString.isDefined)
@@ -168,7 +175,8 @@ try {
 
   //
   // Assert model was successfully built
-  if (pmmlString.isEmpty || !hdfs.exists(new Path(modelPath, Driver.ModelFile))) throw new AssertionError("Failed to build model")
+  if (pmmlString.isEmpty || !hdfs.exists(new Path(modelPath, Driver.ModelFile)))
+    throw new AssertionError("Failed to build model")
   //
 
 } finally {
@@ -177,7 +185,6 @@ try {
 }
 
 // Return model
-pmmlString.getOrElse(ModelPmml.EmptyModel)
 print(pmmlString.getOrElse(ModelPmml.EmptyModel))
 pmmlString
 

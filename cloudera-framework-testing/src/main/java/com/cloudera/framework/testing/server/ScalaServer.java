@@ -31,7 +31,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    * Get instance with default runtime
    */
   public static synchronized ScalaServer getInstance() {
-    return getInstance(instance == null ? Runtime.LOCAL_SCALA_2_11 : instance.getRuntime());
+    return getInstance(instance == null ? Runtime.LOCAL_SCALA211 : instance.getRuntime());
   }
 
   /**
@@ -92,7 +92,9 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
     if (environment == null) {
       environment = new HashMap<>();
     }
-    environment.put("JAVA_OPTS", "-Xmx2g -XX:ReservedCodeCacheSize=512m");
+    if (System.getenv().get("JAVA_OPTS") == null) {
+      environment.put("JAVA_OPTS", "-Xmx2g -XX:ReservedCodeCacheSize=512m");
+    }
     if (ScriptUtil.getHadoopDefaultFs().isDefined()) {
       environment.put(ScriptUtil.PropertyHadoopDefaultFs(), ScriptUtil.getHadoopDefaultFs().get());
     }
@@ -106,7 +108,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
       scala.Option.apply(parameters == null ? null : JavaConversions.<String>asScalaBuffer(parameters)),
       new File(REL_DIR_SCRIPT, UUID.randomUUID().toString()), scala.Option.apply(null), scala.Option.apply(output));
     if (!quiet) {
-      log(LOG, "execute", "script [" + file.getAbsolutePath() + "]" + output.toString(), true);
+      log(LOG, "execute", "script [" + file.getAbsolutePath() + "] " + output.toString(), true);
     }
     return exit;
   }
@@ -125,7 +127,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
     switch (getRuntime()) {
-      case LOCAL_SCALA_2_11:
+      case LOCAL_SCALA211:
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
@@ -137,7 +139,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
   public synchronized void stop() throws IOException {
     long time = log(LOG, "stop");
     switch (getRuntime()) {
-      case LOCAL_SCALA_2_11:
+      case LOCAL_SCALA211:
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
@@ -146,7 +148,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
   }
 
   public enum Runtime {
-    LOCAL_SCALA_2_11 // Local Scala 2.11 script wrapper, single-process, heavy-weight
+    LOCAL_SCALA211 // Local Scala 2.11 script wrapper, single-process, heavy-weight
   }
 
 }

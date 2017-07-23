@@ -30,10 +30,17 @@ is included to provide a bare bones starter client module.
 
 To compile, build and package from source, this project requires:
 
-* Maven 3
 * Java 8
+* Maven 3
 * Scala 2.11
 * Python 2.7
+
+The [bootstrap.sh](https://github.com/ggear/cloudera-framework/blob/master/bootstrap.sh) script tests for,
+configures and installs (where possible) the required toolchain and should be sourced as so:
+
+```bash
+source bootstrap.sh
+```
 
 To run the unit and integrations tests, binaries and meta-data are provided for all CDH components:
 
@@ -52,13 +59,22 @@ to help manage its parcel dependencies.
 
 ## Install
 
-This project can be installed to a local repository as per:
+This project can be installed to a local repository, skipping tests, as per:
 
 ```bash
 git clone git@github.com:ggear/cloudera-framework.git
 cd cloudera-framework
-mvn install
+mvn install -PPKG
 ```
+
+To run the tests:
+
+```bash
+mvn test
+mvn test -pl cloudera-framework-testing -PSCALA_2.11
+```
+
+Note that localhost must be resolvable to run the tests.
 
 Alternatively, the module can be included as a binary dependency in maven, for example pulling in the 
 core client bill-of-materials and test harness can be achieved as so:
@@ -104,7 +120,7 @@ which exercise the entire framework:
 * [Example 2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-2)
   (Java, HSQL, Kafka, Hive/Spark, Spark, Impala, S3)
 * [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-3) 
-  (Scala, Spark2, MLlib, PMML, HDFS)
+  (Scala, CDSW, Spark2, MLlib, PMML, HDFS)
 * [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-4) 
   (Java, Kafka, Spark2 Streaming, Kudu, HDFS)
 * [Example 5](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-5) 

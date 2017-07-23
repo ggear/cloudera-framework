@@ -31,7 +31,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * Get instance with default runtime
    */
   public static synchronized PythonServer getInstance() {
-    return getInstance(instance == null ? Runtime.LOCAL_CPYTHON_2_7 : instance.getRuntime());
+    return getInstance(instance == null ? Runtime.LOCAL_CPYTHON27 : instance.getRuntime());
   }
 
   /**
@@ -105,7 +105,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
       scala.Option.apply(parameters == null ? null : JavaConversions.<String>asScalaBuffer(parameters)),
       new File(REL_DIR_SCRIPT, UUID.randomUUID().toString()), scala.Option.apply(null), scala.Option.apply(output));
     if (!quiet) {
-      log(LOG, "execute", "script [" + file.getAbsolutePath() + "]" + output.toString(), true);
+      log(LOG, "execute", "script [" + file.getAbsolutePath() + "] " + output.toString(), true);
     }
     return exit;
   }
@@ -124,7 +124,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
     switch (getRuntime()) {
-      case LOCAL_CPYTHON_2_7:
+      case LOCAL_CPYTHON27:
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
@@ -136,7 +136,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   public synchronized void stop() throws IOException {
     long time = log(LOG, "stop");
     switch (getRuntime()) {
-      case LOCAL_CPYTHON_2_7:
+      case LOCAL_CPYTHON27:
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
@@ -145,7 +145,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   }
 
   public enum Runtime {
-    LOCAL_CPYTHON_2_7 // Local Python 2.7 script wrapper, single-process, heavy-weight
+    LOCAL_CPYTHON27 // Local Python 2.7 script wrapper, single-process, heavy-weight
   }
 
 }
