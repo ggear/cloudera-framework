@@ -142,10 +142,12 @@ export CF_VERSION_RELEASE=1.5.5
 export CDH_VERSION_RELEASE=5.12.0
 export CF_VERSION_HEAD=1.5.6
 export CDH_VERSION_HEAD=5.12.0
+mvn clean install && \
+mvn test -pl cloudera-framework-testing -PSCALA_2.11 && \
 mvn release:prepare -B \
   -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE \
-  -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT
-mvn release:perform -PPKG
-git push --all
+  -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT && \
+mvn release:perform -PPKG && \
+git push --all && \
 git tag
 ```

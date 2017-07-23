@@ -10,6 +10,7 @@ import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.HiveServer;
 import com.cloudera.framework.testing.server.MrServer;
 import com.cloudera.framework.testing.server.PythonServer;
+import com.cloudera.framework.testing.server.PythonServer.Runtime;
 import org.junit.ClassRule;
 import org.junit.rules.RuleChain;
 import org.junit.rules.TestRule;
@@ -33,7 +34,7 @@ public class TestSuite {
   public static TestRule cdhServers = RuleChain //
     .outerRule(DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS)) //
     .around(MrServer.getInstance(MrServer.Runtime.CLUSTER_JOB)) //
-    .around(PythonServer.getInstance(PythonServer.Runtime.LOCAL_CPYTHON)) //
+    .around(PythonServer.getInstance(Runtime.LOCAL_CPYTHON_2_7)) //
     .around(HiveServer.getInstance(HiveServer.Runtime.LOCAL_MR2));
 
 }

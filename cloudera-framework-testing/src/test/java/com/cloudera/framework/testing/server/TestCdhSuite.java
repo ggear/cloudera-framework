@@ -7,7 +7,6 @@ import com.cloudera.framework.testing.server.test.TestKafkaServer;
 import com.cloudera.framework.testing.server.test.TestKuduServer;
 import com.cloudera.framework.testing.server.test.TestMqttServer;
 import com.cloudera.framework.testing.server.test.TestMrServerDefault;
-import com.cloudera.framework.testing.server.test.TestPythonServer;
 import com.cloudera.framework.testing.server.test.TestSparkServerDefault;
 import com.cloudera.framework.testing.server.test.TestZooKeeperServer;
 import org.junit.ClassRule;
@@ -27,8 +26,7 @@ import org.junit.runners.Suite.SuiteClasses;
   TestFlumeServer.class, //
   TestMrServerDefault.class, //
   TestSparkServerDefault.class, //
-  TestHiveServerMrDefault.class, //
-  TestPythonServer.class, //
+  TestHiveServerMrDefault.class
 })
 
 public class TestCdhSuite {
@@ -43,7 +41,6 @@ public class TestCdhSuite {
     .around(FlumeServer.getInstance()) //
     .around(MrServer.getInstance()) //
     .around(SparkServer.getInstance()) //
-    .around(HiveServer.getInstance()) //
-    .around(PythonServer.getInstance());
+    .around(HiveServer.getInstance());
 
 }

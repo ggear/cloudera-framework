@@ -32,9 +32,10 @@ public class TestPythonServer implements TestConstants {
 
   @Test
   public void testPythonRunFail() throws Exception {
-    assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"), null, null, null, null, true) == 0);
+    assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"), null, null,
+      null, true) == 0);
     assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"),
-      Arrays.asList("--non-existent-param", "MY PARAMETER!"), null, null, null, true) == 0);
+      Arrays.asList("--non-existent-param", "MY PARAMETER!"), null, null, true) == 0);
   }
 
   @Test

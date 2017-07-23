@@ -21,16 +21,31 @@
         <profile>
             <id>SCALA_2.10</id>
             <properties>
-                <test-spark.version>2.10</test-spark.version>
+                <scala-test.version>2.10</scala-test.version>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <argLine>-Xmx${project.runtime.heap.max}m</argLine>
+                            <excludes>
+                                <exclude>**/*ScalaServer*</exclude>
+                                <exclude>**/*PythonServer*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>SCALA_2.11</id>
             <properties>
-                <test-spark.version>2.11</test-spark.version>
+                <scala-test.version>2.11</scala-test.version>
             </properties>
             <build>
                 <plugins>
@@ -40,9 +55,9 @@
                         <configuration>
                             <argLine>-Xmx${project.runtime.heap.max}m</argLine>
                             <excludes>
-                                <exclude>**/*TestCdhSuite*</exclude>
-                                <exclude>**/*Hive*Spark*</exclude>
                                 <exclude>**/*Kafka*</exclude>
+                                <exclude>**/*Hive*Spark*</exclude>
+                                <exclude>**/*TestCdhSuite*</exclude>
                             </excludes>
                         </configuration>
                     </plugin>

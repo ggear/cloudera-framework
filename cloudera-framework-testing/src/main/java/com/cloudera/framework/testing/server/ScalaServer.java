@@ -46,7 +46,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    *
    * @return the exit code
    */
-  public int execute(File file) {
+  public int execute(File file) throws IOException {
     return execute(file, null);
   }
 
@@ -55,7 +55,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters) {
+  public int execute(File file, List<String> parameters) throws IOException {
     return execute(file, parameters, null);
   }
 
@@ -64,7 +64,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters, Map<String, String> environment) {
+  public int execute(File file, List<String> parameters, Map<String, String> environment) throws IOException {
     return execute(file, parameters, environment, null);
   }
 
@@ -73,7 +73,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters, Map<String, String> environment, StringBuffer output) {
+  public int execute(File file, List<String> parameters, Map<String, String> environment, StringBuffer output) throws IOException {
     return execute(file, parameters, environment, output, false);
   }
 
@@ -84,15 +84,19 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters, Map<String, String> environment, StringBuffer output, boolean quiet) {
+  public int execute(File file, List<String> parameters, Map<String, String> environment, StringBuffer output, boolean quiet)
+    throws IOException {
+    if (file == null || !file.exists() || !file.isFile()) {
+      throw new IOException("Could not execute file [" + file + "]");
+    }
     if (environment == null) {
       environment = new HashMap<>();
     }
     environment.put("JAVA_OPTS", "-Xmx2g -XX:ReservedCodeCacheSize=512m");
-    if (ScriptUtil.getHadoopDefaultFs().get() != null) {
+    if (ScriptUtil.getHadoopDefaultFs().isDefined()) {
       environment.put(ScriptUtil.PropertyHadoopDefaultFs(), ScriptUtil.getHadoopDefaultFs().get());
     }
-    if (ScriptUtil.getSparkMaster().get() != null) {
+    if (ScriptUtil.getSparkMaster().isDefined()) {
       environment.put(ScriptUtil.PropertySparkMaster(), ScriptUtil.getSparkMaster().get());
     }
     if (output == null) {

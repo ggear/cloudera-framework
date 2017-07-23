@@ -2,16 +2,17 @@ package com.cloudera.framework.testing.server;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.cloudera.framework.assembly.ScriptUtil;
+import com.jag.maven.templater.TemplaterUtil;
 import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.collection.JavaConversions;
 
 /**
  * Python {@link TestRule}
@@ -30,7 +31,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * Get instance with default runtime
    */
   public static synchronized PythonServer getInstance() {
-    return getInstance(instance == null ? Runtime.LOCAL_CPYTHON : instance.getRuntime());
+    return getInstance(instance == null ? Runtime.LOCAL_CPYTHON_2_7 : instance.getRuntime());
   }
 
   /**
@@ -41,99 +42,89 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   }
 
   /**
-   * Process a script from <code>file</code>, invoking with command line
-   * <code>parameters</code>
+   * Execute a <code>file</code>
    *
    * @return the exit code
    */
-  public int execute(File file) throws IOException, InterruptedException {
+  public int execute(File file) throws IOException {
     return execute(file, null);
   }
 
   /**
-   * Process a script from <code>file</code> sourced from
-   * <code>directory</code>, invoking with command line <code>parameters</code>
+   * Execute a <code>file</code> with <code>parameters</code>
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters) throws IOException, InterruptedException {
+  public int execute(File file, List<String> parameters) throws IOException {
     return execute(file, parameters, null);
   }
 
   /**
-   * Process a script from <code>file</code> sourced from
-   * <code>directory</code>, invoking with command line <code>parameters</code>
+   * Execute a <code>file</code> with <code>parameters</code> and <code>environment</code>
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters, Map<String, String> configuration) throws IOException, InterruptedException {
-    return execute(file, parameters, configuration, null, null);
+  public int execute(File file, List<String> parameters, Map<String, String> environment) throws IOException {
+    return execute(file, parameters, environment, null);
   }
 
   /**
-   * Process a script from <code>file</code> sourced from
-   * <code>directory</code>, invoking with command line <code>parameters</code>
+   * Execute a <code>file</code> with <code>parameters</code> and <code>environment</code>, writing stdout and stderr to <code>output</code>
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error)
-    throws IOException, InterruptedException {
-    return execute(file, parameters, configuration, output, error, false);
+  public int execute(File file, List<String> parameters, Map<String, String> environment, StringBuffer output) throws IOException {
+    return execute(file, parameters, environment, output, false);
   }
 
   /**
-   * Process a script from <code>file</code> sourced from
-   * <code>directory</code>, invoking with command line <code>parameters</code>
+   * Execute a <code>file</code> with <code>parameters</code> and <code>environment</code>, writing stdout and stderr to
+   * <code>output</code>,
+   * suppressing all logging if <code>quiet</code>
    *
    * @return the exit code
    */
-  @SuppressWarnings("ResultOfMethodCallIgnored")
-  public int execute(File file, List<String> parameters, Map<String, String> configuration, StringBuffer output, StringBuffer error,
-                     boolean quiet) throws IOException, InterruptedException {
-    int exit;
-    if (file == null || !file.exists()) {
-      throw new IOException("Could not find file [" + file + "]");
+  public int execute(File file, List<String> parameters, Map<String, String> environment, StringBuffer output, boolean quiet)
+    throws IOException {
+    if (file == null || !file.exists() || !file.isFile()) {
+      throw new IOException("Could not execute file [" + file + "]");
     }
-    if (!file.canExecute()) {
-      file.setExecutable(true);
+    if (environment == null) {
+      environment = new HashMap<>();
     }
-    List<String> command = new ArrayList<>(parameters == null ? Collections.emptyList() : parameters);
-    command.add(0, file.getAbsolutePath());
-    Process process = new ProcessBuilder(command).start();
-    IOUtils.closeQuietly(process.getOutputStream());
-    exit = process.waitFor();
-    String inputString = StringUtils.removeEnd(IOUtils.toString(process.getInputStream()), "\n");
-    IOUtils.closeQuietly(process.getInputStream());
-    if (output != null) {
-      output.append(inputString);
+    if (ScriptUtil.getHadoopDefaultFs().isDefined()) {
+      environment.put(ScriptUtil.PropertyHadoopDefaultFs(), ScriptUtil.getHadoopDefaultFs().get());
     }
-    String errorString = StringUtils.removeEnd(IOUtils.toString(process.getErrorStream()), "\n");
-    IOUtils.closeQuietly(process.getErrorStream());
-    if (error != null) {
-      error.append(errorString);
+    if (ScriptUtil.getSparkMaster().isDefined()) {
+      environment.put(ScriptUtil.PropertySparkMaster(), ScriptUtil.getSparkMaster().get());
     }
+    if (output == null) {
+      output = new StringBuffer();
+    }
+    int exit = TemplaterUtil.executeScriptPython(scala.Option.apply(JavaConversions.<String, String>mapAsScalaMap(environment)), file,
+      scala.Option.apply(parameters == null ? null : JavaConversions.<String>asScalaBuffer(parameters)),
+      new File(REL_DIR_SCRIPT, UUID.randomUUID().toString()), scala.Option.apply(null), scala.Option.apply(output));
     if (!quiet) {
-      log(LOG, "execute", "script [" + file.getAbsolutePath() + "]\n" + inputString + (StringUtils.isEmpty(errorString) ? "" : errorString),
-        true);
+      log(LOG, "execute", "script [" + file.getAbsolutePath() + "]" + output.toString(), true);
     }
     return exit;
   }
 
   @Override
   public int getIndex() {
-    return 120;
+    return 110;
   }
 
   @Override
   public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[0];
+    return new CdhServer<?, ?>[]{DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS)};
   }
 
   @Override
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
     switch (getRuntime()) {
-      case LOCAL_CPYTHON:
+      case LOCAL_CPYTHON_2_7:
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
@@ -145,7 +136,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   public synchronized void stop() throws IOException {
     long time = log(LOG, "stop");
     switch (getRuntime()) {
-      case LOCAL_CPYTHON:
+      case LOCAL_CPYTHON_2_7:
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
@@ -154,7 +145,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   }
 
   public enum Runtime {
-    LOCAL_CPYTHON // Local CPython script wrapper, single-process, heavy-weight
+    LOCAL_CPYTHON_2_7 // Local Python 2.7 script wrapper, single-process, heavy-weight
   }
 
 }
