@@ -87,7 +87,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
     if (environment == null) {
       environment = new HashMap<>();
     }
-    environment.put("JAVA_OPTS", "-Xmx2g");
+    environment.put("JAVA_OPTS", "-Xmx2g -XX:ReservedCodeCacheSize=512m");
     if (ScriptUtil.getHadoopDefaultFs().get() != null) {
       environment.put(ScriptUtil.PropertyHadoopDefaultFs(), ScriptUtil.getHadoopDefaultFs().get());
     }

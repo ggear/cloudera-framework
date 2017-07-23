@@ -112,7 +112,7 @@
 
         <cdh-hadoop.version>2.6.0-cdh5.12.0</cdh-hadoop.version>
         <cdh-spark.version>1.6.0-cdh5.12.0</cdh-spark.version>
-        <cdh-spark2.version>2.1.0.cloudera1</cdh-spark2.version>
+        <cdh-spark2.version>2.2.0.cloudera1</cdh-spark2.version>
         <cdh-hive.version>1.1.0-cdh5.12.0</cdh-hive.version>
         <cdh-flume.version>1.6.0-cdh5.12.0</cdh-flume.version>
         <cdh-avro-base.version>1.7.6</cdh-avro-base.version>
@@ -339,7 +339,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.19.1</version>
                     <configuration>
-                        <argLine>-Xmx${project.runtime.heap.max}m</argLine>
+                        <argLine>-Xmx${project.runtime.heap.max}m -XX:ReservedCodeCacheSize=512m</argLine>
                     </configuration>
                 </plugin>
                 <plugin>
