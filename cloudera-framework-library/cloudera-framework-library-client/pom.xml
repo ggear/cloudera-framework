@@ -19,7 +19,6 @@
         <module>cloudera-framework-library-client-mqtt</module>
         <module>cloudera-framework-library-client-kafka</module>
         <module>cloudera-framework-library-client-flume</module>
-        <module>cloudera-framework-library-client-pmml</module>
         <module>cloudera-framework-library-client-spark</module>
         <module>cloudera-framework-library-client-spark2</module>
         <module>cloudera-framework-library-client-impala</module>

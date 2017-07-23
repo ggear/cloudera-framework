@@ -281,7 +281,6 @@
                         </goals>
                         <configuration>
                             <artifactItems>
-                                <!--suppress MavenModelInspection -->
                                 <artifactItem>
                                     <groupId>com.cloudera.framework</groupId>
                                     <artifactId>cloudera-framework-assembly</artifactId>

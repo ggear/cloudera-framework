@@ -2,6 +2,7 @@ package com.cloudera.framework.testing.server;
 
 import java.io.IOException;
 
+import com.cloudera.framework.assembly.ScriptUtil;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -58,12 +59,17 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
     System.setProperty(SPARK_CONF_MASTER, "local[*]");
     System.setProperty(SPARK_CONF_WAREHOUSE, new Path(DfsServer.getInstance().getPathUri("/usr/spark/warehouse")).toString());
     new JavaSparkContext(new SparkConf()).close();
+    System.setProperty(ScriptUtil.PropertySparkMaster(), System.getProperty(SPARK_CONF_MASTER));
     log(LOG, "start", time);
   }
 
   @Override
   public synchronized void stop() throws IOException {
     long time = log(LOG, "stop");
+    System.clearProperty(SPARK_CONF_APPNAME);
+    System.clearProperty(SPARK_CONF_MASTER);
+    System.clearProperty(SPARK_CONF_WAREHOUSE);
+    System.clearProperty(ScriptUtil.PropertySparkMaster());
     log(LOG, "stop", time);
   }
 

@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.cloudera.framework.assembly.ScriptUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
@@ -364,6 +366,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
     }
+    System.setProperty(ScriptUtil.PropertyHadoopDefaultFs(), getConf().get(CommonConfigurationKeysPublic.FS_DEFAULT_NAME_KEY));
     log(LOG, "start", time);
   }
 
@@ -409,6 +412,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       miniDfs.shutdown();
       miniDfs = null;
     }
+    System.clearProperty(ScriptUtil.PropertyHadoopDefaultFs());
     log(LOG, "stop", time);
   }
 

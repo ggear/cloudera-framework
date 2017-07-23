@@ -32,8 +32,8 @@ To compile, build and package from source, this project requires:
 
 * Maven 3
 * Java 8
+* Scala 2.11
 * Python 2.7
-* Scala 2.10 or 2.11
 
 To run the unit and integrations tests, binaries and meta-data are provided for all CDH components:
 

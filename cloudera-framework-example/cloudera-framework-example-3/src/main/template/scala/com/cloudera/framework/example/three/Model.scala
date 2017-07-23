@@ -9,23 +9,25 @@ When editing the template directly (as indicated by the presence of the
 TEMPLATE.PRE-PROCESSOR.RAW_TEMPLATE tag at the top of this file), care should
 be taken to ensure the maven-resources-plugin generate-sources filtering of the
 TEMPLATE.PRE-PROCESSOR tags, which comment and or uncomment blocks of the
-template, leave the file in a consistent state post filtering.
+template, leave the file in a consistent state, as a script ot library, post filtering.
 
 It is desirable that in template form, the file remains both compilable and
 runnable as a script in your IDEs (eg Eclipse, IntelliJ, CDSW etc). To setup
 your environment, it may be necessary to run the pre-processed script once
 (eg to execute AddJar commands with dependency versions completely resolved) but
 from then on the template can be used for direct editing and distribution via
-the source code control system.
+the source code control system and maven repository for dependencies.
 
 The library can be tested during the standard maven compile and test phases.
+
+Note that pre-processed files will be overwritten as part of the Maven build
+process. Care should be taken to either ignore and not edit these files (eg
+libraries) or check them in and note changes post Maven build (eg scripts)
 ${TEMPLATE.PRE-PROCESSOR.SPACER}
 */
 
 /*
-%AddJar https://repo.maven.apache.org/maven2/org/jpmml/pmml-evaluator/${pmml.version}/pmml-evaluator-${pmml.version}.jar
-%AddJar https://repo.maven.apache.org/maven2/org/jpmml/jpmml-sparkml/${sparkpmml.version}/jpmml-sparkml-${sparkpmml.version}.jar
-%AddJar https://repo.maven.apache.org/maven2/org/apache/commons/commons-csv/${commonscsv.version}/commons-csv-${commonscsv.version}.jar
+%AddJar http://52.63.86.162/artifactory/cloudera-framework-releases/com/jag/maven-templater/maven-templater-assembly/${templater.version}/maven-templater-assembly-${templater.version}.jar
 */
 
 /*
@@ -33,36 +35,36 @@ ${TEMPLATE.PRE-PROCESSOR.UNCLOSE}
 
 package com.cloudera.framework.example.three
 
-import org.apache.hadoop.conf.Configuration
-import org.dmg.pmml.PMML
-
 object Model {
 
-  def build(version: String, conf: Configuration, trainPath: String, testPath: String, modelPath: String): PMML = {
+  def build(hdfs: org.apache.hadoop.fs.FileSystem, version: String, trainPath: String, testPath: String, modelPath: String): Option[String] = {
 
 ${TEMPLATE.PRE-PROCESSOR.UNOPEN}
 */
 
-import java.io.{BufferedReader, InputStreamReader, PrintStream}
-import javax.xml.transform.stream.StreamResult
+//${TEMPLATE.PRE-PROCESSOR.OPEN}
+// Add dependencies dynamically
+//${TEMPLATE.PRE-PROCESSOR.ADDJAROPEN}
+com.jag.maven.templater.TemplaterUtil.getDepJar(
+  "com.cloudera.framework.example", "cloudera-framework-example-3", "${project.version}", "",
+  "http://52.63.86.162/artifactory/cloudera-framework-releases",
+  "http://52.63.86.162/artifactory/cloudera-framework-snapshots")
+//${TEMPLATE.PRE-PROCESSOR.ADDJARCLOSE}
+//${TEMPLATE.PRE-PROCESSOR.CLOSE}
 
-import org.apache.commons.csv.CSVFormat
+import java.io.PrintStream
+
+import com.cloudera.framework.assembly.ScriptUtil
+import com.cloudera.framework.example.three.{Driver, ModelPmml}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
-import org.apache.spark.SparkConf
 import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.tuning.{ParamGridBuilder, TrainValidationSplit}
 import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.sql.SparkSession
-import org.dmg.pmml.{Application, Extension, FieldName, PMML}
-import org.jpmml.evaluator.{ModelEvaluatorFactory, ProbabilityDistribution}
-import org.jpmml.model.JAXBUtil
-import org.jpmml.sparkml.ConverterUtil
 
-import scala.collection.JavaConverters._
-import scala.io.Source
 import scala.util.Random
 
 //${TEMPLATE.PRE-PROCESSOR.OPEN}
@@ -71,18 +73,16 @@ val version = "0.0.1-CDSW"
 val trainPath = "/tmp/roomsensors/train"
 val testPath = "/tmp/roomsensors/test"
 val modelPath = "/tmp/roomsensors/model"
-val conf = new org.apache.hadoop.conf.Configuration()
 //${TEMPLATE.PRE-PROCESSOR.CLOSE}
 
 /*
 ${TEMPLATE.PRE-PROCESSOR.SPACER}
-Build a model to predict if a hotel room is occupied or not based on data collected from sensors accross the hotels rooms
+Build a model to predict if a hotel room is occupied or not based on data collected from sensors across the hotels rooms
 ${TEMPLATE.PRE-PROCESSOR.SPACER}
 */
-
-val hdfs = FileSystem.newInstance(conf)
-val sparkSession = SparkSession.builder().config(new SparkConf).getOrCreate()
-var pmml: PMML = null
+val hdfs = FileSystem.newInstance(ScriptUtil.getHadoopConf)
+val sparkSession = SparkSession.builder().config(ScriptUtil.getSparkConf).getOrCreate()
+var pmmlString = None: Option[String]
 
 try {
 
@@ -94,32 +94,22 @@ try {
 
   //${TEMPLATE.PRE-PROCESSOR.OPEN}
   // Load data
-  val testDataPrintStream = new PrintStream(hdfs.create(new Path(testPath, "sample.csv")))
-  try {
-    testDataPrintStream.print(Source.fromURL("https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
-      "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data/roomsensors/test/sample/sample.csv").mkString)
-  } finally {
-    testDataPrintStream.close()
-  }
-  val trainDataPrintStream = new PrintStream(hdfs.create(new Path(trainPath, "sample.csv")))
-  try {
-    trainDataPrintStream.print(Source.fromURL("https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
-      "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data/roomsensors/train/sample/sample.csv").mkString)
-  } finally {
-    trainDataPrintStream.close()
-  }
+  ScriptUtil.copyFromUrl(hdfs, new Path(testPath, "sample.csv"), "https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
+    "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data/roomsensors/test/sample/sample.csv")
+  ScriptUtil.copyFromUrl(hdfs, new Path(trainPath, "sample.csv"), "https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
+    "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data/roomsensors/train/sample/sample.csv")
   //${TEMPLATE.PRE-PROCESSOR.CLOSE}
 
   if (hdfs.listFiles(new Path(testPath), true).hasNext && hdfs.listFiles(new Path(trainPath), true).hasNext) {
 
-    // Load the training data from raw source
+    // Load the training data
     val training = sparkSession.read.
       option("inferSchema", value = true).
       option("header", value = true).
-      csv(trainPath).
+      csv(hdfs.makeQualified(new Path(trainPath)).toUri.toString).
       drop("Date").cache()
 
-    // Train a logistic regression model
+    // Train a model
     val assembler = new VectorAssembler().
       setInputCols(training.columns.filter(_ != "Occupancy")).
       setOutputCol("featureVec")
@@ -129,7 +119,7 @@ try {
       setRawPredictionCol("rawPrediction")
     val pipeline = new Pipeline().setStages(Array(assembler, logisticRegression))
 
-    // Tune the logistic regression model
+    // Tune the model
     val tuning = new ParamGridBuilder().
       addGrid(logisticRegression.regParam, Seq(0.00001, 0.001, 0.1)).
       addGrid(logisticRegression.elasticNetParam, Seq(1.0)).
@@ -147,89 +137,42 @@ try {
     val pipelineModel = validatorModel.bestModel.asInstanceOf[PipelineModel]
     val logisticRegressionModel = pipelineModel.stages.last.asInstanceOf[LogisticRegressionModel]
 
-    // Logistic regression model parameters
-    training.columns.zip(logisticRegressionModel.coefficients.toArray).foreach(println)
+    // Model parameters
+    training.columns.zip(logisticRegressionModel.coefficients.toArray)
 
-    // Model hyperparameters
+    // Model hyper-parameters
     logisticRegressionModel.getElasticNetParam
     logisticRegressionModel.getRegParam
 
-    // Validation metric (accuracy)
+    // Model validations
     validatorModel.validationMetrics.max
 
-    // Build PMML
-    pmml = ConverterUtil.toPMML(training.schema, pipelineModel)
+    // Convert model to PMML
+    pmmlString = ModelPmml.export(hdfs, version, testPath, modelPath, training.schema, pipelineModel)
 
-    // TODO: Does not work on CDSW
-    //pmml.getHeader.setModelVersion(version)
-
-    pmml.getHeader.setApplication(new Application("Occupancy Detection"))
-
-    // Verify model
-    val evaluator = ModelEvaluatorFactory.newInstance().newModelEvaluator(pmml)
-    evaluator.verify()
-
-    // Test accuracy of model based on test data
-    var total = 0
-    var correct = 0
-    val testFiles = hdfs.listFiles(new Path(testPath), true)
-    while (testFiles.hasNext) {
-      val testStream = hdfs.open(testFiles.next().getPath)
-      try {
-        CSVFormat.RFC4180.withFirstRecordAsHeader().parse(new BufferedReader(new InputStreamReader(testStream)))
-          .asScala.foreach { record =>
-          val inputMap = record.toMap.asScala.
-            filterKeys(_ != "Date").
-            filterKeys(_ != "Occupancy").
-            map { case (field, fieldValue) => (new FieldName(field), fieldValue) }.asJava
-          val outputMap = evaluator.evaluate(inputMap)
-          val expected = record.get("Occupancy").toInt
-          val actual = outputMap.get(new FieldName("Occupancy")).
-            asInstanceOf[ProbabilityDistribution].getResult.toString.toInt
-          if (expected == actual) {
-            correct += 1
-          }
-          total += 1
-        }
-      } finally {
-        testStream.close()
+    // Write PMML to HDFS
+    if (pmmlString.isDefined)
+      new PrintStream(hdfs.create(new Path(modelPath, Driver.ModelFile))) {
+        print(pmmlString.get)
+        close()
       }
-    }
-    val accuracy = correct.toDouble / total
-
-    // Store accuracy in PMML header
-    val accuracyExtension = new Extension()
-    accuracyExtension.setName("Accuracy")
-    accuracyExtension.addContent("" + accuracy)
-    pmml.getHeader.addExtensions(accuracyExtension)
-
-    // Export PMML to HDFS
-    val pmmlOutputStream = hdfs.create(new Path(modelPath, "occupancy.pmml"))
-    try {
-      JAXBUtil.marshalPMML(pmml, new StreamResult(pmmlOutputStream))
-    } finally {
-      pmmlOutputStream.close()
-    }
 
   }
 
-  pmml
+  //${TEMPLATE.PRE-PROCESSOR.OPEN}
+  // Assert model was successfully built
+  if (pmmlString.isEmpty || !hdfs.exists(new Path(modelPath, Driver.ModelFile))) throw new AssertionError("Failed to build model")
+  //${TEMPLATE.PRE-PROCESSOR.CLOSE}
 
 } finally {
   sparkSession.close()
   hdfs.close()
 }
 
-//${TEMPLATE.PRE-PROCESSOR.OPEN}
-// Assert accuracy of the model
-try {
-  val accuracy = pmml.getHeader.getExtensions.get(0).getContent.get(0).toString.toDouble
-  if (accuracy < 0.9) throw new AssertionError("Model has accuracy [" + accuracy + "] less than required threshold [0.9]")
-} catch {
-  case t: Throwable =>
-    throw new AssertionError("Model build failed, could not determine accuracy", t)
-}
-//${TEMPLATE.PRE-PROCESSOR.CLOSE}
+// Return model
+pmmlString.getOrElse(ModelPmml.EmptyModel)
+print(pmmlString.getOrElse(ModelPmml.EmptyModel))
+pmmlString
 
 /*
 ${TEMPLATE.PRE-PROCESSOR.UNCLOSE}

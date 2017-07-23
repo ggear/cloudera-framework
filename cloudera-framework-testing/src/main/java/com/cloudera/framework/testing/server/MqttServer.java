@@ -55,7 +55,7 @@ public class MqttServer extends CdhServer<MqttServer, MqttServer.Runtime> {
 
   @Override
   public int getIndex() {
-    return 60;
+    return 100;
   }
 
   @Override

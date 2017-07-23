@@ -1,14 +1,11 @@
 package com.cloudera.framework.example.three
 
-import java.io.StringWriter
 import java.util.Properties
-import javax.xml.transform.stream.StreamResult
 
 import com.cloudera.framework.common.Driver.RETURN_SUCCESS
 import com.cloudera.framework.example.three.Driver.{ModelDir, TestDir, TrainDir}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
-import org.jpmml.model.JAXBUtil
 import org.slf4j.LoggerFactory
 
 import scala.io.Source
@@ -19,6 +16,7 @@ object Driver {
   val TrainDir = "train"
   val ModelDir = "model"
 
+  val ModelFile = "occupancy.pmml"
 }
 
 class Driver extends com.cloudera.framework.common.Driver {
@@ -56,15 +54,8 @@ class Driver extends com.cloudera.framework.common.Driver {
   }
 
   override def execute(): Int = {
-    val pmml = Model.build(properties.getProperty("application.version"), getConf, trainPath.toString, testPath.toString, modelPath.toString)
-    addResult(pmml)
-    var pmmlString = "<PMML/>\n"
-    if (pmml != null) {
-      val pmmlStringWriter = new StringWriter()
-      JAXBUtil.marshalPMML(pmml, new StreamResult(pmmlStringWriter))
-      pmmlString = pmmlStringWriter.toString
-    }
-    addResult("\n\n" + pmmlString)
+    addResult(Model.build(FileSystem.newInstance(getConf), properties.getProperty("application.version"),
+      trainPath.toString, testPath.toString, modelPath.toString).getOrElse(ModelPmml.EmptyModel))
     RETURN_SUCCESS
   }
 

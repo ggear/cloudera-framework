@@ -121,7 +121,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
 
   @Override
   public int getIndex() {
-    return 90;
+    return 120;
   }
 
   @Override

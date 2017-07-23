@@ -31,36 +31,31 @@
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-pmml</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
             <artifactId>cloudera-framework-library-client-scala_2.11</artifactId>
             <version>${project.parent.version}</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.jag.maven-templater</groupId>
-            <artifactId>maven-templater-assembly</artifactId>
-            <version>${templater.version}</version>
-            <scope>runtime</scope>
+            <groupId>com.cloudera.framework</groupId>
+            <artifactId>cloudera-framework-common</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-assembly</artifactId>
             <version>${project.parent.version}</version>
-            <type>tar.gz</type>
-            <classifier>assembly</classifier>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.cloudera.framework</groupId>
-            <artifactId>cloudera-framework-common</artifactId>
+            <groupId>com.jag.maven-templater</groupId>
+            <artifactId>maven-templater-assembly</artifactId>
+            <version>${templater.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudera.framework.library.thirdparty</groupId>
+            <artifactId>cloudera-framework-library-thirdparty-pmml</artifactId>
             <version>${project.parent.version}</version>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -195,6 +190,35 @@
                         <goals>
                             <goal>testCompile</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>shade</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.google</pattern>
+                                    <shadedPattern>cf.com.google</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.jpmml</pattern>
+                                    <shadedPattern>cf.org.jpmml</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.dmg.pmml</pattern>
+                                    <shadedPattern>cf.org.dmg.pmml</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -16,6 +16,7 @@ public interface TestConstants {
   String DIR_DERBY = "test-derby";
   String DIR_DERBY_DB = "test-db";
   String DIR_DERBY_LOG = "derby.log";
+  String DIR_SCRIPT = "test-script";
   String DIR_DFS = "test-dfs";
   String DIR_DFS_TMP = "test-dfs-tmp";
   String DIR_DFS_LOCAL = "test-dfs-local";
@@ -24,6 +25,7 @@ public interface TestConstants {
   String DIR_KAFKA = "test-kafka";
   String DIR_FLUME = "test-flume";
   String DIR_ZOOKEEPER = "test-zookeper";
+  String DIR_SOURCE_SCRIPT = "src/main/script";
 
   // Runtime directories
   String DIR_RUNTIME_KUDU = "runtime-kudu";
@@ -36,6 +38,7 @@ public interface TestConstants {
   String REL_DIR_CLASSES_TEST = DIR_TARGET + "/" + DIR_CLASSES_TEST;
   String REL_DIR_DATASET = REL_DIR_CLASSES_TEST + "/" + DIR_DATASET;
   String REL_DIR_DFS_LOCAL = DIR_TARGET + "/" + DIR_DFS_LOCAL;
+  String REL_DIR_SCRIPT = DIR_TARGET + "/" + DIR_SCRIPT;
   String REL_DIR_DFS = DIR_TARGET + "/" + DIR_DFS;
   String REL_DIR_KUDU = DIR_TARGET + "/" + DIR_KUDU;
 
