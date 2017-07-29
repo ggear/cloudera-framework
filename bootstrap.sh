@@ -13,8 +13,7 @@ CF_DIR=$(mktemp -d)
 echo "" && echo "###############################################################################"
 CF_VERSION_JAVA=1.8
 if [ -z ${JAVA_OPTS+x} ]; then
-  export JAVA_OPTS="-Xmx512m -Dmaven.artifact.threads=15"
-  #export JAVA_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -Dmaven.artifact.threads=15"
+  export JAVA_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 fi
 if [ $(java -version 2>&1 | grep ${CF_VERSION_JAVA} | wc -l) -eq 0 ]; then
   echo "Unable to install system dependent Java "${CF_VERSION_JAVA}", please do so manually"
@@ -26,8 +25,7 @@ echo "##########################################################################
 echo "" && echo "###############################################################################"
 CF_VERSION_MAVEN=3.5.0
 if [ -z ${MAVEN_OPTS+x} ]; then
-  export MAVEN_OPTS="-Xmx512m -Duser.home=${CF_DIR}"
-  #export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m -Duser.home=${CF_DIR}"
+  export MAVEN_OPTS="-Xmx2g -Dmaven.artifact.threads=15 -XX:ReservedCodeCacheSize=512m -Duser.home=${CF_DIR}"
 fi
 if [ $(mvn -version 2>&1 | grep ${CF_VERSION_MAVEN} | wc -l) -eq 0 ]; then
   wget http://apache.mirror.amaze.com.au/maven/maven-3/${CF_VERSION_MAVEN}/binaries/apache-maven-${CF_VERSION_MAVEN}-bin.tar.gz -P ${CF_DIR}

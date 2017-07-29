@@ -53,7 +53,7 @@ public abstract class TestHiveServer implements TestConstants {
     new File(REL_DIR_DATA).mkdirs();
     File localDataFile = new File(REL_DIR_DATA + "/somedata.csv");
     FileUtils.writeStringToFile(localDataFile, "1,1\n2,2\n3,3\n");
-    assertEquals(0, DfsServer.getInstance().listFilesDfs("/usr/hive").length);
+    assertEquals(0, DfsServer.getInstance().listFilesDfs("/usr/hive", true).length);
     assertEquals(0, getHiveServer().execute("SHOW TABLES").size());
     assertEquals(1, getHiveServer().execute("SHOW DATABASES").size());
     assertEquals(2,
@@ -63,7 +63,7 @@ public abstract class TestHiveServer implements TestConstants {
         .size());
     assertEquals(0,
       getHiveServer().execute("LOAD DATA LOCAL INPATH '" + localDataFile.toString() + "' OVERWRITE INTO TABLE somedata").size());
-    assertEquals(1, DfsServer.getInstance().listFilesDfs("/usr/hive").length);
+    assertEquals(1, DfsServer.getInstance().listFilesDfs("/usr/hive", true).length);
     assertEquals("3", getHiveServer().execute("SELECT count(1) AS cnt FROM somedata").get(0));
     assertEquals("2", getHiveServer().execute("SELECT col1 FROM somedata WHERE col2 = 2").get(0));
     assertEquals(2, getHiveServer()

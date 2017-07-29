@@ -41,6 +41,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   private static final Logger LOG = LoggerFactory.getLogger(DfsServer.class);
 
   private static final Path PATH_ROOT = new Path("/");
+
   private static final FsPermission PERMISSION_ALL = new FsPermission(FsAction.ALL, FsAction.ALL, FsAction.ALL);
 
   private static DfsServer instance;
@@ -212,11 +213,25 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    * @return the DFS files
    */
   public Path[] listFilesDfs(String path) throws IllegalArgumentException, IOException {
+    return listFilesDfs(path, false);
+  }
+
+  /**
+   * Get a DFS listing of <code>path</code>, choosing to <code>ignoreHidden</code>
+   *
+   * @param path the path relative to the DFS root, can be with or without '/'
+   *             prefix
+   * @return the DFS files
+   */
+  public Path[] listFilesDfs(String path, boolean ignoreHidden) throws IllegalArgumentException, IOException {
     List<Path> paths = new ArrayList<>();
     try {
       RemoteIterator<LocatedFileStatus> locatedFileStatuses = getFileSystem().listFiles(getPath(path), true);
       while (locatedFileStatuses.hasNext()) {
-        paths.add(locatedFileStatuses.next().getPath());
+        Path pathListed = locatedFileStatuses.next().getPath();
+        if (!ignoreHidden || !pathListed.getName().startsWith(".")) {
+          paths.add(pathListed);
+        }
       }
     } catch (FileNotFoundException fileNotFoundException) {
       // ignore
