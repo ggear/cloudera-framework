@@ -59,12 +59,12 @@ to help manage its parcel dependencies.
 
 ## Limitations
 
-As above, this code is known to not work out of the box on Windows hosts, only Linux and MacOSare supported.
-If developing on Windows it is recommended to run a Linux VM and develop from within it.
+As above, this code is known to not work out of the box on Windows hosts, only Linux and MacOS
+are supported. If developing on Windows it is recommended to run a Linux VM and develop from within it.  
 
-In addition, it is known that running the code from remote storage (eg NFS) will not only perform poorly, but
-will likely result in timing errors during testing, so it is recommended that only direct attached (be it
-physical or para-virtualized) by used.
+In addition, it is known that running the code from remote storage (eg NFS) will not only perform poorly,
+but will likely result in timing errors during testing, so it is recommended that only direct attached
+storage (be it physical or para-virtualized) by used.
 
 ## Install
 
