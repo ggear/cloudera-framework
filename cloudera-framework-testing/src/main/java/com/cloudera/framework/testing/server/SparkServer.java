@@ -55,6 +55,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   @Override
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
+    CdhServer.setEnvProperty("SPARK_HOME", null);
     System.setProperty(SPARK_CONF_APPNAME, "spark-unit-test");
     System.setProperty(SPARK_CONF_MASTER, "local[*]");
     System.setProperty(SPARK_CONF_WAREHOUSE, new Path(DfsServer.getInstance().getPathUri("/usr/spark/warehouse")).toString());

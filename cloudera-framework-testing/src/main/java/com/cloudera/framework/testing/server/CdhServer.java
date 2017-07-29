@@ -1,7 +1,10 @@
 package com.cloudera.framework.testing.server;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.ServerSocket;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cloudera.framework.testing.TestConstants;
@@ -199,6 +202,34 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
       throw new RuntimeException(message, exception);
     }
     return true;
+  }
+
+  /**
+   * Set an environment variable
+   *
+   * @param key
+   * @param value
+   */
+  protected static void setEnvProperty(String key, String value) {
+    try {
+      Class[] classes = Collections.class.getDeclaredClasses();
+      Map<String, String> env = (Map<String, String>) System.getenv();
+      for (Class clazz : classes) {
+        if ("java.util.Collections$UnmodifiableMap".equals(clazz.getName())) {
+          Field field = clazz.getDeclaredField("m");
+          field.setAccessible(true);
+          Object object = field.get(env);
+          Map<String, String> map = (Map<String, String>) object;
+          if (value == null) {
+            map.remove(key);
+          } else {
+            map.put(key, value);
+          }
+        }
+      }
+    } catch (Exception exception) {
+      throw new RuntimeException("Could not set environment property [" + key + "] to [" + value + "]");
+    }
   }
 
   protected String logPrefix() {

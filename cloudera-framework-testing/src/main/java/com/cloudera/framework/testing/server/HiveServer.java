@@ -277,6 +277,8 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   @Override
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
+    CdhServer.setEnvProperty("HIVE_HOME", null);
+    CdhServer.setEnvProperty("HIVE_CONF_DIR", null);
     Path hiveHomePath = new Path(DfsServer.getInstance().getPathUri("/"), DIR_HOME);
     Path hiveWarehousePath = new Path(hiveHomePath, DIR_WAREHOUSE);
     Path hiveScratchPath = new Path(hiveHomePath, DIR_SCRATCH);
