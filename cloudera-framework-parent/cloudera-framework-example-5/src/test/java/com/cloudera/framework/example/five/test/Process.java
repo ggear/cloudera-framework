@@ -6,6 +6,7 @@ import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.SparkServer;
 import com.googlecode.zohhak.api.Coercion;
+import com.googlecode.zohhak.api.TestWith;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 
@@ -30,6 +31,13 @@ public class Process implements TestConstants {
   public final TestMetaData testMetaDataAll = TestMetaData.getInstance() //
     .dataSetSourceDirs(REL_DIR_DATASET) //
     .dataSetDestinationDirs(DATASET_INPUT_DIR);
+
+  /**
+   * Test process
+   */
+  @TestWith({"testMetaDataAll"})
+  public void testProcess(TestMetaData testMetaData) throws Exception {
+  }
 
   @Coercion
   public TestMetaData toCdhMetaData(String field) {
