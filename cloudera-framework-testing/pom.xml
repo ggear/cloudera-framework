@@ -16,7 +16,6 @@
     <properties>
         <parcel.cdh.skip>true</parcel.cdh.skip>
         <scala-test.version>2.10</scala-test.version>
-        <parcel.repo.host>http://archive.cloudera.com/</parcel.repo.host>
     </properties>
 
     <profiles>
@@ -116,7 +115,6 @@
                         <configuration>
                             <source>
                                 project.properties["parcel.cdh.skip"] = ("${os.name}" == "Linux") ? "false" : "true"
-                                project.properties["parcel.repo.host"] = ("${os.name}" == "Mac OS X") ? "http://52.63.86.162/tmph3l7m2vv103/sbin/" : "http://archive.cloudera.com/"
                             </source>
                         </configuration>
                     </execution>
@@ -138,7 +136,7 @@
                                     <groupId>com.cloudera.parcel</groupId>
                                     <artifactId>CDH</artifactId>
                                     <version>${cdh-patch.version}</version>
-                                    <repositoryUrl>${parcel.repo.host}/cdh5/parcels</repositoryUrl>
+                                    <repositoryUrl>http://archive.cloudera.com/cdh5/parcels</repositoryUrl>
                                     <linkDirectory>${project.build.directory}/runtime-cdh</linkDirectory>
                                 </parcel>
                             </parcels>
@@ -157,7 +155,7 @@
                                     <groupId>com.cloudera.parcel</groupId>
                                     <artifactId>KAFKA</artifactId>
                                     <version>${cdh-kafka-patch.version}</version>
-                                    <repositoryUrl>${parcel.repo.host}/cdh5/parcels</repositoryUrl>
+                                    <repositoryUrl>http://archive.cloudera.com/kafka/parcels</repositoryUrl>
                                     <linkDirectory>${project.build.directory}/runtime-kafka</linkDirectory>
                                 </parcel>
                             </parcels>
@@ -176,7 +174,7 @@
                                     <groupId>com.cloudera.parcel</groupId>
                                     <artifactId>KUDU</artifactId>
                                     <version>${cdh-kudu-patch.version}</version>
-                                    <repositoryUrl>${parcel.repo.host}/kudu/parcels</repositoryUrl>
+                                    <repositoryUrl>http://52.63.86.162/tmph3l7m2vv103/sbin/kudu/parcels</repositoryUrl>
                                     <linkDirectory>${project.build.directory}/runtime-kudu</linkDirectory>
                                 </parcel>
                             </parcels>
