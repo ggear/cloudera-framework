@@ -14,7 +14,9 @@
     </parent>
 
     <properties>
+        <parcel.cdh.skip>true</parcel.cdh.skip>
         <scala-test.version>2.10</scala-test.version>
+        <parcel.repo.host>http://archive.cloudera.com/</parcel.repo.host>
     </properties>
 
     <profiles>
@@ -103,12 +105,68 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.groovy.maven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                project.properties["parcel.cdh.skip"] = ("${os.name}" == "Linux") ? "false" : "true"
+                                project.properties["parcel.repo.host"] = ("${os.name}" == "Mac OS X") ? "http://52.63.86.162/tmph3l7m2vv103/sbin/" : "http://archive.cloudera.com/"
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.cloudera.parcel</groupId>
                 <artifactId>cloudera-parcel-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>explode</id>
-                        <phase>validate</phase>
+                        <id>explode-cdh</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>explode</goal>
+                        </goals>
+                        <configuration>
+                            <parcels>
+                                <parcel>
+                                    <groupId>com.cloudera.parcel</groupId>
+                                    <artifactId>CDH</artifactId>
+                                    <version>${cdh-patch.version}</version>
+                                    <repositoryUrl>${parcel.repo.host}/cdh5/parcels</repositoryUrl>
+                                    <linkDirectory>${project.build.directory}/runtime-cdh</linkDirectory>
+                                </parcel>
+                            </parcels>
+                            <skip>${parcel.cdh.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>explode-kafka</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>explode</goal>
+                        </goals>
+                        <configuration>
+                            <parcels>
+                                <parcel>
+                                    <groupId>com.cloudera.parcel</groupId>
+                                    <artifactId>KAFKA</artifactId>
+                                    <version>${cdh-kafka-patch.version}</version>
+                                    <repositoryUrl>${parcel.repo.host}/cdh5/parcels</repositoryUrl>
+                                    <linkDirectory>${project.build.directory}/runtime-kafka</linkDirectory>
+                                </parcel>
+                            </parcels>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>explode-kudu</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>explode</goal>
                         </goals>
@@ -117,9 +175,8 @@
                                 <parcel>
                                     <groupId>com.cloudera.parcel</groupId>
                                     <artifactId>KUDU</artifactId>
-                                    <version>${cdh-kudu.version}</version>
-                                    <classifier>${os-platform.version}</classifier>
-                                    <repositoryUrl>http://52.63.86.162/tmph3l7m2vv103/sbin/kudu/parcels</repositoryUrl>
+                                    <version>${cdh-kudu-patch.version}</version>
+                                    <repositoryUrl>${parcel.repo.host}/kudu/parcels</repositoryUrl>
                                     <linkDirectory>${project.build.directory}/runtime-kudu</linkDirectory>
                                 </parcel>
                             </parcels>

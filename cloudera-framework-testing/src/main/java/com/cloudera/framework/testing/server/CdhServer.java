@@ -6,10 +6,12 @@ import java.net.ServerSocket;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestRunner;
+import com.cloudera.parcel.library.ParcelUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.JobConf;
 import org.junit.ClassRule;
@@ -22,6 +24,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.util.Properties;
 
 /**
  * Base class for all {@link ClassRule} and {@link org.junit.Rule} annotated
@@ -37,18 +40,34 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   public static final AtomicInteger SERVER_BIND_PORT_START = new AtomicInteger(25000);
   public static final int SERVER_BIND_PORT_FINISH = 25100;
 
+  protected String envOsName;
+  protected String envOsDescriptor;
+  protected String envScalaVersion;
+
   private static final Logger LOG = LoggerFactory.getLogger(DfsServer.class);
 
-  protected static final Pattern REGEX_SCALA_VERSION = Pattern.compile(".*([1-9]+\\.[0-9]+)\\.[1-9]+.*");
+  private static final Pattern REGEX_SCALA_VERSION = Pattern.compile(".*([1-9]+\\.[0-9]+)\\.[1-9]+.*");
 
   private V runtime;
   private int semaphore;
   private Configuration conf;
   private Boolean isValid;
 
+
   protected CdhServer(V runtime) {
     conf = new JobConf();
     this.runtime = runtime;
+    this.envOsName = System.getProperty("os.name");
+    if (this.envOsName == null) {
+      throw new RuntimeException("Could not determine host OS");
+    }
+    this.envOsDescriptor = ParcelUtil.getOsDescriptor();
+    Matcher scalaVersionMatcher = REGEX_SCALA_VERSION.matcher(Properties.versionString());
+    if (scalaVersionMatcher.find()) {
+      this.envScalaVersion = scalaVersionMatcher.group(1);
+    } else {
+      throw new RuntimeException("Could not determine Scala version");
+    }
   }
 
   /**
@@ -203,7 +222,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
       for (CdhServer<?, ?> dependency : getDependencies()) {
         dependency.before();
       }
-      if(isValid()) {
+      if (isValid()) {
         start();
       }
     }
@@ -213,7 +232,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   protected synchronized void after() {
     if (--semaphore == 0) {
       try {
-        if(isValid()) {
+        if (isValid()) {
           stop();
         }
         for (CdhServer<?, ?> dependency : getDependencies()) {

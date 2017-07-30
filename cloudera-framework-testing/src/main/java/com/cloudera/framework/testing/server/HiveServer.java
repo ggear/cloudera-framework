@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Matcher;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -40,7 +39,6 @@ import org.apache.hive.service.server.HiveServer2;
 import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.util.Properties;
 
 /**
  * Hive {@link TestRule}
@@ -270,23 +268,15 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   @Override
   public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[]{DfsServer.getInstance(), (getRuntime() == null || getRuntime().equals(Runtime.LOCAL_MR2)) ? MrServer
-      .getInstance()
-      : SparkServer.getInstance()};
+    return new CdhServer<?, ?>[]{DfsServer.getInstance(),
+      (getRuntime() == null || getRuntime().equals(Runtime.LOCAL_MR2)) ? MrServer.getInstance() : SparkServer.getInstance()};
   }
 
   @Override
   public synchronized boolean testValidity() {
     if (getRuntime().equals(Runtime.LOCAL_SPARK)) {
-      Matcher scalaVersionMatcher = REGEX_SCALA_VERSION.matcher(Properties.versionString());
-      if (scalaVersionMatcher.find()) {
-        String scalaVersion = scalaVersionMatcher.group(1);
-        if (!scalaVersion.equals("2.10")) {
-          log(LOG, "error", "scala 2.10 required, scala [" + scalaVersion + "] detected");
-          return false;
-        }
-      } else {
-        log(LOG, "error", "could not detect scala version");
+      if (!envScalaVersion.equals("2.10")) {
+        log(LOG, "error", "Scala 2.10 required, " + envScalaVersion + " detected");
         return false;
       }
     }

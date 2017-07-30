@@ -41,7 +41,7 @@ public abstract class TestHiveServer implements TestConstants {
 
   @Test(expected = IOException.class)
   public void testHiveNoFile() throws Exception {
-    getHiveServer().execute(new File("/hive/some-non-existent-script.sql"));
+    getHiveServer().execute(new File("/sql/some-non-existent-script.sql"));
   }
 
   /**

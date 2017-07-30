@@ -8,8 +8,7 @@
 #
 ###############################################################################
 
-CF_DIR=$(mktemp -d -t cloudera-framework)
-#CF_DIR=$(mkdir -p .toolchain)
+CF_DIR=$(mktemp -d -t cloudera-framework.XXXXXX)
 
 echo "" && echo "###############################################################################"
 CF_VERSION_JAVA=1.8
@@ -24,13 +23,13 @@ java -version
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
-CF_VERSION_MAVEN=3.
+CF_VERSION_MAVEN=3.5.0
+CF_VERSION_MAVEN_MAJOR=3.
 if [ -z ${MAVEN_OPTS+x} ]; then
   export MAVEN_OPTS="-Xmx2g -Dmaven.artifact.threads=15 -XX:ReservedCodeCacheSize=512m -Duser.home=${CF_DIR}"
 fi
-if [ $(mvn -version 2>&1 | grep ${CF_VERSION_MAVEN} | wc -l) -eq 0 ]; then
-  wget http://apache.mirror.amaze.com.au/maven/maven-3/${CF_VERSION_MAVEN}5.0/binaries/apache-maven-${CF_VERSION_MAVEN}5.0-bin.tar.gz -P
-  ${CF_DIR}
+if [ $(mvn -version 2>&1 | grep ${CF_VERSION_MAVEN_MAJOR} | wc -l) -eq 0 ]; then
+  wget http://apache.mirror.amaze.com.au/maven/maven-3/${CF_VERSION_MAVEN}/binaries/apache-maven-${CF_VERSION_MAVEN}-bin.tar.gz -P ${CF_DIR}
   tar xvzf ${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}-bin.tar.gz -C ${CF_DIR}
   export PATH=${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}/bin:$PATH
 fi
@@ -39,11 +38,12 @@ mvn -version
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
-CF_VERSION_SCALA=2.11
-if [ $(scala -version 2>&1 | grep ${CF_VERSION_SCALA} | wc -l) -eq 0 ]; then
-  wget https://downloads.lightbend.com/scala/${CF_VERSION_SCALA}.8/scala-${CF_VERSION_SCALA}.8.tgz -P ${CF_DIR}
-  tar xvzf ${CF_DIR}/scala-${CF_VERSION_SCALA}.8.tgz -C ${CF_DIR}
-  export PATH=${CF_DIR}/scala-${CF_VERSION_SCALA}.8/bin:$PATH
+CF_VERSION_SCALA=2.11.8
+CF_VERSION_SCALA_MAJOR=2.11
+if [ $(scala -version 2>&1 | grep ${CF_VERSION_SCALA_MAJOR} | wc -l) -eq 0 ]; then
+  wget https://downloads.lightbend.com/scala/${CF_VERSION_SCALA}/scala-${CF_VERSION_SCALA}.tgz -P ${CF_DIR}
+  tar xvzf ${CF_DIR}/scala-${CF_VERSION_SCALA}.tgz -C ${CF_DIR}
+  export PATH=${CF_DIR}/scala-${CF_VERSION_SCALA}/bin:$PATH
 fi
 echo "###############################################################################"
 scala -version
@@ -60,5 +60,4 @@ echo "##########################################################################
 
 echo "" && echo "###############################################################################"
 
-mvn clean
-mvn clean install -PPKG
+mvn clean && mvn install -PPKG

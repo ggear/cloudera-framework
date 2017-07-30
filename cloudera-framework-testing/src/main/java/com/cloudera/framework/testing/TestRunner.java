@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.cloudera.framework.testing.server.CdhServer;
 import com.cloudera.framework.testing.server.DfsServer;
-import com.cloudera.parcel.library.ParcelUtil;
 import com.googlecode.zohhak.api.runners.ZohhakRunner;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -44,8 +43,6 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
 
   private static final Logger LOG = LoggerFactory.getLogger(TestRunner.class);
 
-  private String osDescriptor;
-
   static {
     Log.getLog(ParquetOutputFormat.class);
     SLF4JBridgeHandler.removeHandlersForRootLogger();
@@ -66,7 +63,6 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
 
   public TestRunner(Class<?> clazz) throws InitializationError {
     super(clazz);
-    osDescriptor = ParcelUtil.getOsDescriptor();
   }
 
   /**
@@ -169,8 +165,7 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
         @Override
         public void evaluate() throws Throwable {
           if (LOG.isWarnEnabled()) {
-            LOG.warn("Skipping [" + method.getDeclaringClass().getCanonicalName() + "." + method.getName() + "], " +
-            "invalid service classpath");
+            LOG.warn("Skipping [" + method.getDeclaringClass().getCanonicalName() + "." + method.getName() + "], invalid classpath");
           }
         }
       };

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
 
 import com.cloudera.framework.assembly.ScriptUtil;
 import com.jag.maven.templater.TemplaterUtil;
@@ -14,7 +13,6 @@ import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.collection.JavaConversions;
-import scala.util.Properties;
 
 /**
  * Python {@link TestRule}
@@ -33,7 +31,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
    * Get instance with default runtime
    */
   public static synchronized PythonServer getInstance() {
-    return getInstance(instance == null ? Runtime.LOCAL_CPYTHON27 : instance.getRuntime());
+    return getInstance(instance == null ? Runtime.LOCAL_CPYTHON_2_7 : instance.getRuntime());
   }
 
   /**
@@ -114,7 +112,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
 
   @Override
   public int getIndex() {
-    return 110;
+    return 120;
   }
 
   @Override
@@ -124,15 +122,8 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
 
   @Override
   public synchronized boolean testValidity() {
-    Matcher scalaVersionMatcher = REGEX_SCALA_VERSION.matcher(Properties.versionString());
-    if (scalaVersionMatcher.find()) {
-      String scalaVersion = scalaVersionMatcher.group(1);
-      if (!scalaVersion.equals("2.11")) {
-        log(LOG, "error", "scala 2.11 required, scala [" + scalaVersion + "] detected");
-        return false;
-      }
-    } else {
-      log(LOG, "error", "could not detect scala version");
+    if (!envScalaVersion.equals("2.11")) {
+      log(LOG, "error", "Scala 2.11 required, " + envScalaVersion + " detected");
       return false;
     }
     return true;
@@ -142,7 +133,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
     switch (getRuntime()) {
-      case LOCAL_CPYTHON27:
+      case LOCAL_CPYTHON_2_7:
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
@@ -154,7 +145,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   public synchronized void stop() throws IOException {
     long time = log(LOG, "stop");
     switch (getRuntime()) {
-      case LOCAL_CPYTHON27:
+      case LOCAL_CPYTHON_2_7:
         break;
       default:
         throw new IllegalArgumentException("Unsupported [" + getClass().getSimpleName() + "] runtime [" + getRuntime() + "]");
@@ -163,7 +154,7 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   }
 
   public enum Runtime {
-    LOCAL_CPYTHON27 // Local Python 2.7 script wrapper, single-process, heavy-weight
+    LOCAL_CPYTHON_2_7 // Local Python 2.7 script wrapper, single-process, heavy-weight
   }
 
 }
