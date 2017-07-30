@@ -1,97 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--suppress ALL -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.cloudera.framework.example</groupId>
-    <artifactId>cloudera-framework-example-1</artifactId>
-    <packaging>jar</packaging>
+    <groupId>com.cloudera.framework</groupId>
+    <artifactId>cloudera-framework-parent</artifactId>
+    <packaging>pom</packaging>
     <version>1.5.6-cdh5.12.0-SNAPSHOT</version>
 
     <parent>
-        <groupId>com.cloudera.framework</groupId>
-        <artifactId>cloudera-framework-example</artifactId>
+        <groupId>com.cloudera</groupId>
+        <artifactId>cloudera-framework</artifactId>
         <version>1.5.6-cdh5.12.0-SNAPSHOT</version>
     </parent>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-core</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-zookeeper</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-kafka</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-flume</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework</groupId>
-            <artifactId>cloudera-framework-assembly</artifactId>
-            <version>${project.parent.version}</version>
-            <type>tar.gz</type>
-            <classifier>assembly</classifier>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.thirdparty</groupId>
-            <artifactId>cloudera-framework-library-thirdparty-hive</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.thirdparty</groupId>
-            <artifactId>cloudera-framework-library-thirdparty-avro</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.thirdparty</groupId>
-            <artifactId>cloudera-framework-library-thirdparty-parquet</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.thirdparty</groupId>
-            <artifactId>cloudera-framework-library-thirdparty-elephantbird</artifactId>
-            <version>${project.parent.version}</version>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework</groupId>
-            <artifactId>cloudera-framework-common</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>${opencsv.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework</groupId>
-            <artifactId>cloudera-framework-testing</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <properties>
+
+        <templater.build.skip>true</templater.build.skip>
+
+        <parcel.build.skip>true</parcel.build.skip>
+        <parcel.build.target>el7</parcel.build.target>
+        <parcel.build.repo>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</parcel.build.repo>
+
+        <cloudera-framework.version>${project.version}</cloudera-framework.version>
+
+    </properties>
+
+    <modules>
+        <module>cloudera-framework-example-1</module>
+        <module>cloudera-framework-example-2</module>
+        <module>cloudera-framework-example-3</module>
+        <module>cloudera-framework-example-4</module>
+        <module>cloudera-framework-example-5</module>
+    </modules>
 
     <build>
         <plugins>
@@ -115,18 +55,47 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.avro</groupId>
-                <artifactId>avro-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>template-script</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>schema</goal>
+                            <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <stringType>String</stringType>
-                            <sourceDirectory>src/main/resources/avro/</sourceDirectory>
-                            <outputDirectory>src/main/java/</outputDirectory>
+                            <outputDirectory>src/main/script/scala</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/template/scala</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <filters>
+                                <filter>${project.build.directory}/templater-assembly/script.properties</filter>
+                            </filters>
+                            <skip>${templater.build.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>template-scala</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/scala</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/template/scala</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <filters>
+                                <filter>${project.build.directory}/templater-assembly/library.properties</filter>
+                            </filters>
+                            <skip>${templater.build.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
@@ -147,10 +116,10 @@
                                     <groupId>${project.groupId}</groupId>
                                     <artifactId>${project.artifactId}</artifactId>
                                     <version>${project.version}</version>
-                                    <classifier>el7</classifier>
+                                    <classifier>${parcel.build.target}</classifier>
                                 </parcel>
                             </parcels>
-                            <skip>${maven.test.skip}</skip>
+                            <skip>${parcel.build.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -165,11 +134,11 @@
                                     <groupId>${project.groupId}</groupId>
                                     <artifactId>${project.artifactId}</artifactId>
                                     <version>${project.version}</version>
-                                    <classifier>el7</classifier>
-                                    <distributionRepositoryUrl>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</distributionRepositoryUrl>
+                                    <classifier>${parcel.build.target}</classifier>
+                                    <distributionRepositoryUrl>${parcel.build.repo}</distributionRepositoryUrl>
                                 </parcel>
                             </parcels>
-                            <skip>${maven.test.skip}</skip>
+                            <skip>${parcel.build.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -184,11 +153,11 @@
                                     <groupId>${project.groupId}</groupId>
                                     <artifactId>${project.artifactId}</artifactId>
                                     <version>${project.version}</version>
-                                    <classifier>el7</classifier>
-                                    <distributionRepositoryUrl>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</distributionRepositoryUrl>
+                                    <classifier>${parcel.build.target}</classifier>
+                                    <distributionRepositoryUrl>${parcel.build.repo}</distributionRepositoryUrl>
                                 </parcel>
                             </parcels>
-                            <skip>${maven.test.skip}</skip>
+                            <skip>${parcel.build.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
@@ -208,6 +177,7 @@
                                 <descriptor>src/main/assembly/assembly.xml</descriptor>
                             </descriptors>
                             <tarLongFileMode>gnu</tarLongFileMode>
+                            <skipAssembly>${parcel.build.skip}</skipAssembly>
                         </configuration>
                     </execution>
                 </executions>
@@ -216,6 +186,25 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
+                    <execution>
+                        <id>unpack-templater</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.jag.maven-templater</groupId>
+                                    <artifactId>maven-templater-assembly</artifactId>
+                                    <version>${templater.version}</version>
+                                    <outputDirectory>${project.build.directory}/templater-assembly</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                            <includes>**/*.properties</includes>
+                            <skip>${templater.build.skip}</skip>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>parcel-dependency</id>
                         <phase>pre-integration-test</phase>
@@ -231,6 +220,7 @@
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib/jar</outputDirectory>
+                            <skip>${parcel.build.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -244,6 +234,7 @@
                             <includeScope>runtime</includeScope>
                             <excludeTransitive>false</excludeTransitive>
                             <outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib/jar</outputDirectory>
+                            <skip>${parcel.build.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -261,6 +252,7 @@
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib/flume/${project.artifactId}/lib</outputDirectory>
+                            <skip>${parcel.build.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -274,6 +266,7 @@
                             <includeScope>runtime</includeScope>
                             <excludeTransitive>false</excludeTransitive>
                             <outputDirectory>${project.build.directory}/parcel/${parcel.name}/lib/flume/${project.artifactId}/libext</outputDirectory>
+                            <skip>${parcel.build.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -287,12 +280,13 @@
                                 <artifactItem>
                                     <groupId>com.cloudera.framework</groupId>
                                     <artifactId>cloudera-framework-assembly</artifactId>
-                                    <version>${project.parent.version}</version>
+                                    <version>${cloudera-framework.version}</version>
                                     <type>tar.gz</type>
                                     <classifier>assembly</classifier>
                                     <outputDirectory>${project.build.directory}/parcel/${parcel.name}</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
+                            <skip>${parcel.build.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -312,6 +306,7 @@
                                     <outputDirectory>${project.build.directory}/assembly</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
+                            <skip>${parcel.build.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>

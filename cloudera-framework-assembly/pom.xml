@@ -67,6 +67,9 @@
             <plugin>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest-maven-plugin</artifactId>
+                <configuration>
+                    <skipTests>${maven.test.skip}</skipTests>
+                </configuration>
                 <executions>
                     <execution>
                         <id>test</id>

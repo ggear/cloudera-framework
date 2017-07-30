@@ -19,7 +19,7 @@ providing full coverage against CDH:
 * Spark & Spark2
 * Hive/MR & Hive/Spark
 
-[Examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
+[Examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent) 
 are included, codifying the standards, providing end to end data streaming, ingest, modeling, testing
 pipelines, with synthetic datasets to exercise the codebase.
 
@@ -121,18 +121,18 @@ core client bill-of-materials and test harness can be achieved as so:
 ## Usage
 
 The cloudera-framework includes a set of 
-[examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
+[examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent) 
 which exercise the entire framework:
 
-* [Example 1](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-1) 
+* [Example 1](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example-1) 
   (Java, HSQL, Flume, MR, Hive/MR, Impala, HDFS)
-* [Example 2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-2)
+* [Example 2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example-2)
   (Java, HSQL, Kafka, Hive/Spark, Spark, Impala, S3)
-* [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-3) 
+* [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example-3) 
   (Scala, CDSW, Spark2, MLlib, PMML, HDFS)
-* [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-4) 
+* [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example-4) 
   (Java, Kafka, Spark2 Streaming, Kudu, HDFS)
-* [Example 5](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-5) 
+* [Example 5](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example-5) 
   (PySpark, Spark2, HDFS)
 
 In addition, an archetype is available allowing one to stand up a simple, bare bones project for 

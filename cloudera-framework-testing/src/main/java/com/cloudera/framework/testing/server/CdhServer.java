@@ -64,6 +64,34 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   }
 
   /**
+   * Set an environment variable
+   *
+   * @param key
+   * @param value
+   */
+  protected static void setEnvProperty(String key, String value) {
+    try {
+      Class[] classes = Collections.class.getDeclaredClasses();
+      Map<String, String> env = (Map<String, String>) System.getenv();
+      for (Class clazz : classes) {
+        if ("java.util.Collections$UnmodifiableMap".equals(clazz.getName())) {
+          Field field = clazz.getDeclaredField("m");
+          field.setAccessible(true);
+          Object object = field.get(env);
+          Map<String, String> map = (Map<String, String>) object;
+          if (value == null) {
+            map.remove(key);
+          } else {
+            map.put(key, value);
+          }
+        }
+      }
+    } catch (Exception exception) {
+      throw new RuntimeException("Could not set environment property [" + key + "] to [" + value + "]");
+    }
+  }
+
+  /**
    * Define the index that defines <code>this</code> objects order within the
    * dependency pipeline, the lower the index the earlier in the dependency tree
    * <code>this</code> object will be
@@ -202,34 +230,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
       throw new RuntimeException(message, exception);
     }
     return true;
-  }
-
-  /**
-   * Set an environment variable
-   *
-   * @param key
-   * @param value
-   */
-  protected static void setEnvProperty(String key, String value) {
-    try {
-      Class[] classes = Collections.class.getDeclaredClasses();
-      Map<String, String> env = (Map<String, String>) System.getenv();
-      for (Class clazz : classes) {
-        if ("java.util.Collections$UnmodifiableMap".equals(clazz.getName())) {
-          Field field = clazz.getDeclaredField("m");
-          field.setAccessible(true);
-          Object object = field.get(env);
-          Map<String, String> map = (Map<String, String>) object;
-          if (value == null) {
-            map.remove(key);
-          } else {
-            map.put(key, value);
-          }
-        }
-      }
-    } catch (Exception exception) {
-      throw new RuntimeException("Could not set environment property [" + key + "] to [" + value + "]");
-    }
   }
 
   protected String logPrefix() {

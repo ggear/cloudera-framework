@@ -16,15 +16,6 @@ object ScriptUtil {
     conf
   }
 
-  def getSparkConf: SparkConf = {
-    if (getSparkMaster.isDefined) {
-      System.setProperty("spark.master", getSparkMaster.get)
-      System.setProperty("spark.app.name", "spark-script-test")
-      System.setProperty("spark.sql.warehouse.dir", getHadoopDefaultFs.get + "/usr/spark/warehouse")
-    }
-    new SparkConf
-  }
-
   def getHadoopDefaultFs: Option[String] = {
     var property = None: Option[String]
     if (System.getProperty(PropertyHadoopDefaultFs) != null) property = Some(System.getProperty(PropertyHadoopDefaultFs))
@@ -33,6 +24,15 @@ object ScriptUtil {
   }
 
   def PropertyHadoopDefaultFs = "CF_HADOOP_DEFAULT_FS"
+
+  def getSparkConf: SparkConf = {
+    if (getSparkMaster.isDefined) {
+      System.setProperty("spark.master", getSparkMaster.get)
+      System.setProperty("spark.app.name", "spark-script-test")
+      System.setProperty("spark.sql.warehouse.dir", getHadoopDefaultFs.get + "/usr/spark/warehouse")
+    }
+    new SparkConf
+  }
 
   def getSparkMaster: Option[String] = {
     var property = None: Option[String]

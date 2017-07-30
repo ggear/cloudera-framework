@@ -8,7 +8,8 @@
 #
 ###############################################################################
 
-CF_DIR=$(mktemp -d)
+CF_DIR=$(mktemp -d -t cloudera-framework)
+#CF_DIR=$(mkdir -p .toolchain)
 
 echo "" && echo "###############################################################################"
 CF_VERSION_JAVA=1.8
@@ -23,12 +24,13 @@ java -version
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
-CF_VERSION_MAVEN=3.5.0
+CF_VERSION_MAVEN=3.
 if [ -z ${MAVEN_OPTS+x} ]; then
   export MAVEN_OPTS="-Xmx2g -Dmaven.artifact.threads=15 -XX:ReservedCodeCacheSize=512m -Duser.home=${CF_DIR}"
 fi
 if [ $(mvn -version 2>&1 | grep ${CF_VERSION_MAVEN} | wc -l) -eq 0 ]; then
-  wget http://apache.mirror.amaze.com.au/maven/maven-3/${CF_VERSION_MAVEN}/binaries/apache-maven-${CF_VERSION_MAVEN}-bin.tar.gz -P ${CF_DIR}
+  wget http://apache.mirror.amaze.com.au/maven/maven-3/${CF_VERSION_MAVEN}5.0/binaries/apache-maven-${CF_VERSION_MAVEN}5.0-bin.tar.gz -P
+  ${CF_DIR}
   tar xvzf ${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}-bin.tar.gz -C ${CF_DIR}
   export PATH=${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}/bin:$PATH
 fi
@@ -57,5 +59,6 @@ python --version
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
+
 mvn clean
 mvn clean install -PPKG

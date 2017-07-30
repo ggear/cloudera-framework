@@ -20,6 +20,12 @@
     <dependencies>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
+            <artifactId>cloudera-framework-parent</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-library</artifactId>
             <version>${project.version}</version>
             <type>pom</type>

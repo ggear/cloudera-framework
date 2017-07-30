@@ -3,48 +3,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.cloudera.framework.example</groupId>
+    <groupId>com.cloudera.framework.parent</groupId>
     <artifactId>cloudera-framework-example-3</artifactId>
     <packaging>jar</packaging>
     <version>1.5.6-cdh5.12.0-SNAPSHOT</version>
 
     <parent>
         <groupId>com.cloudera.framework</groupId>
-        <artifactId>cloudera-framework-example</artifactId>
+        <artifactId>cloudera-framework-parent</artifactId>
         <version>1.5.6-cdh5.12.0-SNAPSHOT</version>
     </parent>
+
+    <properties>
+        <parcel.build.skip>true</parcel.build.skip>
+        <templater.build.skip>false</templater.build.skip>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.cloudera.framework.library.client</groupId>
             <artifactId>cloudera-framework-library-client-spark2</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework.library.client</groupId>
             <artifactId>cloudera-framework-library-client-core</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework.library.client</groupId>
             <artifactId>cloudera-framework-library-client-scala_2.11</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-common</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-assembly</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jag.maven-templater</groupId>
@@ -54,7 +59,7 @@
         <dependency>
             <groupId>com.cloudera.framework.library.thirdparty</groupId>
             <artifactId>cloudera-framework-library-thirdparty-pmml</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
             <type>pom</type>
         </dependency>
         <dependency>
@@ -65,14 +70,14 @@
         <dependency>
             <groupId>com.cloudera.framework.library.runtime</groupId>
             <artifactId>cloudera-framework-library-runtime-scala_2.11</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
             <type>pom</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-testing</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -94,75 +99,6 @@
             </resource>
         </resources>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-assembly</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.jag.maven-templater</groupId>
-                                    <artifactId>maven-templater-assembly</artifactId>
-                                    <version>${templater.version}</version>
-                                    <outputDirectory>${project.build.directory}/templater-assembly</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                            <includes>**/*.properties</includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-                <executions>
-                    <execution>
-                        <id>template-script</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/main/script/scala</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/template/scala</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                            <filters>
-                                <filter>${project.build.directory}/templater-assembly/script.properties</filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>template-scala</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/main/scala</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/template/scala</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                            <filters>
-                                <filter>${project.build.directory}/templater-assembly/library.properties</filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
@@ -224,4 +160,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
