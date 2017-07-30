@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -278,16 +277,18 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
 
   @Override
   public synchronized boolean testValidity() {
-    Matcher scalaVersionMatcher = REGEX_SCALA_VERSION.matcher(Properties.versionString());
-    if (scalaVersionMatcher.find()) {
-      String scalaVersion = scalaVersionMatcher.group(1);
-      if (!scalaVersion.equals("2.10")) {
-        log(LOG, "error", "scala 2.10 required, scala [" + scalaVersion + "] detected");
+    if (getRuntime().equals(Runtime.LOCAL_SPARK)) {
+      Matcher scalaVersionMatcher = REGEX_SCALA_VERSION.matcher(Properties.versionString());
+      if (scalaVersionMatcher.find()) {
+        String scalaVersion = scalaVersionMatcher.group(1);
+        if (!scalaVersion.equals("2.10")) {
+          log(LOG, "error", "scala 2.10 required, scala [" + scalaVersion + "] detected");
+          return false;
+        }
+      } else {
+        log(LOG, "error", "could not detect scala version");
         return false;
       }
-    } else {
-      log(LOG, "error", "could not detect scala version");
-      return false;
     }
     return true;
   }
