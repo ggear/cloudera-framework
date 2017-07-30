@@ -16,6 +16,9 @@ buildNumber.properties
 .pydevproject
 .toolchain*
 .viminfo
+.cache
+.local
+.ipython
 .bash_history
 .oracle_jre_usage
 *.pipeout
