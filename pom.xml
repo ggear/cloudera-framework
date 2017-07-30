@@ -138,7 +138,7 @@
         <scalatest.version>3.0.1</scalatest.version>
         <templater.version>1.2.3</templater.version>
 
-        <parcel-plugin.version>0.7.9</parcel-plugin.version>
+        <parcel-plugin.version>0.8.0-SNAPSHOT</parcel-plugin.version>
 
         <cloudera-framework-parcel.repo>http://52.63.86.162/tmph3l7m2vv103/sbin</cloudera-framework-parcel.repo>
         <cloudera-framework-module.repo>http://52.63.86.162:80/artifactory/cloudera-framework-releases</cloudera-framework-module.repo>

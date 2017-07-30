@@ -1,6 +1,8 @@
 package com.cloudera.framework.testing.server;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.cloudera.framework.assembly.ScriptUtil;
 import org.apache.hadoop.fs.Path;
@@ -10,6 +12,7 @@ import org.apache.spark.package$;
 import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.util.Properties;
 
 /**
  * Spark {@link TestRule}
@@ -50,6 +53,29 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   @Override
   public CdhServer<?, ?>[] getDependencies() {
     return new CdhServer<?, ?>[]{DfsServer.getInstance()};
+  }
+
+  @Override
+  public synchronized boolean testValidity() {
+    Matcher scalaVersionMatcher = REGEX_SCALA_VERSION.matcher(Properties.versionString());
+    if (scalaVersionMatcher.find()) {
+      String scalaVersion = scalaVersionMatcher.group(1);
+      if (package$.MODULE$.SPARK_VERSION().charAt(0) == '1') {
+        if (!scalaVersion.equals("2.10")) {
+          log(LOG, "error", "scala 2.10 required, scala [" + scalaVersion + "] detected");
+          return false;
+        }
+      } else if (package$.MODULE$.SPARK_VERSION().charAt(0) == '2') {
+        if (!scalaVersion.equals("2.11")) {
+          log(LOG, "error", "scala 2.11 required, scala [" + scalaVersion + "] detected");
+          return false;
+        }
+      }
+    } else {
+      log(LOG, "error", "could not detect scala version");
+      return false;
+    }
+    return true;
   }
 
   @Override

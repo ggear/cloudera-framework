@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.cloudera.framework.testing.server.CdhServer;
 import com.cloudera.framework.testing.server.DfsServer;
+import com.cloudera.parcel.library.ParcelUtil;
 import com.googlecode.zohhak.api.runners.ZohhakRunner;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -43,6 +44,8 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
 
   private static final Logger LOG = LoggerFactory.getLogger(TestRunner.class);
 
+  private String osDescriptor;
+
   static {
     Log.getLog(ParquetOutputFormat.class);
     SLF4JBridgeHandler.removeHandlersForRootLogger();
@@ -63,6 +66,7 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
 
   public TestRunner(Class<?> clazz) throws InitializationError {
     super(clazz);
+    osDescriptor = ParcelUtil.getOsDescriptor();
   }
 
   /**
@@ -141,14 +145,36 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
     } catch (Throwable e) {
       return new Fail(e);
     }
-    Statement statement = methodInvoker(method, test);
-    statement = withLogging(method, test, statement);
-    statement = possiblyExpectingExceptions(method, test, statement);
-    statement = withPotentialTimeout(method, test, statement);
-    statement = withBefores(method, test, statement);
-    statement = withAfters(method, test, statement);
-    statement = withServerRules(method, test, statement);
-    statement = withRules(method, test, statement);
+    boolean validated = true;
+    for (CdhServer cdhServer : getTestClass().getAnnotatedFieldValues(test, ClassRule.class, CdhServer.class)) {
+      validated = validated && cdhServer.isValid();
+      if (validated) {
+        for (CdhServer cdhServerDependency : cdhServer.getDependencies()) {
+          validated = validated && cdhServerDependency.isValid();
+        }
+      }
+    }
+    Statement statement;
+    if (validated) {
+      statement = methodInvoker(method, test);
+      statement = withLogging(method, test, statement);
+      statement = possiblyExpectingExceptions(method, test, statement);
+      statement = withPotentialTimeout(method, test, statement);
+      statement = withBefores(method, test, statement);
+      statement = withAfters(method, test, statement);
+      statement = withServerRules(method, test, statement);
+      statement = withRules(method, test, statement);
+    } else {
+      statement = new Statement() {
+        @Override
+        public void evaluate() throws Throwable {
+          if (LOG.isWarnEnabled()) {
+            LOG.warn("Skipping [" + method.getDeclaringClass().getCanonicalName() + "." + method.getName() + "], " +
+            "invalid service classpath");
+          }
+        }
+      };
+    }
     return statement;
   }
 

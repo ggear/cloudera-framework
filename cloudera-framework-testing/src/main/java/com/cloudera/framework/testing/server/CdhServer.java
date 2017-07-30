@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestRunner;
@@ -38,9 +39,12 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
 
   private static final Logger LOG = LoggerFactory.getLogger(DfsServer.class);
 
+  protected static final Pattern REGEX_SCALA_VERSION = Pattern.compile(".*([1-9]+\\.[0-9]+)\\.[1-9]+.*");
+
   private V runtime;
   private int semaphore;
   private Configuration conf;
+  private Boolean isValid;
 
   protected CdhServer(V runtime) {
     conf = new JobConf();
@@ -104,6 +108,20 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
    */
   public CdhServer<?, ?>[] getDependencies() {
     return new CdhServer<?, ?>[0];
+  }
+
+  /**
+   * Determine whether the runtime environment presented to this service is valid
+   */
+  public synchronized boolean isValid() {
+    return isValid == null ? isValid = testValidity() : isValid;
+  }
+
+  /**
+   * Determine whether the runtime environment presented to this service is valid
+   */
+  public synchronized boolean testValidity() {
+    return true;
   }
 
   /**
@@ -185,7 +203,9 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
       for (CdhServer<?, ?> dependency : getDependencies()) {
         dependency.before();
       }
-      start();
+      if(isValid()) {
+        start();
+      }
     }
   }
 
@@ -193,7 +213,9 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   protected synchronized void after() {
     if (--semaphore == 0) {
       try {
-        stop();
+        if(isValid()) {
+          stop();
+        }
         for (CdhServer<?, ?> dependency : getDependencies()) {
           dependency.after();
         }

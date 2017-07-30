@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
 
 import com.cloudera.framework.assembly.ScriptUtil;
 import com.jag.maven.templater.TemplaterUtil;
@@ -13,6 +14,7 @@ import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.collection.JavaConversions;
+import scala.util.Properties;
 
 /**
  * Python {@link TestRule}
@@ -118,6 +120,22 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
   @Override
   public CdhServer<?, ?>[] getDependencies() {
     return new CdhServer<?, ?>[]{DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS)};
+  }
+
+  @Override
+  public synchronized boolean testValidity() {
+    Matcher scalaVersionMatcher = REGEX_SCALA_VERSION.matcher(Properties.versionString());
+    if (scalaVersionMatcher.find()) {
+      String scalaVersion = scalaVersionMatcher.group(1);
+      if (!scalaVersion.equals("2.11")) {
+        log(LOG, "error", "scala 2.11 required, scala [" + scalaVersion + "] detected");
+        return false;
+      }
+    } else {
+      log(LOG, "error", "could not detect scala version");
+      return false;
+    }
+    return true;
   }
 
   @Override

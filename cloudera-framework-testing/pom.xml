@@ -26,43 +26,12 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <argLine>-Xmx${project.runtime.heap.max}m</argLine>
-                            <excludes>
-                                <exclude>**/*ScalaServer*</exclude>
-                                <exclude>**/*PythonServer*</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>SCALA_2.11</id>
             <properties>
                 <scala-test.version>2.11</scala-test.version>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <argLine>-Xmx${project.runtime.heap.max}m</argLine>
-                            <excludes>
-                                <exclude>**/*Kafka*</exclude>
-                                <exclude>**/*Hive*Spark*</exclude>
-                                <exclude>**/*TestCdhSuite*</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 
@@ -88,6 +57,11 @@
             <groupId>com.jag.maven-templater</groupId>
             <artifactId>maven-templater-assembly</artifactId>
             <version>${templater.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudera.parcel</groupId>
+            <artifactId>cloudera-parcel-library</artifactId>
+            <version>${parcel-plugin.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
