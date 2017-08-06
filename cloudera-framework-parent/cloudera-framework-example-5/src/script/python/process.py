@@ -6,7 +6,7 @@ spark = SparkSession.builder \
          .appName("spark-nltk") \
          .getOrCreate()
  
-data = spark.sparkContext.textFile('1970-Nixon.txt')
+data = spark.sparkContext.textFile('/tmp/stateunion/1970-Nixon.txt')
  
 def word_tokenize(x):
    import nltk
@@ -17,7 +17,7 @@ def pos_tag(x):
    return nltk.pos_tag([x])
  
 words = data.flatMap(word_tokenize)
-words.saveAsTextFile('nixon_tokens')
+words.saveAsTextFile('/tmp/stateunion/nixon_tokens')
  
 pos_word = words.map(pos_tag)
-pos_word.saveAsTextFile('nixon_token_pos')
+pos_word.saveAsTextFile('/tmp/stateunion/nixon_token_pos')

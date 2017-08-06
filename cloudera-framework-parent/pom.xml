@@ -14,17 +14,12 @@
     </parent>
 
     <properties>
-
         <conda.build.skip>true</conda.build.skip>
-
         <templater.build.skip>true</templater.build.skip>
-
         <parcel.build.skip>true</parcel.build.skip>
         <parcel.build.target>el7</parcel.build.target>
         <parcel.build.repo>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</parcel.build.repo>
-
         <cloudera-framework.version>${project.version}</cloudera-framework.version>
-
     </properties>
 
     <modules>
