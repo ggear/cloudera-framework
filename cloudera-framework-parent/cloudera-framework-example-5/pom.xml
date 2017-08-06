@@ -38,8 +38,6 @@
             <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-assembly</artifactId>
             <version>${project.version}</version>
-            <type>tar.gz</type>
-            <classifier>assembly</classifier>
             <scope>runtime</scope>
         </dependency>
         <dependency>
