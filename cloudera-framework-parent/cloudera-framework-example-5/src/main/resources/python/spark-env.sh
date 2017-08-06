@@ -7,4 +7,4 @@
 ###############################################################################
 
 SPARK_CONFIG=cloudera-framework-parent/${project.artifactId}/target/test-python/spark-defaults.conf
-PYSPARK_PYTHON=./CLDR_FW/${project.artifactId}/bin/python
+PYSPARK_PYTHON=./CLDRFW/cfe5/bin/python
