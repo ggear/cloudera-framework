@@ -16,6 +16,7 @@
 
     <properties>
         <conda.build.skip>false</conda.build.skip>
+        <templater.build.skip>false</templater.build.skip>
         <parcel.build.skip>true</parcel.build.skip>
     </properties>
 

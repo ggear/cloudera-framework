@@ -79,10 +79,10 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>src/main/script/scala</outputDirectory>
+                            <outputDirectory>src/main/script</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/template/scala</directory>
+                                    <directory>src/main/template</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>
@@ -143,13 +143,8 @@
                             <target>
                                 <exec executable="conda" failonerror="true">
                                     <arg value="env" />
-                                    <arg value="remove" />
-                                    <arg value="-y" />
-                                    <arg value="-p=${project.build.directory}/test-python/python" />
-                                </exec>
-                                <exec executable="conda" failonerror="true">
-                                    <arg value="env" />
                                     <arg value="create" />
+                                    <arg value="--force" />
                                     <arg value="-f=${project.build.directory}/test-python/conda.yml" />
                                     <arg value="-p=${project.build.directory}/test-python/python" />
                                 </exec>

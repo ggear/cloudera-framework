@@ -9,7 +9,8 @@ When editing the template directly (as indicated by the presence of the
 TEMPLATE.PRE-PROCESSOR.RAW_TEMPLATE tag at the top of this file), care should
 be taken to ensure the maven-resources-plugin generate-sources filtering of the
 TEMPLATE.PRE-PROCESSOR tags, which comment and or uncomment blocks of the
-template, leave the file in a consistent state, as a script ot library, post filtering.
+template, leave the file in a consistent state, as a script ot library,
+post filtering.
 
 It is desirable that in template form, the file remains both compilable and
 runnable as a script in your IDEs (eg Eclipse, IntelliJ, CDSW etc). To setup
@@ -28,7 +29,7 @@ libraries) or check them in and note changes post Maven build (eg scripts)
 
 // @formatter:off
 /*
-%AddJar http://52.63.86.162/artifactory/cloudera-framework-releases/com/jag/maven-templater/maven-templater-assembly/1.2.3/maven-templater-assembly-1.2.3.jar
+%AddJar http://52.63.86.162/artifactory/cloudera-framework-releases/com/jag/maven-templater/maven-templater-assembly/1.2.4/maven-templater-assembly-1.2.4.jar
 */
 // @formatter:on
 

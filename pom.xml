@@ -137,7 +137,7 @@
         <zohhak.version>1.1.1</zohhak.version>
         <junit.version>4.12</junit.version>
         <scalatest.version>3.0.1</scalatest.version>
-        <templater.version>1.2.3</templater.version>
+        <templater.version>1.2.4</templater.version>
 
         <parcel-plugin.version>0.8.1</parcel-plugin.version>
 
