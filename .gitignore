@@ -18,6 +18,7 @@ buildNumber.properties
 .viminfo
 .cache
 .local
+.conda
 .ipython
 .bash_history
 .oracle_jre_usage
