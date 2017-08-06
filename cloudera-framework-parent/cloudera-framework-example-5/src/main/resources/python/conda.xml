@@ -8,8 +8,8 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <outputDirectory>python</outputDirectory>
-            <directory>target/test-python/python</directory>
+            <outputDirectory>cloudera-framework-example-5</outputDirectory>
+            <directory>target/test-python/cloudera-framework-example-5</directory>
         </fileSet>
     </fileSets>
 

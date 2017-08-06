@@ -127,7 +127,7 @@
                                     <arg value="env" />
                                     <arg value="remove" />
                                     <arg value="-y" />
-                                    <arg value="-p=${project.build.directory}/test-python/python" />
+                                    <arg value="-p=${project.build.directory}/test-python/${project.artifactId}" />
                                 </exec>
                             </target>
                             <skip>${conda.build.skip}</skip>
@@ -145,13 +145,13 @@
                                     <arg value="env" />
                                     <arg value="remove" />
                                     <arg value="-y" />
-                                    <arg value="-p=${project.build.directory}/test-python/python" />
+                                    <arg value="-p=${project.build.directory}/test-python/${project.artifactId}" />
                                 </exec>
                                 <exec executable="conda" failonerror="true">
                                     <arg value="env" />
                                     <arg value="create" />
                                     <arg value="-f=${project.build.directory}/test-python/conda.yml" />
-                                    <arg value="-p=${project.build.directory}/test-python/python" />
+                                    <arg value="-p=${project.build.directory}/test-python/${project.artifactId}" />
                                 </exec>
                             </target>
                             <skip>${conda.build.skip}</skip>
