@@ -15,6 +15,7 @@
     </parent>
 
     <properties>
+        <conda.build.skip>false</conda.build.skip>
         <parcel.build.skip>true</parcel.build.skip>
     </properties>
 

@@ -27,20 +27,20 @@ public class TestPythonServer implements TestConstants {
 
   @Test(expected = IOException.class)
   public void testPythonNoFile() throws Exception {
-    pythonServer.execute(new File("/python/some-non-existent-script.py"));
+    pythonServer.execute(new File("/../../src/script/python/some-non-existent-script.py"));
   }
 
   @Test
   public void testPythonRunFail() throws Exception {
-    assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"), null, null,
+    assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/../../src/script/python/python.py"), null, null,
       null, true) == 0);
-    assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"),
+    assertFalse(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/../../src/script/python/python.py"),
       Arrays.asList("--non-existent-param", "MY PARAMETER!"), null, null, true) == 0);
   }
 
   @Test
   public void testPython() throws Exception {
-    assertTrue(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/python/python.py"),
+    assertTrue(pythonServer.execute(new File(ABS_DIR_CLASSES_TEST, "/../../src/script/python/python.py"),
       Arrays.asList("--param", "MY PARAMETER!")) == 0);
   }
 

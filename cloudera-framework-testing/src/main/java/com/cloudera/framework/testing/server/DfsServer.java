@@ -375,11 +375,6 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     CdhServer.setEnvProperty("HADOOP_PREFIX", null);
     CdhServer.setEnvProperty("HADOOP_CONF_DIR", null);
     CdhServer.setEnvProperty("HADOOP_USER_NAME", null);
-    File hadoopHomeDefault = new File("/usr/bin/hadoop");
-    if (hadoopHomeDefault.exists()) {
-      throw new RuntimeException("Detected a hadoop installation at the default path [" + hadoopHomeDefault + "], this will likely " +
-        "interfere with the test harness, please relocate");
-    }
     switch (getRuntime()) {
       case LOCAL_FS:
         fileSystem = FileSystem.getLocal(getConf());

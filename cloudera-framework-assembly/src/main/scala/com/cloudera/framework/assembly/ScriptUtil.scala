@@ -16,15 +16,6 @@ object ScriptUtil {
     conf
   }
 
-  def getHadoopDefaultFs: Option[String] = {
-    var property = None: Option[String]
-    if (System.getProperty(PropertyHadoopDefaultFs) != null) property = Some(System.getProperty(PropertyHadoopDefaultFs))
-    else if (System.getenv(PropertyHadoopDefaultFs) != null) property = Some(System.getenv(PropertyHadoopDefaultFs))
-    property
-  }
-
-  def PropertyHadoopDefaultFs = "CF_HADOOP_DEFAULT_FS"
-
   def getSparkConf: SparkConf = {
     if (getSparkMaster.isDefined) {
       System.setProperty("spark.master", getSparkMaster.get)
@@ -33,6 +24,15 @@ object ScriptUtil {
     }
     new SparkConf
   }
+
+  def getHadoopDefaultFs: Option[String] = {
+    var property = None: Option[String]
+    if (System.getProperty(PropertyHadoopDefaultFs) != null) property = Some(System.getProperty(PropertyHadoopDefaultFs))
+    else if (System.getenv(PropertyHadoopDefaultFs) != null) property = Some(System.getenv(PropertyHadoopDefaultFs))
+    property
+  }
+
+  def PropertyHadoopDefaultFs = "CF_HADOOP_DEFAULT_FS"
 
   def getSparkMaster: Option[String] = {
     var property = None: Option[String]

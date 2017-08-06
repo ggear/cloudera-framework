@@ -34,6 +34,7 @@ To compile, build and package from source, this project requires:
 * Maven 3
 * Scala 2.11
 * Python 2.7
+* Anaconda 4
 
 The [bootstrap.sh](https://github.com/ggear/cloudera-framework/blob/master/bootstrap.sh) script tests for,
 configures and installs (where possible) the required toolchain and should be sourced as so:
@@ -133,7 +134,7 @@ which exercise the entire framework:
 * [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example-4) 
   (Java, Kafka, Spark2 Streaming, Kudu, HDFS)
 * [Example 5](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example-5) 
-  (Python, Numpy/Pandas, PySpark, Spark2, HDFS)
+  (Python, NLTK, PySpark, Spark2, HDFS)
 
 In addition, an archetype is available allowing one to stand up a simple, bare bones project for 
 new cloudera-framework clients as so (assuming Eclipse as the IDE):

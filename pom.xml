@@ -119,6 +119,7 @@
         <cdh-kafka.version>0.10.0-kafka-2.1.1</cdh-kafka.version>
 
         <cdh-patch.version>5.12.0-1.cdh5.12.0.p0.29</cdh-patch.version>
+        <cdh-spark2-patch.version>2.2.0.cloudera1-1.cdh5.12.0.p0.142354</cdh-spark2-patch.version>
         <cdh-kafka-patch.version>2.2.0-1.2.2.0.p0.68</cdh-kafka-patch.version>
         <cdh-kudu-patch.version>1.4.0-1.cdh5.12.0.p0.25</cdh-kudu-patch.version>
 

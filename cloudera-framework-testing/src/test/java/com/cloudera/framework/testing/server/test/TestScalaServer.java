@@ -28,18 +28,18 @@ public class TestScalaServer implements TestConstants {
 
   @Test(expected = IOException.class)
   public void testScalaNoFile() throws Exception {
-    scalaServer.execute(new File("/scala/some-non-existent-script.py"));
+    scalaServer.execute(new File("/../../src/script/scala/some-non-existent-script.py"));
   }
 
   @Test
   public void testScalaRunFail() throws Exception {
-    assertFalse(scalaServer.execute(new File(ABS_DIR_CLASSES_TEST, "/scala/scala.scala"), null,
+    assertFalse(scalaServer.execute(new File(ABS_DIR_CLASSES_TEST, "/../../src/script/scala/scala.scala"), null,
       Maps.newHashMap(ImmutableMap.of("KILL_MY_SCRIPT", "true")), null, true) == 0);
   }
 
   @Test
   public void testScala() throws Exception {
-    assertTrue(scalaServer.execute(new File(ABS_DIR_CLASSES_TEST, "/scala/scala.scala")) == 0);
+    assertTrue(scalaServer.execute(new File(ABS_DIR_CLASSES_TEST, "/../../src/script/scala/scala.scala")) == 0);
   }
 
   @Test

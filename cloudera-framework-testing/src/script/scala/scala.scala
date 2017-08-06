@@ -10,7 +10,7 @@ if (System.getenv("KILL_MY_SCRIPT") != null) throw new Exception("I have been as
 val path = new Path("/tmp/data.csv")
 val hdfs = FileSystem.newInstance(ScriptUtil.getHadoopConf)
 new PrintStream(hdfs.create(hdfs.makeQualified(path))) {
-  print(Source.fromFile("../../../src/test/resources/scala/data.csv").mkString)
+  print(Source.fromFile("../../../src/test/resources/data/data.csv").mkString)
   close()
 }
 assert(hdfs.exists(path))

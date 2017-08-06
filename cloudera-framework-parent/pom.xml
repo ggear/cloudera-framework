@@ -15,6 +15,8 @@
 
     <properties>
 
+        <conda.build.skip>true</conda.build.skip>
+
         <templater.build.skip>true</templater.build.skip>
 
         <parcel.build.skip>true</parcel.build.skip>
@@ -59,7 +61,24 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>template-script</id>
+                        <id>conda-resources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/test-python</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/python</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <skip>${conda.build.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>templater-script</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -79,7 +98,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>template-scala</id>
+                        <id>templater-scala</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -97,6 +116,48 @@
                             </filters>
                             <skip>${templater.build.skip}</skip>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>conda-clean</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <target>
+                                <exec executable="conda" failonerror="true">
+                                    <arg value="env" />
+                                    <arg value="remove" />
+                                    <arg value="-y" />
+                                    <arg value="-p=${project.build.directory}/test-python/python" />
+                                </exec>
+                            </target>
+                            <skip>${conda.build.skip}</skip>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>conda-create</id>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <target>
+                                <exec executable="conda" failonerror="true">
+                                    <arg value="env" />
+                                    <arg value="create" />
+                                    <arg value="-f=${project.build.directory}/test-python/conda.yml" />
+                                    <arg value="-p=${project.build.directory}/test-python/python" />
+                                </exec>
+                            </target>
+                            <skip>${conda.build.skip}</skip>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -167,7 +228,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>package-tar</id>
+                        <id>assembly-tar</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>single</goal>
@@ -178,6 +239,19 @@
                             </descriptors>
                             <tarLongFileMode>gnu</tarLongFileMode>
                             <skipAssembly>${parcel.build.skip}</skipAssembly>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>conda-zip</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/resources/python/conda.xml</descriptor>
+                            </descriptors>
+                            <skipAssembly>${conda.build.skip}</skipAssembly>
                         </configuration>
                     </execution>
                 </executions>

@@ -104,8 +104,8 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
     if (output == null) {
       output = new StringBuffer();
     }
-    int exit = TemplaterUtil.executeScriptScala(scala.Option.apply(JavaConversions.<String, String>mapAsScalaMap(environment)), file,
-      scala.Option.apply(parameters == null ? null : JavaConversions.<String>asScalaBuffer(parameters)),
+    int exit = TemplaterUtil.executeScriptScala(scala.Option.apply(JavaConversions.mapAsScalaMap(environment)), file,
+      scala.Option.apply(parameters == null ? null : JavaConversions.asScalaBuffer(parameters)),
       new File(REL_DIR_SCRIPT, UUID.randomUUID().toString()), scala.Option.apply(null), scala.Option.apply(output));
     if (!quiet) {
       log(LOG, "execute", "script [" + file.getAbsolutePath() + "] " + output.toString(), true);

@@ -144,6 +144,25 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>explode-spark2</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>explode</goal>
+                        </goals>
+                        <configuration>
+                            <parcels>
+                                <parcel>
+                                    <groupId>com.cloudera.parcel</groupId>
+                                    <artifactId>SPARK2</artifactId>
+                                    <version>${cdh-spark2-patch.version}</version>
+                                    <repositoryUrl>http://archive-primary.cloudera.com/spark2/parcels</repositoryUrl>
+                                    <linkDirectory>${project.build.directory}/runtime-spark2</linkDirectory>
+                                </parcel>
+                            </parcels>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>explode-kafka</id>
                         <phase>initialize</phase>
                         <goals>

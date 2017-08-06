@@ -1,0 +1,7 @@
+name: ${project.artifactId}
+channels:
+- defaults
+dependencies:
+- nltk=3.2.3=py27_0
+- pip=9.0.1=py27_1
+- python=2.7.11=0

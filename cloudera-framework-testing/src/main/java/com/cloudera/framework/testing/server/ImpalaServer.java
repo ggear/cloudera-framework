@@ -107,7 +107,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * by 1-length empty {@link String} {@link List}
    */
   public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults,
-                              boolean quiet) throws Exception {
+                              boolean quiet) {
     List<String> results = new ArrayList<>();
     return results;
   }
@@ -161,8 +161,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
    */
-  public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration, int maxResults)
-    throws Exception {
+  public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration, int maxResults) {
     List<List<String>> results = new ArrayList<>();
     return results;
   }
