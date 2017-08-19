@@ -29,8 +29,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Driver extends Configured implements Tool {
 
-  public static final int RETURN_SUCCESS = 0;
-  public static final int RETURN_FAILURE_RUNTIME = 10;
+  public static final int SUCCESS = 0;
+  public static final int FAILURE_RUNTIME = 10;
   public static final String CONF_SETTINGS = "driver-site.xml";
   private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
   private static final int FORMAT_TIME_FACTOR = 10;
@@ -106,18 +106,18 @@ public abstract class Driver extends Configured implements Tool {
    * @param arguments the arguments passed in via the command line, option switches will
    *                  be populated into the {@link Configuration} available from
    *                  {@link #getConf()}
-   * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
+   * @return {@link #SUCCESS} on success, non {@link #SUCCESS} on
    * failure
    */
   @SuppressWarnings("SameReturnValue")
   public int prepare(String... arguments) throws Exception {
-    return RETURN_SUCCESS;
+    return SUCCESS;
   }
 
   /**
    * Execute the driver
    *
-   * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
+   * @return {@link #SUCCESS} on success, non {@link #SUCCESS} on
    * failure
    */
   public abstract int execute() throws Exception;
@@ -125,12 +125,12 @@ public abstract class Driver extends Configured implements Tool {
   /**
    * Clean the driver on shutdown
    *
-   * @return {@link #RETURN_SUCCESS} on success, non {@link #RETURN_SUCCESS} on
+   * @return {@link #SUCCESS} on success, non {@link #SUCCESS} on
    * failure
    */
   @SuppressWarnings("SameReturnValue")
   public int cleanup() {
-    return RETURN_SUCCESS;
+    return SUCCESS;
   }
 
   /**
@@ -169,9 +169,9 @@ public abstract class Driver extends Configured implements Tool {
         LOG.trace("\t" + entry.getKey() + "=" + entry.getValue());
       }
     }
-    int exitValue = RETURN_FAILURE_RUNTIME;
+    int exitValue = FAILURE_RUNTIME;
     try {
-      if ((exitValue = prepare(args)) == RETURN_SUCCESS) {
+      if ((exitValue = prepare(args)) == SUCCESS) {
         exitValue = execute();
       }
     } catch (Exception exception) {
@@ -203,13 +203,13 @@ public abstract class Driver extends Configured implements Tool {
         results.forEach(result -> LOG.info("\t" + result));
       }
       LOG.info(
-        "Driver [" + this.getClass().getSimpleName() + "] finished " + (exitValue == RETURN_SUCCESS ? "successfully" : "unsuccessfully")
+        "Driver [" + this.getClass().getSimpleName() + "] finished " + (exitValue == SUCCESS ? "successfully" : "unsuccessfully")
           + " with exit value [" + exitValue + "] in " + formatTime(timeTotal));
     }
     return exitValue;
   }
 
-  final public int runner(String[] arguments) {
+  final public int runner(String... arguments) {
     int returnValue;
     try {
       returnValue = ToolRunner.run(this, arguments);
@@ -217,9 +217,9 @@ public abstract class Driver extends Configured implements Tool {
       if (LOG.isErrorEnabled()) {
         LOG.error("Fatal error encountered", exception);
       }
-      returnValue = RETURN_FAILURE_RUNTIME;
+      returnValue = FAILURE_RUNTIME;
     }
-    if (returnValue != RETURN_SUCCESS) {
+    if (returnValue != SUCCESS) {
       if (LOG.isInfoEnabled()) {
         StringBuilder optionsAndParameters = new StringBuilder(256);
         for (int i = 0; i < options().length; i++) {
@@ -280,7 +280,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   protected void addCounters(Map<Enum<?>, Long> counters) {
-    addCounters(this.getClass().getCanonicalName(), counters);
+    addCounters(this.getClass().getName(), counters);
   }
 
   protected void addCounters(String group, Map<Enum<?>, Long> counters) {
@@ -294,7 +294,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   protected void addCounters(Job job, Enum<?>[] values) throws IOException {
-    addCounters(this.getClass().getCanonicalName(), job, values);
+    addCounters(this.getClass().getName(), job, values);
   }
 
   protected void addCounters(String group, Job job, Enum<?>[] values) throws IOException {
@@ -308,17 +308,17 @@ public abstract class Driver extends Configured implements Tool {
     }
   }
 
-  public Long incrementCounter(Enum<?> counter, int increment) {
-    return incrementCounter(this.getClass().getCanonicalName(), counter, increment);
+  public Long incrementCounter(Enum<?> counter, long increment) {
+    return incrementCounter(this.getClass().getName(), counter, increment);
   }
 
-  public Long incrementCounter(String group, Enum<?> counter, int increment) {
+  public Long incrementCounter(String group, Enum<?> counter, long increment) {
     this.counters.computeIfAbsent(group, k -> new LinkedHashMap<>());
     return counters.get(group).put(counter, (counters.get(group).get(counter) == null ? 0 : counters.get(group).get(counter)) + increment);
   }
 
   public Long incrementCounter(Enum<?> counter, int increment, String tag, Set<String> set) {
-    return incrementCounter(this.getClass().getCanonicalName(), counter, increment, tag, set);
+    return incrementCounter(this.getClass().getName(), counter, increment, tag, set);
   }
 
   public Long incrementCounter(String group, Enum<?> counter, int increment, String tag, Set<String> set) {
@@ -326,6 +326,15 @@ public abstract class Driver extends Configured implements Tool {
       return incrementCounter(group, counter, increment);
     }
     return counters.get(group).get(counter);
+  }
+
+  public enum Counter {
+    FILES_IN,
+    FILES_OUT,
+    FILES_ERROR,
+    RECORDS_IN,
+    RECORDS_OUT,
+    RECORDS_ERROR
   }
 
 }

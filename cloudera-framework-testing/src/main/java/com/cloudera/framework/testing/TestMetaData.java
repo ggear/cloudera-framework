@@ -21,7 +21,7 @@ import java.util.Map;
  *     .dataSetSubsets(new String[][] { { "dataset-1-sub-1" }, { "dataset-1-sub-1" } }) //
  *     .dataSetLabels(new String[][][] { { { "dataset-1-sub-1-sub-1" } }, { { "dataset-1-sub-1-sub-1" } } }) //
  *     .dataSetDestinationDirs("/tmp/data/1/1", "/tmp/data/1/2") //
- *     .asserts(ImmutableMap.of(getClass().getCanonicalName(), ImmutableMap.of(Counter.COUNTER1, 0L)));
+ *     .asserts(ImmutableMap.of(getClass().getName(), ImmutableMap.of(Counter.COUNTER1, 0L)));
  *
  * public static final TestMetaData testMetaData2 = TestMetaData.getInstance() //
  *     .dataSetSourceDirs("target/test-data", "target/test-data") //
@@ -29,7 +29,7 @@ import java.util.Map;
  *     .dataSetSubsets(new String[][] { { "dataset-2-sub-1" }, { "dataset-2-sub-1" } }) //
  *     .dataSetLabels(new String[][][] { { { "dataset-2-sub-1-sub-1" } }, { { "dataset-2-sub-1-sub-1" } } }) //
  *     .dataSetDestinationDirs("/tmp/data/2/1", "/tmp/data/2/2") //
- *     .asserts(ImmutableMap.of(getClass().getCanonicalName(), ImmutableMap.of(Counter.COUNTER1, 0L)));
+ *     .asserts(ImmutableMap.of(getClass().getName(), ImmutableMap.of(Counter.COUNTER1, 0L)));
  *
  * &#64;TestWith({ "testMetaData1", "testMetaData2" })
  * public void testCdhMetaData1(TestMetaData testMetaData) throws Exception {

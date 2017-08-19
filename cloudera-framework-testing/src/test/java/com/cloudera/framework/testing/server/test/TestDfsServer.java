@@ -27,7 +27,7 @@ import org.junit.Test;
 
 public abstract class TestDfsServer implements TestConstants {
 
-  public static final String COUNTER_GROUP = TestDfsServer.class.getCanonicalName();
+  public static final String COUNTER_GROUP = TestDfsServer.class.getName();
 
   public static final TestMetaData testMetaData1 = TestMetaData.getInstance() //
     .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)));
@@ -257,7 +257,7 @@ public abstract class TestDfsServer implements TestConstants {
 
   public void testDfs(TestMetaData testMetaData) throws Exception {
     assertNotNull(testMetaData);
-    assertCounterEquals(testMetaData.getAsserts()[0],
+    assertCounterEquals(testMetaData,
       ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, (long) getDfsServer().listFilesDfs("/").length)));
   }
 

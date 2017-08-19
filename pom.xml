@@ -198,7 +198,6 @@
         <module>cloudera-framework-common</module>
         <module>cloudera-framework-assembly</module>
         <module>cloudera-framework-parent</module>
-        <module>cloudera-framework-example</module>
         <module>cloudera-framework-archetype</module>
     </modules>
 

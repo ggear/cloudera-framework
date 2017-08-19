@@ -19,14 +19,14 @@ providing full coverage against CDH:
 * Spark & Spark2
 * Hive/MR & Hive/Spark
 
-[Examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
+[Examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example) 
 are included, codifying the standards, providing end to end data streaming, ingest, modeling, testing
 pipelines, with synthetic datasets to exercise the codebase.
 
 Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) 
 is included to provide a bare bones starter client module.
 
-## Requirements
+# Requirements
 
 To compile, build and package from source, this project requires:
 
@@ -58,7 +58,7 @@ are used to manage platform dependent binaries. This project depends on the
 [cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/tree/master/cloudera-parcel-plugin) 
 to help manage its parcel dependencies.
 
-## Limitations
+# Limitations
 
 As above, this code is known to not work out of the box on Windows hosts, only Linux and MacOS
 are supported. If developing on Windows it is recommended to run a Linux VM and develop from within it.  
@@ -67,7 +67,7 @@ In addition, it is known that running the code from remote storage (eg NFS) will
 but will likely result in timing errors during testing, so it is recommended that only direct attached
 storage (be it physical or para-virtualized) by used.
 
-## Install
+# Install
 
 This project can be installed to a local repository, skipping tests, as per:
 
@@ -119,25 +119,31 @@ core client bill-of-materials and test harness can be achieved as so:
 </project>
 ```
 
-## Usage
+# Usage
 
 The cloudera-framework includes a set of 
-[examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example) 
+[examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example) 
 which exercise the entire framework:
 
-* [Example 1](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-1) 
+* [Example 1](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-1) 
   (Java, HSQL, Flume, MR, Hive/MR, Impala, HDFS)
-* [Example 2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-2)
+* [Example 2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-2)
   (Java, HSQL, Kafka, Hive/Spark, Spark, Impala, S3)
-* [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-3) 
+* [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-3) 
   (Scala, CDSW, Spark2, MLlib, PMML, HDFS)
-* [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-4) 
+* [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-4) 
   (Java, Kafka, Spark2 Streaming, Kudu, HDFS)
-* [Example 5](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example/cloudera-framework-example-5) 
+* [Example 5](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-5) 
   (Python, NLTK, PySpark, Spark2, HDFS)
 
-In addition, an archetype is available allowing one to stand up a simple, bare bones project for 
-new cloudera-framework clients as so (assuming Eclipse as the IDE):
+In addition,
+[archetypes](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype)
+are available in various profiles, allowing one to stand up a simple, bare bones project for new cloudera-framework clients:
+
+* [Workload](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype/cloudera-framework-archetype-workload/src/main/resources/archetype-resources)
+  (Scala, Java, Spark2)
+
+For example, a project could be created with the workload profile baseline via:
 
 ```bash
 # Change the following variables to appropriate values for the target environment
@@ -155,7 +161,7 @@ mvn archetype:generate -B \
   -Dpackage=com.cloudera.mytest
 ```
 
-## Release
+# Release
 
 To perform a release:
 

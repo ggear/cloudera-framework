@@ -11,6 +11,52 @@ public class Assert extends org.junit.Assert {
   /**
    * Assert <code>actual</code> equals <code>expected</code>
    *
+   * @param expected <code>TestMetaData</code>
+   * @param actual   <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterEquals(TestMetaData expected, Map actual) {
+    assertCounterEquals(expected, 0, actual);
+  }
+
+  /**
+   * Assert <code>actual</code> equals <code>expected</code>
+   *
+   * @param expected <code>TestMetaData</code>
+   * @param index    <code>index</code>
+   * @param actual   <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterEquals(TestMetaData expected, int index, Map actual) {
+    assertCounterEquals(expected.getAsserts()[index], actual);
+  }
+
+  /**
+   * Assert <code>actual</code> equals <code>expected</code>
+   *
+   * @param expected <code>TestMetaData</code>
+   * @param group    <code>group</code>
+   * @param counter  <code>counter</code>
+   * @param actual   <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterEquals(TestMetaData expected, String group, Enum<?> counter, Object actual) {
+    assertCounterEquals(expected, 0, group, counter, actual);
+  }
+
+  /**
+   * Assert <code>actual</code> equals <code>expected</code>
+   *
+   * @param expected <code>TestMetaData</code>
+   * @param index    <code>index</code>
+   * @param group    <code>group</code>
+   * @param counter  <code>counter</code>
+   * @param actual   <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterEquals(TestMetaData expected, int index, String group, Enum<?> counter, Object actual) {
+    assertEquals(((Map) expected.getAsserts()[index].get(group)).get(counter), actual);
+  }
+
+  /**
+   * Assert <code>actual</code> equals <code>expected</code>
+   *
    * @param expected <code>Map<String, Map<Enum<?>, Long>></code>
    * @param actual   <code>Map<String, Map<Enum<?>, Long>></code>
    */

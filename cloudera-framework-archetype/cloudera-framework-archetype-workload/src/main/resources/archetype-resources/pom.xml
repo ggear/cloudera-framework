@@ -19,6 +19,23 @@
         <cloudera-framework.version>${project.version}</cloudera-framework.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>cloudera-framework-releases</id>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>cloudera-framework-snapshots</id>
+            <url>http://52.63.86.162:80/artifactory/cloudera-framework-snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.cloudera.framework.library.client</groupId>

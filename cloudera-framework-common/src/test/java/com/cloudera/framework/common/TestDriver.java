@@ -24,31 +24,27 @@ public class TestDriver {
   @Test
   public void testRunnerSuccessParameters() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf());
-    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{"false"}));
+    assertEquals(Driver.SUCCESS, driver.runner("false"));
   }
 
   @Test
   public void testRunnerSuccessOptions() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf());
     driver.getConf().setBoolean("i.should.fail.option", false);
-    assertEquals(Driver.RETURN_SUCCESS, driver.runner(new String[]{"false"}));
+    assertEquals(Driver.SUCCESS, driver.runner("false"));
   }
 
   @Test
   public void testRunnerFailureParameters() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf());
-    assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[]{"true"}));
+    assertEquals(Driver.FAILURE_RUNTIME, driver.runner("true"));
   }
 
   @Test
   public void testRunnerFailureOptions() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf());
     driver.getConf().setBoolean("i.should.fail.option", true);
-    assertEquals(Driver.RETURN_FAILURE_RUNTIME, driver.runner(new String[]{"false"}));
-  }
-
-  private enum Counter {
-    FILES_NUMBER
+    assertEquals(Driver.FAILURE_RUNTIME, driver.runner("false"));
   }
 
   private class CountFilesDriver extends Driver {
@@ -82,7 +78,7 @@ public class TestDriver {
       }
       iShouldFailParameter = arguments[0];
       iShouldFailOption = getConf().getBoolean("i.should.fail.option", false);
-      return RETURN_SUCCESS;
+      return SUCCESS;
     }
 
     @Override
@@ -91,10 +87,10 @@ public class TestDriver {
       RemoteIterator<LocatedFileStatus> files = fileSystem.listFiles(new Path("."), true);
       while (files.hasNext()) {
         files.next();
-        incrementCounter(Counter.FILES_NUMBER, 1);
+        incrementCounter(Counter.FILES_IN, 1);
       }
-      return iShouldFailOption || iShouldFailParameter.toLowerCase().equals(Boolean.TRUE.toString().toLowerCase()) ? RETURN_FAILURE_RUNTIME
-        : RETURN_SUCCESS;
+      return iShouldFailOption || iShouldFailParameter.toLowerCase().equals(Boolean.TRUE.toString().toLowerCase()) ?
+        FAILURE_RUNTIME : SUCCESS;
     }
 
   }
