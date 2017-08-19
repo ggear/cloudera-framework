@@ -22,28 +22,14 @@
     <dependencies>
         <dependency>
             <groupId>com.cloudera.framework.library.client</groupId>
+            <artifactId>cloudera-framework-library-client-spark2</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.cloudera.framework.library.client</groupId>
             <artifactId>cloudera-framework-library-client-core</artifactId>
-            <version>${project.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-zookeeper</artifactId>
-            <version>${project.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-kafka</artifactId>
-            <version>${project.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-flume</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
             <scope>provided</scope>
@@ -52,8 +38,6 @@
             <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-assembly</artifactId>
             <version>${project.version}</version>
-            <type>tar.gz</type>
-            <classifier>assembly</classifier>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -62,11 +46,52 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.cloudera.framework.library.runtime</groupId>
+            <artifactId>cloudera-framework-library-runtime-scala_2.11</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-testing</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.cloudera.framework.library.runtime</groupId>
+                    <artifactId>cloudera-framework-library-runtime-scala_2.10</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <configuration>
+                    <scalaVersion>${scala_2.11.version}</scalaVersion>
+                    <scalaCompatVersion>${scala_2.11-base.version}</scalaCompatVersion>
+                    <javacArgs>
+                        <javacArg>-source</javacArg>
+                        <javacArg>${java.version}</javacArg>
+                        <javacArg>-target</javacArg>
+                        <javacArg>${java.version}</javacArg>
+                    </javacArgs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>scala-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

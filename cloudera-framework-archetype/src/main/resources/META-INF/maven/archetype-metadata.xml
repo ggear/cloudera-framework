@@ -4,8 +4,8 @@
         xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd">
 
     <fileSets>
-        <fileSet filtered="false" packaged="false">
-            <directory>src/main/java</directory>
+        <fileSet filtered="true" packaged="false">
+            <directory>src/main/scala</directory>
         </fileSet>
         <fileSet filtered="false" packaged="false">
             <directory>src/main/resources</directory>
@@ -13,10 +13,10 @@
         <fileSet filtered="false" packaged="false">
             <directory>src/main/parcel</directory>
         </fileSet>
-        <fileSet filtered="false" packaged="false">
+        <fileSet filtered="true" packaged="false">
             <directory>src/main/assembly</directory>
         </fileSet>
-        <fileSet filtered="false" packaged="false">
+        <fileSet filtered="true" packaged="false">
             <directory>src/test/java</directory>
         </fileSet>
         <fileSet filtered="false" packaged="false">

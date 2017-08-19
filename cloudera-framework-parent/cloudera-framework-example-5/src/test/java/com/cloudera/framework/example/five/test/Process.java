@@ -4,7 +4,7 @@ import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
-import com.cloudera.framework.testing.server.SparkServer;
+import com.cloudera.framework.testing.server.PythonServer;
 import com.googlecode.zohhak.api.Coercion;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class Process implements TestConstants {
   public static final DfsServer dfsServer = DfsServer.getInstance();
 
   @ClassRule
-  public static final SparkServer sparkServer = SparkServer.getInstance();
+  public static final PythonServer pythonServer = PythonServer.getInstance();
 
   /**
    * Test process

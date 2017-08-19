@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PARCEL_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/..
+PARCEL_DIR=$( cd "$( dirname "$BASH_SOURCE" )" && pwd )/..
 
 $PARCEL_DIR/meta/cloudera-framework-initialise.sh
 

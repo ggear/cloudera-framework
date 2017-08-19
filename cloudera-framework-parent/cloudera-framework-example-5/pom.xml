@@ -23,13 +23,6 @@
     <dependencies>
         <dependency>
             <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-spark2</artifactId>
-            <version>${project.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
             <artifactId>cloudera-framework-library-client-core</artifactId>
             <version>${project.version}</version>
             <type>pom</type>

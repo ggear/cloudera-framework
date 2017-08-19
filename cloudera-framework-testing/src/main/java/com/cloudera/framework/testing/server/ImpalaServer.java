@@ -108,8 +108,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    */
   public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults,
                               boolean quiet) {
-    List<String> results = new ArrayList<>();
-    return results;
+    return new ArrayList<>();
   }
 
   /**
@@ -162,8 +161,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * {@link String} {@link List}
    */
   public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration, int maxResults) {
-    List<List<String>> results = new ArrayList<>();
-    return results;
+    return new ArrayList<>();
   }
 
   @Override

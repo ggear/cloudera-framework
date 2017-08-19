@@ -32,8 +32,8 @@ class Driver extends com.cloudera.framework.common.Driver {
     super.setConf(configuration)
   }
 
-  def main(arguments: Array[String]): Unit = {
-    System.exit(new Driver().runner(arguments))
+  override def parameters(): Array[String] = {
+    Array("working-path")
   }
 
   override def prepare(arguments: String*): Int = {
@@ -49,14 +49,14 @@ class Driver extends com.cloudera.framework.common.Driver {
     RETURN_SUCCESS
   }
 
-  override def parameters(): Array[String] = {
-    Array("working-path")
-  }
-
   override def execute(): Int = {
     addResult(Model.build(FileSystem.newInstance(getConf), properties.getProperty("application.version"),
       trainPath.toString, testPath.toString, modelPath.toString).getOrElse(ModelPmml.EmptyModel))
     RETURN_SUCCESS
+  }
+
+  def main(arguments: Array[String]): Unit = {
+    System.exit(new Driver().runner(arguments))
   }
 
 }

@@ -39,16 +39,19 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   public static final String SERVER_BIND_IP = "127.0.0.1";
   public static final AtomicInteger SERVER_BIND_PORT_START = new AtomicInteger(25000);
   public static final int SERVER_BIND_PORT_FINISH = 25100;
+
   private static final Logger LOG = LoggerFactory.getLogger(DfsServer.class);
+
   private static final Pattern REGEX_SCALA_VERSION = Pattern.compile(".*([1-9]+\\.[0-9]+)\\.[1-9]+.*");
+
   protected String envOsName;
   protected String envOsDescriptor;
   protected String envScalaVersion;
+
   private V runtime;
   private int semaphore;
   private Configuration conf;
   private Boolean isValid;
-
 
   protected CdhServer(V runtime) {
     conf = new JobConf();
@@ -85,6 +88,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   /**
    * Set an environment variable
    */
+  @SuppressWarnings("unchecked")
   protected static void setEnvProperty(String key, String value) {
     try {
       Class[] classes = Collections.class.getDeclaredClasses();
