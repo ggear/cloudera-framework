@@ -22,14 +22,6 @@
         <cloudera-framework.version>${project.version}</cloudera-framework.version>
     </properties>
 
-    <modules>
-        <module>cloudera-framework-example-1</module>
-        <module>cloudera-framework-example-2</module>
-        <module>cloudera-framework-example-3</module>
-        <module>cloudera-framework-example-4</module>
-        <module>cloudera-framework-example-5</module>
-    </modules>
-
     <build>
         <plugins>
             <plugin>
