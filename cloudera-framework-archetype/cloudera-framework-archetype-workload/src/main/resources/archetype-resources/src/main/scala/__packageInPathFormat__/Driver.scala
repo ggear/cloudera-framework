@@ -2,7 +2,7 @@
   * This is a trivial example [[com.cloudera.framework.common.Driver]], please replace with your implementation.
   *
   * More detailed examples are available here:
-  * https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example
+  * https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example
   */
 #* // @formatter:off
 *#

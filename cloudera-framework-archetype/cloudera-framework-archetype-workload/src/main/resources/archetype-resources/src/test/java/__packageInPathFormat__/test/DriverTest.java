@@ -2,7 +2,7 @@
  * This is a unit test example, testing the bundled {@link ${package}.Driver}
  * <p>
  * More detailed examples are available here:
- * https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-example
+ * https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example
  */
 #* // @formatter:off
 *#

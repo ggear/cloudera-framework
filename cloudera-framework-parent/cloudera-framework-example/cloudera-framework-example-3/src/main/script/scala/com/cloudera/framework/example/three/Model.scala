@@ -104,13 +104,11 @@ try {
   //
   // Load data
   ScriptUtil.copyFromUrl(hdfs, new Path(testPath, "sample.csv"),
-    "https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
-      "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data" +
-      "/roomsensors/test/sample/sample.csv")
+    "https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-parent" +
+      "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data/roomsensors/test/sample/sample.csv")
   ScriptUtil.copyFromUrl(hdfs, new Path(trainPath, "sample.csv"),
-    "https://raw.githubusercontent.com/ggear/cloudera-framework/master" +
-      "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data" +
-      "/roomsensors/train/sample/sample.csv")
+    "https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-parent" +
+      "/cloudera-framework-example/cloudera-framework-example-3/src/test/resources/data/roomsensors/train/sample/sample.csv")
   //
 
   if (hdfs.listFiles(new Path(testPath), true).hasNext &&
