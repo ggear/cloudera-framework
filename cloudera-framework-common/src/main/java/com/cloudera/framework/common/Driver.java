@@ -29,13 +29,23 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Driver extends Configured implements Tool {
 
+  public enum Engine {HADOOP, SPARK}
+
   public static final int SUCCESS = 0;
-  public static final int FAILURE_RUNTIME = 10;
+  public static final int FAILURE_ARGUMENTS = 10;
+  public static final int FAILURE_RUNTIME = 20;
+
   public static final String CONF_SETTINGS = "driver-site.xml";
+
   private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
+
   private static final int FORMAT_TIME_FACTOR = 10;
+
   private final Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
+
   private List<Object> results = null;
+
+  private Engine engine = Engine.HADOOP;
 
   public Driver() {
     super();
@@ -43,6 +53,15 @@ public abstract class Driver extends Configured implements Tool {
 
   public Driver(Configuration conf) {
     super(conf);
+  }
+
+  public Driver(Configuration conf, Engine engine) {
+    super(conf);
+    this.engine = engine;
+  }
+
+  public void setEngine(Engine engine) {
+    this.engine = engine;
   }
 
   private static String formatTime(long time) {
@@ -176,14 +195,14 @@ public abstract class Driver extends Configured implements Tool {
       }
     } catch (Exception exception) {
       if (LOG.isErrorEnabled()) {
-        LOG.error("Exception raised executing runtime pipeline handlers", exception);
+        LOG.error("Exception raised executing pipeline handlers", exception);
       }
     } finally {
       try {
         cleanup();
       } catch (Exception exception) {
         if (LOG.isErrorEnabled()) {
-          LOG.error("Exception raised cleaning up runtime pipeline handlers", exception);
+          LOG.error("Exception raised cleaning up pipeline handlers", exception);
         }
       }
     }
@@ -202,9 +221,23 @@ public abstract class Driver extends Configured implements Tool {
         LOG.info("Driver [" + this.getClass().getCanonicalName() + "] results:");
         results.forEach(result -> LOG.info("\t" + result));
       }
+      String exitStatus;
+      switch (exitValue) {
+        case SUCCESS:
+          exitStatus = "SUCCESS";
+          break;
+        case FAILURE_RUNTIME:
+          exitStatus = "RUNTIME FAILURE";
+          break;
+        case FAILURE_ARGUMENTS:
+          exitStatus = "INVALID ARGUMENTS";
+          break;
+        default:
+          exitStatus = "UNKNOWN";
+      }
       LOG.info(
-        "Driver [" + this.getClass().getSimpleName() + "] finished " + (exitValue == SUCCESS ? "successfully" : "unsuccessfully")
-          + " with exit value [" + exitValue + "] in " + formatTime(timeTotal));
+        "Driver [" + this.getClass().getSimpleName() + "] finished with status [" + exitStatus +
+          "] and exit code [" + exitValue + "] in " + formatTime(timeTotal));
     }
     return exitValue;
   }
@@ -223,20 +256,25 @@ public abstract class Driver extends Configured implements Tool {
       if (LOG.isInfoEnabled()) {
         StringBuilder optionsAndParameters = new StringBuilder(256);
         for (int i = 0; i < options().length; i++) {
-          optionsAndParameters.append(" [-D").append(options()[i]).append("]");
+          switch (engine) {
+            case HADOOP:
+              optionsAndParameters.append(" [-D").append(options()[i]).append("]");
+              break;
+            case SPARK:
+              optionsAndParameters.append(" [--conf 'spark.driver.extraJavaOptions=-D").append(options()[i]).append("']");
+              optionsAndParameters.append(" [--conf 'spark.executor.extraJavaOptions=-D").append(options()[i]).append("']");
+              break;
+          }
         }
         for (int i = 0; i < parameters().length; i++) {
-          optionsAndParameters.append(options().length == 0 ? "" : " " + "<" + parameters()[i] + ">");
+          optionsAndParameters.append(parameters().length == 0 ? "" : " " + "<" + parameters()[i] + ">");
         }
         if (description() != null && !description().equals("")) {
           LOG.info("Description: " + description());
         }
-        LOG.info("Usage: hadoop " + this.getClass().getCanonicalName() + " [generic options]" + optionsAndParameters);
-        ByteArrayOutputStream byteArrayPrintStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(byteArrayPrintStream);
-        ToolRunner.printGenericCommandUsage(printStream);
-        LOG.info(byteArrayPrintStream.toString());
-        printStream.close();
+        LOG.info("Usage: " + (engine.equals(Engine.HADOOP) ? "hadoop" : "spark-submit") + " " +
+          this.getClass().getCanonicalName() + " [generic options]" + optionsAndParameters)
+        ;
       }
     }
     return returnValue;

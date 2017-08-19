@@ -8,9 +8,11 @@
 *#
 package ${package}
 
+import Driver.Name
 import com.cloudera.framework.common.Driver.Counter.{RECORDS_IN, RECORDS_OUT}
-import com.cloudera.framework.common.Driver.SUCCESS
+import com.cloudera.framework.common.Driver.{Engine, FAILURE_ARGUMENTS, SUCCESS}
 import com.cloudera.mytest.Driver.PathInput
+import com.cloudera.mytest.Driver.PathOutput
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkConf
@@ -26,7 +28,7 @@ object Driver {
 
   // Dataset paths
   val PathInput = "input"
-  var PathOutput = "output"
+  val PathOutput = "output"
 
 }
 
@@ -38,18 +40,20 @@ class Driver extends com.cloudera.framework.common.Driver {
   // Input DFS path
   var rootPath: Path = _
 
+  setEngine(Engine.SPARK)
+
   /**
     * Constructor to take configuration
     */
   def this(configuration: Configuration) {
     this
-    super.setConf(configuration)
+    setConf(configuration)
   }
 
   /**
     * Define input path parameter
     */
-  override def parameters(): Array[String] = {
+  override def parameters() = {
     Array("root-path")
   }
 
@@ -57,7 +61,7 @@ class Driver extends com.cloudera.framework.common.Driver {
     * Validate input path parameter
     */
   override def prepare(arguments: String*): Int = {
-    if (arguments == null || arguments.length != parameters().length) throw new Exception("Invalid number of arguments")
+    if (arguments == null || arguments.length != parameters().length) return FAILURE_ARGUMENTS
     rootPath = FileSystem.newInstance(getConf).makeQualified(new Path(arguments(0)))
     SUCCESS
   }
@@ -68,25 +72,25 @@ class Driver extends com.cloudera.framework.common.Driver {
   override def execute(): Int = {
 
     // Create the Spark session
-    val sparkSession = SparkSession.builder.config(new SparkConf).appName(Driver.Name).getOrCreate()
+    val spark = SparkSession.builder.config(new SparkConf).appName(Name).getOrCreate()
 
-    // Read the input CSV into a dataframe and set the record count
-    val inputDataFrame = sparkSession.read.format("com.databricks.spark.csv").option("header", "true")
+    // Read the input CSV into a DataFrame and set the input record count
+    val input = spark.read.format("com.databricks.spark.csv").option("header", "true")
       .load(new Path(rootPath, PathInput).toString)
-    incrementCounter(RECORDS_IN, inputDataFrame.count())
+    incrementCounter(RECORDS_IN, input.count())
 
-    // Transform the input dataframe and write to partitioned files
-    inputDataFrame.drop("index").write.format("com.databricks.spark.csv").option("header", "true")
-      .partitionBy("sex").save(new Path(rootPath, Driver.PathOutput).toString)
+    // Transform the input DataFrame and set the output record count
+    val output = input.drop("index").filter("opt_in = 'true' or opt_in = 'false'")
+    incrementCounter(RECORDS_OUT, output.count())
 
-    // Read the output dataframe and set the record count
-    val outputDataFrame = sparkSession.read.format("com.databricks.spark.csv").option("header", "true")
-      .load(new Path(rootPath, PathInput).toString)
-    incrementCounter(RECORDS_OUT, outputDataFrame.count())
+    // Write the output DataFrame to partitioned CSV files
+    output.write.format("com.databricks.spark.csv").option("header", "true")
+      .partitionBy("opt_in").save(new Path(rootPath, Driver.PathOutput).toString)
 
     // Close the session and return success
-    sparkSession.close()
+    spark.close()
     SUCCESS
+
   }
 
   /**

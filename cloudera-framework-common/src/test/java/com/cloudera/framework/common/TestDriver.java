@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import com.cloudera.framework.common.Driver.Engine;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
 import org.apache.hadoop.conf.Configuration;
@@ -20,6 +21,18 @@ public class TestDriver {
 
   @ClassRule
   public static final DfsServer dfsServer = DfsServer.getInstance();
+
+  @Test
+  public void testRunnerFailure() throws Exception {
+    Driver driver = new CountFilesDriver(dfsServer.getConf());
+    assertEquals(Driver.FAILURE_ARGUMENTS, driver.runner());
+  }
+
+  @Test
+  public void testRunnerFailureSpark() throws Exception {
+    Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.SPARK);
+    assertEquals(Driver.FAILURE_ARGUMENTS, driver.runner());
+  }
 
   @Test
   public void testRunnerSuccessParameters() throws Exception {
@@ -41,8 +54,21 @@ public class TestDriver {
   }
 
   @Test
+  public void testRunnerFailureParametersSpark() throws Exception {
+    Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.SPARK);
+    assertEquals(Driver.FAILURE_RUNTIME, driver.runner("true"));
+  }
+
+  @Test
   public void testRunnerFailureOptions() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf());
+    driver.getConf().setBoolean("i.should.fail.option", true);
+    assertEquals(Driver.FAILURE_RUNTIME, driver.runner("false"));
+  }
+
+  @Test
+  public void testRunnerFailureOptionsSpark() throws Exception {
+    Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.SPARK);
     driver.getConf().setBoolean("i.should.fail.option", true);
     assertEquals(Driver.FAILURE_RUNTIME, driver.runner("false"));
   }
@@ -54,6 +80,10 @@ public class TestDriver {
 
     public CountFilesDriver(Configuration configuration) {
       super(configuration);
+    }
+
+    public CountFilesDriver(Configuration configuration, Engine engine) {
+      super(configuration, engine);
     }
 
     @Override
@@ -74,7 +104,7 @@ public class TestDriver {
     @Override
     public int prepare(String... arguments) throws Exception {
       if (arguments == null || arguments.length != 1) {
-        throw new Exception("Invalid number of arguments");
+        return FAILURE_ARGUMENTS;
       }
       iShouldFailParameter = arguments[0];
       iShouldFailOption = getConf().getBoolean("i.should.fail.option", false);

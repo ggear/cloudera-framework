@@ -2,7 +2,8 @@ package com.cloudera.framework.example.three
 
 import java.util.Properties
 
-import com.cloudera.framework.common.Driver.SUCCESS
+import com.cloudera.framework.common.Driver.Engine.SPARK
+import com.cloudera.framework.common.Driver.{Engine, SUCCESS, FAILURE_ARGUMENTS}
 import com.cloudera.framework.example.three.Driver.{ModelDir, TestDir, TrainDir}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
@@ -21,19 +22,23 @@ object Driver {
 
 class Driver extends com.cloudera.framework.common.Driver {
 
+  val Log = LoggerFactory.getLogger(classOf[Driver])
+
   val properties = new Properties()
-  private val Log = LoggerFactory.getLogger(classOf[Driver])
+
   var testPath: Path = _
   var trainPath: Path = _
   var modelPath: Path = _
 
+  setEngine(Engine.SPARK)
+
   def this(configuration: Configuration) {
     this
-    super.setConf(configuration)
+    setConf(configuration)
   }
 
   override def prepare(arguments: String*): Int = {
-    if (arguments == null || arguments.length != parameters().length) throw new Exception("Invalid number of arguments")
+    if (arguments == null || arguments.length != parameters().length) return FAILURE_ARGUMENTS
     properties.load(Source.fromURL(getClass.getResource("/application.properties")).bufferedReader())
     val hdfs = FileSystem.newInstance(getConf)
     val workingPath = hdfs.makeQualified(new Path(arguments(0)))
@@ -45,7 +50,7 @@ class Driver extends com.cloudera.framework.common.Driver {
     SUCCESS
   }
 
-  override def parameters(): Array[String] = {
+  override def parameters() = {
     Array("working-path")
   }
 

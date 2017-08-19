@@ -20,15 +20,15 @@
     <dependencies>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
-            <artifactId>cloudera-framework-parent</artifactId>
+            <artifactId>cloudera-framework-library</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
-            <artifactId>cloudera-framework-library</artifactId>
+            <artifactId>cloudera-framework-assembly</artifactId>
             <version>${project.version}</version>
-            <type>pom</type>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
@@ -42,9 +42,9 @@
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
-            <artifactId>cloudera-framework-assembly</artifactId>
+            <artifactId>cloudera-framework-parent</artifactId>
             <version>${project.version}</version>
-            <scope>runtime</scope>
+            <type>pom</type>
         </dependency>
     </dependencies>
 

@@ -42,12 +42,6 @@
         </dependency>
         <dependency>
             <groupId>com.cloudera.framework</groupId>
-            <artifactId>cloudera-framework-assembly</artifactId>
-            <version>${project.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.cloudera.framework</groupId>
             <artifactId>cloudera-framework-common</artifactId>
             <version>${project.version}</version>
         </dependency>

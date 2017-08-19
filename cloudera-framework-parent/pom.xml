@@ -26,6 +26,17 @@
         <module>cloudera-framework-example</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.cloudera.framework</groupId>
+            <artifactId>cloudera-framework-assembly</artifactId>
+            <version>${cloudera-framework.version}</version>
+            <type>tar.gz</type>
+            <classifier>assembly</classifier>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -43,6 +54,26 @@
 
                                 project.properties["parcel.name"] = StringUtils.upperCase(project.artifactId).replaceAll('-', '_') + "-" + project.version
                             </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-remote-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>assemblies</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <resourceBundles>
+                                <resourceBundle>com.cloudera.framework:cloudera-framework-assembly:${cloudera-framework.version}</resourceBundle>
+                            </resourceBundles>
+                            <attached>false</attached>
+                            <outputDirectory>${project.build.directory}/assembly-conf</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -227,7 +258,7 @@
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>src/main/assembly/assembly.xml</descriptor>
+                                <descriptor>${project.build.directory}/assembly-conf/assembly-client.xml</descriptor>
                             </descriptors>
                             <tarLongFileMode>gnu</tarLongFileMode>
                             <skipAssembly>${parcel.build.skip}</skipAssembly>

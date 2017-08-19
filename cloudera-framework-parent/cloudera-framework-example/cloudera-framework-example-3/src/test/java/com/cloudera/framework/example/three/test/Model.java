@@ -1,6 +1,7 @@
 package com.cloudera.framework.example.three.test;
 
 
+import static com.cloudera.framework.common.Driver.FAILURE_ARGUMENTS;
 import static com.cloudera.framework.common.Driver.SUCCESS;
 import static com.cloudera.framework.example.three.Driver.ModelDir;
 import static com.cloudera.framework.example.three.Driver.ModelFile;
@@ -61,6 +62,14 @@ public class Model implements TestConstants {
     .dataSetSubsets(new String[][]{{DATASET_TRAIN}, {DATASET_TEST}}) //
     .dataSetLabels(new String[][][]{{{null},}, {{null},}}) //
     .dataSetDestinationDirs(DATASET_DIR + "/" + TrainDir(), DATASET_DIR + "/" + TestDir());
+
+  /**
+   * Test failure when incorrect arguments are passed
+   */
+  @Test
+  public void testFailure() {
+    assertEquals(FAILURE_ARGUMENTS, new com.cloudera.framework.example.three.Driver().runner());
+  }
 
   /**
    * Test model library with no data

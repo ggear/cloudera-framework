@@ -1,0 +1,4 @@
+index,date,lattitude,longitude,opt_in,sex,email
+1,19/07/1981,-30.60785,-70.27128,NOT_A_BOOLEAN,Male,avbah@wipun.io
+2,15/03/2043,-7.41822,86.01454
+AN_INVALID_RECORD

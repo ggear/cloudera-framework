@@ -13,6 +13,7 @@ import ${package}.Driver;
 import static com.cloudera.framework.common.Driver.Counter.FILES_OUT;
 import static com.cloudera.framework.common.Driver.Counter.RECORDS_IN;
 import static com.cloudera.framework.common.Driver.Counter.RECORDS_OUT;
+import static com.cloudera.framework.common.Driver.FAILURE_ARGUMENTS;
 import static com.cloudera.framework.common.Driver.SUCCESS;
 import static com.cloudera.framework.testing.Assert.assertCounterEquals;
 import static com.cloudera.mytest.Driver.Name;
@@ -20,70 +21,92 @@ import static com.cloudera.mytest.Driver.PathInput;
 import static com.cloudera.mytest.Driver.PathOutput;
 import static org.junit.Assert.assertEquals;
 
-import com.cloudera.framework.common.Driver.Counter;
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.SparkServer;
-import com.cloudera.mytest.Driver;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.zohhak.api.Coercion;
 import com.googlecode.zohhak.api.TestWith;
 import org.junit.ClassRule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * Note that the {@link TestRunner} is required to run the unit tests, attempting to instantiate any
- * {@link com.cloudera.framework.testing.server.CdhServer CdhServers} without it will result in a runtime error
+ * The test class, {@link org.junit.runners.Suite Suite} classes are also supported
  */
-@RunWith(TestRunner.class)
+@RunWith(TestRunner.class) // This is required to instantiate any CdhServers, a runtime exception will result otherwise
 public class DriverTest implements TestConstants {
 
-  // Instantiate a class lifecycle bound DFS environment
+  @ClassRule // Instantiate a class lifecycle bound DFS environment
   // Note that the DfsServer.Runtime.LOCAL_FS profile is selected by default, DfsServer.Runtime.CLUSTER_DFS is also available
-  @ClassRule
-  public static final DfsServer dfsServer = DfsServer.getInstance();
+  public static final DfsServer dfs = DfsServer.getInstance();
 
-  // Instantiate a class lifecycle bound Spark environment
-  // Note that if a DfsServer was not specififed, one would be instantiated implicitly as part of the SparkServer dependencies
-  @ClassRule
-  public static final SparkServer sparkServer = SparkServer.getInstance();
+  @ClassRule // Instantiate a class lifecycle bound Spark environment
+  // Note that if a DfsServer was not specified, one would be instantiated implicitly as part of the SparkServer dependencies
+  public static final SparkServer spark = SparkServer.getInstance();
 
-  // Dataset directories
-  private static final String DFS_DATASET = "/tmp/" + Name();
-  private static final String DFS_DATASET_INPUT = DFS_DATASET + "/" + PathInput();
-  private static final String DFS_DATASET_OUTPUT = DFS_DATASET + "/" + PathOutput();
+  /**
+   * Test the driver without required argumnets
+   */
+  @Test
+  public void testFailure() throws Exception {
+    assertEquals(FAILURE_ARGUMENTS, new Driver().runner());
+    assertEquals(0, dfs.listFilesDfs(DATASET_DIR_OUTPUT).length);
+  }
 
-  // The test meta data, picking up all datasets, subsets, labels and specifying expected counter asserts
-  public final TestMetaData testMetaDataAll = TestMetaData.getInstance()
-    .dataSetSourceDirs(REL_DIR_DATASET)
-    .dataSetDestinationDirs(DFS_DATASET_INPUT)
+  // Test meta data, specifying all datasets, subsets, labels and expected counter asserts
+  public final TestMetaData testMetaDataAll = TestMetaData.getInstance().dataSetSourceDirs(REL_DIR_DATASET)
+    .dataSetDestinationDirs(DATASET_DIR_INPUT)
     .asserts(ImmutableMap.of(Driver.class.getName(), ImmutableMap.of(
+      FILES_OUT, 3,
+      RECORDS_IN, 103L,
+      RECORDS_OUT, 100L
+    )));
+
+  // Test meta data, specifying the CSV, pistine dataset and expected counter asserts
+  public final TestMetaData testMetaDataPristine = TestMetaData.getInstance().dataSetSourceDirs(REL_DIR_DATASET)
+    .dataSetNames(Name()).dataSetSubsets(new String[][]{{"csv"}}).dataSetLabels(new String[][][]{{{"pristine"}}})
+    .dataSetDestinationDirs(DATASET_DIR_INPUT).asserts(ImmutableMap.of(Driver.class.getName(), ImmutableMap.of(
       FILES_OUT, 3,
       RECORDS_IN, 100L,
       RECORDS_OUT, 100L
     )));
 
+  // Test meta data, specifying the CSV, corrupt dataset and expected counter asserts
+  public final TestMetaData testMetaDataCorrupt = TestMetaData.getInstance().dataSetSourceDirs(REL_DIR_DATASET)
+    .dataSetNames(Name()).dataSetSubsets(new String[][]{{"csv"}}).dataSetLabels(new String[][][]{{{"corrupt"}}})
+    .dataSetDestinationDirs(DATASET_DIR_INPUT).asserts(ImmutableMap.of(Driver.class.getName(), ImmutableMap.of(
+      FILES_OUT, 1,
+      RECORDS_IN, 3L,
+      RECORDS_OUT, 0L
+    )));
+
   /**
-   * Test the driver against all the bundled test datasets
+   * Test the driver with {@link #testMetaDataAll}, {@link #testMetaDataPristine} and {@link #testMetaDataCorrupt}
    */
-  @TestWith({"testMetaDataAll"})
-  public void test(TestMetaData testMetaData) throws Exception {
+  @TestWith({"testMetaDataAll", "testMetaDataPristine", "testMetaDataCorrupt"})
+  public void testSuccess(TestMetaData testMetaData) throws Exception {
 
     // Construct the driver
-    Driver driver = new Driver(dfsServer.getConf());
+    Driver driver = new Driver(dfs.getConf());
 
     // Execute the driver, asserting a successful return
-    assertEquals(SUCCESS, driver.runner(dfsServer.getPath(DFS_DATASET).toString()));
+    assertEquals(SUCCESS, driver.runner(dfs.getPath(DATASET_DIR).toString()));
 
     // Assert the expected counters are collated in the driver
     assertCounterEquals(testMetaData, driver.getCounters());
 
     // Assert the expected partitions were created within HDFS
-    assertCounterEquals(testMetaData, Driver.class.getName(), FILES_OUT, dfsServer.listFilesDfs(DFS_DATASET_OUTPUT).length);
+    assertCounterEquals(testMetaData, Driver.class.getName(), FILES_OUT, dfs.listFilesDfs(DATASET_DIR_OUTPUT).length);
 
   }
+
+  // Dataset directories
+  private static final String DATASET_DIR = "/tmp/" + Name();
+  private static final String DATASET_DIR_INPUT = DATASET_DIR + "/" + PathInput();
+  private static final String DATASET_DIR_OUTPUT = DATASET_DIR + "/" + PathOutput();
 
   /**
    * Required by the test harness to reflect from a class field name to a {@link TestMetaData} instance
