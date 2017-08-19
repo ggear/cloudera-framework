@@ -143,10 +143,11 @@ new cloudera-framework clients as so (assuming Eclipse as the IDE):
 # Change the following variables to appropriate values for the target environment
 export CF_VERSION=1.5.5
 export CDH_VERSION=5.12.0
+export CF_PROFILE=workload
 mvn archetype:generate -B \
   -DarchetypeRepository=http://52.63.86.162/artifactory/cloudera-framework-releases \
-  -DarchetypeGroupId=com.cloudera.framework \
-  -DarchetypeArtifactId=cloudera-framework-archetype \
+  -DarchetypeGroupId=com.cloudera.framework.archetype \
+  -DarchetypeArtifactId=cloudera-framework-archetype-$CF_PROFILE \
   -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
   -DgroupId=com.cloudera.mytest \
   -DartifactId=cloudera-mytest \
