@@ -12,6 +12,7 @@
             <directory>src/main/assembly/root</directory>
             <excludes>
                 <exclude>**/*.sh</exclude>
+                <exclude>**/*.py</exclude>
                 <exclude>**/*.gitignore</exclude>
             </excludes>
             <fileMode>0644</fileMode>
@@ -91,6 +92,23 @@
                 <includes>
                     <include>**/*.sh</include>
                     <include>**/*.py</include>
+                </includes>
+                <excludes>
+                    <exclude>meta/**</exclude>
+                </excludes>
+            </unpackOptions>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory />
+            <unpack>true</unpack>
+            <includes>
+                <include>com.cloudera.framework:cloudera-framework-assembly:tar.gz:assembly</include>
+            </includes>
+            <fileMode>0600</fileMode>
+            <directoryMode>0755</directoryMode>
+            <unpackOptions>
+                <includes>
+                    <include>**/*.env</include>
                     <include>**/*.ddl</include>
                     <include>**/*.json</include>
                 </includes>

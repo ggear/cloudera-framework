@@ -13,7 +13,12 @@ and includes the following:
 # Requirements
 
 This project shares requirements with those specified in the
-[cloudera-framework](https://github.com/ggear/cloudera-framework#requirements).
+[cloudera-framework](https://github.com/ggear/cloudera-framework#requirements),
+which can be bootstrapped as so:
+
+```bash
+source <(curl -s https://raw.githubusercontent.com/ggear/cloudera-framework/master/bootstrap.sh)
+```
 
 # Install
 

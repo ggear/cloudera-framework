@@ -46,7 +46,7 @@ LOG = logging.getLogger(__name__)
 POLL_SEC = 2
 TIMEOUT_SEC = 180
 REGEX_VERSION = '[1-9][0-9]\.[1-9][0-9]\.[1-9][0-9][0-9][0-9]'
-MAN_API_VERSION = 13  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
+MAN_API_VERSION = 16  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
 
 
 def do_parcel_op(cluster, parcel_name, parcel_version, parcel_op_label, stage_enter, stage_exit, parcel_op):

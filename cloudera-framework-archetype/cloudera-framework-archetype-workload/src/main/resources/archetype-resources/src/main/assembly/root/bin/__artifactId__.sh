@@ -7,7 +7,7 @@
 
 export ROOT_DIR=$( cd "$( dirname "$BASH_SOURCE" )" && pwd )/..
 
-source $ROOT_DIR/bin/*.env
+for env in $ROOT_DIR/cfg/*.env; do if [ -f "$env" ]; then . "$env"; fi; done
 
 set -x -e
 

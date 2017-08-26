@@ -8,16 +8,10 @@ Options:
                                          Defaults to 'localhost'
 --port=<cm-server-port>                  Override the default Cloudera Manager Server port
                                          Defaults to '7180'
---version=<cm-server-api-version>        Define the Cloudera Manager Server API version
-                                         Defaults to latest as defined in the cm_api python module
 --user=<cm-server-user>                  The Cloudera Manager user
                                          Defaults to 'admin'
 --user=<cm-server-user-password>         The Cloudera Manager user password
                                          Defaults to 'admin'
---cluster_node_user=<cluster-node-user>  The local user able to connect to each cluster node
-                                         Defaults to 'root'
---cluster_node_key=<cluster-node-key>    The key path which enables connection to each cluster node
-                                         Defaults to '/root/.ssh/launchpad'
 --cluster_name=<cluster-name>            Name the cluster to reflect on
                                          Defaults to the zeroth cluster defined                                   
 --service_role_name=<service-role-type>  Filter to apply to service and role name
@@ -38,11 +32,13 @@ from cm_api.api_client import ApiResource
 
 LOG = logging.getLogger(__name__)
 
+MAN_API_VERSION = 16  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
+
 
 def do_print_header():
     print '###############################################################################'
     print '# '
-    print '# Cluster connectivity parameters'
+    print '# Cluster Environment'
     print '#'
     print '###############################################################################'
     print ''
@@ -87,8 +83,8 @@ def do_print_line_item(api, service, service_role_name_filter, random_index, ser
     return False
 
 
-def do_call(host, port, version, user, password, cluster_name, cluster_node_user, cluster_node_key, service_role_name, random_index):
-    api = ApiResource(host, port, user, password, False, version);
+def do_call(host, port, user, password, cluster_name, service_role_name, random_index):
+    api = ApiResource(host, port, user, password, False, MAN_API_VERSION);
     for cluster in api.get_all_clusters():
         if cluster_name is None:
             break
@@ -98,10 +94,6 @@ def do_call(host, port, version, user, password, cluster_name, cluster_node_user
         print >> sys.stderr, "Cloud not find cluster: " + cluster_name
         return -2;
     do_print_header()
-    do_print_line_item_manual('CLUSTER', 'NODE', ['USER', 'KEY'], [cluster_node_user, cluster_node_key])
-    do_print_line_item(api, None, service_role_name, random_index, 'MANAGER', 'SERVER', None, [host], [str(port)])
-    do_print_line_item(api, api.get_cloudera_manager().get_service(), service_role_name, random_index, 'MANAGER', 'NAVIGATORMETASERVER',
-                       'navigator_server_port', [], [])
     for service in cluster.get_all_services():
         do_print_line_item(api, service, service_role_name, random_index, 'HDFS', 'NAMENODE', 'namenode_port', [], [])
         do_print_line_item(api, service, service_role_name, random_index, 'HUE', 'HUE_SERVER', 'hue_http_port', [], [])
@@ -127,18 +119,14 @@ def main(argv):
     setup_logging(logging.INFO)
     host = 'localhost'
     port = 7180
-    version = 12  # Do not use api_client.API_CURRENT_VERSION, it is often +1 current production version
     user = 'admin'
     password = 'admin'
     cluster_name = None
-    cluster_node_user = 'ec2-user'
-    cluster_node_key = '/home/graham/.ssh/id_rsa'
     service_role_name = None
     random_index = False
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h",
-                                   ["help", "host=", "port=", "version=", "user=", "password=", "random_index=", "cluster_name=",
-                                    "cluster_node_user=", "cluster_node_key=", "service_role_name="])
+                                   ["help", "host=", "port=", "user=", "password=", "random_index=", "cluster_name=", "service_role_name="])
     except getopt.GetoptError, err:
         print >> sys.stderr, err
         usage()
@@ -151,8 +139,6 @@ def main(argv):
             host = value;
         elif option in ("--port"):
             port = value;
-        elif option in ("--version"):
-            version = value;
         elif option in ("--user"):
             user = value;
         elif option in ("--password"):
@@ -161,17 +147,13 @@ def main(argv):
             random_index = value;
         elif option in ("--cluster_name"):
             cluster_name = value;
-        elif option in ("--cluster_node_user"):
-            cluster_node_user = value;
-        elif option in ("--cluster_node_key"):
-            cluster_node_key = value;
         elif option in ("--service_role_name"):
             service_role_name = value;
         else:
             print >> sys.stderr, "Unknown option or flag: " + option
             usage()
             return -1
-    do_call(host, port, version, user, password, cluster_name, cluster_node_user, cluster_node_key, service_role_name, random_index)
+    do_call(host, port, user, password, cluster_name, service_role_name, random_index)
     return 0
 
 
