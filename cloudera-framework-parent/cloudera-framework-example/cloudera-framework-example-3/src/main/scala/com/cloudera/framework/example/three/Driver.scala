@@ -2,7 +2,6 @@ package com.cloudera.framework.example.three
 
 import java.util.Properties
 
-import com.cloudera.framework.common.Driver.Engine.SPARK
 import com.cloudera.framework.common.Driver.{Engine, SUCCESS, FAILURE_ARGUMENTS}
 import com.cloudera.framework.example.three.Driver.{ModelDir, TestDir, TrainDir}
 import org.apache.hadoop.conf.Configuration
@@ -20,7 +19,7 @@ object Driver {
   val ModelFile = "occupancy.pmml"
 }
 
-class Driver extends com.cloudera.framework.common.Driver {
+class Driver(configuration: Configuration) extends com.cloudera.framework.common.DriverSpark(configuration) {
 
   val Log = LoggerFactory.getLogger(classOf[Driver])
 
@@ -29,13 +28,6 @@ class Driver extends com.cloudera.framework.common.Driver {
   var testPath: Path = _
   var trainPath: Path = _
   var modelPath: Path = _
-
-  setEngine(Engine.SPARK)
-
-  def this(configuration: Configuration) {
-    this
-    setConf(configuration)
-  }
 
   override def prepare(arguments: String*): Int = {
     if (arguments == null || arguments.length != parameters().length) return FAILURE_ARGUMENTS
@@ -61,7 +53,7 @@ class Driver extends com.cloudera.framework.common.Driver {
   }
 
   def main(arguments: Array[String]): Unit = {
-    System.exit(new Driver().runner(arguments: _*))
+    System.exit(new Driver(null).runner(arguments: _*))
   }
 
 }

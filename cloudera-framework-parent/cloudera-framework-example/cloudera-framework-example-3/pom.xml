@@ -15,7 +15,6 @@
     </parent>
 
     <properties>
-        <parcel.build.skip>true</parcel.build.skip>
         <templater.build.skip>false</templater.build.skip>
     </properties>
 

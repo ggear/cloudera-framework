@@ -47,20 +47,8 @@ public abstract class Driver extends Configured implements Tool {
 
   private Engine engine = Engine.HADOOP;
 
-  public Driver() {
-    super();
-  }
-
-  public Driver(Configuration conf) {
-    super(conf);
-  }
-
   public Driver(Configuration conf, Engine engine) {
     super(conf);
-    this.engine = engine;
-  }
-
-  public void setEngine(Engine engine) {
     this.engine = engine;
   }
 

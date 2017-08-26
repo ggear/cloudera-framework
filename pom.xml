@@ -100,10 +100,6 @@
 
     <properties>
 
-        <maven.test.skip>false</maven.test.skip>
-        <maven.system-test.skip>false</maven.system-test.skip>
-        <maven.package.skip>false</maven.package.skip>
-
         <cdh-hadoop.version>2.6.0-cdh5.12.0</cdh-hadoop.version>
         <cdh-spark.version>1.6.0-cdh5.12.0</cdh-spark.version>
         <cdh-spark2.version>2.2.0.cloudera1</cdh-spark2.version>
@@ -144,13 +140,19 @@
         <cloudera-framework-parcel.repo>http://52.63.86.162/tmph3l7m2vv103/sbin</cloudera-framework-parcel.repo>
         <cloudera-framework-module.repo>http://52.63.86.162:80/artifactory/cloudera-framework-releases</cloudera-framework-module.repo>
 
-        <java.version>1.8</java.version>
+        <scala_2.10-base.version>2.10</scala_2.10-base.version>
+        <scala_2.10.version>scala_2.10-base.version.5</scala_2.10.version>
+        <scala_2.11-base.version>2.11</scala_2.11-base.version>
+        <scala_2.11.version>${scala_2.11-base.version}.8</scala_2.11.version>
 
-        <scala_2.10.version>2.10.5</scala_2.10.version>
-        <scala_2.11.version>2.11.8</scala_2.11.version>
+        <java.version>1.8</java.version>
 
         <project.runtime.heap.max>1024</project.runtime.heap.max>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven.test.skip>false</maven.test.skip>
+        <maven.system-test.skip>false</maven.system-test.skip>
+        <maven.package.skip>false</maven.package.skip>
 
     </properties>
 
@@ -162,17 +164,6 @@
                 <maven.system-test.skip>true</maven.system-test.skip>
                 <maven.package.skip>true</maven.package.skip>
             </properties>
-        </profile>
-        <profile>
-            <id>BLD</id>
-            <properties>
-                <maven.test.skip>false</maven.test.skip>
-                <maven.system-test.skip>false</maven.system-test.skip>
-                <maven.package.skip>true</maven.package.skip>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
         </profile>
         <profile>
             <id>PKG</id>
@@ -352,53 +343,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>scala_2.10-base.version</id>
-                        <goals>
-                            <goal>regex-property</goal>
-                        </goals>
-                        <configuration>
-                            <name>scala_2.10-base.version</name>
-                            <value>${scala_2.10.version}</value>
-                            <regex>^([0-9]+\.[0-9]+).*</regex>
-                            <replacement>$1</replacement>
-                            <failIfNoMatch>true</failIfNoMatch>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>scala_2.11-base.version</id>
-                        <goals>
-                            <goal>regex-property</goal>
-                        </goals>
-                        <configuration>
-                            <name>scala_2.11-base.version</name>
-                            <value>${scala_2.11.version}</value>
-                            <regex>^([0-9]+\.[0-9]+).*</regex>
-                            <replacement>$1</replacement>
-                            <failIfNoMatch>true</failIfNoMatch>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>cdh-kudu-base-version</id>
-                        <goals>
-                            <goal>regex-property</goal>
-                        </goals>
-                        <configuration>
-                            <name>kudu.version</name>
-                            <value>${cdh-kudu-patch.version}</value>
-                            <regex>^([0-9]+)\.([0-9]+)\.([0-9]+).*</regex>
-                            <replacement>$1.$2.$3</replacement>
-                            <failIfNoMatch>true</failIfNoMatch>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 
 </project>

@@ -72,6 +72,9 @@
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
             <scope>runtime</scope>
+            <includes>
+                <include>::jar</include>
+            </includes>
             <excludes>
                 <exclude>${groupId}:${artifactId}</exclude>
             </excludes>

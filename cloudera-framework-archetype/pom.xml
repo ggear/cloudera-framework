@@ -17,4 +17,8 @@
         <module>cloudera-framework-archetype-workload</module>
     </modules>
 
+    <properties>
+        <maven.test.skip>false</maven.test.skip>
+    </properties>
+
 </project>

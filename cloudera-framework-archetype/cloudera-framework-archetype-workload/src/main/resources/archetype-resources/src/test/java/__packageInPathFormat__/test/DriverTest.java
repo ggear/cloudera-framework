@@ -1,7 +1,7 @@
 /**
  * This is a unit test example, testing the bundled {@link ${package}.Driver}
  * <p>
- * More detailed examples are available here:
+ * More extensive examples are bundled with the cloudera-framework source here:
  * https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example
  */
 #* // @formatter:off
@@ -52,7 +52,7 @@ public class DriverTest implements TestConstants {
    */
   @Test
   public void testFailure() throws Exception {
-    assertEquals(FAILURE_ARGUMENTS, new Driver().runner());
+    assertEquals(FAILURE_ARGUMENTS, new Driver(null).runner());
     assertEquals(0, dfs.listFilesDfs(DATASET_DIR_OUTPUT).length);
   }
 

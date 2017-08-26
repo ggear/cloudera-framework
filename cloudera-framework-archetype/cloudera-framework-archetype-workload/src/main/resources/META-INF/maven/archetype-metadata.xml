@@ -5,7 +5,7 @@
 
     <fileSets>
         <fileSet filtered="true" encoding="UTF-8">
-            <directory></directory>
+            <directory />
             <includes>
                 <include>README.md</include>
             </includes>

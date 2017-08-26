@@ -12,6 +12,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.RemoteIterator;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,9 +23,14 @@ public class TestDriver {
   @ClassRule
   public static final DfsServer dfsServer = DfsServer.getInstance();
 
+  @Before
+  public void cleanConf() {
+    dfsServer.getConf().unset("i.should.fail.option");
+  }
+
   @Test
-  public void testRunnerFailure() throws Exception {
-    Driver driver = new CountFilesDriver(dfsServer.getConf());
+  public void testRunnerFailureHadoop() throws Exception {
+    Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.HADOOP);
     assertEquals(Driver.FAILURE_ARGUMENTS, driver.runner());
   }
 
@@ -35,21 +41,21 @@ public class TestDriver {
   }
 
   @Test
-  public void testRunnerSuccessParameters() throws Exception {
-    Driver driver = new CountFilesDriver(dfsServer.getConf());
+  public void testRunnerSuccessParametersHadoop() throws Exception {
+    Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.HADOOP);
     assertEquals(Driver.SUCCESS, driver.runner("false"));
   }
 
   @Test
-  public void testRunnerSuccessOptions() throws Exception {
-    Driver driver = new CountFilesDriver(dfsServer.getConf());
+  public void testRunnerSuccessOptionsHadoop() throws Exception {
+    Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.HADOOP);
     driver.getConf().setBoolean("i.should.fail.option", false);
     assertEquals(Driver.SUCCESS, driver.runner("false"));
   }
 
   @Test
-  public void testRunnerFailureParameters() throws Exception {
-    Driver driver = new CountFilesDriver(dfsServer.getConf());
+  public void testRunnerFailureParametersHadoop() throws Exception {
+    Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.HADOOP);
     assertEquals(Driver.FAILURE_RUNTIME, driver.runner("true"));
   }
 
@@ -60,8 +66,8 @@ public class TestDriver {
   }
 
   @Test
-  public void testRunnerFailureOptions() throws Exception {
-    Driver driver = new CountFilesDriver(dfsServer.getConf());
+  public void testRunnerFailureOptionsHadoop() throws Exception {
+    Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.HADOOP);
     driver.getConf().setBoolean("i.should.fail.option", true);
     assertEquals(Driver.FAILURE_RUNTIME, driver.runner("false"));
   }
@@ -77,10 +83,6 @@ public class TestDriver {
 
     private boolean iShouldFailOption;
     private String iShouldFailParameter;
-
-    public CountFilesDriver(Configuration configuration) {
-      super(configuration);
-    }
 
     public CountFilesDriver(Configuration configuration, Engine engine) {
       super(configuration, engine);

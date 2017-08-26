@@ -1,7 +1,7 @@
 /**
   * This is a trivial example [[com.cloudera.framework.common.Driver]], please replace with your implementation.
   *
-  * More detailed examples are available here:
+  * More extensive examples are bundled with the cloudera-framework source here:
   * https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example
   */
 #* // @formatter:off
@@ -35,20 +35,10 @@ object Driver {
 /**
   * Driver implementation
   */
-class Driver extends com.cloudera.framework.common.Driver {
+class Driver(configuration: Configuration) extends com.cloudera.framework.common.DriverSpark(configuration) {
 
   // Input DFS path
   var rootPath: Path = _
-
-  setEngine(Engine.SPARK)
-
-  /**
-    * Constructor to take configuration
-    */
-  def this(configuration: Configuration) {
-    this
-    setConf(configuration)
-  }
 
   /**
     * Define input path parameter
@@ -97,7 +87,7 @@ class Driver extends com.cloudera.framework.common.Driver {
     * Main method to run the driver
     */
   def main(arguments: Array[String]): Unit = {
-    System.exit(new Driver().runner(arguments: _*))
+    System.exit(new Driver(null).runner(arguments: _*))
   }
 
 }

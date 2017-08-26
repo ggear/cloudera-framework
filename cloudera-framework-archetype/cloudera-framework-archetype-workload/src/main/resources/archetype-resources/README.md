@@ -1,6 +1,6 @@
 # ${artifactId}
 
-This project was created from the baseline shipped as part of the
+This project was created from the baseline shipped as part of a
 [cloudera-framework-archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype)
 and includes the following:
 
@@ -22,4 +22,22 @@ in the root directory:
 
 ```bash
 mvn clean install
+```
+
+There is also a convienience compile only profile:
+
+```bash
+mvn clean install -PCMP
+```
+
+and a package only profile:
+
+```bash
+mvn clean install -PPKG
+```
+
+Tests can be turned on/off via the standard surefire switches:
+
+```bash
+mvn clean install -DskipTests
 ```

@@ -14,7 +14,7 @@ if [ "$SHA1_LOCAL" != "$SHA1_REMOTE" ]; then
 	echo "---------------------------------------------------------------------------------------------------------------------------------"
 	echo "---------------------------------------------------------------------------------------------------------------------------------"
 	echo ""
-	echo "ERROR: Parcel checksum failed, local parcel different to that in the repo, parcel idempotency violated, using local parcel, but likely not the version intended"
+	echo "ERROR: Parcel checksum failed, local parcel different to that in the repo, parcel immutability violated, using local parcel, but likely not the version intended"
 	echo ""
 	echo "LOCAL FILE: $SHA1_LOCAL $PARCEL_LOCAL"
 	echo "LOCAL FILE: $SHA1_REMOTE $PARCEL_REMOTE"

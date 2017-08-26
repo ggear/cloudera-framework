@@ -123,7 +123,7 @@ core client bill-of-materials and test harness can be achieved as so:
 
 The cloudera-framework includes a set of 
 [examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example) 
-which exercise the entire framework:
+which exercise the framework:
 
 * [Example 1](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-1) 
   (Java, HSQL, Flume, MR, Hive/MR, Impala, HDFS)
@@ -138,12 +138,14 @@ which exercise the entire framework:
 
 In addition,
 [archetypes](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype)
-are available in various profiles, allowing one to stand up a simple, bare bones project for new cloudera-framework clients:
+are available in various profiles, allowing one to stand up a
+bare bones project to bootstrap new cloudera-framework client projects:
 
 * [Workload](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype/cloudera-framework-archetype-workload/src/main/resources/archetype-resources)
   (Scala, Java, Spark2)
 
-For example, a project could be created with the workload profile baseline via:
+For example, a project could be created with the workload profile baseline,
+including very simple example via:
 
 ```bash
 # Change the following variables to appropriate values for the target environment
@@ -157,7 +159,6 @@ mvn archetype:generate -B \
   -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
   -DgroupId=com.cloudera.mytest \
   -DartifactId=cloudera-mytest \
-  -Dversion=10.10.1000 \
   -Dpackage=com.cloudera.mytest
 ```
 

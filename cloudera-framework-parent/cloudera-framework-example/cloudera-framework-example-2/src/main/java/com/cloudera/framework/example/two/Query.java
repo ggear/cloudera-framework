@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.cloudera.framework.common.Driver;
+import com.cloudera.framework.common.DriverSpark;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -20,22 +21,18 @@ import org.apache.spark.sql.types.DataTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Query extends Driver {
+public class Query extends DriverSpark {
 
   private static final Logger LOG = LoggerFactory.getLogger(Query.class);
   protected Path inputPath;
   private JavaSparkContext sparkContext;
-
-  public Query() {
-    super();
-  }
 
   public Query(Configuration configuration) {
     super(configuration);
   }
 
   public static void main(String... arguments) {
-    System.exit(new Query().runner(arguments));
+    System.exit(new Query(null).runner(arguments));
   }
 
   @Override

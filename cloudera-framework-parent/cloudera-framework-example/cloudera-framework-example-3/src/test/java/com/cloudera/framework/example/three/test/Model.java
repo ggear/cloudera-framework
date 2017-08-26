@@ -68,7 +68,7 @@ public class Model implements TestConstants {
    */
   @Test
   public void testFailure() {
-    assertEquals(FAILURE_ARGUMENTS, new com.cloudera.framework.example.three.Driver().runner());
+    assertEquals(FAILURE_ARGUMENTS, new com.cloudera.framework.example.three.Driver(null).runner());
   }
 
   /**

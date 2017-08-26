@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Driver super class
  */
-public abstract class Driver extends com.cloudera.framework.common.Driver {
+public abstract class Driver extends com.cloudera.framework.common.DriverHadoop {
 
   private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
 
@@ -25,7 +25,7 @@ public abstract class Driver extends com.cloudera.framework.common.Driver {
   protected FileSystem hdfs;
 
   public Driver() {
-    super();
+    super(null);
   }
 
   public Driver(Configuration configuration) {
