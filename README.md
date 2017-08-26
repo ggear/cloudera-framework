@@ -23,8 +23,8 @@ providing full coverage against CDH:
 are included, codifying the standards, providing end to end data streaming, ingest, modeling, testing
 pipelines, with synthetic datasets to exercise the codebase.
 
-Finally, an [archetype](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) 
-is included to provide a bare bones starter client module.
+Finally, a set of [archetypes](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) 
+are included to provide bare bones starter client modules.
 
 # Requirements
 
