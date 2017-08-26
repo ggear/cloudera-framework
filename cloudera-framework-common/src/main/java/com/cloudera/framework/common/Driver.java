@@ -32,11 +32,17 @@ public abstract class Driver extends Configured implements Tool {
   public static final int SUCCESS = 0;
   public static final int FAILURE_ARGUMENTS = 10;
   public static final int FAILURE_RUNTIME = 20;
+
   public static final String CONF_SETTINGS = "driver-site.xml";
+
   private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
+
   private static final int FORMAT_TIME_FACTOR = 10;
-  private final Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
+
+  private Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
+
   private List<Object> results = null;
+
   private Engine engine = Engine.HADOOP;
 
   public Driver(Configuration conf, Engine engine) {

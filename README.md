@@ -68,15 +68,19 @@ storage (be it physical or para-virtualized) by used.
 
 # Install
 
-This project can be installed to a local repository, skipping tests, as per:
+This project can be compiled, packaged and installed to a local repository, skipping tests, as per:
 
 ```bash
-git clone git@github.com:ggear/cloudera-framework.git
-cd cloudera-framework
 mvn install -PPKG
 ```
 
-To run the tests:
+To simply compile the project:
+
+```bash
+mvn install -PCMP
+```
+
+To run the tests for both Scala 2.10 (default) and 2.11:
 
 ```bash
 mvn test
