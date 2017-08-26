@@ -63,7 +63,7 @@ As above, this code is known to not work out of the box on Windows hosts, only L
 are supported. If developing on Windows it is recommended to run a Linux VM and develop from within it.  
 
 In addition, it is known that running the code from remote storage (eg NFS) will not only perform poorly,
-but will likely result in timing errors during testing, so it is recommended that only direct attached
+but will likely result in IO race conditions during testing, so it is recommended that only direct attached
 storage (be it physical or para-virtualized) by used.
 
 # Install
@@ -121,8 +121,7 @@ core client bill-of-materials and test harness can be achieved as so:
 # Usage
 
 The cloudera-framework includes a set of 
-[examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example) 
-which exercise the framework:
+[examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example):
 
 * [Example 1](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-1) 
   (Java, HSQL, Flume, MR, Hive/MR, Impala, HDFS)
@@ -137,14 +136,13 @@ which exercise the framework:
 
 In addition,
 [archetypes](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype)
-are available in various profiles, allowing one to stand up a
-bare bones project to bootstrap new cloudera-framework client projects:
+are available in various profiles, allowing one to bootstrap a new cloudera-framework client module:
 
 * [Workload](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype/cloudera-framework-archetype-workload/src/main/resources/archetype-resources)
   (Scala, Java, Spark2)
 
 For example, a project could be created with the workload profile baseline,
-including very simple example via:
+including a very simple example via:
 
 ```bash
 # Change the following variables to appropriate values for the target environment
