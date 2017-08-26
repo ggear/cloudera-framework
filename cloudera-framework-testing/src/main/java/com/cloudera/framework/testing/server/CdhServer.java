@@ -51,7 +51,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
   private V runtime;
   private int semaphore;
   private Configuration conf;
-  private Boolean isValid;
 
   protected CdhServer(V runtime) {
     conf = new JobConf();
@@ -130,13 +129,6 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
    * Determine whether the runtime environment presented to this service is valid
    */
   public synchronized boolean isValid() {
-    return isValid == null ? isValid = testValidity() : isValid;
-  }
-
-  /**
-   * Determine whether the runtime environment presented to this service is valid
-   */
-  public synchronized boolean testValidity() {
     return true;
   }
 

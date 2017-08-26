@@ -155,45 +155,48 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
     if (!quiet) {
       log(LOG, "execute", true);
     }
-    HiveConf confSession = new HiveConf((HiveConf) getConf());
-    confSession.set(HiveConf.ConfVars.HIVEQUERYID.varname, QueryPlan.makeQueryId());
-    for (String key : configuration.keySet()) {
-      confSession.set(key, configuration.get(key));
-    }
-    statement = new StrSubstitutor(parameters, "${hivevar:", "}")
-      .replace(statement.trim())
-      .replaceAll("(?i)LOCATION '/", "LOCATION '" + DfsServer.getInstance().getPathUri("/"));
     List<String> results = new ArrayList<>();
-    CommandProcessor commandProcessor = CommandProcessorFactory.getForHiveCommand(
-      statement.split("\\s+"), confSession);
-    if (commandProcessor == null) {
-      ((Driver) (commandProcessor = new Driver(confSession))).setMaxRows(maxResults);
-    }
-    if (!quiet) {
-      log(LOG, "execute", "statement:\n" + statement, true);
-    }
-    String responseErrorMessage = null;
-    int responseCode = commandProcessor.run(statement).getResponseCode();
-    if (commandProcessor instanceof Driver) {
-      ((Driver) commandProcessor).getResults(results);
-      responseErrorMessage = ((Driver) commandProcessor).getErrorMsg();
-    }
-    if (!quiet) {
-      if (responseCode != 0 || responseErrorMessage != null) {
-        log(LOG, "execute",
-          "error code [" + responseCode + "]" + (responseErrorMessage != null ? " message [" + responseErrorMessage + " ]" : ""), true);
-      } else {
-        log(LOG, "execute", "results count [" + results.size() + (results.size() == maxResults ? " (MAX)" : "") + "]:\n"
-          + StringUtils.join(results.toArray(), "\n"), true);
+    try {
+      HiveConf confSession = new HiveConf((HiveConf) getConf());
+      confSession.set(HiveConf.ConfVars.HIVEQUERYID.varname, QueryPlan.makeQueryId());
+      for (String key : configuration.keySet()) {
+        confSession.set(key, configuration.get(key));
       }
-      log(LOG, "execute", "finished in [" + (System.currentTimeMillis() - time) + "] ms", true);
+      statement = new StrSubstitutor(parameters, "${hivevar:", "}")
+        .replace(statement.trim())
+        .replaceAll("(?i)LOCATION '/", "LOCATION '" + DfsServer.getInstance().getPathUri("/"));
+      CommandProcessor commandProcessor = CommandProcessorFactory.getForHiveCommand(
+        statement.split("\\s+"), confSession);
+      if (commandProcessor == null) {
+        ((Driver) (commandProcessor = new Driver(confSession))).setMaxRows(maxResults);
+      }
+      if (!quiet) {
+        log(LOG, "execute", "statement:\n" + statement, true);
+      }
+      String responseErrorMessage = null;
+      int responseCode = commandProcessor.run(statement).getResponseCode();
+      if (commandProcessor instanceof Driver) {
+        ((Driver) commandProcessor).getResults(results);
+        responseErrorMessage = ((Driver) commandProcessor).getErrorMsg();
+      }
+      if (!quiet) {
+        if (responseCode != 0 || responseErrorMessage != null) {
+          log(LOG, "execute",
+            "error code [" + responseCode + "]" + (responseErrorMessage != null ? " message [" + responseErrorMessage + " ]" : ""), true);
+        } else {
+          log(LOG, "execute", "results count [" + results.size() + (results.size() == maxResults ? " (MAX)" : "") + "]:\n"
+            + StringUtils.join(results.toArray(), "\n"), true);
+        }
+        log(LOG, "execute", "finished in [" + (System.currentTimeMillis() - time) + "] ms", true);
+      }
+      if (responseCode != 0 || responseErrorMessage != null) {
+        throw new SQLException("Statement executed with error response code [" + responseCode + "]"
+          + (responseErrorMessage != null ? " and error message [" + responseErrorMessage + " ]" : ""));
+      }
+    } finally {
+      if (SessionState.get().getSparkSession() != null)
+        SessionState.get().getSparkSession().close();
     }
-    if (responseCode != 0 || responseErrorMessage != null) {
-      throw new SQLException("Statement executed with error response code [" + responseCode + "]"
-        + (responseErrorMessage != null ? " and error message [" + responseErrorMessage + " ]" : ""));
-    }
-    if (SessionState.get().getSparkSession() != null)
-      SessionState.get().getSparkSession().close();
     return results;
   }
 
@@ -273,7 +276,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   }
 
   @Override
-  public synchronized boolean testValidity() {
+  public synchronized boolean isValid() {
     if (getRuntime().equals(Runtime.LOCAL_SPARK)) {
       if (!envScalaVersion.equals("2.10")) {
         log(LOG, "error", "Scala 2.10 required, " + envScalaVersion + " detected");

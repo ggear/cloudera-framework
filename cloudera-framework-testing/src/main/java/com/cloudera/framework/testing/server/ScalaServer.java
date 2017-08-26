@@ -124,7 +124,7 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
   }
 
   @Override
-  public synchronized boolean testValidity() {
+  public synchronized boolean isValid() {
     if (!envScalaVersion.equals("2.11")) {
       log(LOG, "error", "Scala 2.11 required, " + envScalaVersion + " detected");
       return false;

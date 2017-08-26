@@ -53,7 +53,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   }
 
   @Override
-  public synchronized boolean testValidity() {
+  public synchronized boolean isValid() {
     if (package$.MODULE$.SPARK_VERSION().charAt(0) == '1') {
       if (!envScalaVersion.equals("2.10")) {
         log(LOG, "error", "Scala 2.10 required, " + envScalaVersion + " detected");

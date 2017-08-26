@@ -19,20 +19,6 @@ import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
 /**
-  * Driver constants
-  */
-object Driver {
-
-  // Application name
-  val Name = "${artifactId}"
-
-  // Dataset paths
-  val PathInput = "input"
-  val PathOutput = "output"
-
-}
-
-/**
   * Driver implementation
   */
 class Driver(configuration: Configuration) extends com.cloudera.framework.common.DriverSpark(configuration) {
@@ -41,19 +27,19 @@ class Driver(configuration: Configuration) extends com.cloudera.framework.common
   var rootPath: Path = _
 
   /**
-    * Define input path parameter
-    */
-  override def parameters() = {
-    Array("root-path")
-  }
-
-  /**
     * Validate input path parameter
     */
   override def prepare(arguments: String*): Int = {
     if (arguments == null || arguments.length != parameters().length) return FAILURE_ARGUMENTS
     rootPath = FileSystem.newInstance(getConf).makeQualified(new Path(arguments(0)))
     SUCCESS
+  }
+
+  /**
+    * Define input path parameter
+    */
+  override def parameters() = {
+    Array("root-path")
   }
 
   /**
@@ -89,5 +75,19 @@ class Driver(configuration: Configuration) extends com.cloudera.framework.common
   def main(arguments: Array[String]): Unit = {
     System.exit(new Driver(null).runner(arguments: _*))
   }
+
+}
+
+/**
+  * Driver constants
+  */
+object Driver {
+
+  // Application name
+  val Name = "${artifactId}"
+
+  // Dataset paths
+  val PathInput = "input"
+  val PathOutput = "output"
 
 }
