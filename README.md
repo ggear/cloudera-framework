@@ -54,9 +54,8 @@ Some CDH components have additional coverage on other platforms and versions.
 
 Note that in addition to Maven dependencies, Cloudera 
 [parcels](http://www.cloudera.com/documentation/enterprise/latest/topics/cm_ig_parcels.html) 
-are used to manage platform dependent binaries. This project depends on the 
-[cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/tree/master/cloudera-parcel-plugin) 
-to help manage its parcel dependencies.
+are used to manage platform dependent binaries by way of the 
+[cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/tree/master/cloudera-parcel-plugin).
 
 # Limitations
 
