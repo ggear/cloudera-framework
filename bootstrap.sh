@@ -60,6 +60,6 @@ echo "##########################################################################
 
 echo "" && echo "###############################################################################"
 
-mvn install -DskipTests
+mvn install -PPKG
 
 export PATH=$(echo ${PWD}/target/assembly/*/bin):$PATH
