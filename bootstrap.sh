@@ -31,7 +31,7 @@ fi
 if [ $(mvn -version 2>&1 | grep ${CF_VERSION_MAVEN_MAJOR} | wc -l) -eq 0 ]; then
   wget http://apache.mirror.amaze.com.au/maven/maven-3/${CF_VERSION_MAVEN}/binaries/apache-maven-${CF_VERSION_MAVEN}-bin.tar.gz -P ${CF_DIR}
   tar xvzf ${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}-bin.tar.gz -C ${CF_DIR}
-  export PATH=${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}/bin:$PATH
+  export PATH=${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}/bin:${PATH}
 fi
 echo "###############################################################################"
 mvn -version || { echo "Maven "${CF_VERSION_MAVEN}" not found" ; exit 20; }
@@ -43,7 +43,7 @@ CF_VERSION_SCALA_MAJOR=2.11
 if [ $(scala -version 2>&1 | grep ${CF_VERSION_SCALA_MAJOR} | wc -l) -eq 0 ]; then
   wget https://downloads.lightbend.com/scala/${CF_VERSION_SCALA}/scala-${CF_VERSION_SCALA}.tgz -P ${CF_DIR}
   tar xvzf ${CF_DIR}/scala-${CF_VERSION_SCALA}.tgz -C ${CF_DIR}
-  export PATH=${CF_DIR}/scala-${CF_VERSION_SCALA}/bin:$PATH
+  export PATH=${CF_DIR}/scala-${CF_VERSION_SCALA}/bin:${PATH}
 fi
 echo "###############################################################################"
 scala -version || { echo "Scala "${CF_VERSION_SCALA}" not found" ; exit 30; }
@@ -61,3 +61,13 @@ echo "##########################################################################
 echo "" && echo "###############################################################################"
 
 mvn install -PPKG
+
+PATHS=${PWD}
+PATHS+=:${PWD}/cloudera-framework-archetype/cloudera-framework-archetype-workload/target/test-classes/projects/test/project/cloudera-mytest/target/assembly/cloudera-mytest-10.10.1000/bin
+PATHS+=:${PWD}/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-1/target/assembly/cloudera-framework-example-*/bin
+PATHS+=:${PWD}/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-2/target/assembly/cloudera-framework-example-*/bin
+PATHS+=:${PWD}/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-3/target/assembly/cloudera-framework-example-*/bin
+PATHS+=:${PWD}/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-4/target/assembly/cloudera-framework-example-*/bin
+PATHS+=:${PWD}/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-5/target/assembly/cloudera-framework-example-*/bin
+
+export PATH=${PATHS}:$PATH
