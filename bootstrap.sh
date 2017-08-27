@@ -62,7 +62,7 @@ echo "" && echo "###############################################################
 
 mvn install -PPKG
 
-PATHS=${PWD}
+PATHS=${PWD}/assembly/*/bin
 PATHS+=:${PWD}/cloudera-framework-archetype/cloudera-framework-archetype-workload/target/test-classes/projects/test/project/cloudera-mytest/target/assembly/cloudera-mytest-10.10.1000/bin
 PATHS+=:${PWD}/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-1/target/assembly/cloudera-framework-example-*/bin
 PATHS+=:${PWD}/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-2/target/assembly/cloudera-framework-example-*/bin
