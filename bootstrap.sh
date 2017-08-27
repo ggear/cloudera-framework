@@ -62,4 +62,4 @@ echo "" && echo "###############################################################
 
 mvn install -DskipTests
 
-export PATH=${PWD}/target/assembly/*/bin:$PATH
+export PATH=$(echo ${PWD}/target/assembly/*/bin):$PATH
