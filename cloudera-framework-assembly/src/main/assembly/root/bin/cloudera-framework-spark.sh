@@ -6,7 +6,7 @@ for env in $ROOT_DIR/cfg/*.env; do if [ -f "$env" ]; then . "$env"; fi; done
 
 set -x -e
 
-if $USER_ADMIN; then
+if [ "$USER_ADMIN" = true ]; then
   USER_APP=$USER_ADMIN_HDFS
 fi
 
