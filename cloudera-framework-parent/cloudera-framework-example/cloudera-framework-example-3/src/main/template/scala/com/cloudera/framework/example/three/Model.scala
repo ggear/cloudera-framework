@@ -23,7 +23,11 @@ The library can be tested during the standard maven compile and test phases.
 
 Note that pre-processed files will be overwritten as part of the Maven build
 process. Care should be taken to either ignore and not edit these files (eg
-libraries) or check them in and note changes post Maven build (eg scripts)
+libraries) or check them in and note changes post Maven build (eg scripts).
+
+This file was adapted from a project authored by Sean Owen:
+https://github.com/srowen/cdsw-simple-serving
+
 ${TEMPLATE.PRE-PROCESSOR.SPACER}
 */
 

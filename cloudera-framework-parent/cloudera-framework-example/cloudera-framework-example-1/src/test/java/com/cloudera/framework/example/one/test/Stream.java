@@ -25,6 +25,7 @@ import com.cloudera.framework.testing.server.FlumeServer;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.zohhak.api.Coercion;
 import com.googlecode.zohhak.api.TestWith;
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import org.apache.flume.EventDeliveryException;
 import org.apache.flume.sink.hdfs.HDFSEventSink;
 import org.junit.ClassRule;
@@ -138,14 +139,15 @@ public class Stream extends TestBase {
         )));
   private final Map<String, String> FLUME_SUBSTITUTIONS = ImmutableMap.of(//
     "FLUME_AGENT_NAME", FLUME_AGENT_NAME, //
-    "ROOT_HDFS", dfsServer.getPathUri("/"), //
-    "ROOT_DIR_HDFS", DIR_ABS_MYDS, //
+    "HDFS_URL", dfsServer.getPathUri("/"), //
+    "HDFS_APP", DIR_ABS_MYDS, //
     "RECORD_FORMAT", "xml"//
   );
 
   /**
    * Test dataset stream
    */
+  @java.lang.SuppressWarnings("unchecked")
   @TestWith({"testMetaDataCsvBatch", "testMetaDataXmlBatch"})
   public void testStream(TestMetaData testMetaData) throws IOException, EventDeliveryException, InterruptedException {
     assertEquals(((Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_FILE_COUNT)).intValue(),

@@ -159,9 +159,9 @@ mvn archetype:generate -B \
   -DarchetypeGroupId=com.cloudera.framework.archetype \
   -DarchetypeArtifactId=cloudera-framework-archetype-$CF_PROFILE \
   -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
-  -DgroupId=com.cloudera.mytest \
-  -DartifactId=cloudera-mytest \
-  -Dpackage=com.cloudera.mytest
+  -DgroupId=com.myorg.mytest \
+  -DartifactId=mytest \
+  -Dpackage=com.myorg.mytest
 ```
 
 # Release

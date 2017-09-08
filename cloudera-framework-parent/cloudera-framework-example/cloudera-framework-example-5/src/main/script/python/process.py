@@ -25,6 +25,9 @@
 # process. Care should be taken to either ignore and not edit these files (eg
 # libraries) or check them in and note changes post Maven build (eg scripts)
 #
+# This file was adapted from a project authored by Michiaki Ariga:
+# https://github.com/chezou/NLTK-pyspark
+#
 ###############################################################################
 
 from pyspark.sql import SparkSession

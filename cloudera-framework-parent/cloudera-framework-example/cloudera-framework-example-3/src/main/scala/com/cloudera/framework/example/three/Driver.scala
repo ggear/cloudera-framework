@@ -2,11 +2,11 @@ package com.cloudera.framework.example.three
 
 import java.util.Properties
 
-import com.cloudera.framework.common.Driver.{Engine, SUCCESS, FAILURE_ARGUMENTS}
-import com.cloudera.framework.example.three.Driver.{ModelDir, TestDir, TrainDir}
+import com.cloudera.framework.common.Driver._
+import Driver.{ModelDir, TestDir, TrainDir}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.io.Source
 
@@ -21,9 +21,7 @@ object Driver {
 
 class Driver(configuration: Configuration) extends com.cloudera.framework.common.DriverSpark(configuration) {
 
-  val Log = LoggerFactory.getLogger(classOf[Driver])
-
-  val properties = new Properties()
+  val Log: Logger = LoggerFactory.getLogger(classOf[Driver])
 
   var testPath: Path = _
   var trainPath: Path = _
@@ -31,7 +29,6 @@ class Driver(configuration: Configuration) extends com.cloudera.framework.common
 
   override def prepare(arguments: String*): Int = {
     if (arguments == null || arguments.length != parameters().length) return FAILURE_ARGUMENTS
-    properties.load(Source.fromURL(getClass.getResource("/application.properties")).bufferedReader())
     val hdfs = FileSystem.newInstance(getConf)
     val workingPath = hdfs.makeQualified(new Path(arguments(0)))
     if (!hdfs.exists(workingPath)) throw new Exception("Input path [" + workingPath + "] does not exist")
@@ -42,12 +39,12 @@ class Driver(configuration: Configuration) extends com.cloudera.framework.common
     SUCCESS
   }
 
-  override def parameters() = {
+  override def parameters(): Array[String] = {
     Array("working-path")
   }
 
   override def execute(): Int = {
-    addResult(Model.build(FileSystem.newInstance(getConf), properties.getProperty("application.version"),
+    addResult(Model.build(FileSystem.newInstance(getConf), getApplicationProperty("APP_VERSION"),
       trainPath.toString, testPath.toString, modelPath.toString).getOrElse(ModelPmml.EmptyModel))
     SUCCESS
   }

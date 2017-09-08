@@ -25,6 +25,7 @@
         <conda.build.skip>true</conda.build.skip>
         <templater.build.skip>true</templater.build.skip>
         <parcel.build.skip>true</parcel.build.skip>
+        <tar.build.skip>true</tar.build.skip>
 
         <parcel.build.target>el7</parcel.build.target>
         <parcel.build.repo>scp://graham:/Users/graham/.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</parcel.build.repo>
@@ -62,6 +63,8 @@
                                 import org.apache.commons.lang.StringUtils
 
                                 project.properties["parcel.name"] = StringUtils.upperCase(project.artifactId).replaceAll('-', '_') + "-" + project.version
+                                project.properties["project.name.escaped"] = StringUtils.upperCase(project.artifactId).replaceAll('-', '_')
+                                project.properties["project.version.numeric"] = (project.version.endsWith("SNAPSHOT") ? "-" : "") + project.version.replaceAll("\\D+", "")
                             </source>
                         </configuration>
                     </execution>
@@ -83,7 +86,6 @@
                             </resourceBundles>
                             <attached>false</attached>
                             <outputDirectory>${project.build.directory}/assembly-conf</outputDirectory>
-                            <skip>${maven.package.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
@@ -92,6 +94,44 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
+                    <execution>
+                        <id>application-resources-classes</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/assembly-conf</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>application.properties</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>application-resources-tar</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/assembly/${project.name}-${project.version}/cfg</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/assembly-conf</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>application.properties</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>conda-resources</id>
                         <phase>generate-sources</phase>
@@ -271,7 +311,7 @@
                                 <descriptor>${project.build.directory}/assembly-conf/assembly-client.xml</descriptor>
                             </descriptors>
                             <tarLongFileMode>gnu</tarLongFileMode>
-                            <skipAssembly>${maven.package.skip}</skipAssembly>
+                            <skipAssembly>${tar.build.skip}</skipAssembly>
                         </configuration>
                     </execution>
                     <execution>
@@ -413,7 +453,7 @@
                                     <outputDirectory>${project.build.directory}/assembly</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
-                            <skip>${maven.package.skip}</skip>
+                            <skip>${tar.build.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,18 +1,17 @@
 /**
-  * This is a trivial example [[com.cloudera.framework.common.Driver]], please replace with your implementation.
+  * This is a trivial example [[com.cloudera.framework.common.Driver]],
+  * please replace with your implementation.
   *
-  * More extensive examples are bundled with the cloudera-framework source here:
+  * More extensive examples are bundled with the cloudera-framework here:
   * https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example
   */
 #* // @formatter:off
 *#
 package ${package}
 
-import Driver.Name
+import Driver.{Name, PathInput, PathOutput}
 import com.cloudera.framework.common.Driver.Counter.{RECORDS_IN, RECORDS_OUT}
 import com.cloudera.framework.common.Driver.{Engine, FAILURE_ARGUMENTS, SUCCESS}
-import com.cloudera.mytest.Driver.PathInput
-import com.cloudera.mytest.Driver.PathOutput
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.SparkConf
@@ -21,7 +20,8 @@ import org.apache.spark.sql.SparkSession
 /**
   * Driver implementation
   */
-class Driver(configuration: Configuration) extends com.cloudera.framework.common.DriverSpark(configuration) {
+class Driver(configuration: Configuration)
+  extends com.cloudera.framework.common.DriverSpark(configuration) {
 
   // Input DFS path
   var rootPath: Path = _
@@ -30,7 +30,8 @@ class Driver(configuration: Configuration) extends com.cloudera.framework.common
     * Validate input path parameter
     */
   override def prepare(arguments: String*): Int = {
-    if (arguments == null || arguments.length != parameters().length) return FAILURE_ARGUMENTS
+    if (arguments == null || arguments.length != parameters().length)
+      return FAILURE_ARGUMENTS
     rootPath = FileSystem.newInstance(getConf).makeQualified(new Path(arguments(0)))
     SUCCESS
   }

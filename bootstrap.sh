@@ -19,7 +19,7 @@ if [ $(java -version 2>&1 | grep ${CF_VERSION_JAVA} | wc -l) -eq 0 ]; then
   echo "Unable to install system dependent Java "${CF_VERSION_JAVA}", please do so manually"
 fi
 echo "###############################################################################"
-java -version || { echo "Java "${CF_VERSION_JAVA}" not found" ; exit 10; }
+java -version || { echo "Java "${CF_VERSION_JAVA}" not found" ; return 10; }
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
@@ -34,7 +34,7 @@ if [ $(mvn -version 2>&1 | grep ${CF_VERSION_MAVEN_MAJOR} | wc -l) -eq 0 ]; then
   export PATH=${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}/bin:${PATH}
 fi
 echo "###############################################################################"
-mvn -version || { echo "Maven "${CF_VERSION_MAVEN}" not found" ; exit 20; }
+mvn -version || { echo "Maven "${CF_VERSION_MAVEN}" not found" ; return 20; }
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
@@ -46,7 +46,7 @@ if [ $(scala -version 2>&1 | grep ${CF_VERSION_SCALA_MAJOR} | wc -l) -eq 0 ]; th
   export PATH=${CF_DIR}/scala-${CF_VERSION_SCALA}/bin:${PATH}
 fi
 echo "###############################################################################"
-scala -version || { echo "Scala "${CF_VERSION_SCALA}" not found" ; exit 30; }
+scala -version || { echo "Scala "${CF_VERSION_SCALA}" not found" ; return 30; }
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
@@ -55,7 +55,7 @@ if [ $(python --version 2>&1 | grep ${CF_VERSION_PYTHON} | wc -l) -eq 0 ]; then
   echo "Unable to install system dependent CPython "${CF_VERSION_PYTHON}", please do so manually"
 fi
 echo "###############################################################################"
-pip install cm-api && python --version || { echo "Python "${CF_VERSION_PYTHON}" not found" ; exit 40; }
+pip install cm-api && python --version || { echo "Python "${CF_VERSION_PYTHON}" not found" ; return 40; }
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"

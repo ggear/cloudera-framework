@@ -8,7 +8,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Scanner;
 
-import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.common.util.FsUtil;
 import com.cloudera.framework.example.one.Constants;
 import com.cloudera.framework.example.one.TestBase;

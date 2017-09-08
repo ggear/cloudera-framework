@@ -8,7 +8,7 @@
   },
   "setActiveSymlink": true,
   "scripts": {
-    "defines": "${parcel.name.long}-env.sh"
+    "defines": "environment.sh"
   },
   "packages": [
     {

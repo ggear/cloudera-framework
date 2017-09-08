@@ -44,7 +44,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
 
   private static final Pattern REGEX_SCALA_VERSION = Pattern.compile(".*([1-9]+\\.[0-9]+)\\.[1-9]+.*");
 
-  protected String envOsName;
+  protected final String envOsName;
   protected String envOsDescriptor;
   protected String envScalaVersion;
 

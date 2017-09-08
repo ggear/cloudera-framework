@@ -1,7 +1,7 @@
 /**
  * This is a unit test example, testing the bundled {@link ${package}.Driver}
  * <p>
- * More extensive examples are bundled with the cloudera-framework source here:
+ * More extensive examples are bundled with the cloudera-framework here:
  * https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example
  */
 #* // @formatter:off
@@ -9,6 +9,9 @@
 package ${package}.test;
 
 import ${package}.Driver;
+import static ${package}.Driver.Name;
+import static ${package}.Driver.PathInput;
+import static ${package}.Driver.PathOutput;
 
 import static com.cloudera.framework.common.Driver.Counter.FILES_OUT;
 import static com.cloudera.framework.common.Driver.Counter.RECORDS_IN;
@@ -16,9 +19,6 @@ import static com.cloudera.framework.common.Driver.Counter.RECORDS_OUT;
 import static com.cloudera.framework.common.Driver.FAILURE_ARGUMENTS;
 import static com.cloudera.framework.common.Driver.SUCCESS;
 import static com.cloudera.framework.testing.Assert.assertCounterEquals;
-import static com.cloudera.mytest.Driver.Name;
-import static com.cloudera.mytest.Driver.PathInput;
-import static com.cloudera.mytest.Driver.PathOutput;
 import static org.junit.Assert.assertEquals;
 
 import com.cloudera.framework.testing.TestConstants;
@@ -99,7 +99,8 @@ public class DriverTest implements TestConstants {
     assertCounterEquals(testMetaData, driver.getCounters());
 
     // Assert the expected partitions were created within HDFS
-    assertCounterEquals(testMetaData, Driver.class.getName(), FILES_OUT, dfs.listFilesDfs(DATASET_DIR_OUTPUT).length);
+    assertCounterEquals(testMetaData, Driver.class.getName(), FILES_OUT,
+      dfs.listFilesDfs(DATASET_DIR_OUTPUT).length);
 
   }
 

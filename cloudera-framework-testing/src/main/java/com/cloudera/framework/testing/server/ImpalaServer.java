@@ -58,7 +58,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
    */
-  public List<String> execute(String statement) throws Exception {
+  public List<String> execute(String statement) {
     return execute(statement, Collections.emptyMap(), Collections.emptyMap());
   }
 
@@ -69,7 +69,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
    */
-  public List<String> execute(String statement, Map<String, String> parameters) throws Exception {
+  public List<String> execute(String statement, Map<String, String> parameters) {
     return execute(statement, parameters, Collections.emptyMap());
   }
 
@@ -81,7 +81,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
    */
-  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration) throws Exception {
+  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration) {
     return execute(statement, parameters, configuration, MAX_RESULTS_DEFAULT);
   }
 
@@ -93,8 +93,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * @return {@link List} of {@link String} results, no result will be indicated
    * by 1-length empty {@link String} {@link List}
    */
-  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults)
-    throws Exception {
+  public List<String> execute(String statement, Map<String, String> parameters, Map<String, String> configuration, int maxResults) {
     return execute(statement, parameters, configuration, maxResults, false);
   }
 
@@ -119,7 +118,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
    */
-  public List<List<String>> execute(File file) throws Exception {
+  public List<List<String>> execute(File file) {
     return execute(file, Collections.emptyMap(), Collections.emptyMap());
   }
 
@@ -132,7 +131,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
    */
-  public List<List<String>> execute(File file, Map<String, String> parameters) throws Exception {
+  public List<List<String>> execute(File file, Map<String, String> parameters) {
     return execute(file, parameters, Collections.emptyMap());
   }
 
@@ -146,7 +145,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
    * statement, no result will be indicated by 1-length empty
    * {@link String} {@link List}
    */
-  public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration) throws Exception {
+  public List<List<String>> execute(File file, Map<String, String> parameters, Map<String, String> configuration) {
     return execute(file, parameters, configuration, MAX_RESULTS_DEFAULT);
   }
 
@@ -208,6 +207,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
     log(LOG, "stop", time);
   }
 
+  @SuppressWarnings("SameReturnValue")
   private String getJdbcURL() {
     return "";
   }

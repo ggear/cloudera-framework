@@ -57,6 +57,7 @@
                 </executions>
                 <configuration>
                     <includes>
+                        <include>**/application.properties</include>
                         <include>**/assembly-client.xml</include>
                     </includes>
                 </configuration>

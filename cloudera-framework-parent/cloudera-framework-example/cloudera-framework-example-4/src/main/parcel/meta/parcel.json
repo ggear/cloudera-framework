@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "name": "${parcel.name}",
+  "version": "${parcel.version}",
+  "extraVersionInfo": {
+    "fullVersion": "${parcel.version.full}",
+    "baseVersion": "${parcel.version.base}"
+  },
+  "setActiveSymlink": true,
+  "scripts": {
+    "defines": "environment.sh"
+  },
+  "packages": [
+    {
+      "name": "${parcel.name.long}",
+      "version": "${parcel.version}"
+    }
+  ],
+  "components": [
+    {
+      "name": "${parcel.name.long}",
+      "version": "${parcel.version}",
+      "pkg_version": "${parcel.version}"
+    }
+  ],
+  "provides": [
+    "${parcel.name.long}"
+  ],
+  "users": {
+    "${parcel.namespace}": {
+      "longname": "${parcel.name.long}",
+      "home": "/var/lib/${parcel.name.long}",
+      "shell": "/bin/false",
+      "extra_groups": []
+    }
+  },
+  "groups": [
+    "hadoop"
+  ]
+}

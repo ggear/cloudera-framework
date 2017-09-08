@@ -5,12 +5,12 @@
 
     <!--
         There are no restrictons on the modules group or artifact IDs outside of those imposed by Maven,
-        but the version must conform to the [1-9][0-9]\.[1-9][0-9]\.[1-9][0-9][0-9][0-9] regex to facilitate
+        but the version must conform to the [1-9][0-9]\.[0-9][0-9][0-9]\.[0-9][0-9][0-9][0-9] regex to facilitate
         a nice lexiocogrpahic ordered, fast moving, version scheme suitable for continuously deployed environments
     -->
     <groupId>\${groupId}</groupId>
     <artifactId>\${artifactId}</artifactId>
-    <version>10.10.1000</version>
+    <version>10.000.0000-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <!--
@@ -29,6 +29,8 @@
         https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/pom.xml
     -->
     <properties>
+        <tar.build.skip>false</tar.build.skip>
+        <parcel.build.skip>false</parcel.build.skip>
         <cloudera-framework.version>${project.version}</cloudera-framework.version>
     </properties>
 

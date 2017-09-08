@@ -117,7 +117,7 @@ TABLES_LOCATION=( \
 if $CREATE_SCHEMA; then
   AVRO_SCHEMA="$(cat $ROOT_DIR/lib/avro/model.avsc | tr '\n' ' ' | tr '\t' ' ')"
   for((i=0;i<${#TABLES_NAME[@]};i++)); do
-    $ROOT_DIR/bin/cloudera-framework-hive.sh \
+    $ROOT_DIR/bin/cldr-shell-hive.sh \
       --hivevar my.database.name="$DATABASE_APP" \
       --hivevar my.table.name="${TABLES_NAME[$i]}" \
       --hivevar my.table.partition="${TABLES_PARTITION[$i]}" \
@@ -127,7 +127,7 @@ if $CREATE_SCHEMA; then
       --hivevar my.table.location="${TABLES_LOCATION[$i]}" \
       --hivevar my.table.schema="$AVRO_SCHEMA" \
       -f $ROOT_DIR/lib/hive/schema/ddl/"${TABLES_DDL[$i]}"
-    $ROOT_DIR/bin/cloudera-framework-impala.sh -q "USE $DATABASE_APP; INVALIDATE METADATA ${TABLES_NAME[$i]};"
+    $ROOT_DIR/bin/cldr-shell-impala.sh -q "USE $DATABASE_APP; INVALIDATE METADATA ${TABLES_NAME[$i]};"
   done
 fi
 
@@ -136,10 +136,10 @@ if ! $CREATE_SCHEMA; then
   for((i=0;i<${#TABLES_NAME[@]};i++)); do
     TABLES_REFRESH_HIVE="$TABLES_REFRESH_HIVE"" MSCK REPAIR TABLE ""${TABLES_NAME[$i]}""; "
   done
-  $ROOT_DIR/bin/cloudera-framework-hive.sh -e "$TABLES_REFRESH_HIVE"
+  $ROOT_DIR/bin/cldr-shell-hive.sh -e "$TABLES_REFRESH_HIVE"
   set +e
   for((i=0;i<${#TABLES_NAME[@]};i++)); do
-    $ROOT_DIR/bin/cloudera-framework-impala.sh -q "REFRESH ${TABLES_NAME[$i]};" 2> /dev/null
+    $ROOT_DIR/bin/cldr-shell-impala.sh -q "REFRESH ${TABLES_NAME[$i]};" 2> /dev/null
   done
   set -e
 fi

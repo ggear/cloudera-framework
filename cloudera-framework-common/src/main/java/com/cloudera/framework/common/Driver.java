@@ -1,8 +1,6 @@
 package com.cloudera.framework.common;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -10,6 +8,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.hadoop.conf.Configuration;
@@ -34,16 +34,28 @@ public abstract class Driver extends Configured implements Tool {
   public static final int FAILURE_RUNTIME = 20;
 
   public static final String CONF_SETTINGS = "driver-site.xml";
+  public static final String CONF_APPLICATION = "/application.properties";
 
   private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
 
   private static final int FORMAT_TIME_FACTOR = 10;
 
-  private Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
+  private final Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
 
   private List<Object> results = null;
 
   private Engine engine = Engine.HADOOP;
+
+  private static final Properties APP_CONF = Optional.of(new Properties()).map(properties -> {
+    try {
+      properties.load(Driver.class.getResourceAsStream(Driver.CONF_APPLICATION));
+    } catch (Exception exception) {
+      if (LOG.isErrorEnabled()) {
+        LOG.error("Failed to load application properties from [" + Driver.CONF_APPLICATION + "]", exception);
+      }
+    }
+    return properties;
+  }).orElseGet(Properties::new);
 
   public Driver(Configuration conf, Engine engine) {
     super(conf);
@@ -352,7 +364,13 @@ public abstract class Driver extends Configured implements Tool {
     return counters.get(group).get(counter);
   }
 
-  public enum Engine {HADOOP, SPARK}
+  public static String getApplicationProperty(String key) {
+    return (String) APP_CONF.get(key);
+  }
+
+  public enum Engine {
+    HADOOP, SPARK
+  }
 
   public enum Counter {
     FILES_IN,

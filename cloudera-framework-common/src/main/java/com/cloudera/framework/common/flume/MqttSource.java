@@ -1,9 +1,5 @@
 package com.cloudera.framework.common.flume;
 
-import java.io.File;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import org.apache.flume.Context;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
@@ -26,10 +22,10 @@ import org.slf4j.LoggerFactory;
  */
 public class MqttSource extends AbstractPollableSource {
 
-  public static final String CONFIG_USER_NAME = "userName";
-  public static final String CONFIG_USER_NAME_DEFAULT = "";
-  public static final String CONFIG_PASSWORD_FILE = "passwordFile";
-  public static final String CONFIG_PASSWORD_FILE_DEFAULT = "";
+  public static final String CONFIG_BROKER_ACCESS = "brokerAccess";
+  public static final String CONFIG_BROKER_ACCESS_DEFAULT = "";
+  public static final String CONFIG_BROKER_SECRET = "brokerSecret";
+  public static final String CONFIG_BROKER_SECRET_DEFAULT = "";
   public static final String CONFIG_PROVIDER_URL = "providerURL";
   public static final String CONFIG_PROVIDER_URL_DEFAULT = "tcp://localhost:1883";
   public static final String CONFIG_DESTINATION_NAME = "destinationName";
@@ -49,14 +45,13 @@ public class MqttSource extends AbstractPollableSource {
     sourceCounter = new SourceCounter(getName());
     providerUrl = context.getString(CONFIG_PROVIDER_URL, CONFIG_PROVIDER_URL_DEFAULT).trim();
     destinationName = context.getString(CONFIG_DESTINATION_NAME, CONFIG_DESTINATION_NAME_DEFAULT).trim();
-    String userName = context.getString(CONFIG_USER_NAME, CONFIG_USER_NAME_DEFAULT).trim();
-    String passwordFile = context.getString(CONFIG_PASSWORD_FILE, CONFIG_PASSWORD_FILE_DEFAULT).trim();
+    String brokerAccess = context.getString(CONFIG_BROKER_ACCESS, CONFIG_BROKER_ACCESS_DEFAULT).trim();
+    String brokerSecret = context.getString(CONFIG_BROKER_SECRET, CONFIG_BROKER_SECRET_DEFAULT).trim();
     try {
       clientOptions = new MqttConnectOptions();
-      if (!userName.isEmpty()) {
-        clientOptions.setUserName(userName);
-        clientOptions.setPassword((passwordFile.isEmpty()
-          ? "" : Files.toString(new File(passwordFile), Charsets.UTF_8).trim()).toCharArray());
+      if (!brokerAccess.isEmpty()) {
+        clientOptions.setUserName(brokerAccess);
+        clientOptions.setPassword(brokerSecret.toCharArray());
       }
       clientOptions.setCleanSession(false);
       clientOptions.setAutomaticReconnect(false);

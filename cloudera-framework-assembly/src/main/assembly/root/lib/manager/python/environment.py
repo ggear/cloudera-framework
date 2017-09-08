@@ -96,6 +96,7 @@ def do_call(host, port, user, password, cluster_name, service_role_name, random_
     do_print_header()
     for service in cluster.get_all_services():
         do_print_line_item(api, service, service_role_name, random_index, 'HDFS', 'NAMENODE', 'namenode_port', [], [])
+        do_print_line_item(api, service, service_role_name, random_index, 'KUDU', 'KUDU_MASTER', 'webserver_port', [], [])
         do_print_line_item(api, service, service_role_name, random_index, 'HUE', 'HUE_SERVER', 'hue_http_port', [], [])
         do_print_line_item(api, service, service_role_name, random_index, 'HIVE', 'HIVESERVER2', 'hs2_thrift_address_port', [], [])
         do_print_line_item(api, service, service_role_name, random_index, 'IMPALA', 'IMPALAD', 'beeswax_port', [], [])
