@@ -154,7 +154,7 @@ including a very simple example via:
 export CF_VERSION=1.5.7
 export CDH_VERSION=5.12.1
 export CF_PROFILE=workload
-mvn archetype:generate -B \
+mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -B \
   -DarchetypeRepository=http://52.63.86.162/artifactory/cloudera-framework-releases \
   -DarchetypeGroupId=com.cloudera.framework.archetype \
   -DarchetypeArtifactId=cloudera-framework-archetype-$CF_PROFILE \
