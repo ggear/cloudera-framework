@@ -109,14 +109,14 @@ core client bill-of-materials and test harness can be achieved as so:
     <dependency>
       <groupId>com.cloudera.framework.library.client</groupId>
       <artifactId>cloudera-framework-library-client-core</artifactId>
-      <version>1.5.6-cdh5.12.0</version>
+      <version>1.5.7-cdh5.12.0</version>
       <type>pom</type>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.cloudera.framework</groupId>
       <artifactId>cloudera-framework-testing</artifactId>
-      <version>1.5.6-cdh5.12.0</version>
+      <version>1.5.7-cdh5.12.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -151,7 +151,7 @@ including a very simple example via:
 
 ```bash
 # Change the following variables to appropriate values for the target environment
-export CF_VERSION=1.5.6
+export CF_VERSION=1.5.7
 export CDH_VERSION=5.12.0
 export CF_PROFILE=workload
 mvn archetype:generate -B \
@@ -170,9 +170,9 @@ To perform a release:
 
 ```bash
 # Change the following variables to appropriate values for the target release
-export CF_VERSION_RELEASE=1.5.6
+export CF_VERSION_RELEASE=1.5.7
 export CDH_VERSION_RELEASE=5.12.0
-export CF_VERSION_HEAD=1.5.6
+export CF_VERSION_HEAD=1.5.7
 export CDH_VERSION_HEAD=5.13.0
 mvn clean install && \
 mvn test -pl cloudera-framework-testing -PSCALA_2.11 && \
