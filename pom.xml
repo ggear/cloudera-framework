@@ -141,9 +141,9 @@
         <cloudera-framework-module.repo>http://52.63.86.162:80/artifactory/cloudera-framework-releases</cloudera-framework-module.repo>
 
         <scala_2.10-base.version>2.10</scala_2.10-base.version>
-        <scala_2.10.version>scala_2.10-base.version.5</scala_2.10.version>
+        <scala_2.10.version>2.10.5</scala_2.10.version>
         <scala_2.11-base.version>2.11</scala_2.11-base.version>
-        <scala_2.11.version>${scala_2.11-base.version}.8</scala_2.11.version>
+        <scala_2.11.version>2.11.8</scala_2.11.version>
 
         <java.version>1.8</java.version>
 
