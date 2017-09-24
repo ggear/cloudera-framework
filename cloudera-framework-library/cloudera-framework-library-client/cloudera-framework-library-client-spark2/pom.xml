@@ -5,12 +5,12 @@
     <groupId>com.cloudera.framework.library.client</groupId>
     <artifactId>cloudera-framework-library-client-spark2</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.7-cdh5.12.1</version>
+    <version>1.5.8-cdh5.12.1-SNAPSHOT</version>
 
     <parent>
         <groupId>com.cloudera.framework.library</groupId>
         <artifactId>cloudera-framework-library-client</artifactId>
-        <version>1.5.7-cdh5.12.1</version>
+        <version>1.5.8-cdh5.12.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>
