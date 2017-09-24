@@ -46,7 +46,7 @@ public abstract class Driver extends Configured implements Tool {
 
   private Engine engine = Engine.HADOOP;
 
-  private static final Properties APP_CONF = Optional.of(new Properties()).map(properties -> {
+  private static final Properties APP_PROPERTIES = Optional.of(new Properties()).map(properties -> {
     try {
       properties.load(Driver.class.getResourceAsStream(Driver.CONF_APPLICATION));
     } catch (Exception exception) {
@@ -365,7 +365,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   public static String getApplicationProperty(String key) {
-    return (String) APP_CONF.get(key);
+    return (String) APP_PROPERTIES.get(key);
   }
 
   public enum Engine {

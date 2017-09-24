@@ -64,7 +64,7 @@
 
                                 project.properties["parcel.name"] = StringUtils.upperCase(project.artifactId).replaceAll('-', '_') + "-" + project.version
                                 project.properties["project.name.escaped"] = StringUtils.upperCase(project.artifactId).replaceAll('-', '_')
-                                project.properties["project.version.numeric"] = (project.version.endsWith("SNAPSHOT") ? "-" : "") + project.version.replaceAll("\\D+", "")
+                                project.properties["project.version.numeric"] = (project.version.endsWith("SNAPSHOT") ? "-" : "") + (project.version.replaceAll("\\D+", "").toInteger() >= 100000000 ? (project.version.replaceAll("\\D+", "").toInteger() - 99999999) : project.version.replaceAll("\\D+", "").toInteger())
                             </source>
                         </configuration>
                     </execution>

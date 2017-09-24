@@ -1,8 +1,8 @@
 # Cloudera Framework
 
 Provide an example organisation wide Cloudera (i.e. Hadoop ecosystem) project framework, 
-defining corporate standards on runtime components, datasets, libraries, testing and project 
-structure to facilitate operating with a continuous deployment pipeline. This example includes 
+defining corporate standards on runtime components, datasets, libraries, testing, deployment and
+project  structure to facilitate operating within a continuous deployment pipeline. This example includes 
 [client](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-client)/[runtime](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-runtime)/[thirdparty](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-library/cloudera-framework-library-thirdparty)
 bill-of-materials, [utility](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common)/[driver](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-common/src/main/java/com/cloudera/framework/common/Driver.java)
 libraries and a unit test [harness](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-testing/src/main/java/com/cloudera/framework/testing)
