@@ -22,6 +22,10 @@ buildNumber.properties
 .ipython
 .bash_history
 .oracle_jre_usage
+.beeline
+.hivehistory
+.impalahistory
+.python-eggs
 *.pipeout
 /spark-defaults.conf
 cloudera-framework-thirdparty/src/main/repository/**/*SNAPSHOT*/
