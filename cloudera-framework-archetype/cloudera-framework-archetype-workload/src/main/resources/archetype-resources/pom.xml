@@ -24,14 +24,12 @@
     </parent>
 
     <!--
-        At mininum, a cloudera-framework.version property is required to idenify the modules target
-        cloudera-framework and CDH API compatiblity level, other flags are available from the cloudera-framework-parent
+        The cloduera-framework build pipeline is configured via the flags in the cloudera-framework-parent:
         https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/pom.xml
     -->
     <properties>
         <tar.build.skip>false</tar.build.skip>
         <parcel.build.skip>false</parcel.build.skip>
-        <cloudera-framework.version>${project.version}</cloudera-framework.version>
     </properties>
 
     <!--

@@ -31,6 +31,7 @@ fi
 if [ $(mvn -version 2>&1 | grep ${CF_VERSION_MAVEN_MAJOR} | wc -l) -eq 0 ]; then
   wget http://apache.mirror.amaze.com.au/maven/maven-3/${CF_VERSION_MAVEN}/binaries/apache-maven-${CF_VERSION_MAVEN}-bin.tar.gz -P ${CF_DIR}
   tar xvzf ${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}-bin.tar.gz -C ${CF_DIR}
+  test -d ${HOME}/.m2 || cp -rf ${HOME}/.m2 ${CF_DIR}
   export PATH=${CF_DIR}/apache-maven-${CF_VERSION_MAVEN}/bin:${PATH}
 fi
 echo "###############################################################################"
@@ -59,7 +60,5 @@ pip install cm-api && python --version || { echo "Python "${CF_VERSION_PYTHON}" 
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
-
-mvn clean install -PPKG
 
 export PATH=$(echo ${PWD}/target/assembly/*/bin):$PATH
