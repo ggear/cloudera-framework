@@ -58,14 +58,14 @@ if __name__ == '__main__':
   sys.exit(main(sys.argv))
 END
   else
-    sudo service flume-ng-agent stop
+    sudo service flume stop
     sudo rm -rf /usr/lib/flume-ng/plugins.d/arouter
     sudo mkdir -p /usr/lib/flume-ng/plugins.d/arouter/lib
     sudo mkdir -p /usr/lib/flume-ng/plugins.d/arouter/libext
     sudo cp -rvf $ROOT_DIR/lib/jar/*.jar /usr/lib/flume-ng/plugins.d/arouter/lib
     sudo cp -rvf $ROOT_DIR/lib/jar/dep/*.jar /usr/lib/flume-ng/plugins.d/arouter/libext
-    sudo echo $FLUME_AGENT_CONFIG > /etc/flume-ng/conf/flume.properties
-    $START_DEPLOYMENT && sudo service flume-ng-agent start
+    sudo echo "$FLUME_AGENT_CONFIG" > /etc/flume-ng/conf/flume-conf.properties
+    $START_DEPLOYMENT && sudo service flume start
   fi
 fi
 
