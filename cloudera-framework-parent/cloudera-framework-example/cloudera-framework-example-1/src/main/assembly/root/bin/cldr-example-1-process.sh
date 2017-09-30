@@ -15,4 +15,4 @@ $ROOT_DIR/bin/cldr-shell-hadoop.sh "\
   $ROOT_DIR_HDFS_PARTITIONED \
   $ROOT_DIR_HDFS_CLEANSED"
 
-$ROOT_DIR/bin/cldr-data-schema.sh
+$ROOT_DIR/bin/cldr-deploy-schema.sh

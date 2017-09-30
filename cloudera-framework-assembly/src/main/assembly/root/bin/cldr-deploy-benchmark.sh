@@ -23,11 +23,11 @@ function benchmark_failed {
 if ! $REPORT_ONLY; then
   { $ROOT_DIR/bin/cldr-deploy.sh; } || { benchmark_failed; }
   START_SEC=$(date +%s)
-  { $ROOT_DIR/bin/cldr-data-stream.sh true || benchmark_failed; } && { sleep $STREAM_PERIOD_S; }
-  { $ROOT_DIR/bin/cldr-data-stream.sh false && sleep $SLEEP_PERIOD_S; } || { benchmark_failed; }
+  { $ROOT_DIR/bin/cldr-deploy.sh true || benchmark_failed; } && { sleep $STREAM_PERIOD_S; }
+  { $ROOT_DIR/bin/cldr-deploy.sh false && sleep $SLEEP_PERIOD_S; } || { benchmark_failed; }
   [ $(find $ROOT_DIR/bin -maxdepth 1 -type f -name "*-process.sh" | wc -l) -gt 1 ] && { echo "Error - multiple process scripts found" && benchmark_failed; }
   [ $(find $ROOT_DIR/bin -maxdepth 1 -type f -name "*-process.sh" | wc -l) -eq 1 ] && { $ROOT_DIR/bin/*-process.sh && sleep $SLEEP_PERIOD_S || benchmark_failed; }
-  { $ROOT_DIR/bin/cldr-data-query.sh && sleep $SLEEP_PERIOD_S; } || { benchmark_failed; }
+  { $ROOT_DIR/bin/cldr-deploy-query.sh && sleep $SLEEP_PERIOD_S; } || { benchmark_failed; }
   FINISH_SEC=$(date +%s)
   DURATION_SEC=$((FINISH_SEC-START_SEC))
 fi
