@@ -64,8 +64,7 @@ public class TestMqttSource implements TestConstants {
       flumeServer.crankPipeline(
         ImmutableMap.of("HDFS_ROOT", dfsServer.getPathUri("/"), "TOPIC_NAME", TOPIC_NAME_TEST),
         "flume/flume-conf.properties", Collections.emptyMap(), Collections.emptyMap(),
-        "agent", "mqtt", "hdfs",
-        new MqttSource(), new HDFSEventSink(),
+        "agent", "mqtt", "hdfs", new MqttSource(), new HDFSEventSink(),
         "/tmp/flume-mqtt", 10, this::mqttClientSendMessage));
   }
 
