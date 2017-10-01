@@ -64,6 +64,9 @@ END
     sudo mkdir -p /usr/lib/flume-ng/plugins.d/arouter/libext
     sudo cp -rvf $ROOT_DIR/lib/jar/*.jar /usr/lib/flume-ng/plugins.d/arouter/lib
     sudo cp -rvf $ROOT_DIR/lib/jar/dep/*.jar /usr/lib/flume-ng/plugins.d/arouter/libext
+    sudo rm -rf /usr/lib/flume-ng/plugins.d/arouter/avro
+    sudo cp -rvf $ROOT_DIR/lib/avro /lib/flume-ng/plugins.d/arouter
+    sudo chown -R flume.flume /lib/flume-ng/plugins.d/arouter/avro
     sudo mkdir -p /usr/lib/flume-ng/plugins.d/arouter/store
     sudo chown -R flume.flume /lib/flume-ng/plugins.d/arouter/store
     sudo chmod 666 /etc/flume-ng/conf/flume.conf
