@@ -22,8 +22,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.cloudera.framework.library.client</groupId>
-            <artifactId>cloudera-framework-library-client-mqtt</artifactId>
+            <groupId>com.cloudera.framework.library.thirdparty</groupId>
+            <artifactId>cloudera-framework-library-thirdparty-mqtt</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
             <scope>provided</scope>

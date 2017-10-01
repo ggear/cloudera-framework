@@ -17,6 +17,7 @@
         <module>cloudera-framework-library-thirdparty-hive</module>
         <module>cloudera-framework-library-thirdparty-avro</module>
         <module>cloudera-framework-library-thirdparty-pmml</module>
+        <module>cloudera-framework-library-thirdparty-mqtt</module>
         <module>cloudera-framework-library-thirdparty-parquet</module>
         <module>cloudera-framework-library-thirdparty-spark2csv</module>
         <module>cloudera-framework-library-thirdparty-elephantbird</module>

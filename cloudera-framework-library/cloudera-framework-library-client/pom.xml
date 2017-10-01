@@ -16,7 +16,6 @@
     <modules>
         <module>cloudera-framework-library-client-core</module>
         <module>cloudera-framework-library-client-kudu</module>
-        <module>cloudera-framework-library-client-mqtt</module>
         <module>cloudera-framework-library-client-kafka</module>
         <module>cloudera-framework-library-client-flume</module>
         <module>cloudera-framework-library-client-spark</module>
