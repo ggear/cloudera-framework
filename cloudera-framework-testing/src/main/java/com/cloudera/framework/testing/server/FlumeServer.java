@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.jersey.api.model.Parameter.Source;
@@ -79,7 +80,7 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
   public synchronized int crankPipeline(Map<String, String> substitutions, String configFile, Map<String, String> configSourceOverlay,
                                         Map<String, String> configSinkOverlay, String agentName, String sourceName, String sinkName,
                                         PollableSource source, Sink sink, String outputPath, int iterations,
-                                        Consumer<Integer> preProcess) throws IOException,
+                                        UnaryOperator<Integer> preProcess) throws IOException,
     EventDeliveryException {
     Properties config = new Properties();
     if (configFile != null) {
@@ -112,7 +113,7 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
     if (outputPath != null) {
       DfsServer.getInstance().getFileSystem().mkdirs(DfsServer.getInstance().getPath(outputPath));
     }
-    Channel channel = new MemoryChannel();
+    MemoryChannel channel = new MemoryChannel();
     channel.setName(sourceName + "-" + sinkName + "-channel");
     Configurables.configure(channel, new Context(ImmutableMap.of("keep-alive", "1")));
     channel.start();
@@ -130,11 +131,13 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
     Configurables.configure(channelProcessor, new Context(sourceConfig));
     source.setChannelProcessor(channelProcessor);
     source.start();
+    int messageCount = 0;
     for (int i = 0; i < iterations; i++) {
-      preProcess.accept(i);
+      source.process();
+      messageCount += preProcess.apply(i);
       source.process();
     }
-    for (int i = 0; i < iterations; i++) {
+    for (int i = 0; i < messageCount; i++) {
       sink.process();
     }
     source.stop();

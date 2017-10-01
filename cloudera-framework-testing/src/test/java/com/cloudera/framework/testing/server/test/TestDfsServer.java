@@ -27,6 +27,8 @@ import org.junit.Test;
 
 public abstract class TestDfsServer implements TestConstants {
 
+  private static final String DIR_DESTINATION = "/tmp/data";
+  private static final String DIR_SOURCE = REL_DIR_CLASSES_TEST + "/data";
   public static final String COUNTER_GROUP = TestDfsServer.class.getName();
 
   public static final TestMetaData testMetaData1 = TestMetaData.getInstance() //
@@ -34,8 +36,6 @@ public abstract class TestDfsServer implements TestConstants {
   public static final TestMetaData testMetaData2 = TestMetaData.getInstance() //
     .parameters(Collections.EMPTY_MAP) //
     .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)));
-  private static final String DIR_SOURCE = REL_DIR_CLASSES_TEST + "/data";
-  private static final String DIR_DESTINATION = "/tmp/data";
   public static final TestMetaData testMetaData3 = TestMetaData.getInstance() //
     .dataSetSourceDirs(DIR_SOURCE) //
     .dataSetDestinationDirs(DIR_DESTINATION) //

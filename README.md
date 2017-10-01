@@ -75,7 +75,7 @@ This project can be compiled, packaged and installed to a local repository, skip
 mvn install -PPKG
 ```
 
-To simply compile the project:
+To only compile the project:
 
 ```bash
 mvn install -PCMP

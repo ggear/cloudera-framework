@@ -69,7 +69,7 @@ public class Stream extends TestBase {
         KEY_FLUME_SINK_NAME, "sink_batch_hdfs", //
         KEY_FLUME_OUTPUT_DIR, DIR_ABS_MYDS_STAGED, //
         KEY_FLUME_PROCESS_ITERATIONS, 3, //
-        KEY_FLUME_PROCESS_FILE_COUNT, 1)) //
+        KEY_FLUME_PROCESS_FILE_COUNT, 2)) //
     .asserts( //
       ImmutableMap.of( //
         Stage.class.getName(),
@@ -82,16 +82,16 @@ public class Stream extends TestBase {
       ImmutableMap.of( //
         Partition.class.getName(),
         ImmutableMap.of( //
-          RecordCounter.RECORDS, 10000L, //
-          RecordCounter.RECORDS_CANONICAL, 6000L, //
-          RecordCounter.RECORDS_DUPLICATE, 4000L, //
+          RecordCounter.RECORDS, 20000L, //
+          RecordCounter.RECORDS_CANONICAL, 10000L, //
+          RecordCounter.RECORDS_DUPLICATE, 10000L, //
           RecordCounter.RECORDS_MALFORMED, 0L //
         )), //
       ImmutableMap.of( //
         com.cloudera.framework.example.one.process.Cleanse.class.getName(),
         ImmutableMap.of( //
-          RecordCounter.RECORDS, 6000L, //
-          RecordCounter.RECORDS_CANONICAL, 6000L, //
+          RecordCounter.RECORDS, 10000L, //
+          RecordCounter.RECORDS_CANONICAL, 10000L, //
           RecordCounter.RECORDS_DUPLICATE, 0L, //
           RecordCounter.RECORDS_MALFORMED, 0L //
         )));
@@ -111,7 +111,7 @@ public class Stream extends TestBase {
         KEY_FLUME_SINK_NAME, "sink_batch_hdfs", //
         KEY_FLUME_OUTPUT_DIR, DIR_ABS_MYDS_STAGED, //
         KEY_FLUME_PROCESS_ITERATIONS, 3, //
-        KEY_FLUME_PROCESS_FILE_COUNT, 1)) //
+        KEY_FLUME_PROCESS_FILE_COUNT, 2)) //
     .asserts( //
       ImmutableMap.of( //
         Stage.class.getName(),
@@ -124,16 +124,16 @@ public class Stream extends TestBase {
       ImmutableMap.of( //
         Partition.class.getName(),
         ImmutableMap.of( //
-          RecordCounter.RECORDS, 10000L, //
-          RecordCounter.RECORDS_CANONICAL, 6000L, //
-          RecordCounter.RECORDS_DUPLICATE, 4000L, //
+          RecordCounter.RECORDS, 20000L, //
+          RecordCounter.RECORDS_CANONICAL, 10000L, //
+          RecordCounter.RECORDS_DUPLICATE, 10000L, //
           RecordCounter.RECORDS_MALFORMED, 0L //
         )), //
       ImmutableMap.of( //
         Cleanse.class.getName(),
         ImmutableMap.of( //
-          RecordCounter.RECORDS, 6000L, //
-          RecordCounter.RECORDS_CANONICAL, 6000L, //
+          RecordCounter.RECORDS, 10000L, //
+          RecordCounter.RECORDS_CANONICAL, 10000L, //
           RecordCounter.RECORDS_DUPLICATE, 0L, //
           RecordCounter.RECORDS_MALFORMED, 0L //
         )));
@@ -155,8 +155,7 @@ public class Stream extends TestBase {
         FLUME_AGENT_NAME, (String) testMetaData.getParameters()[2].get(KEY_FLUME_SOURCE_NAME),
         (String) testMetaData.getParameters()[2].get(KEY_FLUME_SINK_NAME), new com.cloudera.framework.example.one.stream.Stream(),
         new HDFSEventSink(), (String) testMetaData.getParameters()[2].get(KEY_FLUME_OUTPUT_DIR),
-        (Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_ITERATIONS), iterations -> {
-        }));
+        (Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_ITERATIONS), iterations -> 1));
     Driver driverStage = new Stage(dfsServer.getConf());
     assertEquals(SUCCESS, driverStage.runner(
       dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString()));
