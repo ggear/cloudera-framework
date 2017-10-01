@@ -51,18 +51,19 @@ public class MqttSource extends AbstractPollableSource {
       clientOptions = new MqttConnectOptions();
       if (!brokerAccess.isEmpty()) {
         clientOptions.setUserName(brokerAccess);
+      }
+      if (!brokerSecret.isEmpty()) {
         clientOptions.setPassword(brokerSecret.toCharArray());
       }
       clientOptions.setCleanSession(false);
       clientOptions.setAutomaticReconnect(false);
       clientOptions.setConnectionTimeout(Math.toIntExact(getBackOffSleepIncrement() / 2000));
-      clientOptions = new MqttConnectOptions();
       client = new MqttClient(providerUrl, getName(), new MemoryPersistence());
     } catch (Exception e) {
       throw new FlumeException("Could not create MQTT client with broker [" + providerUrl + "] and client ID [" + getName() + "]", e);
     }
     if (LOG.isInfoEnabled()) {
-      LOG.info("MQTT client configured with broker [" + providerUrl + "], topic [" +
+      LOG.info("MQTT client configured with broker [" + providerUrl + "], user [" + clientOptions.getUserName() + "], topic [" +
         destinationName + "] and client ID [" + getName() + "]");
     }
   }
@@ -116,7 +117,7 @@ public class MqttSource extends AbstractPollableSource {
           client.subscribe(destinationName);
         }
       } catch (MqttException e) {
-        throw new FlumeException("Could not connect to MQTT broker [" + providerUrl + "]", e);
+        throw new FlumeException("Could not connect to MQTT broker [" + providerUrl + "], user [" + clientOptions.getUserName() + "]", e);
       }
     }
   }
