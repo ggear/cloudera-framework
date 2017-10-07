@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.cloudera.framework.library.thirdparty</groupId>
+    <artifactId>cloudera-framework-library-thirdparty-spark2avro</artifactId>
+    <packaging>pom</packaging>
+    <version>1.6.0-cdh5.12.1-SNAPSHOT</version>
+
+    <parent>
+        <groupId>com.cloudera.framework.library</groupId>
+        <artifactId>cloudera-framework-library-thirdparty</artifactId>
+        <version>1.6.0-cdh5.12.1-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.databricks</groupId>
+            <artifactId>spark-avro_2.11</artifactId>
+            <version>${sparkavro.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+</project>
