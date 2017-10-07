@@ -1,27 +1,19 @@
 package com.cloudera.framework.common.flume;
 
 import java.io.File;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.apache.flume.Channel;
+import com.google.common.collect.ImmutableMap;
 import org.apache.flume.Context;
-import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
 import org.apache.flume.FlumeException;
+import org.apache.flume.NamedComponent;
 import org.apache.flume.event.EventBuilder;
 import org.apache.flume.instrumentation.SourceCounter;
 import org.apache.flume.source.AbstractPollableSource;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +22,8 @@ import org.slf4j.LoggerFactory;
  * MQTT {@link org.apache.flume.Source}
  */
 public class MqttSource extends AbstractPollableSource {
+
+  public static final String HEADER_TOPIC = "tpc";
 
   public static final String CONFIG_BROKER_ACCESS = "brokerAccess";
   public static final String CONFIG_BROKER_ACCESS_DEFAULT = "";
@@ -51,11 +45,9 @@ public class MqttSource extends AbstractPollableSource {
   private MqttClient client;
   private MqttConnectOptions clientOptions;
   private SourceCounter sourceCounter;
-  private ArrayBlockingQueue<Event> queue;
 
   @Override
   protected void doConfigure(Context context) throws FlumeException {
-    queue = new ArrayBlockingQueue<>(1);
     sourceCounter = new SourceCounter(getName());
     journalDir = context.getString(CONFIG_JOURNAL_DIR, CONFIG_JOURNAL_DIR_DEFAULT).trim();
     providerUrl = context.getString(CONFIG_PROVIDER_URL, CONFIG_PROVIDER_URL_DEFAULT).trim();
@@ -117,22 +109,19 @@ public class MqttSource extends AbstractPollableSource {
       if (!client.isConnected()) {
         try {
           client.connect(clientOptions);
-          client.subscribe(destinationName, 2, new IMqttMessageListener() {
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-              if (LOG.isDebugEnabled()) {
-                LOG.debug("MQTT client received message from [" +
-                  providerUrl + "/" + topic + "] of size [" + message.getPayload().length + "]");
-              }
-              sourceCounter.incrementAppendReceivedCount();
-              sourceCounter.incrementEventReceivedCount();
-              getChannelProcessor().processEvent(EventBuilder.withBody(message.getPayload()));
-              sourceCounter.incrementEventAcceptedCount();
-              sourceCounter.incrementAppendAcceptedCount();
-              if (LOG.isDebugEnabled()) {
-                LOG.debug("MQTT client committed message to channels [" +
-                  getChannelProcessor().getSelector().getAllChannels().stream().map(channel ->
-                    channel.getName()).collect(Collectors.joining(",")) + "]");
-              }
+          client.subscribe(destinationName, 2, (topic, message) -> {
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("MQTT client received message from [" +
+                providerUrl + "/" + topic + "] of size [" + message.getPayload().length + "]");
+            }
+            sourceCounter.incrementAppendReceivedCount();
+            sourceCounter.incrementEventReceivedCount();
+            getChannelProcessor().processEvent(EventBuilder.withBody(message.getPayload(), ImmutableMap.of(HEADER_TOPIC, topic)));
+            sourceCounter.incrementEventAcceptedCount();
+            sourceCounter.incrementAppendAcceptedCount();
+            if (LOG.isDebugEnabled()) {
+              LOG.debug("MQTT client committed message to channels [" + getChannelProcessor().getSelector().getAllChannels().stream()
+                .map(NamedComponent::getName).collect(Collectors.joining(",")) + "]");
             }
           });
           if (LOG.isInfoEnabled()) {

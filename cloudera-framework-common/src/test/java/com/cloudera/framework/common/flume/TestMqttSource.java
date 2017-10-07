@@ -50,6 +50,7 @@ public class TestMqttSource implements TestConstants {
     client.connect();
   }
 
+  @SuppressWarnings("SameReturnValue")
   private int mqttClientSendMessage(Integer iteration) {
     try {
       for (int i = 0; i < FLUME_CRANKS_MESSAGES; i++) {
