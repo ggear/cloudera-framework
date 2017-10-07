@@ -61,11 +61,7 @@ public abstract class CdhServer<U extends CdhServer<?, ?>, V> extends ExternalRe
     }
     this.envOsDescriptor = ParcelUtil.getOsDescriptor();
     Matcher scalaVersionMatcher = REGEX_SCALA_VERSION.matcher(Properties.versionString());
-    if (scalaVersionMatcher.find()) {
-      this.envScalaVersion = scalaVersionMatcher.group(1);
-    } else {
-      throw new RuntimeException("Could not determine Scala version");
-    }
+    this.envScalaVersion = scalaVersionMatcher.find() ? scalaVersionMatcher.group(1) : "UNKNOWN";
   }
 
   /**
