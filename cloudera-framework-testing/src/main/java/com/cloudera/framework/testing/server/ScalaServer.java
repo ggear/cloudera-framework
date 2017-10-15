@@ -47,7 +47,16 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    * @return the exit code
    */
   public int execute(File file) throws IOException {
-    return execute(file, null);
+    return execute(null, file);
+  }
+
+  /**
+   * Execute a <code>file</code>
+   *
+   * @return the exit code
+   */
+  public int execute(String virtualMachine, File file) throws IOException {
+    return execute(virtualMachine, file, null);
   }
 
   /**
@@ -55,8 +64,8 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters) throws IOException {
-    return execute(file, parameters, null);
+  public int execute(String virtualMachine, File file, List<String> parameters) throws IOException {
+    return execute(virtualMachine, file, parameters, null);
   }
 
   /**
@@ -64,8 +73,8 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters, Map<String, String> environment) throws IOException {
-    return execute(file, parameters, environment, null);
+  public int execute(String virtualMachine, File file, List<String> parameters, Map<String, String> environment) throws IOException {
+    return execute(virtualMachine, file, parameters, environment, null);
   }
 
   /**
@@ -73,8 +82,9 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters, Map<String, String> environment, StringBuffer output) throws IOException {
-    return execute(file, parameters, environment, output, false);
+  public int execute(String virtualMachine, File file, List<String> parameters, Map<String, String> environment, StringBuffer output)
+    throws IOException {
+    return execute(virtualMachine, file, parameters, environment, output, false);
   }
 
   /**
@@ -84,7 +94,8 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
    *
    * @return the exit code
    */
-  public int execute(File file, List<String> parameters, Map<String, String> environment, StringBuffer output, boolean quiet)
+  public int execute(String virtualMachine, File file, List<String> parameters, Map<String, String> environment, StringBuffer output,
+                     boolean quiet)
     throws IOException {
     if (file == null || !file.exists() || !file.isFile()) {
       throw new IOException("Could not execute file [" + file + "]");
@@ -104,8 +115,8 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
     if (output == null) {
       output = new StringBuffer();
     }
-    int exit = TemplaterUtil.executeScriptScala(scala.Option.apply(JavaConversions.mapAsScalaMap(environment)), file,
-      scala.Option.apply(parameters == null ? null : JavaConversions.asScalaBuffer(parameters)),
+    int exit = TemplaterUtil.executeScriptScala(scala.Option.apply(JavaConversions.mapAsScalaMap(environment)),
+      scala.Option.apply(virtualMachine), file, scala.Option.apply(parameters == null ? null : JavaConversions.asScalaBuffer(parameters)),
       new File(REL_DIR_SCRIPT, UUID.randomUUID().toString()), scala.Option.apply(null), scala.Option.apply(output));
     if (!quiet) {
       log(LOG, "execute", "script [" + file.getAbsolutePath() + "] " + output.toString(), true);

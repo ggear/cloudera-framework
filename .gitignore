@@ -36,3 +36,8 @@ cloudera-framework-thirdparty/src/main/repository/**/_remote.repositories
 cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-1/src/main/java/com/cloudera/framework/example/one/model/Record.java
 cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-3/src/main/scala/com/cloudera/framework/example/three/Model.scala
 cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-3/src/main/script/scala/com/cloudera/framework/example/three/Model.scala
+cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-5/src/main/python/process.py
+cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-5/src/main/python/script_util.py
+cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-5/src/main/script/python/process.py
+cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-5/src/main/script/python/script_util.py
+cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-5/src/main/template/python/script_util.py

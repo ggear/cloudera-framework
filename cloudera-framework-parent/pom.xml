@@ -22,8 +22,9 @@
         <cloudera-framework.version>1.6.0-cdh5.12.1-SNAPSHOT</cloudera-framework.version>
 
         <!-- Child projects can enable/disable various build facets via these flags -->
+        <templater-scala.build.skip>true</templater-scala.build.skip>
+        <templater-python.build.skip>true</templater-python.build.skip>
         <conda.build.skip>true</conda.build.skip>
-        <templater.build.skip>true</templater.build.skip>
         <parcel.build.skip>true</parcel.build.skip>
         <tar.build.skip>true</tar.build.skip>
 
@@ -150,27 +151,63 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>templater-script</id>
+                        <id>templater-utils-python</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>src/main/script</outputDirectory>
+                            <outputDirectory>src/main/template/python</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/template</directory>
+                                    <directory>${project.build.directory}/assembly-conf/python</directory>
+                                </resource>
+                            </resources>
+                            <skip>${templater-python.build.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>templater-script-scala</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/script/scala</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/template/scala</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>
                             <filters>
-                                <filter>${project.build.directory}/templater-assembly/script.properties</filter>
+                                <filter>${project.build.directory}/templater-assembly/scala/script.properties</filter>
                             </filters>
-                            <skip>${templater.build.skip}</skip>
+                            <skip>${templater-scala.build.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>templater-scala</id>
+                        <id>templater-script-python</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/script/python</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/template/python</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <filters>
+                                <filter>${project.build.directory}/templater-assembly/python/script.properties</filter>
+                            </filters>
+                            <skip>${templater-python.build.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>templater-library-scala</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -184,9 +221,29 @@
                                 </resource>
                             </resources>
                             <filters>
-                                <filter>${project.build.directory}/templater-assembly/library.properties</filter>
+                                <filter>${project.build.directory}/templater-assembly/scala/library.properties</filter>
                             </filters>
-                            <skip>${templater.build.skip}</skip>
+                            <skip>${templater-scala.build.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>templater-library-python</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/python</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/template/python</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <filters>
+                                <filter>${project.build.directory}/templater-assembly/python/library.properties</filter>
+                            </filters>
+                            <skip>${templater-python.build.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
@@ -334,7 +391,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>unpack-templater</id>
+                        <id>unpack-templater-scala</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>unpack</goal>
@@ -349,7 +406,26 @@
                                 </artifactItem>
                             </artifactItems>
                             <includes>**/*.properties</includes>
-                            <skip>${templater.build.skip}</skip>
+                            <skip>${templater-scala.build.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-templater-python</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.jag.maven-templater</groupId>
+                                    <artifactId>maven-templater-assembly</artifactId>
+                                    <version>${templater.version}</version>
+                                    <outputDirectory>${project.build.directory}/templater-assembly</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                            <includes>**/*.properties</includes>
+                            <skip>${templater-python.build.skip}</skip>
                         </configuration>
                     </execution>
                     <execution>

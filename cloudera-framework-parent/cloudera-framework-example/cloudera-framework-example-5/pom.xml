@@ -15,10 +15,10 @@
     </parent>
 
     <properties>
-        <tar.build.skip>${maven.package.skip}</tar.build.skip>
-        <parcel.build.skip>${maven.package.skip}</parcel.build.skip>
+        <templater-python.build.skip>false</templater-python.build.skip>
         <conda.build.skip>${maven.package.skip}</conda.build.skip>
-        <templater.build.skip>false</templater.build.skip>
+        <parcel.build.skip>${maven.package.skip}</parcel.build.skip>
+        <tar.build.skip>${maven.package.skip}</tar.build.skip>
     </properties>
 
     <dependencies>

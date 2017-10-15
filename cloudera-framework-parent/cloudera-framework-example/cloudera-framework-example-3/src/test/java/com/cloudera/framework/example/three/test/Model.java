@@ -22,7 +22,6 @@ import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
-import com.cloudera.framework.testing.server.DfsServer.Runtime;
 import com.cloudera.framework.testing.server.ScalaServer;
 import com.cloudera.framework.testing.server.SparkServer;
 import com.googlecode.zohhak.api.Coercion;
@@ -40,7 +39,7 @@ import org.junit.runner.RunWith;
 public class Model implements TestConstants {
 
   @ClassRule
-  public static final DfsServer dfsServer = DfsServer.getInstance(Runtime.CLUSTER_DFS);
+  public static final DfsServer dfsServer = DfsServer.getInstance();
 
   @ClassRule
   public static final SparkServer sparkServer = SparkServer.getInstance();

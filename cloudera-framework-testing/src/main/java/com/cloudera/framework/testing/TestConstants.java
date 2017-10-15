@@ -8,6 +8,9 @@ import java.io.File;
 public interface TestConstants {
 
   // Directories
+  String DIR_SOURCE = "src/main";
+  String DIR_SCALA = "scala";
+  String DIR_PYTHON = "python";
   String DIR_TARGET = "target";
   String DIR_DATASET = "data";
   String DIR_DATA = "test-data";
@@ -31,6 +34,7 @@ public interface TestConstants {
   String DIR_RUNTIME_KUDU = "runtime-kudu";
   String DIR_RUNTIME_MQTT = "runtime-mqtt";
   String DIR_RUNTIME_MR = "MiniMRCluster_";
+  String DIR_RUNTIME_PYTHON = "test-python";
 
   // Relative directories
   String REL_DIR_DATA = DIR_TARGET + "/" + DIR_DATA;
@@ -44,6 +48,9 @@ public interface TestConstants {
 
   // Absolute directories
   String ABS_DIR_WORKING = new File(".").getAbsolutePath().substring(0, new File(".").getAbsolutePath().length() - 2);
+  String ABS_DIR_SOURCE = ABS_DIR_WORKING + "/" + DIR_SOURCE;
+  String ABS_DIR_SCALA_SRC = ABS_DIR_SOURCE + "/" + DIR_SCALA;
+  String ABS_DIR_PYTHON_SRC = ABS_DIR_SOURCE + "/" + DIR_PYTHON;
   String ABS_DIR_TARGET = ABS_DIR_WORKING + "/" + DIR_TARGET;
   String ABS_DIR_CLASSES = ABS_DIR_TARGET + "/" + DIR_CLASSES;
   String ABS_DIR_CLASSES_TEST = ABS_DIR_TARGET + "/" + DIR_CLASSES_TEST;
@@ -60,7 +67,8 @@ public interface TestConstants {
   String ABS_DIR_KAFKA = ABS_DIR_TARGET + "/" + DIR_KAFKA;
   String ABS_DIR_FLUME = ABS_DIR_TARGET + "/" + DIR_FLUME;
   String ABS_DIR_ZOOKEEPER = ABS_DIR_TARGET + "/" + DIR_ZOOKEEPER;
-  String ABS_DIR_PYTHON = ABS_DIR_CLASSES + "/python";
+  String ABS_DIR_PYTHON = ABS_DIR_CLASSES + "/" + DIR_PYTHON;
+  String ABS_DIR_PYTHON_BIN = ABS_DIR_TARGET + "/" + DIR_RUNTIME_PYTHON + "/" + DIR_PYTHON + "/bin/" + DIR_PYTHON;
   String ABS_DIR_HIVE_QUERY = ABS_DIR_CLASSES + "/hive/query";
   String ABS_DIR_HIVE_SCHEMA = ABS_DIR_CLASSES + "/hive/schema";
   String ABS_DIR_HIVE_REFRESH = ABS_DIR_CLASSES + "/hive/refresh";

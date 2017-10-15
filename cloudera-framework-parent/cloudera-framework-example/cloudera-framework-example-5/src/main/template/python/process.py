@@ -1,5 +1,6 @@
 ###############################################################################
-# ${TEMPLATE.PRE-PROCESSOR.LINE}${TEMPLATE.PRE-PROCESSOR.RAW_TEMPLATE}
+#
+# ${TEMPLATE.PRE-PROCESSOR.RAW_TEMPLATE}
 #
 # This file is in the ${TEMPLATE.PRE-PROCESSOR.STATE} pre-processed state with template available by the
 # same package and file name under the modules src/main/template directory.
@@ -29,13 +30,14 @@
 #
 ###############################################################################
 
+import sys
 from pyspark.sql import SparkSession
+from script_util import hdfs_make_qualified
 
 # @formatter:off
-#${TEMPLATE.PRE-PROCESSOR.LINE}!hdfs dfs -rm -f -r -skipTrash /tmp/stateunion
-#${TEMPLATE.PRE-PROCESSOR.LINE}!hdfs dfs -mkdir -p /tmp/stateunion/landing
-#${TEMPLATE.PRE-PROCESSOR.LINE}!hdfs dfs -put cloudera-framework-parent/cloudera-framework-example-5/src/test/resources/data/stateunion/nixon/1970/1970-Nixon.txt /tmp/stateunion/landing/1970-Nixon.txt
-#${TEMPLATE.PRE-PROCESSOR.LINE}!hdfs dfs -ls /tmp/stateunion/landing
+# Remove existing dataset${TEMPLATE.PRE-PROCESSOR.CLOSE}!hdfs dfs -rm -f -r -skipTrash /tmp/stateunion
+# Make dataset directory${TEMPLATE.PRE-PROCESSOR.CLOSE}!hdfs dfs -mkdir -p /tmp/stateunion/landing
+# Put dataset into HDFS${TEMPLATE.PRE-PROCESSOR.CLOSE}!hdfs dfs -put cloudera-framework-parent/cloudera-framework-example-5/src/test/resources/data/stateunion/nixon/1970/1970-Nixon.txt /tmp/stateunion/landing/1970-Nixon.txt
 # @formatter:on
 
 sparkSession = SparkSession.builder \
@@ -43,7 +45,7 @@ sparkSession = SparkSession.builder \
     .getOrCreate()
 
 data = sparkSession.sparkContext.textFile(
-    '/tmp/stateunion/landing/1970-Nixon.txt')
+    hdfs_make_qualified('/tmp/stateunion/landing/1970-Nixon.txt'))
 
 
 def word_tokenize(x):
@@ -59,9 +61,11 @@ def word_position(x):
 words = data.flatMap(word_tokenize)
 words.collect()
 words.saveAsTextFile(
-    '/tmp/stateunion/processed/words')
+    hdfs_make_qualified('/tmp/stateunion/processed/words'))
 
 words_positions = words.map(word_position)
 words_positions.collect()
 words_positions.saveAsTextFile(
-    '/tmp/stateunion/processed/words_positions')
+    hdfs_make_qualified('/tmp/stateunion/processed/words_positions'))
+
+if sparkSession.sparkContext.textFile(hdfs_make_qualified('/tmp/stateunion/processed/words')).count() != 4987: raise Exception()

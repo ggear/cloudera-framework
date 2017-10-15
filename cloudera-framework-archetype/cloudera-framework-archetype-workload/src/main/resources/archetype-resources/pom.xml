@@ -28,8 +28,8 @@
         https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/pom.xml
     -->
     <properties>
-        <tar.build.skip>false</tar.build.skip>
         <parcel.build.skip>false</parcel.build.skip>
+        <tar.build.skip>false</tar.build.skip>
     </properties>
 
     <!--

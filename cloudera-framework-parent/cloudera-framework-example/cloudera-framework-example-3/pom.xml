@@ -15,9 +15,9 @@
     </parent>
 
     <properties>
-        <tar.build.skip>${maven.package.skip}</tar.build.skip>
+        <templater-scala.build.skip>false</templater-scala.build.skip>
         <parcel.build.skip>${maven.package.skip}</parcel.build.skip>
-        <templater.build.skip>false</templater.build.skip>
+        <tar.build.skip>${maven.package.skip}</tar.build.skip>
     </properties>
 
     <dependencies>

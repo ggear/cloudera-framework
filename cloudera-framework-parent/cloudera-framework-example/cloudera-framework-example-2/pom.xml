@@ -15,8 +15,8 @@
     </parent>
 
     <properties>
-        <tar.build.skip>${maven.package.skip}</tar.build.skip>
         <parcel.build.skip>${maven.package.skip}</parcel.build.skip>
+        <tar.build.skip>${maven.package.skip}</tar.build.skip>
     </properties>
 
     <dependencies>
