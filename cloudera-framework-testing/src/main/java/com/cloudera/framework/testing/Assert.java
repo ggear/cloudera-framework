@@ -67,11 +67,31 @@ public class Assert extends org.junit.Assert {
   /**
    * Assert <code>actual</code> less than <code>expected</code>
    *
+   * @param expected <code>TestMetaData</code>
+   * @param actual   <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterLessThan(TestMetaData expected, Map actual) {
+    assertCounterEqualsLessThanGreaterThan(expected.getAsserts()[0], actual, false, true, false, false);
+  }
+
+  /**
+   * Assert <code>actual</code> less than <code>expected</code>
+   *
    * @param expected <code>Map<String, Map<Enum<?>, Long>></code>
    * @param actual   <code>Map<String, Map<Enum<?>, Long>></code>
    */
   public static void assertCounterLessThan(Map expected, Map actual) {
     assertCounterEqualsLessThanGreaterThan(expected, actual, false, true, false, false);
+  }
+
+  /**
+   * Assert <code>actual</code> greater than <code>expected</code>
+   *
+   * @param expected <code>TestMetaData</code>
+   * @param actual   <code>Map<String, Map<Enum<?>, Long>></code>
+   */
+  public static void assertCounterGreaterThan(TestMetaData expected, Map actual) {
+    assertCounterEqualsLessThanGreaterThan(expected.getAsserts()[0], actual, false, false, true, false);
   }
 
   /**

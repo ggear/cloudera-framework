@@ -50,7 +50,7 @@ class Driver(configuration: Configuration) extends com.cloudera.framework.common
   }
 
   def main(arguments: Array[String]): Unit = {
-    System.exit(new Driver(null).runner(arguments: _*))
+    new Driver(null).runner(arguments: _*)
   }
 
 }

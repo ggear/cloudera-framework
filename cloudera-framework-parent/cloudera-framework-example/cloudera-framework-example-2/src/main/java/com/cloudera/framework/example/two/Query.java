@@ -31,7 +31,7 @@ public class Query extends DriverSpark {
   }
 
   public static void main(String... arguments) {
-    System.exit(new Query(null).runner(arguments));
+    new Query(null).runner(arguments);
   }
 
   @Override

@@ -74,7 +74,7 @@ class Driver(configuration: Configuration)
     * Main method to run the driver
     */
   def main(arguments: Array[String]): Unit = {
-    System.exit(new Driver(null).runner(arguments: _*))
+    new Driver(null).runner(arguments: _*)
   }
 
 }

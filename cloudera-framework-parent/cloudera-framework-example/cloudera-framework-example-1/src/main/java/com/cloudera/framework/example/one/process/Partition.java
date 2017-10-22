@@ -66,7 +66,7 @@ public class Partition extends Driver {
   }
 
   public static void main(String... arguments) {
-    System.exit(new Partition().runner(arguments));
+    new Partition().runner(arguments);
   }
 
   @Override

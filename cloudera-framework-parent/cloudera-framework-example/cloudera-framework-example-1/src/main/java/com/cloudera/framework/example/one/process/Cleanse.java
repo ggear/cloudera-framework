@@ -53,7 +53,7 @@ public class Cleanse extends Driver {
   }
 
   public static void main(String... arguments) {
-    System.exit(new Cleanse().runner(arguments));
+    new Cleanse().runner(arguments);
   }
 
   @Override

@@ -52,7 +52,7 @@ public class Stage extends Driver {
   }
 
   public static void main(String... arguments) {
-    System.exit(new Stage().runner(arguments));
+    new Stage().runner(arguments);
   }
 
   @Override

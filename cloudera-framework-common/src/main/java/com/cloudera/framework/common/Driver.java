@@ -207,7 +207,7 @@ public abstract class Driver extends Configured implements Tool {
     timeTotal = System.currentTimeMillis() - timeTotal;
     if (LOG.isInfoEnabled()) {
       if (getCountersGroups().size() > 0) {
-        LOG.info("Driver [" + this.getClass().getCanonicalName() + "] counters:");
+        LOG.info("Driver [" + this.getClass().getSimpleName() + "] counters:");
         for (String group : getCountersGroups()) {
           Map<Enum<?>, Long> counters = getCounters(group);
           for (Enum<?> counter : counters.keySet()) {
@@ -216,7 +216,7 @@ public abstract class Driver extends Configured implements Tool {
         }
       }
       if (results != null) {
-        LOG.info("Driver [" + this.getClass().getCanonicalName() + "] results:");
+        LOG.info("Driver [" + this.getClass().getSimpleName() + "] results:");
         results.forEach(result -> LOG.info("\t" + result));
       }
       String exitStatus;

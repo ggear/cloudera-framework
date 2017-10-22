@@ -25,7 +25,7 @@ public class Process extends Driver {
   }
 
   public static void main(String... arguments) {
-    System.exit(new Process().runner(arguments));
+    new Process().runner(arguments);
   }
 
   @Override
