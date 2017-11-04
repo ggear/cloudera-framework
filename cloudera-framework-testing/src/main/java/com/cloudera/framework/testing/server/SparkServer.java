@@ -19,6 +19,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   public static final String SPARK_CONF_MASTER = "spark.master";
   public static final String SPARK_CONF_APPNAME = "spark.app.name";
   public static final String SPARK_CONF_WAREHOUSE = "spark.sql.warehouse.dir";
+  public static final String SPARK_CONF_SQLCODEGEN = "spark.sql.codegen.wholeStage";
 
   private static final Logger LOG = LoggerFactory.getLogger(SparkServer.class);
 
@@ -75,6 +76,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
     System.setProperty(SPARK_CONF_APPNAME, "spark-unit-test");
     System.setProperty(SPARK_CONF_MASTER, "local[*]");
     System.setProperty(SPARK_CONF_WAREHOUSE, new Path(DfsServer.getInstance().getPathUri("/usr/spark/warehouse")).toString());
+    System.setProperty(SPARK_CONF_SQLCODEGEN, "false");
     new JavaSparkContext(new SparkConf()).close();
     System.setProperty(ScriptUtil.PropertySparkMaster(), System.getProperty(SPARK_CONF_MASTER));
     log(LOG, "start", time);

@@ -19,9 +19,10 @@
 .hivehistory
 .impalahistory
 .python-eggs
+.pydevproject
+*.pyc
+*egg-info
 *.pipeout
-target
-build
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -29,7 +30,11 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
+phantomjsdriver.log
 /spark-defaults.conf
+target
+build
+dist
 cloudera-framework-thirdparty/src/main/repository/**/*SNAPSHOT*/
 cloudera-framework-thirdparty/src/main/repository/**/maven-metadata-local.xml
 cloudera-framework-thirdparty/src/main/repository/**/_remote.repositories
