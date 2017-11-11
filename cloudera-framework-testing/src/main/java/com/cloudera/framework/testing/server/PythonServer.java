@@ -113,7 +113,8 @@ public class PythonServer extends CdhServer<PythonServer, PythonServer.Runtime> 
       output = new StringBuffer();
     }
     int exit = TemplaterUtil.executeScriptPython(scala.Option.apply(JavaConversions.mapAsScalaMap(environment)),
-      scala.Option.apply(virtualMachine), file, scala.Option.apply(parameters == null ? null : JavaConversions.asScalaBuffer(parameters)),
+      scala.Option.apply(JavaConversions.asScalaBuffer(SparkServer.SPARK_ENV).toSeq()), scala.Option.apply(virtualMachine), file, scala
+        .Option.apply(parameters == null ? null : JavaConversions.asScalaBuffer(parameters)),
       new File(REL_DIR_SCRIPT, UUID.randomUUID().toString()), scala.Option.apply(null), scala.Option.apply(output));
     if (!quiet) {
       log(LOG, "execute", "script [" + file.getAbsolutePath() + "] " + output.toString(), true);

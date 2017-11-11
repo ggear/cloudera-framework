@@ -1,3 +1,10 @@
+###############################################################################
+#
+# Python script utilities as included from the cloudera-framework-assembly,
+# do not edit directly
+#
+###############################################################################
+
 import os
 import re
 

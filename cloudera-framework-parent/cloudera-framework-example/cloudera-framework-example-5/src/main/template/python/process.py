@@ -31,6 +31,9 @@
 ###############################################################################
 
 import sys
+
+# Add working director to the system path${TEMPLATE.PRE-PROCESSOR.CLOSE}sys.path.insert(0, 'asystem-amodel/src/main/script/python')
+
 from pyspark.sql import SparkSession
 from script_util import hdfs_make_qualified
 

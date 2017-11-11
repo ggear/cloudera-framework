@@ -2,6 +2,8 @@ package com.cloudera.framework.testing.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,7 @@ import org.junit.rules.TestRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.collection.JavaConversions;
+import scala.tools.asm.Type;
 
 /**
  * Scala {@link TestRule}
@@ -116,7 +119,8 @@ public class ScalaServer extends CdhServer<ScalaServer, ScalaServer.Runtime> {
       output = new StringBuffer();
     }
     int exit = TemplaterUtil.executeScriptScala(scala.Option.apply(JavaConversions.mapAsScalaMap(environment)),
-      scala.Option.apply(virtualMachine), file, scala.Option.apply(parameters == null ? null : JavaConversions.asScalaBuffer(parameters)),
+      scala.Option.apply(JavaConversions.asScalaBuffer(SparkServer.SPARK_ENV).toSeq()), scala.Option.apply(virtualMachine), file,
+      scala.Option.apply(parameters == null ? null : JavaConversions.asScalaBuffer(parameters)),
       new File(REL_DIR_SCRIPT, UUID.randomUUID().toString()), scala.Option.apply(null), scala.Option.apply(output));
     if (!quiet) {
       log(LOG, "execute", "script [" + file.getAbsolutePath() + "] " + output.toString(), true);

@@ -1,6 +1,8 @@
 package com.cloudera.framework.testing.server;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import com.cloudera.framework.assembly.ScriptUtil;
 import org.apache.hadoop.fs.Path;
@@ -20,6 +22,8 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   public static final String SPARK_CONF_APPNAME = "spark.app.name";
   public static final String SPARK_CONF_WAREHOUSE = "spark.sql.warehouse.dir";
   public static final String SPARK_CONF_SQLCODEGEN = "spark.sql.codegen.wholeStage";
+
+  public static final List<String> SPARK_ENV = Arrays.asList(new String[]{"SPARK_HOME", "SPARK_CONF_DIR"});
 
   private static final Logger LOG = LoggerFactory.getLogger(SparkServer.class);
 
@@ -73,6 +77,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   public synchronized void start() throws Exception {
     long time = log(LOG, "start");
     CdhServer.setEnvProperty("SPARK_HOME", null);
+    CdhServer.setEnvProperty("SPARK_CONF_DIR", null);
     System.setProperty(SPARK_CONF_APPNAME, "spark-unit-test");
     System.setProperty(SPARK_CONF_MASTER, "local[*]");
     System.setProperty(SPARK_CONF_WAREHOUSE, new Path(DfsServer.getInstance().getPathUri("/usr/spark/warehouse")).toString());
