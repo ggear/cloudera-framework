@@ -11,7 +11,7 @@ MANAGER_SERVER_USER=${2:-"admin"}
 MANAGER_SERVER_PWORD=${3:-"admin"}
 FLUME_PROPERTIES=${4:-"$ROOT_DIR/lib/flume/flume-conf.properties"}
 
-REMOTE_DEPLOY=${REMOTE_DEPLOY:-true}
+CLUSTER_PROVISION=${CLUSTER_PROVISION:-altus}
 
 if [ -f $FLUME_PROPERTIES ]; then
   export FLUME_AGENT_CONFIG=$(cat $FLUME_PROPERTIES | \
@@ -27,7 +27,7 @@ if [ -f $FLUME_PROPERTIES ]; then
       source $SCRIPT
     fi
   done
-  if $REMOTE_DEPLOY; then
+  if [ "$CLUSTER_PROVISION" != "local" ]; then
     python - "$MANAGER_SERVER_USER" "$MANAGER_SERVER_PWORD" "$MANAGER_SERVER_HOST" "$MANAGER_SERVER_PORT" "$PARCEL_NAMESPACE" "$FLUME_AGENT_CONFIG" "/opt/cloudera/parcels/$PARCEL_NAME/lib/flume" "$START_DEPLOYMENT" << END
 import sys
 from cm_api import api_client
@@ -79,7 +79,7 @@ END
   fi
 fi
 
-if $REMOTE_DEPLOY; then
+if [ "$CLUSTER_PROVISION" = "local" ]; then
   if [ -f $ROOT_DIR/lib/parcel/parcel.env ]; then
     id -u $PARCEL_NAMESPACE &>/dev/null || sudo useradd $PARCEL_NAMESPACE
     $ROOT_DIR/lib/manager/python/deploy.py \

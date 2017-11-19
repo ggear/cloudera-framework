@@ -9,7 +9,7 @@ When editing the template directly (as indicated by the presence of the
 TEMPLATE.PRE-PROCESSOR.RAW_TEMPLATE tag at the top of this file), care should
 be taken to ensure the maven-resources-plugin generate-sources filtering of the
 TEMPLATE.PRE-PROCESSOR tags, which comment and or uncomment blocks of the
-template, leave the file in a consistent state, as a script ot library,
+template, leave the file in a consistent state, as a script or library,
 post filtering.
 
 It is desirable that in template form, the file remains both compilable and

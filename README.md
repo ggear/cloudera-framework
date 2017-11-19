@@ -35,6 +35,7 @@ To compile, build and package from source, this project requires:
 * Scala 2.11
 * Python 2.7
 * Anaconda 4
+* Altus CLI 2.2
 * Python CM API 5
 
 The [bootstrap.sh](https://github.com/ggear/cloudera-framework/blob/master/bootstrap.sh) script tests for,

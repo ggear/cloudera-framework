@@ -56,7 +56,7 @@ if [ $(python --version 2>&1 | grep ${CF_VERSION_PYTHON} | wc -l) -eq 0 ]; then
   echo "Unable to install system dependent CPython "${CF_VERSION_PYTHON}", please do so manually"
 fi
 echo "###############################################################################"
-pip install cm-api && python --version || { echo "Python "${CF_VERSION_PYTHON}" not found" ; return 40; }
+pip install cm-api altuscli && python --version || { echo "Python "${CF_VERSION_PYTHON}" not found" ; return 40; }
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"

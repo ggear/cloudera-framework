@@ -8,10 +8,10 @@ set -x -e
 
 WAIT_TASK=${1:-"false"}
 JOB_NAME=${2:-"my-job"}
-JOB_CLASS=${3:-"com.my.Job"}
+JOB_MAINPY=${3:-"my_job.py"}
 JOB_ARGS=${4:-""}
 SPARK_ARGS=${5:-"--num-executors 5 --executor-cores 1 --executor-memory 1G"}
-S3_LIB=${6:-"s3a://my-bucket/jar/"}
+S3_LIB=${6:-"s3a://my-bucket/py/"}
 CLUSTER_NAME=${7:-"$CLUSTER_NAME"}
 
 if [ "$USER_ADMIN" = true ]; then
@@ -23,13 +23,12 @@ fi
 #bash -c "export HADOOP_CLASSPATH=$HADOOP_CLASSPATH; spark-submit $@"
 
 if [ "$CLUSTER_PROVISION" = "altus" ]; then
-  LIB_JARS=($(ls $ROOT_DIR/lib/jar/dep/*.jar))
-  LIB_JARS+=($(ls $ROOT_DIR/lib/jar/*.jar))
-  LIB_JARS_CSV=''
-  for LIB_JAR in "${LIB_JARS[@]}"; do
-    aws s3 cp "$LIB_JAR" "${S3_LIB/s3a:\/\//s3://}"
-    [[ ! -z "$LIB_JARS_CSV" ]] && LIB_JARS_CSV="$LIB_JARS_CSV"','
-    LIB_JARS_CSV="$LIB_JARS_CSV"'"'"$S3_LIB"$(basename "$LIB_JAR")'"'
+  LIB_PYS=($(ls $ROOT_DIR/lib/py/*.py))
+  LIB_PYS_CSV=''
+  for LIB_PY in "${LIB_PYS[@]}"; do
+    aws s3 cp "$LIB_PY" "${S3_LIB/s3a:\/\//s3://}"
+    [[ ! -z "$LIB_PYS_CSV" ]] && LIB_PYS_CSV="$LIB_PYS_CSV"','
+    LIB_PYS_CSV="$LIB_PYS_CSV"'"'"$S3_LIB"$(basename "$LIB_PY")'"'
   done
   JOB_ARGS=($JOB_ARGS)
   JOB_ARGS_CSV=""
@@ -41,11 +40,11 @@ if [ "$CLUSTER_PROVISION" = "altus" ]; then
     --cluster-name "$CLUSTER_NAME" \
     --jobs '{
               "name": "'"$JOB_NAME"'",
-              "sparkJob": {
-                "jars": ['"$LIB_JARS_CSV"'],
-                "mainClass": "'"$JOB_CLASS"'",
+              "pySparkJob": {
+                "mainPy": "'"$S3_LIB""$JOB_MAINPY"'",
+                "pyFiles": ['"$LIB_PYS_CSV"'],
                 "applicationArguments": ['"$JOB_ARGS_CSV"'],
-                "sparkArguments": "'"$SPARK_ARGS"'"
+                "sparkArguments": "'"$SPARK_ARGS"" --conf spark.pyspark.python=/tmp/pyspark-env/bin/python"'"
               }
             }'
   if [ "$WAIT_TASK" = "true" ]; then
@@ -55,18 +54,18 @@ if [ "$CLUSTER_PROVISION" = "altus" ]; then
     done
   fi
 else
-  LIB_JAR=($(ls $ROOT_DIR/lib/jar/*.jar))
-  LIB_JARS=($(ls $ROOT_DIR/lib/jar/dep/*.jar))
-  LIB_JARS_CSV=''
-  for LIB_JAR in "${LIB_JARS[@]}"; do
-    [[ ! -z "$LIB_JARS_CSV" ]] && LIB_JARS_CSV="$LIB_JARS_CSV"','
-    LIB_JARS_CSV="$LIB_JARS_CSV""file://""$LIB_JAR"
+  LIB_PY=($(ls $ROOT_DIR/lib/jar/*.jar))
+  LIB_PYS=($(ls $ROOT_DIR/lib/jar/dep/*.jar))
+  LIB_PYS_CSV=''
+  for LIB_JAR in "${LIB_PYS[@]}"; do
+    [[ ! -z "$LIB_PYS_CSV" ]] && LIB_PYS_CSV="$LIB_PYS_CSV"','
+    LIB_PYS_CSV="$LIB_PYS_CSV""file://""$LIB_JAR"
   done
   spark-submit2 \
     --name "$JOB_NAME"
     --master yarn \
     --deploy-mode cluster \
-    --jars "$LIB_JARS_CSV" \
+    --jars "$LIB_PYS_CSV" \
     --class "$JOB_CLASS" \
     $SPARK_ARGS \
     $LIB_JAR \

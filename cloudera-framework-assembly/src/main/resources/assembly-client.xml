@@ -34,6 +34,7 @@
             <excludes>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/*.py</exclude>
+                <exclude>**/*.properties</exclude>
             </excludes>
             <fileMode>0700</fileMode>
             <directoryMode>0755</directoryMode>
@@ -42,7 +43,26 @@
             <outputDirectory>lib</outputDirectory>
             <directory>src/main/resources</directory>
             <includes>
+                <include>**/*.properties</include>
+            </includes>
+            <filtered>true</filtered>
+            <fileMode>0700</fileMode>
+            <directoryMode>0755</directoryMode>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>lib</outputDirectory>
+            <directory>src/main/resources</directory>
+            <includes>
                 <include>**/*.sh</include>
+                <include>**/*.py</include>
+            </includes>
+            <fileMode>0700</fileMode>
+            <directoryMode>0755</directoryMode>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>lib/py</outputDirectory>
+            <directory>src/main/python</directory>
+            <includes>
                 <include>**/*.py</include>
             </includes>
             <fileMode>0700</fileMode>
