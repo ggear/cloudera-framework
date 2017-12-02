@@ -35,6 +35,7 @@ phantomjsdriver.log
 target
 build
 dist
+nltk_data
 cloudera-framework-thirdparty/src/main/repository/**/*SNAPSHOT*/
 cloudera-framework-thirdparty/src/main/repository/**/maven-metadata-local.xml
 cloudera-framework-thirdparty/src/main/repository/**/_remote.repositories
