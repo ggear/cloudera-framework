@@ -18,7 +18,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
 /**
-  * Driver implementation
+  * Driver class
   */
 class Driver(configuration: Configuration)
   extends com.cloudera.framework.common.DriverSpark(configuration) {
@@ -70,17 +70,11 @@ class Driver(configuration: Configuration)
 
   }
 
-  /**
-    * Main method to run the driver
-    */
-  def main(arguments: Array[String]): Unit = {
-    new Driver(null).runner(arguments: _*)
-  }
-
 }
 
+
 /**
-  * Driver constants
+  * Driver object
   */
 object Driver {
 
@@ -90,5 +84,12 @@ object Driver {
   // Dataset paths
   val PathInput = "input"
   val PathOutput = "output"
+
+  /**
+  * Main method to run the driver
+  */
+  def main(arguments: Array[String]): Unit = {
+    new Driver(null).runner(arguments: _*)
+  }
 
 }
