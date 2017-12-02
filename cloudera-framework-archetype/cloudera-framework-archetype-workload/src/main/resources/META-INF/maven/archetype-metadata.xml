@@ -2,7 +2,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0"
         xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.0.0 http://maven.apache.org/xsd/archetype-descriptor-1.0.0.xsd">
-
     <fileSets>
         <fileSet filtered="true" encoding="UTF-8">
             <directory />
@@ -26,5 +25,18 @@
             <directory>src/test/resources</directory>
         </fileSet>
     </fileSets>
-
+    <requiredProperties>
+        <requiredProperty key="altusEnv">
+            <defaultValue>my_altus_environment</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="altusCluster">
+            <defaultValue>my_cluster</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="altusKey">
+            <defaultValue>file:///Users/my_altus_client_user/.ssh/altus</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="altusS3Bucket">
+            <defaultValue>my_s3_bucket</defaultValue>
+        </requiredProperty>
+    </requiredProperties>
 </archetype-descriptor>

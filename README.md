@@ -19,6 +19,10 @@ providing full coverage against CDH:
 * Spark & Spark2
 * Hive/MR & Hive/Spark
 
+The framework can target managed services provisioned by [Cloudera Altus](https://www.cloudera.com/products/altus.html),
+automated cluster deployments via [Cloudera Director](https://www.cloudera.com/products/product-components/cloudera-director.html)
+and or manually managed clusters via [Cloudera Manager](https://www.cloudera.com/products/product-components/cloudera-manager.html).
+
 [Examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example) 
 are included, codifying the standards, providing end to end data streaming, ingest, modeling, testing
 pipelines, with synthetic datasets to exercise the codebase.
@@ -35,8 +39,9 @@ To compile, build and package from source, this project requires:
 * Scala 2.11
 * Python 2.7
 * Anaconda 4
-* Altus CLI 2.2
-* Python CM API 5
+* Cloudera Altus CLI 2.2
+* Cloudera Director Client 2.6
+* Python Cloudera Manager API 5
 
 The [bootstrap.sh](https://github.com/ggear/cloudera-framework/blob/master/bootstrap.sh) script tests for,
 configures and installs (where possible) the required toolchain and should be sourced as so:
@@ -148,7 +153,7 @@ are available in various profiles, allowing one to bootstrap a new cloudera-fram
   (Scala, Java, Spark2)
 
 For example, a project could be created with the workload profile baseline,
-including a very simple example via:
+including a very simple example targeting a Cloudera Altus runtime as below:
 
 ```bash
 # Change the following variables to appropriate values for the target environment
@@ -162,8 +167,17 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -B \
   -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
   -DgroupId=com.myorg.mytest \
   -DartifactId=mytest \
-  -Dpackage=com.myorg.mytest
+  -Dpackage=com.myorg.mytest \
+  -DaltusEnv=my_altus_environment \
+  -DaltusKey=file:///Users/my_altus_client_user/.ssh/altus \
+  -DaltusCluster=my_cluster \
+  -DaltusS3Bucket=my_s3_bucket
 ```
+
+Note that in order to run against the Cloudera Altus Amazon AWS runtime as above, 
+both the "AWS_ACCESS_KEY" and "AWS_SECRET_KEY" are required to be set in the 
+environment and each Maven archetype parameter with the "altus" prefix has to be 
+given an appropriate value.
 
 # Release
 

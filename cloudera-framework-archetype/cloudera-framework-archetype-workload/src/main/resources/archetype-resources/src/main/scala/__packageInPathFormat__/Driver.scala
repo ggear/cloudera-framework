@@ -32,7 +32,7 @@ class Driver(configuration: Configuration)
   override def prepare(arguments: String*): Int = {
     if (arguments == null || arguments.length != parameters().length)
       return FAILURE_ARGUMENTS
-    rootPath = FileSystem.newInstance(getConf).makeQualified(new Path(arguments(0)))
+    rootPath = new Path(arguments(0)).getFileSystem(getConf).makeQualified(new Path(arguments(0)))
     SUCCESS
   }
 
