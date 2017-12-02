@@ -177,7 +177,11 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -B \
 Note that in order to run against the Cloudera Altus Amazon AWS runtime as above, 
 both the "AWS_ACCESS_KEY" and "AWS_SECRET_KEY" are required to be set in the 
 environment and each Maven archetype parameter with the "altus" prefix has to be 
-given an appropriate value.
+given an appropriate value. The "altusS3Bucket" parameter should specify a valid
+S3 bucket which the user has read/write access to, within the "altusEnv" region
+and has data stored under the "/data/workload/input" key with schema like the
+[pristine](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-archetype/cloudera-framework-archetype-workload/src/main/resources/archetype-resources/src/test/resources/data/__artifactId__/csv/pristine/pristine.csv) 
+test data set.
 
 # Release
 
