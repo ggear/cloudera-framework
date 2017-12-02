@@ -66,7 +66,7 @@
                                 project.properties["parcel.name"] = StringUtils.upperCase(project.artifactId).replaceAll('-', '_') + "-" + project.version
                                 project.properties["project.name.escaped"] = StringUtils.upperCase(project.artifactId).replaceAll('-', '_')
                                 project.properties["project.version.numeric"] = (project.version.endsWith("SNAPSHOT") ? "-" : "") + (project.version.replaceAll("\\D+", "").toInteger() &gt;= 100000000 ? (project.version.replaceAll("\\D+", "").toInteger() - 99999999) : project.version.replaceAll("\\D+", "").toInteger())
-                                project.properties["project.cdh.version"] = project.properties['cloudera-framework.version'].substring(project.properties['cloudera-framework.version'].indexOf('cdh') + 3, project.properties['cloudera-framework.version'].indexOf('-', project.properties['cloudera-framework.version'].indexOf('cdh')))
+                                project.properties["project.cdh.version"] = project.properties['cloudera-framework.version'].substring(project.properties['cloudera-framework.version'].indexOf('cdh') + 3, project.properties['cloudera-framework.version'].lastIndexOf('.') + 2)
                                 project.properties["project.cdh.version.minor"] = "CDH" + project.properties['project.cdh.version'].substring(0, project.properties['project.cdh.version'].indexOf('.', project.properties['project.cdh.version'].indexOf('.') + 1)).replaceAll("\\.", "")
                             </source>
                         </configuration>
