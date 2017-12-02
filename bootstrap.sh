@@ -57,6 +57,7 @@ if [ $(python --version 2>&1 | grep ${CF_VERSION_PYTHON} | wc -l) -eq 0 ]; then
 fi
 echo "###############################################################################"
 pip install cm-api altuscli && python --version || { echo "Python "${CF_VERSION_PYTHON}" not found" ; return 40; }
+python -m nltk.downloader all
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
