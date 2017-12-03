@@ -17,7 +17,7 @@ set -x -e
 WAIT_TASK=${1:-"false"}
 DELETE_CLUSTER=${2:-"false"}
 
-[[ "$DELETE_CLUSTER" = "true" ]] && WAIT_TASK = "true"
+[[ "$DELETE_CLUSTER" = "true" ]] && WAIT_TASK="true"
 
 $ROOT_DIR/bin/cldr-provision.sh "$WAIT_TASK"
 
