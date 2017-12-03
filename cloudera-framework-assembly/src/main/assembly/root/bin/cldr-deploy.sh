@@ -79,7 +79,7 @@ END
   fi
 fi
 
-if [ "$CLUSTER_PROVISION" = "local" ]; then
+if [ "$CLUSTER_PROVISION" = "manual" ]; then
   if [ -f $ROOT_DIR/lib/parcel/parcel.env ]; then
     id -u $PARCEL_NAMESPACE &>/dev/null || sudo useradd $PARCEL_NAMESPACE
     $ROOT_DIR/lib/manager/python/deploy.py \
