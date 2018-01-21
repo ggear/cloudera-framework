@@ -115,14 +115,14 @@ core client bill-of-materials and test harness can be achieved as so:
     <dependency>
       <groupId>com.cloudera.framework.library.client</groupId>
       <artifactId>cloudera-framework-library-client-core</artifactId>
-      <version>1.6.2-cdh5.12.1</version>
+      <version>1.6.3-cdh5.12.1</version>
       <type>pom</type>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.cloudera.framework</groupId>
       <artifactId>cloudera-framework-testing</artifactId>
-      <version>1.6.2-cdh5.12.1</version>
+      <version>1.6.3-cdh5.12.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -157,7 +157,7 @@ including a very simple example targeting a Cloudera Altus runtime as below:
 
 ```bash
 # Change the following variables to appropriate values for the target environment
-export CF_VERSION=1.6.2
+export CF_VERSION=1.6.3
 export CDH_VERSION=5.12.1
 export CF_PROFILE=workload
 mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -B \
@@ -189,9 +189,9 @@ To perform a release:
 
 ```bash
 # Change the following variables to appropriate values for the target release
-export CF_VERSION_RELEASE=1.6.2
+export CF_VERSION_RELEASE=1.6.3
 export CDH_VERSION_RELEASE=5.12.1
-export CF_VERSION_HEAD=1.6.3
+export CF_VERSION_HEAD=1.6.4
 export CDH_VERSION_HEAD=5.12.1
 mvn clean install && \
 mvn test -pl cloudera-framework-testing -PSCALA_2.11 && \
