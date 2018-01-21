@@ -1,5 +1,6 @@
 package com.cloudera.framework.testing;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -164,10 +165,52 @@ public class TestMetaData {
   }
 
   /**
+   * @return a specific parameter
+   */
+  public <T> T getParameter(String key) {
+    return getParameter(0, key);
+  }
+
+  /**
+   * @return a specific parameter
+   */
+  public <T> T getParameter(int index, String key) {
+    return ((T) parameters[index].get(key));
+  }
+
+  /**
    * @return the asserts
    */
   public Map[] getAsserts() {
     return asserts;
+  }
+
+  /**
+   * @return a specific assert
+   */
+  public <T> T getAssert(Enum key) {
+    return getAssert(asserts[0].keySet().iterator().next().toString(), key);
+  }
+
+  /**
+   * @return a specific assert
+   */
+  public <T> T getAssert(Class group, Enum key) {
+    return getAssert(group.getName(), key);
+  }
+
+  /**
+   * @return a specific assert
+   */
+  public <T> T getAssert(String group, Enum key) {
+    return getAssert(0, group, key);
+  }
+
+  /**
+   * @return a specific assert
+   */
+  public <T> T getAssert(int index, String group, Enum key) {
+    return ((T) ((Map) asserts[index].get(group)).get(key));
   }
 
 }

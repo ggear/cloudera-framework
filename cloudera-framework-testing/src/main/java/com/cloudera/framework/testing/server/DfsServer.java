@@ -442,15 +442,22 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     for (Path source : sources) {
       File sourceFile = new File(source.toString());
       Path destinationChildPath = new Path(destination, source.getName());
-      if (fileSystem.exists(destinationChildPath)) {
-        if (sourceFile.isDirectory() && fileSystem.isDirectory(destinationChildPath)) {
+      FileStatus destinationChildStatus = null;
+      try {
+        destinationChildStatus = fileSystem.getFileStatus(destinationChildPath);
+      } catch (FileNotFoundException exception) {
+        // Ignore, feels like a hack (and slow) to use exception handling for this,
+        // but this is how FileSystem.exists() works in any case, so oh well
+      }
+      if (destinationChildStatus != null) {
+        if (sourceFile.isDirectory() && destinationChildStatus.isDirectory()) {
           List<Path> sourceChildPaths = new ArrayList<>();
           for (File sourceChildFile : sourceFile.listFiles()) {
             sourceChildPaths.add(new Path(sourceChildFile.getPath()));
           }
           return copyFromLocalFile(sourceChildPaths, destinationChildPath);
-        } else if (sourceFile.isDirectory() && fileSystem.isFile(destinationChildPath)
-          || sourceFile.isFile() && fileSystem.isDirectory(destinationChildPath)) {
+        } else if (sourceFile.isDirectory() && destinationChildStatus.isFile()
+          || sourceFile.isFile() && destinationChildStatus.isDirectory()) {
           fileSystem.delete(destinationChildPath, true);
         }
       }

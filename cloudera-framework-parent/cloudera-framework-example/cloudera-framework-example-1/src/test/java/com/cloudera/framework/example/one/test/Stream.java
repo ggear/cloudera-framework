@@ -95,6 +95,7 @@ public class Stream extends TestBase {
           RecordCounter.RECORDS_DUPLICATE, 0L, //
           RecordCounter.RECORDS_MALFORMED, 0L //
         )));
+
   public final TestMetaData testMetaDataXmlBatch = TestMetaData.getInstance() //
     .parameters( //
       ImmutableMap.of( //
@@ -137,6 +138,7 @@ public class Stream extends TestBase {
           RecordCounter.RECORDS_DUPLICATE, 0L, //
           RecordCounter.RECORDS_MALFORMED, 0L //
         )));
+
   private final Map<String, String> FLUME_SUBSTITUTIONS = ImmutableMap.of(//
     "FLUME_AGENT_NAME", FLUME_AGENT_NAME, //
     "HDFS_URL", dfsServer.getPathUri("/"), //
@@ -150,12 +152,12 @@ public class Stream extends TestBase {
   @java.lang.SuppressWarnings("unchecked")
   @TestWith({"testMetaDataCsvBatch", "testMetaDataXmlBatch"})
   public void testStream(TestMetaData testMetaData) throws IOException, EventDeliveryException, InterruptedException {
-    assertEquals(((Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_FILE_COUNT)).intValue(),
+    assertEquals(testMetaData.<Integer>getParameter(2, KEY_FLUME_PROCESS_FILE_COUNT).intValue(),
       flumeServer.crankPipeline(FLUME_SUBSTITUTIONS, FLUME_CONFIG_FILE, testMetaData.getParameters()[0], testMetaData.getParameters()[1],
-        FLUME_AGENT_NAME, (String) testMetaData.getParameters()[2].get(KEY_FLUME_SOURCE_NAME),
-        (String) testMetaData.getParameters()[2].get(KEY_FLUME_SINK_NAME), new com.cloudera.framework.example.one.stream.Stream(),
-        new HDFSEventSink(), (String) testMetaData.getParameters()[2].get(KEY_FLUME_OUTPUT_DIR),
-        (Integer) testMetaData.getParameters()[2].get(KEY_FLUME_PROCESS_ITERATIONS), iterations -> 1));
+        FLUME_AGENT_NAME, testMetaData.<String>getParameter(2, KEY_FLUME_SOURCE_NAME),
+        testMetaData.<String>getParameter(2, KEY_FLUME_SINK_NAME), new com.cloudera.framework.example.one.stream.Stream(),
+        new HDFSEventSink(), testMetaData.<String>getParameter(2, KEY_FLUME_OUTPUT_DIR),
+        testMetaData.<Integer>getParameter(2, KEY_FLUME_PROCESS_ITERATIONS), iterations -> 1));
     Driver driverStage = new Stage(dfsServer.getConf());
     assertEquals(SUCCESS, driverStage.runner(
       dfsServer.getPath(DIR_ABS_MYDS_RAW_CANONICAL).toString(), dfsServer.getPath(DIR_ABS_MYDS_STAGED).toString()));
