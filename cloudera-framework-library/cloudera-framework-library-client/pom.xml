@@ -22,6 +22,7 @@
         <module>cloudera-framework-library-client-spark2</module>
         <module>cloudera-framework-library-client-impala</module>
         <module>cloudera-framework-library-client-zookeeper</module>
+        <module>cloudera-framework-library-client-aws</module>
         <module>cloudera-framework-library-client-scala_2.10</module>
         <module>cloudera-framework-library-client-scala_2.11</module>
     </modules>
