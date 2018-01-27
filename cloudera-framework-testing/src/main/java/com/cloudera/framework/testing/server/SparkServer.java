@@ -20,6 +20,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
 
   public static final String SPARK_CONF_MASTER = "spark.master";
   public static final String SPARK_CONF_APPNAME = "spark.app.name";
+  public static final String SPARK_CONF_DRIVERHOST = "spark.driver.host";
   public static final String SPARK_CONF_WAREHOUSE = "spark.sql.warehouse.dir";
   public static final String SPARK_CONF_SQLCODEGEN = "spark.sql.codegen.wholeStage";
 
@@ -78,6 +79,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
     long time = log(LOG, "start");
     CdhServer.setEnvProperty("SPARK_HOME", null);
     CdhServer.setEnvProperty("SPARK_CONF_DIR", null);
+    System.setProperty(SPARK_CONF_DRIVERHOST, "localhost");
     System.setProperty(SPARK_CONF_APPNAME, "spark-unit-test");
     System.setProperty(SPARK_CONF_MASTER, "local[*]");
     System.setProperty(SPARK_CONF_WAREHOUSE, new Path(DfsServer.getInstance().getPathUri("/usr/spark/warehouse")).toString());
