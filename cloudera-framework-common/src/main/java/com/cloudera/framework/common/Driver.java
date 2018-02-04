@@ -243,6 +243,7 @@ public abstract class Driver extends Configured implements Tool {
   final public int runner(String... arguments) {
     int returnValue;
     try {
+      reset();
       returnValue = ToolRunner.run(this, arguments);
     } catch (Exception exception) {
       if (LOG.isErrorEnabled()) {
