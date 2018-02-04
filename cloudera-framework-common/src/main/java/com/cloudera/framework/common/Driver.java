@@ -44,7 +44,7 @@ public abstract class Driver extends Configured implements Tool {
 
   private List<Object> results = null;
 
-  private Engine engine = Engine.HADOOP;
+  private Engine engine;
 
   private static final Properties APP_PROPERTIES = Optional.of(new Properties()).map(properties -> {
     try {

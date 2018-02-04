@@ -1,6 +1,5 @@
 package com.cloudera.framework.example.five.test;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;

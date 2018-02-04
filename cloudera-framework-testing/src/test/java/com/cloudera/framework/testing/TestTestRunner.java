@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,6 +134,21 @@ public class TestTestRunner implements TestConstants {
       LOG.debug("Before method");
     }
     assertEquals(6, COUNTER.incrementAndGet());
+  }
+
+  @Test
+  public void test() throws Exception {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test");
+    }
+  }
+
+  @TestWith({"testMetaData1", "testMetaData2"})
+  public void testStringMetaData1(String testMetaData) throws Exception {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Test " + testMetaData);
+    }
+    assertNotNull(testMetaData);
   }
 
   @TestWith({"testMetaData1", "testMetaData2"})

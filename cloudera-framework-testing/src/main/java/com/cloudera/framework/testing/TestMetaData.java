@@ -1,6 +1,5 @@
 package com.cloudera.framework.testing;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ import java.util.Map;
  * }
  * </pre>
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class TestMetaData {
 
   private String[] dataSetSourceDirs;

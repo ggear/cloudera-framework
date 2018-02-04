@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.cloudera.framework.testing.server.CdhServer;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.googlecode.zohhak.api.runners.ZohhakRunner;
+import com.googlecode.zohhak.internal.junit.ParametrizedFrameworkMethod;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.internal.runners.model.ReflectiveCallable;
@@ -173,6 +174,11 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
     return statement;
   }
 
+  private String getDescription(final FrameworkMethod method) {
+    return method.getDeclaringClass().getSimpleName() + "." + method.getName() +
+      (method instanceof ParametrizedFrameworkMethod ? ("(" + ((ParametrizedFrameworkMethod) method).getParametersLine() + ")") : "");
+  }
+
   private Statement withLogging(final FrameworkMethod method, Object target, Statement statement) {
     final AtomicLong time = new AtomicLong();
     List<TestRule> rules = new ArrayList<>();
@@ -181,14 +187,14 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
       protected void before() throws Throwable {
         if (LOG.isDebugEnabled()) {
           time.set(System.currentTimeMillis());
-          LOG.debug("Beginning [" + method.getDeclaringClass().getCanonicalName() + "." + method.getName() + "]");
+          LOG.debug("Beginning [" + getDescription(method) + "]");
         }
       }
 
       @Override
       protected void after() {
         if (LOG.isDebugEnabled()) {
-          LOG.debug("Completed [" + method.getDeclaringClass().getCanonicalName() + "." + method.getName() + "] in ["
+          LOG.debug("Completed [" + getDescription(method) + "] in ["
             + (System.currentTimeMillis() - time.get()) + "] ms");
         }
       }

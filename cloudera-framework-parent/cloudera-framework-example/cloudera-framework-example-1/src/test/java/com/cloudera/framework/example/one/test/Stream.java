@@ -154,9 +154,9 @@ public class Stream extends TestBase {
   public void testStream(TestMetaData testMetaData) throws IOException, EventDeliveryException, InterruptedException {
     assertEquals(testMetaData.<Integer>getParameter(2, KEY_FLUME_PROCESS_FILE_COUNT).intValue(),
       flumeServer.crankPipeline(FLUME_SUBSTITUTIONS, FLUME_CONFIG_FILE, testMetaData.getParameters()[0], testMetaData.getParameters()[1],
-        FLUME_AGENT_NAME, testMetaData.<String>getParameter(2, KEY_FLUME_SOURCE_NAME),
-        testMetaData.<String>getParameter(2, KEY_FLUME_SINK_NAME), new com.cloudera.framework.example.one.stream.Stream(),
-        new HDFSEventSink(), testMetaData.<String>getParameter(2, KEY_FLUME_OUTPUT_DIR),
+        FLUME_AGENT_NAME, testMetaData.getParameter(2, KEY_FLUME_SOURCE_NAME),
+        testMetaData.getParameter(2, KEY_FLUME_SINK_NAME), new com.cloudera.framework.example.one.stream.Stream(),
+        new HDFSEventSink(), testMetaData.getParameter(2, KEY_FLUME_OUTPUT_DIR),
         testMetaData.<Integer>getParameter(2, KEY_FLUME_PROCESS_ITERATIONS), iterations -> 1));
     Driver driverStage = new Stage(dfsServer.getConf());
     assertEquals(SUCCESS, driverStage.runner(

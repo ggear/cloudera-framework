@@ -24,7 +24,7 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   public static final String SPARK_CONF_WAREHOUSE = "spark.sql.warehouse.dir";
   public static final String SPARK_CONF_SQLCODEGEN = "spark.sql.codegen.wholeStage";
 
-  public static final List<String> SPARK_ENV = Arrays.asList(new String[]{"SPARK_HOME", "SPARK_CONF_DIR"});
+  public static final List<String> SPARK_ENV = Arrays.asList("SPARK_HOME", "SPARK_CONF_DIR");
 
   private static final Logger LOG = LoggerFactory.getLogger(SparkServer.class);
 
