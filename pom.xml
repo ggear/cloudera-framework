@@ -11,7 +11,7 @@
         <connection>scm:git:git@github.com:ggear/cloudera-framework.git</connection>
         <url>scm:git:git@github.com:ggear/cloudera-framework.git</url>
         <developerConnection>scm:git:git@github.com:ggear/cloudera-framework.git</developerConnection>
-        <tag>cloudera-framework-1.6.6-cdh5.12.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
