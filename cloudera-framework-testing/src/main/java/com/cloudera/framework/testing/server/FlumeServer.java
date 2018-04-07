@@ -97,8 +97,8 @@ public class FlumeServer extends CdhServer<FlumeServer, FlumeServer.Runtime> {
       String key = (String) keyObject;
       String value = config.getProperty(key);
       for (String keyReplace : substitutions.keySet()) {
-        key = key.replaceAll("\\$" + keyReplace, substitutions.get(keyReplace));
-        value = value.replaceAll("\\$" + keyReplace, substitutions.get(keyReplace));
+        key = key.replace("$" + keyReplace, substitutions.get(keyReplace));
+        value = value.replace("$" + keyReplace, substitutions.get(keyReplace));
       }
       if (key.startsWith(sinkConfigPrefix) && !key.endsWith(sinkConfigPrefix + "type") && !key.endsWith(".channel")) {
         sinkConfig.put(key.replace(sinkConfigPrefix, ""), value);
