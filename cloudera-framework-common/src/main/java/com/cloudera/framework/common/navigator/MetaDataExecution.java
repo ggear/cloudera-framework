@@ -17,7 +17,6 @@ import com.cloudera.nav.sdk.model.relations.RelationRole;
 import org.apache.commons.lang.WordUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.joda.time.Instant;
-import org.testng.annotations.ITestOrConfiguration;
 
 public class MetaDataExecution extends Entity {
 
