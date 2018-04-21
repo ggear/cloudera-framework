@@ -26,10 +26,10 @@ if [ "$CLUSTER_PROVISION" = "altus" ]; then
   LIB_PYS=($(ls $ROOT_DIR/lib/py/*.py))
   LIB_PYS_CSV=''
   for LIB_PY in "${LIB_PYS[@]}"; do
-    aws s3 cp "$LIB_PY" "${S3_LIB/s3a:\/\//s3://}"
     [[ ! -z "$LIB_PYS_CSV" ]] && LIB_PYS_CSV="$LIB_PYS_CSV"','
     LIB_PYS_CSV="$LIB_PYS_CSV"'"'"$S3_LIB"$(basename "$LIB_PY")'"'
   done
+  aws s3 sync "$ROOT_DIR/lib/py" "${S3_LIB/s3a:\/\//s3://}"
   JOB_ARGS=($JOB_ARGS)
   JOB_ARGS_CSV=""
   for JOB_ARG in "${JOB_ARGS[@]}"; do

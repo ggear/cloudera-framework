@@ -1,6 +1,7 @@
 package com.cloudera.framework.testing.server.test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -33,8 +34,8 @@ public class TestScalaServer implements TestConstants {
 
   @Test
   public void testScalaRunFail() throws Exception {
-    assertFalse(scalaServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/scala/scala.scala"), null,
-      Maps.newHashMap(ImmutableMap.of("KILL_MY_SCRIPT", "true")), null, true) == 0);
+    assertNotEquals(0, scalaServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/scala/scala.scala"), null,
+      Maps.newHashMap(ImmutableMap.of("KILL_MY_SCRIPT", "true")), null, true));
   }
 
   @Test

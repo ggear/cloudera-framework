@@ -139,7 +139,7 @@ public class Assert extends org.junit.Assert {
             Long expectedLong = ((Map<Enum<?>, Long>) expected.get(group)).get(counter);
             Long actualLong = actual.get(group).get(counter);
             if (assertEquals) {
-              assertTrue("Expected [" + expectedLong + "] to be equal to actual [" + actualLong + "]", expectedLong.equals(actualLong));
+              assertEquals("Expected [" + expectedLong + "] to be equal to actual [" + actualLong + "]", expectedLong, actualLong);
             }
             if (assertLessThan) {
               assertTrue("Expected [" + expectedLong + "] to be greater than actual [" + actualLong + "]", expectedLong > actualLong);

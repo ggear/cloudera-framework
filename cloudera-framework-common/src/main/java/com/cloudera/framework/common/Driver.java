@@ -1,6 +1,7 @@
 package com.cloudera.framework.common;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -12,6 +13,12 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
+import com.cloudera.framework.common.navigator.MetaDataExecution;
+import com.cloudera.nav.sdk.client.MetadataQuery;
+import com.cloudera.nav.sdk.client.NavigatorPlugin;
+import com.cloudera.nav.sdk.client.writer.ResultSet;
+import com.google.common.collect.ImmutableMap;
+import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.mapreduce.Counters;
@@ -33,6 +40,9 @@ public abstract class Driver extends Configured implements Tool {
   public static final int FAILURE_ARGUMENTS = 10;
   public static final int FAILURE_RUNTIME = 20;
 
+  public static final String CONF_CLDR_JOB_GROUP = "cldr.job.group";
+  public static final String CONF_CLDR_JOB_NAME = "cldr.job.name";
+
   public static final String CONF_SETTINGS = "driver-site.xml";
   public static final String CONF_APPLICATION = "/application.properties";
 
@@ -42,9 +52,11 @@ public abstract class Driver extends Configured implements Tool {
 
   private final Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
 
+  private boolean enableMetaData = true;
   private List<Object> results = null;
+  private NavigatorPlugin navigatorPlugin = null;
 
-  private Engine engine;
+  private final Engine engine;
 
   private static final Properties APP_PROPERTIES = Optional.of(new Properties()).map(properties -> {
     try {
@@ -57,9 +69,22 @@ public abstract class Driver extends Configured implements Tool {
     return properties;
   }).orElseGet(Properties::new);
 
+  public Driver(Engine engine) {
+    this(null, engine, false);
+  }
+
   public Driver(Configuration conf, Engine engine) {
+    this(conf, engine, false);
+  }
+
+  public Driver(Engine engine, boolean enableMetaData) {
+    this(null, engine, enableMetaData);
+  }
+
+  public Driver(Configuration conf, Engine engine, boolean enableMetaData) {
     super(conf);
     this.engine = engine;
+    this.enableMetaData = enableMetaData;
   }
 
   private static String formatTime(long time) {
@@ -98,7 +123,7 @@ public abstract class Driver extends Configured implements Tool {
   }
 
   /**
-   * Declare non-mandatory options, passed in as command line "-Dname=value"
+   * Declare non-mandatory options, passed in as command line "--name=value"
    * switches or typed configurations as part of the {@link Configuration}
    * available from {@link #getConf()}
    *
@@ -188,7 +213,16 @@ public abstract class Driver extends Configured implements Tool {
     }
     int exitValue = FAILURE_RUNTIME;
     try {
-      if ((exitValue = prepare(args)) == SUCCESS) {
+      List<String> argsSansOptions = new ArrayList<>();
+      for (String arg : args) {
+        if (arg.startsWith("--")) {
+          String[] option = arg.replace("--", "").split("=");
+          if (option.length == 2) getConf().set(option[0], option[1]);
+        } else {
+          argsSansOptions.add(arg);
+        }
+      }
+      if ((exitValue = prepare(argsSansOptions.toArray(new String[argsSansOptions.size()]))) == SUCCESS) {
         exitValue = execute();
       }
     } catch (Exception exception) {
@@ -255,15 +289,7 @@ public abstract class Driver extends Configured implements Tool {
       if (LOG.isInfoEnabled()) {
         StringBuilder optionsAndParameters = new StringBuilder(256);
         for (int i = 0; i < options().length; i++) {
-          switch (engine) {
-            case HADOOP:
-              optionsAndParameters.append(" [-D").append(options()[i]).append("]");
-              break;
-            case SPARK:
-              optionsAndParameters.append(" [--conf 'spark.driver.extraJavaOptions=-D").append(options()[i]).append("']");
-              optionsAndParameters.append(" [--conf 'spark.executor.extraJavaOptions=-D").append(options()[i]).append("']");
-              break;
-          }
+          optionsAndParameters.append(" [--").append(options()[i]).append("]");
         }
         for (int i = 0; i < parameters().length; i++) {
           optionsAndParameters.append(parameters().length == 0 ? "" : " " + "<" + parameters()[i] + ">");
@@ -277,6 +303,49 @@ public abstract class Driver extends Configured implements Tool {
       }
     }
     return returnValue;
+  }
+
+  public List<Map<String, Object>> getMetaData(MetaDataExecution execution, String tag) {
+    return !enableMetaData ? Collections.emptyList() :
+      // TODO: Fix implementation
+      getNavigatorPlugin(execution.getClass()).getClient().getEntityBatch(new MetadataQuery(
+        "+(\"" + execution.getName() + "\") +tags:\"" + tag + "\"", Integer.MAX_VALUE, null)).getResults();
+  }
+
+  public void updateMetaData() {
+    // TODO: Provide implementation
+  }
+
+  public void addMetaData(MetaDataExecution execution) {
+    if (enableMetaData) {
+      getNavigatorPlugin(execution.getClass()).registerModels(execution.getClass().getPackage().getName());
+      ResultSet result = getNavigatorPlugin(execution.getClass()).write(execution);
+      if (result.hasErrors()) {
+        throw new RuntimeException("Errors encountered writing metadata:\n" + result.toString());
+      }
+    }
+  }
+
+  private synchronized NavigatorPlugin getNavigatorPlugin(Class clazz) {
+    if (navigatorPlugin == null) {
+      Properties properties = new Properties();
+      InputStream stream = clazz.getClassLoader().getResourceAsStream("cloudera/cloudera.properties");
+      try {
+        properties.load(stream);
+        navigatorPlugin = NavigatorPlugin.fromConfigMap(ImmutableMap.<String, Object>builder()
+          .put("application_url", "http://localhost")
+          .put("navigator_api_version", 9)
+          .put("namespace", getConf().get(CONF_CLDR_JOB_GROUP).replace("-", "_"))
+          .put("navigator_url", properties.get("navigator.url"))
+          .put("username", properties.get("navigator.user"))
+          .put("password", properties.get("navigator.password"))
+          .put("autocommit", "true").build());
+      } catch (IOException exception) {
+      } finally {
+        IOUtils.closeQuietly(stream);
+      }
+    }
+    return navigatorPlugin;
   }
 
   public List<Object> getResults() {

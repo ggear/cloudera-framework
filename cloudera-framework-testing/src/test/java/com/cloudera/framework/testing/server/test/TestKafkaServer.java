@@ -60,7 +60,7 @@ public class TestKafkaServer implements TestConstants {
       assertEquals(messageCount, records.count());
       for (ConsumerRecord<String, String> record : records) {
         assertTrue(record.offset() >= Long.parseLong(record.key()));
-        assertTrue(Long.parseLong(record.key()) == Long.parseLong(record.value()));
+        assertEquals(Long.parseLong(record.key()), Long.parseLong(record.value()));
       }
     } finally {
       IOUtils.closeQuietly(producer);

@@ -27,10 +27,11 @@ if [ "$CLUSTER_PROVISION" = "altus" ]; then
   LIB_JARS+=($(ls $ROOT_DIR/lib/jar/*.jar))
   LIB_JARS_CSV=''
   for LIB_JAR in "${LIB_JARS[@]}"; do
-    aws s3 cp "$LIB_JAR" "${S3_LIB/s3a:\/\//s3://}"
     [[ ! -z "$LIB_JARS_CSV" ]] && LIB_JARS_CSV="$LIB_JARS_CSV"','
     LIB_JARS_CSV="$LIB_JARS_CSV"'"'"$S3_LIB"$(basename "$LIB_JAR")'"'
   done
+  aws s3 sync "$ROOT_DIR/lib/jar/dep" "${S3_LIB/s3a:\/\//s3://}"
+  aws s3 cp $ROOT_DIR/lib/jar/*.jar "${S3_LIB/s3a:\/\//s3://}"
   JOB_ARGS=($JOB_ARGS)
   JOB_ARGS_CSV=""
   for JOB_ARG in "${JOB_ARGS[@]}"; do

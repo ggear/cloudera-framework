@@ -199,6 +199,5 @@ mvn release:prepare -B \
   -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE \
   -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT -PPKG && \
 mvn release:perform -PPKG && \
-git push --all && \
 git tag
 ```

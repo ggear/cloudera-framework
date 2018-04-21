@@ -1,6 +1,8 @@
 package com.cloudera.framework.testing.server.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -32,16 +34,16 @@ public class TestPythonServer implements TestConstants {
 
   @Test
   public void testPythonRunFail() throws Exception {
-    assertFalse(pythonServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/python/python.py"), null, null,
-      null, true) == 0);
-    assertFalse(pythonServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/python/python.py"),
-      Arrays.asList("--non-existent-param", "MY PARAMETER!"), null, null, true) == 0);
+    assertNotEquals(0, pythonServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/python/python.py"), null, null,
+      null, true));
+    assertNotEquals(0, pythonServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/python/python.py"),
+      Arrays.asList("--non-existent-param", "MY PARAMETER!"), null, null, true));
   }
 
   @Test
   public void testPython() throws Exception {
-    assertTrue(pythonServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/python/python.py"),
-      Arrays.asList("--param", "MY PARAMETER!")) == 0);
+    assertEquals(0, pythonServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/python/python.py"),
+      Arrays.asList("--param", "MY PARAMETER!")));
   }
 
   @Test

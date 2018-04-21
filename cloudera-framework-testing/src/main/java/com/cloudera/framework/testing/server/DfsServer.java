@@ -151,7 +151,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
         }
       }
     }
-    return files.toArray(new File[files.size()]);
+    return files.toArray(new File[0]);
   }
 
   private static String stripLeadingSlashes(String string) {
@@ -236,7 +236,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     } catch (FileNotFoundException fileNotFoundException) {
       // ignore
     }
-    return paths.toArray(new Path[paths.size()]);
+    return paths.toArray(new Path[0]);
   }
 
   /**
@@ -297,7 +297,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
         }
       }
     }
-    return files.toArray(new File[files.size()]);
+    return files.toArray(new File[0]);
   }
 
   /**
@@ -337,7 +337,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       throw new IllegalArgumentException("Could not find files with path [" + sourcePathGlob + "]");
     }
     log(LOG, "copy", time, true);
-    return files.toArray(new File[files.size()]);
+    return files.toArray(new File[0]);
   }
 
   /**
