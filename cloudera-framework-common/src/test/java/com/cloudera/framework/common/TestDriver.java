@@ -1,11 +1,15 @@
 package com.cloudera.framework.common;
 
 import static com.cloudera.framework.common.Driver.CONF_CLDR_JOB_GROUP;
+import static com.cloudera.framework.common.Driver.CONF_CLDR_JOB_METADATA;
 import static com.cloudera.framework.common.Driver.CONF_CLDR_JOB_NAME;
+import static com.cloudera.framework.common.Driver.CONF_CLDR_JOB_TRANSACTION;
+import static com.cloudera.framework.common.Driver.METADATA_NAMESPACE;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 import com.cloudera.framework.common.Driver.Engine;
 import com.cloudera.framework.common.navigator.MetaDataExecution;
@@ -14,7 +18,6 @@ import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.nav.sdk.model.annotations.MClass;
 import com.cloudera.nav.sdk.model.annotations.MProperty;
-import com.cloudera.nav.sdk.model.custom.CustomPropertyType;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
@@ -89,41 +92,59 @@ public class TestDriver {
   public void testRunnerFailureOptionsSpark() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.SPARK);
     assertEquals(Driver.FAILURE_RUNTIME, driver.runner("-Di.should.fail.option=true", "false"));
+    assertEquals(Driver.FAILURE_RUNTIME, driver.runner("--i.should.fail.option=true", "false"));
   }
 
   @Test
   public void testRunnerMetaData() throws Exception {
     Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.SPARK);
-    assertEquals(Driver.SUCCESS, driver.runner("--" + CONF_CLDR_JOB_GROUP + "=some-test",
-      "--" + CONF_CLDR_JOB_NAME + "=some-test", "false"));
+    driver.getConf().set(CONF_CLDR_JOB_GROUP, "test-" + METADATA_NAMESPACE.replace("_", "-"));
+    driver.getConf().set(CONF_CLDR_JOB_NAME, "test-" + METADATA_NAMESPACE.replace("_", "-") + "-job");
+    driver.getConf().set(CONF_CLDR_JOB_TRANSACTION, UUID.randomUUID().toString());
+    driver.getConf().set(CONF_CLDR_JOB_METADATA, "true");
+    MetaDataExecution metaData = new TestExecution(driver.getConf(), new TestTemplate(driver.getConf()), 0, null, null);
+    driver.pollMetaData(metaData);
+    assertEquals(0, driver.pullMetaData(metaData).size());
+    assertEquals(Driver.SUCCESS, driver.runner("false"));
+    assertEquals(driver.getConf().getBoolean(CONF_CLDR_JOB_METADATA, false) ? 1 : 0, driver.pullMetaData(metaData).size());
   }
 
-  @MClass(model = "some_test_template")
-  public class SomeTestTemplate extends MetaDataTemplate {
-    public SomeTestTemplate(Configuration conf) {
+  @MClass(model = "test_template")
+  public class TestTemplate extends MetaDataTemplate {
+    public TestTemplate(Configuration conf) {
       super(conf);
     }
   }
 
-  @MClass(model = "some_test_execution")
-  public class SomeTestExecution extends MetaDataExecution {
+  @MClass(model = "test_execution")
+  public class TestExecution extends MetaDataExecution {
 
-    @MProperty(register = true, fieldType = CustomPropertyType.INTEGER)
-    private int test;
+    @MProperty(attribute = "FILES_IN")
+    private String filesIn;
 
-    public SomeTestExecution(Configuration conf, SomeTestTemplate template, Instant started, Instant ended, int test) {
-      super(conf, template, "1.0.0-SNAPSHOT");
+    private TestExecution() {
+    }
+
+    public TestExecution(Configuration conf, TestTemplate template, Integer exit, Instant started, Instant ended) {
+      super(conf, template, exit);
       setStarted(started);
       setEnded(ended);
-      this.test = test;
     }
 
-    public int getTest() {
-      return test;
+    @Override
+    public MetaDataExecution clone(MetaDataExecution metaData, Map<String, Object> metaDataMap, String string) {
+      TestExecution clone = new TestExecution();
+      clone.update(metaData, metaDataMap, string);
+      clone.setFilesIn(((Map) metaDataMap.get("properties")).get("FILES_IN").toString());
+      return clone;
     }
 
-    public void setTest(int test) {
-      this.test = test;
+    public String getFilesIn() {
+      return filesIn;
+    }
+
+    public void setFilesIn(String filesIn) {
+      this.filesIn = filesIn;
     }
 
   }
@@ -135,10 +156,6 @@ public class TestDriver {
 
     public CountFilesDriver(Configuration configuration, Engine engine) {
       super(configuration, engine);
-    }
-
-    public CountFilesDriver(Configuration configuration, Engine engine, boolean enableMetaData) {
-      super(configuration, engine, enableMetaData);
     }
 
     @Override
@@ -169,20 +186,19 @@ public class TestDriver {
     @Override
     public int execute() throws IOException {
       FileSystem fileSystem = FileSystem.newInstance(getConf());
+      int filesIn = 0;
       RemoteIterator<LocatedFileStatus> files = fileSystem.listFiles(new Path("."), true);
       while (files.hasNext()) {
         files.next();
-        incrementCounter(Counter.FILES_IN, 1);
+        filesIn++;
       }
-      String tag = "A_TEST_TAG";
-      SomeTestExecution metadata = new SomeTestExecution(getConf(), new SomeTestTemplate(getConf()),
-        Instant.now(), Instant.now(), 200);
-      metadata.addTags(tag);
-      addMetaData(metadata);
-      for (Map<String, Object> entity : getMetaData(metadata, tag)) {
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Found entity " + entity);
-        }
+      MetaDataExecution metaData = new TestExecution(getConf(), new TestTemplate(getConf()), 100, Instant.now(), Instant.now());
+      metaData.addTags("STAGING", "UNVETTED");
+      addMetaDataCounter(metaData, Counter.FILES_IN, filesIn);
+      pushMetaData(metaData);
+      pushMetadataTags(metaData, "UNVETTED", "VETTED");
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Driver metadata " + pullMetaData(metaData));
       }
       return iShouldFailOption || iShouldFailParameter.toLowerCase().equals(Boolean.TRUE.toString().toLowerCase()) ?
         FAILURE_RUNTIME : SUCCESS;

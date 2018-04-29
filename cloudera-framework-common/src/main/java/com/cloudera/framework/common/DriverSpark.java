@@ -12,12 +12,4 @@ public abstract class DriverSpark extends Driver {
     super(conf, Engine.SPARK);
   }
 
-  public DriverSpark(boolean enableMetaData) {
-    super(Engine.SPARK, enableMetaData);
-  }
-
-  public DriverSpark(Configuration conf, boolean enableMetaData) {
-    super(conf, Engine.SPARK, enableMetaData);
-  }
-
 }

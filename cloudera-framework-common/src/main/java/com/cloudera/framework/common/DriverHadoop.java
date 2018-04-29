@@ -12,12 +12,4 @@ public abstract class DriverHadoop extends Driver {
     super(conf, Engine.HADOOP);
   }
 
-  public DriverHadoop(boolean enableMetaData) {
-    super(Engine.HADOOP, enableMetaData);
-  }
-
-  public DriverHadoop(Configuration conf, boolean enableMetaData) {
-    super(conf, Engine.HADOOP, enableMetaData);
-  }
-
 }

@@ -1,6 +1,6 @@
 package com.cloudera.framework.testing.server.test;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -40,7 +40,7 @@ public class TestScalaServer implements TestConstants {
 
   @Test
   public void testScala() throws Exception {
-    assertTrue(scalaServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/scala/scala.scala")) == 0);
+    assertEquals(0, scalaServer.execute(null, new File(ABS_DIR_CLASSES_TEST, "/../../src/script/scala/scala.scala")));
   }
 
   @Test

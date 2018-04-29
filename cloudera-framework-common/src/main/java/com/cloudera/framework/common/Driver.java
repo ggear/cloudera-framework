@@ -1,5 +1,8 @@
 package com.cloudera.framework.common;
 
+import static com.google.common.base.CaseFormat.UPPER_CAMEL;
+import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -31,8 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Base driver class providing a standard life-cycle, counter management and
- * logging
+ * Base driver class providing a standard life-cycle, counter management and logging
  */
 public abstract class Driver extends Configured implements Tool {
 
@@ -40,11 +42,16 @@ public abstract class Driver extends Configured implements Tool {
   public static final int FAILURE_ARGUMENTS = 10;
   public static final int FAILURE_RUNTIME = 20;
 
-  public static final String CONF_CLDR_JOB_GROUP = "cldr.job.group";
   public static final String CONF_CLDR_JOB_NAME = "cldr.job.name";
+  public static final String CONF_CLDR_JOB_GROUP = "cldr.job.group";
+  public static final String CONF_CLDR_JOB_VERSION = "cldr.job.version";
+  public static final String CONF_CLDR_JOB_TRANSACTION = "cldr.job.transaction";
+  public static final String CONF_CLDR_JOB_METADATA = "cldr.job.metadata";
 
   public static final String CONF_SETTINGS = "driver-site.xml";
   public static final String CONF_APPLICATION = "/application.properties";
+
+  public static final String METADATA_NAMESPACE = "cloudera_framework";
 
   private static final Logger LOG = LoggerFactory.getLogger(Driver.class);
 
@@ -52,7 +59,6 @@ public abstract class Driver extends Configured implements Tool {
 
   private final Map<String, Map<Enum<?>, Long>> counters = new LinkedHashMap<>();
 
-  private boolean enableMetaData = true;
   private List<Object> results = null;
   private NavigatorPlugin navigatorPlugin = null;
 
@@ -70,21 +76,12 @@ public abstract class Driver extends Configured implements Tool {
   }).orElseGet(Properties::new);
 
   public Driver(Engine engine) {
-    this(null, engine, false);
+    this(null, engine);
   }
 
   public Driver(Configuration conf, Engine engine) {
-    this(conf, engine, false);
-  }
-
-  public Driver(Engine engine, boolean enableMetaData) {
-    this(null, engine, enableMetaData);
-  }
-
-  public Driver(Configuration conf, Engine engine, boolean enableMetaData) {
     super(conf);
     this.engine = engine;
-    this.enableMetaData = enableMetaData;
   }
 
   private static String formatTime(long time) {
@@ -222,7 +219,7 @@ public abstract class Driver extends Configured implements Tool {
           argsSansOptions.add(arg);
         }
       }
-      if ((exitValue = prepare(argsSansOptions.toArray(new String[argsSansOptions.size()]))) == SUCCESS) {
+      if ((exitValue = prepare(argsSansOptions.toArray(new String[0]))) == SUCCESS) {
         exitValue = execute();
       }
     } catch (Exception exception) {
@@ -305,24 +302,61 @@ public abstract class Driver extends Configured implements Tool {
     return returnValue;
   }
 
-  public List<Map<String, Object>> getMetaData(MetaDataExecution execution, String tag) {
-    return !enableMetaData ? Collections.emptyList() :
-      // TODO: Fix implementation
-      getNavigatorPlugin(execution.getClass()).getClient().getEntityBatch(new MetadataQuery(
-        "+(\"" + execution.getName() + "\") +tags:\"" + tag + "\"", Integer.MAX_VALUE, null)).getResults();
+  public boolean pollMetaData(MetaDataExecution metaData) {
+    boolean success = false;
+    try {
+      pullMetaData(metaData, true);
+      success = true;
+    } catch (Exception ignored) {
+    }
+    getConf().set(CONF_CLDR_JOB_METADATA, "" + success);
+    return success;
   }
 
-  public void updateMetaData() {
-    // TODO: Provide implementation
+  public List<MetaDataExecution> pullMetaData(MetaDataExecution metaData) {
+    return pullMetaData(metaData, false);
   }
 
-  public void addMetaData(MetaDataExecution execution) {
-    if (enableMetaData) {
-      getNavigatorPlugin(execution.getClass()).registerModels(execution.getClass().getPackage().getName());
-      ResultSet result = getNavigatorPlugin(execution.getClass()).write(execution);
+  private List<MetaDataExecution> pullMetaData(MetaDataExecution metaData, boolean poll) {
+    List<MetaDataExecution> metaDatas = new ArrayList<>();
+    if (poll || getConf().getBoolean(CONF_CLDR_JOB_METADATA, false)) {
+      String query = (metaData.getName() == null ? "" : ("+(\"" + metaData.getName() + "\") ")) +
+        (metaData.getTransaction() == null ? "" : ("+" + METADATA_NAMESPACE + ".Transaction:\"" + metaData.getTransaction() + "\" ")) +
+        "+type:operation_execution +deleted:(-deleted:true)";
+      List<Map<String, Object>> metaDataMaps = !getConf().getBoolean(CONF_CLDR_JOB_METADATA, false) ? Collections.emptyList() :
+        getNavigatorPlugin(metaData.getClass()).getClient().getEntityBatch(new MetadataQuery(query, Integer.MAX_VALUE, null)).getResults();
+      for (Map<String, Object> metaDataMap : metaDataMaps) {
+        metaDatas.add(metaData.clone(metaData, metaDataMap, getNavigatorPlugin(metaData.getClass()).getConfig().getNavigatorUrl()));
+      }
+    }
+    return metaDatas;
+  }
+
+  public void addMetaDataCounter(MetaDataExecution metaData, Enum label, Integer counter) {
+    incrementCounter(label, counter);
+    try {
+      metaData.getClass().getMethod("set" + UPPER_UNDERSCORE.to(UPPER_CAMEL, label.toString()),
+        String.class).invoke(metaData, counter.toString());
+    } catch (Exception exception) {
+      throw new RuntimeException("Errors encountered forming metadata", exception);
+    }
+  }
+
+  public void pushMetaData(MetaDataExecution metaData) {
+    if (getConf().getBoolean(CONF_CLDR_JOB_METADATA, false)) {
+      getNavigatorPlugin(metaData.getClass()).registerModels(metaData.getClass().getPackage().getName());
+      ResultSet result = getNavigatorPlugin(metaData.getClass()).write(metaData);
       if (result.hasErrors()) {
         throw new RuntimeException("Errors encountered writing metadata:\n" + result.toString());
       }
+    }
+  }
+
+  public void pushMetadataTags(MetaDataExecution metaData, String remove, String add) {
+    for (MetaDataExecution metaDataPull : pullMetaData(metaData)) {
+      if (add != null) metaDataPull.addTags(add);
+      if (remove != null) metaDataPull.removeTags(remove);
+      pushMetaData(metaDataPull);
     }
   }
 
@@ -335,7 +369,7 @@ public abstract class Driver extends Configured implements Tool {
         navigatorPlugin = NavigatorPlugin.fromConfigMap(ImmutableMap.<String, Object>builder()
           .put("application_url", "http://localhost")
           .put("navigator_api_version", 9)
-          .put("namespace", getConf().get(CONF_CLDR_JOB_GROUP).replace("-", "_"))
+          .put("namespace", METADATA_NAMESPACE)
           .put("navigator_url", properties.get("navigator.url"))
           .put("username", properties.get("navigator.user"))
           .put("password", properties.get("navigator.password"))
