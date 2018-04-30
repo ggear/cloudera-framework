@@ -6,7 +6,7 @@ for env in $ROOT_DIR/cfg/*.env; do if [ -f "$env" ]; then . "$env"; fi; done
 
 set -x -e
 
-WAIT_TASK=${1:-"false"}
+WAIT_TASK=${1:-"true"}
 DELETE_CLUSTER=${2:-"false"}
 PROXY_CONNECT=${3:-"false"}
 CLUSTER_NAME=${4:-"$CLUSTER_NAME"}

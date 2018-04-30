@@ -319,35 +319,53 @@ public abstract class Driver extends Configured implements Tool {
 
   private List<MetaDataExecution> pullMetaData(MetaDataExecution metaData, boolean poll) {
     List<MetaDataExecution> metaDatas = new ArrayList<>();
-    if (poll || getConf().getBoolean(CONF_CLDR_JOB_METADATA, false)) {
-      String query = (metaData.getName() == null ? "" : ("+(\"" + metaData.getName() + "\") ")) +
-        (metaData.getTransaction() == null ? "" : ("+" + METADATA_NAMESPACE + ".Transaction:\"" + metaData.getTransaction() + "\" ")) +
-        "+type:operation_execution +deleted:(-deleted:true)";
-      List<Map<String, Object>> metaDataMaps = !getConf().getBoolean(CONF_CLDR_JOB_METADATA, false) ? Collections.emptyList() :
-        getNavigatorPlugin(metaData.getClass()).getClient().getEntityBatch(new MetadataQuery(query, Integer.MAX_VALUE, null)).getResults();
-      for (Map<String, Object> metaDataMap : metaDataMaps) {
-        metaDatas.add(metaData.clone(metaData, metaDataMap, getNavigatorPlugin(metaData.getClass()).getConfig().getNavigatorUrl()));
+    try {
+      if (poll || getConf().getBoolean(CONF_CLDR_JOB_METADATA, false)) {
+        String query = (metaData.getName() == null ? "" : ("+(\"" + metaData.getName() + "\") ")) +
+          (metaData.getTransaction() == null ? "" : ("+" + METADATA_NAMESPACE + ".Transaction:\"" + metaData.getTransaction() + "\" ")) +
+          "+type:operation_execution +deleted:(-deleted:true)";
+        List<Map<String, Object>> metaDataMaps = !getConf().getBoolean(CONF_CLDR_JOB_METADATA, false) ? Collections.emptyList() :
+          getNavigatorPlugin(metaData.getClass()).getClient().getEntityBatch(new MetadataQuery(query, Integer.MAX_VALUE, null))
+            .getResults();
+
+        for (Map<String, Object> metaDataMap : metaDataMaps) {
+          metaDatas.add(metaData.clone(metaData, metaDataMap, getNavigatorPlugin(metaData.getClass()).getConfig().getNavigatorUrl()));
+        }
+      }
+    } catch (Exception exception) {
+      if (poll) {
+        throw exception;
+      } else if (LOG.isErrorEnabled()) {
+        LOG.error("Failed to pull metadata", exception);
       }
     }
     return metaDatas;
   }
 
   public void addMetaDataCounter(MetaDataExecution metaData, Enum label, Integer counter) {
-    incrementCounter(label, counter);
     try {
+      incrementCounter(label, counter);
       metaData.getClass().getMethod("set" + UPPER_UNDERSCORE.to(UPPER_CAMEL, label.toString()),
         String.class).invoke(metaData, counter.toString());
     } catch (Exception exception) {
-      throw new RuntimeException("Errors encountered forming metadata", exception);
+      if (LOG.isErrorEnabled()) {
+        LOG.error("Failed to add metadata", exception);
+      }
     }
   }
 
   public void pushMetaData(MetaDataExecution metaData) {
-    if (getConf().getBoolean(CONF_CLDR_JOB_METADATA, false)) {
-      getNavigatorPlugin(metaData.getClass()).registerModels(metaData.getClass().getPackage().getName());
-      ResultSet result = getNavigatorPlugin(metaData.getClass()).write(metaData);
-      if (result.hasErrors()) {
-        throw new RuntimeException("Errors encountered writing metadata:\n" + result.toString());
+    try {
+      if (getConf().getBoolean(CONF_CLDR_JOB_METADATA, false)) {
+        getNavigatorPlugin(metaData.getClass()).registerModels(metaData.getClass().getPackage().getName());
+        ResultSet result = getNavigatorPlugin(metaData.getClass()).write(metaData);
+        if (result.hasErrors()) {
+          throw new RuntimeException("Failed to write metadata:\n" + result.toString());
+        }
+      }
+    } catch (Exception exception) {
+      if (LOG.isErrorEnabled()) {
+        LOG.error("Failed to push metadata", exception);
       }
     }
   }

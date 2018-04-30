@@ -6,7 +6,7 @@ for env in $ROOT_DIR/cfg/*.env; do if [ -f "$env" ]; then . "$env"; fi; done
 
 set -x -e
 
-WAIT_TASK=${1:-"false"}
+WAIT_TASK=${1:-"true"}
 DELETE_CLUSTER=${2:-"false"}
 MANAGER_SERVER_USER=${3:-"admin"}
 MANAGER_SERVER_PWORD=${4:-"admin"}
