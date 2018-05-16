@@ -23,7 +23,7 @@ java -version || { echo "Java "${CF_VERSION_JAVA}" not found" ; return 10; }
 echo "###############################################################################"
 
 echo "" && echo "###############################################################################"
-CF_VERSION_MAVEN=3.5.2
+CF_VERSION_MAVEN=3.5.3
 CF_VERSION_MAVEN_MAJOR=3.
 if [ -z ${MAVEN_OPTS+x} ]; then
   export MAVEN_OPTS="-Xmx2g -Dmaven.artifact.threads=15 -XX:ReservedCodeCacheSize=512m -Duser.home=${CF_DIR}"
