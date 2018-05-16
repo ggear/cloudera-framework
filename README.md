@@ -169,7 +169,6 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -B \
   -DartifactId=mytest \
   -Dpackage=com.myorg.mytest \
   -DaltusEnv=my_altus_environment \
-  -DaltusKey=file:///Users/my_altus_client_user/.ssh/altus \
   -DaltusCluster=my_cluster \
   -DaltusS3Bucket=my_s3_bucket
 ```

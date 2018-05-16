@@ -15,9 +15,8 @@ WORKERS_NUMBER=${6:-"$CLUSTER_WORKERS_NUMBER"}
 INSTANCE_TYPE=${7:-"$CLUSTER_INSTANCE_TYPE"}
 CDH_VERSION=${8:-"$CLUSTER_CDH_VERSION"}
 ALTUS_ENV=${9:-"$CLUSTER_ENVIRONMENT"}
-SSH_KEY=${10:-"$CLUSTER_KEY"}
-MANAGER_SERVER_USER=${11:-"cmuser"}
-MANAGER_SERVER_PWORD=${12:-"Q_Dr@7bE"}
+MANAGER_SERVER_USER=${10:-"cmuser"}
+MANAGER_SERVER_PWORD=${11:-"Q_Dr@7bE"}
 
 BOOTSTRAP_FILE=$ROOT_DIR/bin/cldr-provision-altus-bootstrap.sh
 
@@ -35,6 +34,8 @@ else
           echo "/tmp/pyspark-env/bin/pip install "$(echo "$LIB_PIP" | sed 's/=/==/g') >> $BOOTSTRAP_FILE
       done
     fi
+    SSH_KEY="$ROOT_DIR/cfg/provision"
+    [[ -f "$SSH_KEY" ]] && ssh-keygen -N '' -f "$SSH_KEY"
     altus dataeng create-aws-cluster \
       --service-type="$SERVICE_TYPE" \
       --workers-group-size="$WORKERS_NUMBER" \
