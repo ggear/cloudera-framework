@@ -255,24 +255,6 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>conda-clean</id>
-                        <phase>clean</phase>
-                        <configuration>
-                            <target>
-                                <exec executable="conda" failonerror="false">
-                                    <arg value="env" />
-                                    <arg value="remove" />
-                                    <arg value="-y" />
-                                    <arg value="-p=${project.build.directory}/test-python/python" />
-                                </exec>
-                            </target>
-                            <skip>${conda.build.skip}</skip>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>conda-create</id>
                         <phase>process-sources</phase>
                         <configuration>
