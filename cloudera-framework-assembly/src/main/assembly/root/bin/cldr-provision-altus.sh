@@ -42,7 +42,7 @@ else
       --cluster-name="$CLUSTER_NAME" \
       --instance-type="$INSTANCE_TYPE" \
       --cdh-version="$CDH_VERSION" \
-      --ssh-private-key="$SSH_KEY.pub" \
+      --ssh-private-key="file://$SSH_KEY" \
       --environment-name="$ALTUS_ENV" \
       --instance-bootstrap-script=file://"$BOOTSTRAP_FILE" \
       --cloudera-manager-username="$MANAGER_SERVER_USER" \
