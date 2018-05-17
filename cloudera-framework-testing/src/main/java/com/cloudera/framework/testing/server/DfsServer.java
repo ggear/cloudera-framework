@@ -151,6 +151,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
         }
       }
     }
+    Collections.sort(files);
     return files.toArray(new File[0]);
   }
 
