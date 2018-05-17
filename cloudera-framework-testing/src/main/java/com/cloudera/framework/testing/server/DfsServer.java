@@ -12,7 +12,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.cloudera.framework.assembly.ScriptUtil;
 import org.apache.commons.io.FileUtils;
@@ -131,7 +133,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     if (!pathFile.exists() || !pathFile.isDirectory()) {
       throw new IllegalArgumentException("Could not find directory [" + pathFile.getAbsolutePath() + "]");
     }
-    List<File> files = new ArrayList<>();
+    Set<File> files = new TreeSet();
     for (File pathDatasetFile : pathFile.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
       if (paths.length == 0 || paths[0].equals(pathDatasetFile.getName())) {
         for (File pathSubsetFile : pathDatasetFile.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
@@ -151,7 +153,6 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
         }
       }
     }
-    Collections.sort(files);
     return files.toArray(new File[0]);
   }
 
