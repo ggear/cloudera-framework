@@ -35,7 +35,7 @@ else
       done
     fi
     SSH_KEY="$ROOT_DIR/cfg/provision"
-    [[ -f "$SSH_KEY" ]] && ssh-keygen -N '' -f "$SSH_KEY"
+    [[ ! -f "$SSH_KEY" ]] && ssh-keygen -N '' -f "$SSH_KEY"
     altus dataeng create-aws-cluster \
       --service-type="$SERVICE_TYPE" \
       --workers-group-size="$WORKERS_NUMBER" \
