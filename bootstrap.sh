@@ -56,7 +56,8 @@ function mode_execute {
   elif [ "${MODE}" = "build" ]; then
 
     echo "" && echo "" && echo "" && echo "Build [cloudera-framework]"
-    git pull --all
+    git checkout master
+    git pull -a
     mvn clean install
     mvn test -pl cloudera-framework-testing -PSCALA_2.11
 
