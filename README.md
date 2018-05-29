@@ -47,7 +47,7 @@ The [bootstrap.sh](https://github.com/ggear/cloudera-framework/blob/master/boots
 configures and installs (where possible) the required toolchain and should be sourced as so:
 
 ```bash
-source bootstrap.sh
+. ./bootstrap.sh environment
 ```
 
 To run the unit and integrations tests, binaries and meta-data are provided for all CDH components:
@@ -87,17 +87,21 @@ To only compile the project:
 mvn install -PCMP
 ```
 
-To run the tests for both Scala 2.10 (default) and 2.11:
+To run the tests for both Scala 2.10 (default) and 2.11 (localhost must be resolvable to run the tests):
 
 ```bash
 mvn test
 mvn test -pl cloudera-framework-testing -PSCALA_2.11
 ```
 
-Note that localhost must be resolvable to run the tests.
+The bootstrap script provides convenience mechanisms to build and release the project as so:
 
-Alternatively, the module can be included as a binary dependency in maven, for example pulling in the 
-core client bill-of-materials and test harness can be achieved as so:
+```bash
+./bootstrap.sh build release
+```
+
+As an alternative to installing to a local repository, the module can be included as a binary dependency in maven, 
+for example the core client bill-of-materials and test harness can be pulled into a module as below:
 
 ```xml
 <project>
@@ -156,15 +160,11 @@ For example, a project could be created with the workload profile baseline,
 including a very simple example targeting a Cloudera Altus runtime as below:
 
 ```bash
-# Change the following variables to appropriate values for the target environment
-export CF_VERSION=1.7.6
-export CDH_VERSION=5.12.1
-export CF_PROFILE=workload
 mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -B \
   -DarchetypeRepository=http://52.63.86.162/artifactory/cloudera-framework-releases \
   -DarchetypeGroupId=com.cloudera.framework.archetype \
-  -DarchetypeArtifactId=cloudera-framework-archetype-$CF_PROFILE \
-  -DarchetypeVersion=$CF_VERSION-cdh$CDH_VERSION \
+  -DarchetypeArtifactId=cloudera-framework-archetype-workload \
+  -DarchetypeVersion=1.7.6-cdh5.12.1 \
   -DgroupId=com.myorg.mytest \
   -DartifactId=mytest \
   -Dpackage=com.myorg.mytest \
@@ -182,21 +182,3 @@ and has data stored under the "/data/workload/input" key with schema like the
 [pristine](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-archetype/cloudera-framework-archetype-workload/src/main/resources/archetype-resources/src/test/resources/data/__artifactId__/csv/pristine/pristine.csv) 
 test data set.
 
-# Release
-
-To perform a release:
-
-```bash
-# Change the following variables to appropriate values for the target release
-export CF_VERSION_RELEASE=1.7.6
-export CDH_VERSION_RELEASE=5.12.1
-export CF_VERSION_HEAD=1.7.7
-export CDH_VERSION_HEAD=5.12.1
-mvn clean install && \
-mvn test -pl cloudera-framework-testing -PSCALA_2.11 && \
-mvn release:prepare -B \
-  -DreleaseVersion=$CF_VERSION_RELEASE-cdh$CDH_VERSION_RELEASE \
-  -DdevelopmentVersion=$CF_VERSION_HEAD-cdh$CDH_VERSION_HEAD-SNAPSHOT -PPKG && \
-mvn release:perform -PPKG && \
-git tag
-```

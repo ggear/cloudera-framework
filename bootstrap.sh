@@ -67,15 +67,18 @@ function mode_execute {
     git checkout master
     git remote set-url origin git@github.com:ggear/cloudera-framework.git
     mvn clean install -PCMP -pl cloudera-framework-parent
-    VERSION_RELEASE=$(grep -m 1 "<version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//' | sed 's/-SNAPSHOT*//')
+    VERSION_PREVIOUS=$(git describe \-\-tags | cut -c20-34 | xargs)
+    VERSION_RELEASE=$(grep -m 1 "<version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//' | sed 's/-SNAPSHOT*//' | xargs)
     VERSION_HEAD_NUMERIC=$(($(echo $VERSION_RELEASE | cut -f1 -d"-" | sed 's/\.//g')+1))
     VERSION_HEAD=${VERSION_HEAD_NUMERIC:0:1}.${VERSION_HEAD_NUMERIC:1:1}.${VERSION_HEAD_NUMERIC:2:2}"-"$(grep -m 1 "<version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//' | sed 's/-SNAPSHOT*//' |  cut -d"-" -f2)"-SNAPSHOT"
-    mvn clean install && \
-    mvn test -pl cloudera-framework-testing -PSCALA_2.11 && \
-    mvn release:prepare -B \
-      -DreleaseVersion=$VERSION_RELEASE \
-      -DdevelopmentVersion=$VERSION_HEAD -PPKG && \
-    mvn release:perform -PPKG && \
+    mvn clean install
+    mvn test -pl cloudera-framework-testing -PSCALA_2.11
+    mvn release:prepare -B -DreleaseVersion=$VERSION_RELEASE -DdevelopmentVersion=$VERSION_HEAD -PPKG
+    mvn release:perform -PPKG
+    sed -i -e "s/$VERSION_PREVIOUS/$VERSION_RELEASE/g" README.md
+    git add -A
+    git commit -m "Update README for cloudera-framework-${VERSION_RELEASE}"
+    git push --all
     git tag
 
   else
