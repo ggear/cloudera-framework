@@ -7,6 +7,7 @@
 import zipfile
 
 import requests
+from requests.utils import quote
 
 NAV_API_VERSION = 9
 METADATA_NAMESPACE = 'cloudera_framework'
@@ -20,7 +21,7 @@ def nav_uri(properties, path):
 def getMetaData(connection_jar, transaction_id):
     with zipfile.ZipFile(connection_jar, 'r') as f:
         properties = dict(l.strip().split("=") for l in f.open(FILE_PROPERTIES) if not l.startswith("#") and not l.startswith("\n"))
-        query = '+' + METADATA_NAMESPACE + '.Transaction:"' + transaction_id + '" +type:operation_execution +deleted:(-deleted:true)'
+        query = quote('+' + METADATA_NAMESPACE + '.Transaction:"' + transaction_id + '" +type:operation_execution +deleted:(-deleted:true)')
         metadatas = requests.get(nav_uri(properties, 'entities/?query=' + query + '&limit=100&offset=0'),
                                  auth=(properties['navigator.user'], properties['navigator.password'])).json()
         metadatas = [metadata for metadata in metadatas if 'customProperties' in metadata and metadata['customProperties'] is not None and
