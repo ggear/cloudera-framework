@@ -67,7 +67,7 @@ function mode_execute {
     [[ -n "$(git status --porcelain)" ]] && exit 1
     git checkout master
     git remote set-url origin git@github.com:ggear/cloudera-framework.git
-    mvn clean install -PCMP -pl cloudera-framework-parent
+    mvn clean install -PCMP
     VERSION_PREVIOUS=$(git describe \-\-tags | cut -c20-34 | xargs)
     VERSION_RELEASE=$(grep -m 1 "<version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//' | sed 's/-SNAPSHOT*//' | xargs)
     VERSION_HEAD_NUMERIC=$(($(echo $VERSION_RELEASE | cut -f1 -d"-" | sed 's/\.//g')+1))
