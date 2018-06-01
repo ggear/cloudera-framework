@@ -7,7 +7,6 @@ import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -108,15 +107,15 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    *              not specified all paths at that level will be included
    * @return the local files as mapped by dataset, subset and label
    */
-  public static Map<String, Map<String, Map<String, List<File>>>> mapFilesLocal(String path, String... paths) {
-    Map<String, Map<String, Map<String, List<File>>>> files = new TreeMap<>();
+  public static Map<String, Map<String, Map<String, Set<File>>>> mapFilesLocal(String path, String... paths) {
+    Map<String, Map<String, Map<String, Set<File>>>> files = new TreeMap<>();
     for (File file : listFilesLocal(path, false, paths)) {
       String pathDataset = file.getParentFile().getParentFile().getParentFile().getName();
       String pathSubset = file.getParentFile().getParentFile().getName();
       String pathLabel = file.getParentFile().getName();
       files.computeIfAbsent(pathDataset, k -> new TreeMap<>());
       files.get(pathDataset).computeIfAbsent(pathSubset, k -> new TreeMap<>());
-      files.get(pathDataset).get(pathSubset).computeIfAbsent(pathLabel, k -> new ArrayList<>());
+      files.get(pathDataset).get(pathSubset).computeIfAbsent(pathLabel, k -> new TreeSet<>());
       if (file.isFile()) {
         files.get(pathDataset).get(pathSubset).get(pathLabel).add(file);
       } else {
@@ -255,8 +254,8 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     if (file.isFile()) {
       return new File[]{file};
     } else {
-      return FileUtils.listFiles(new File(getPathLocal(sourcePath).toString()), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)
-        .toArray(new File[0]);
+      return FileUtils.listFiles(new File(getPathLocal(sourcePath).toString()),
+        TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE).toArray(new File[0]);
     }
   }
 
@@ -322,7 +321,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       + (sourcePaths.length <= 2 ? "*" : sourcePaths[2])).replace(ABS_DIR_WORKING, ".");
     getFileSystem().mkdirs(getPath(destinationPath));
     for (File file : listFilesLocal(sourcePath, false, sourcePaths)) {
-      copyFromLocalFile(Collections.singletonList(new Path(file.getPath())), getPath(destinationPath));
+      copyFromLocalFile(Collections.singleton(new Path(file.getPath())), getPath(destinationPath));
       if (file.isFile()) {
         files.add(file);
       } else {
@@ -439,7 +438,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   }
 
   @SuppressWarnings("ConstantConditions")
-  private boolean copyFromLocalFile(List<Path> sources, Path destination) throws IOException {
+  private boolean copyFromLocalFile(Set<Path> sources, Path destination) throws IOException {
     FileSystem fileSystem = getFileSystem();
     for (Path source : sources) {
       File sourceFile = new File(source.toString());
@@ -453,7 +452,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
       }
       if (destinationChildStatus != null) {
         if (sourceFile.isDirectory() && destinationChildStatus.isDirectory()) {
-          List<Path> sourceChildPaths = new ArrayList<>();
+          Set<Path> sourceChildPaths = new TreeSet<>();
           for (File sourceChildFile : sourceFile.listFiles()) {
             sourceChildPaths.add(new Path(sourceChildFile.getPath()));
           }
