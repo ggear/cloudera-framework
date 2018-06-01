@@ -392,7 +392,7 @@ public abstract class Driver extends Configured implements Tool {
           .put("username", properties.get("navigator.user"))
           .put("password", properties.get("navigator.password"))
           .put("autocommit", "true").build());
-      } catch (IOException exception) {
+      } catch (IOException ignored) {
       } finally {
         IOUtils.closeQuietly(stream);
       }

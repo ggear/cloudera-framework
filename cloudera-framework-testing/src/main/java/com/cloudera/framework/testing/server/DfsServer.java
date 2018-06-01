@@ -133,7 +133,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     if (!pathFile.exists() || !pathFile.isDirectory()) {
       throw new IllegalArgumentException("Could not find directory [" + pathFile.getAbsolutePath() + "]");
     }
-    Set<File> files = new TreeSet();
+    Set<File> files = new TreeSet<>();
     for (File pathDatasetFile : pathFile.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
       if (paths.length == 0 || paths[0].equals(pathDatasetFile.getName())) {
         for (File pathSubsetFile : pathDatasetFile.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
