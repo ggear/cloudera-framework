@@ -30,7 +30,7 @@ pipelines, with synthetic datasets to exercise the codebase.
 Finally, a set of [archetypes](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype) 
 are included to provide bare bones starter client modules.
 
-# Requirements
+## Requirements
 
 To compile, build and package from source, this project requires:
 
@@ -64,7 +64,7 @@ Note that in addition to Maven dependencies, Cloudera
 are used to manage platform dependent binaries by way of the 
 [cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/tree/master/cloudera-parcel-plugin).
 
-# Limitations
+## Limitations
 
 As above, this code is known to not work out of the box on Windows hosts, only Linux and MacOS
 are supported. If developing on Windows it is recommended to run a Linux VM and develop from within it.  
@@ -73,7 +73,7 @@ In addition, it is known that running the code from remote storage (eg NFS) will
 but will likely result in IO race conditions during testing, so it is recommended that only direct attached
 storage (be it physical or para-virtualized) by used.
 
-# Install
+## Install
 
 This project can be compiled, packaged and installed to a local repository, skipping tests, as per:
 
@@ -133,7 +133,7 @@ for example the core client bill-of-materials and test harness can be pulled int
 </project>
 ```
 
-# Usage
+## Usage
 
 The cloudera-framework includes a set of 
 [examples](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example):

@@ -10,17 +10,15 @@ and includes the following:
 * Parcel packaging
 * Altus bootstrap script
 
-# Requirements
-
 This project shares requirements with those specified in the
 [cloudera-framework](https://github.com/ggear/cloudera-framework#requirements),
 which can be bootstrapped as so:
 
 ```bash
-source <(curl -s https://raw.githubusercontent.com/ggear/cloudera-framework/master/bootstrap.sh)
+curl -s https://raw.githubusercontent.com/ggear/cloudera-framework/master/bootstrap.sh > target/bootstrap.sh
+chmod +x target/bootstrap.sh
+. ./target/bootstrap.sh environment
 ```
-
-# Install
 
 To compile, test and package the project, the following should be run
 in the root directory:
