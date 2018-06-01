@@ -226,7 +226,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    * @return the DFS files
    */
   public Path[] listFilesDfs(String path, boolean ignoreHidden) throws IllegalArgumentException, IOException {
-    List<Path> paths = new ArrayList<>();
+    Set<Path> paths = new TreeSet<>();
     try {
       RemoteIterator<LocatedFileStatus> locatedFileStatuses = getFileSystem().listFiles(getPath(path), true);
       while (locatedFileStatuses.hasNext()) {
@@ -276,7 +276,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
    */
   public File[] copyFromLocalDir(String[] sourcePaths, String[] destinationPaths, String[] datasets, String[][] subsets,
                                  String[][][] labels) throws IllegalArgumentException, IOException {
-    List<File> files = new ArrayList<>();
+    Set<File> files = new TreeSet<>();
     if (datasets.length != sourcePaths.length || datasets.length != destinationPaths.length || datasets.length != subsets.length
       || datasets.length != labels.length) {
       throw new IllegalArgumentException("Number of datasets exceeds number of source paths, destination paths, subsets and or labels");
@@ -316,7 +316,7 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   public File[] copyFromLocalDir(String sourcePath, String destinationPath, String... sourcePaths)
     throws IllegalArgumentException, IOException {
     long time = log(LOG, "copy", true);
-    List<File> files = new ArrayList<>();
+    Set<File> files = new TreeSet<>();
     StringBuilder filesString = new StringBuilder();
     String sourcePathGlob = ((sourcePaths.length == 0 ? "*" : sourcePaths[0]) + "/" + (sourcePaths.length <= 1 ? "*" : sourcePaths[1]) + "/"
       + (sourcePaths.length <= 2 ? "*" : sourcePaths[2])).replace(ABS_DIR_WORKING, ".");
