@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestMetaData;
@@ -207,7 +208,7 @@ public abstract class TestDfsServer implements TestConstants {
 
   @Test
   public void testMapFilesLocalAndListFilesLocal() throws Exception {
-    Map<String, Map<String, Map<String, List<File>>>> files = DfsServer.mapFilesLocal(DIR_SOURCE);
+    Map<String, Map<String, Map<String, Set<File>>>> files = DfsServer.mapFilesLocal(DIR_SOURCE);
     assertEquals(3, files.size());
     for (String dataset : files.keySet()) {
       assertArrayEquals(getDfsServer().copyFromLocalDir(DIR_SOURCE, DIR_DESTINATION, dataset),
