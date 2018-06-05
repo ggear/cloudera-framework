@@ -14,15 +14,15 @@ METADATA_NAMESPACE = 'cloudera_framework'
 FILE_PROPERTIES = 'cloudera/cloudera.properties'
 
 
-def nav_uri(properties, path):
+def uri(properties, path):
     return properties['navigator.url'] + '/api/v' + str(NAV_API_VERSION) + '/' + path
 
 
-def getMetaData(connection_jar, transaction_id):
+def get(connection_jar, transaction_id):
     with zipfile.ZipFile(connection_jar, 'r') as f:
         properties = dict(l.strip().split("=") for l in f.open(FILE_PROPERTIES) if not l.startswith("#") and not l.startswith("\n"))
         query = quote('+' + METADATA_NAMESPACE + '.Transaction:"' + transaction_id + '" +type:operation_execution +deleted:(-deleted:true)')
-        metadatas = requests.get(nav_uri(properties, 'entities/?query=' + query + '&limit=100&offset=0'),
+        metadatas = requests.get(uri(properties, 'entities/?query=' + query + '&limit=100&offset=0'),
                                  auth=(properties['navigator.user'], properties['navigator.password'])).json()
         metadatas = [metadata for metadata in metadatas if 'customProperties' in metadata and metadata['customProperties'] is not None and
                      METADATA_NAMESPACE in metadata['customProperties'] and metadata['customProperties'][METADATA_NAMESPACE] is not None and
