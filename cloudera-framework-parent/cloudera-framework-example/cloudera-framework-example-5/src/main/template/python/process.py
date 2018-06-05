@@ -35,7 +35,7 @@ import sys
 # Add working director to the system path${TEMPLATE.PRE-PROCESSOR.CLOSE}sys.path.insert(0, 'asystem-amodel/src/main/script/python')
 
 from pyspark.sql import SparkSession
-from script_util import hdfs_make_qualified
+from script_util import qualify
 
 # @formatter:off
 # Remove existing dataset${TEMPLATE.PRE-PROCESSOR.CLOSE}!hdfs dfs -rm -f -r -skipTrash /tmp/stateunion
@@ -48,7 +48,7 @@ sparkSession = SparkSession.builder \
     .getOrCreate()
 
 data = sparkSession.sparkContext.textFile(
-    hdfs_make_qualified('/tmp/stateunion/landing/1970-Nixon.txt'))
+    qualify('/tmp/stateunion/landing/1970-Nixon.txt'))
 
 
 def word_tokenize(x):
@@ -64,11 +64,11 @@ def word_position(x):
 words = data.flatMap(word_tokenize)
 words.collect()
 words.saveAsTextFile(
-    hdfs_make_qualified('/tmp/stateunion/processed/words'))
+    qualify('/tmp/stateunion/processed/words'))
 
 words_positions = words.map(word_position)
 words_positions.collect()
 words_positions.saveAsTextFile(
-    hdfs_make_qualified('/tmp/stateunion/processed/words_positions'))
+    qualify('/tmp/stateunion/processed/words_positions'))
 
-if sparkSession.sparkContext.textFile(hdfs_make_qualified('/tmp/stateunion/processed/words')).count() != 4987: raise Exception()
+if sparkSession.sparkContext.textFile(qualify('/tmp/stateunion/processed/words')).count() != 4987: raise Exception()
