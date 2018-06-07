@@ -21,7 +21,9 @@ MANAGER_SERVER_PWORD=${11:-"Q_Dr@7bE"}
 BOOTSTRAP_FILE=$ROOT_DIR/bin/cldr-provision-altus-bootstrap.sh
 
 if [ "$DELETE_CLUSTER" = "true" ]; then
-  altus dataeng delete-cluster --cluster-name="$CLUSTER_NAME"
+  if [ $(altus dataeng list-clusters --cluster-names "$CLUSTER_NAME" 2>&1 | grep status | grep CREATED | wc -l) -eq 1 ]; then
+    altus dataeng delete-cluster --cluster-name="$CLUSTER_NAME"
+  fi
 else
   if [ $(altus dataeng list-clusters --cluster-names "$CLUSTER_NAME" 2>&1 | grep "No cluster found" | wc -l) -ne 0 ]; then
     echo "virtualenv /tmp/pyspark-env" > $BOOTSTRAP_FILE
