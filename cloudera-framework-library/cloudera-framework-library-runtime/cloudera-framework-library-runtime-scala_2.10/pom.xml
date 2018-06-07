@@ -5,12 +5,12 @@
     <groupId>com.cloudera.framework.library.runtime</groupId>
     <artifactId>cloudera-framework-library-runtime-scala_2.10</artifactId>
     <packaging>pom</packaging>
-    <version>1.8.4-cdh5.12.2-SNAPSHOT</version>
+    <version>1.8.4-cdh5.12.2</version>
 
     <parent>
         <groupId>com.cloudera.framework.library</groupId>
         <artifactId>cloudera-framework-library-runtime</artifactId>
-        <version>1.8.4-cdh5.12.2-SNAPSHOT</version>
+        <version>1.8.4-cdh5.12.2</version>
     </parent>
 
     <dependencies>
