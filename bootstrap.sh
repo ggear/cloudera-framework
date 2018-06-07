@@ -50,7 +50,11 @@ function mode_execute {
       echo "Unable to install system dependent CPython "${CF_VERSION_PYTHON}", please do so manually"
     fi
     pip install cm-api altuscli && python --version || { echo "Python "${CF_VERSION_PYTHON}" not found" ; return 40; }
-    python -m nltk.downloader all
+    if [ -w "/usr/local/share/nltk_data" ]; then
+      python -m nltk.downloader -d /usr/local/share/nltk_data all
+    else
+      python -m nltk.downloader all
+    fi
     CF_VERSION_CONDA=4.5
     if [ $(conda --version 2>&1 | grep ${CF_VERSION_CONDA} | wc -l) -eq 0 ]; then
       echo "Unable to install system dependent Conda "${CF_VERSION_PYTHON}", please do so manually"
