@@ -51,6 +51,12 @@ function mode_execute {
     fi
     pip install cm-api altuscli && python --version || { echo "Python "${CF_VERSION_PYTHON}" not found" ; return 40; }
     python -m nltk.downloader all
+    CF_VERSION_CONDA=4.5
+    if [ $(conda --version 2>&1 | grep ${CF_VERSION_CONDA} | wc -l) -eq 0 ]; then
+      echo "Unable to install system dependent Conda "${CF_VERSION_PYTHON}", please do so manually"
+    fi
+    conda --version || { echo "Conda "${CF_VERSION_CONDA}" not found" ; return 50; }
+    conda config --set ssl_verify no
     export PATH=$(echo ${PWD}/target/assembly/*/bin):$PATH
 
   elif [ "${MODE}" = "build" ]; then
