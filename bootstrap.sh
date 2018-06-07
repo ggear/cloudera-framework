@@ -8,7 +8,7 @@
 #
 ###############################################################################
 
-[[ -f "/etc/profile" ]] && . /etc/profile
+[[ -z "${CDSW_PROJECT_URL}" ]] && [[ -f "/etc/profile" ]] && . /etc/profile
 
 CF_DIR=$(mktemp -d -t cloudera-framework.XXXXXX)
 
