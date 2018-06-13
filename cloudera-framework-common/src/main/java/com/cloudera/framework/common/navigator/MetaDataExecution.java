@@ -5,7 +5,10 @@ import static com.cloudera.framework.common.Driver.CONF_CLDR_JOB_TRANSACTION;
 import static com.cloudera.framework.common.Driver.CONF_CLDR_JOB_VERSION;
 import static com.cloudera.framework.common.Driver.METADATA_NAMESPACE;
 import static com.cloudera.framework.common.navigator.MetaDataTemplate.DEFAULT_NAME;
+import static com.google.common.base.CaseFormat.UPPER_CAMEL;
+import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.UUID;
 
@@ -56,16 +59,14 @@ public abstract class MetaDataExecution extends Entity {
     setDescription(WordUtils.capitalize(conf.get(CONF_CLDR_JOB_NAME, DEFAULT_NAME)
       .replace("_", " ").replace("-", " ")));
     setVersion(conf.get(CONF_CLDR_JOB_VERSION, DEFAULT_VERSION));
-    setTransaction(conf.get(CONF_CLDR_JOB_TRANSACTION, UUID.randomUUID().toString()));
+    setTransaction(conf.get(CONF_CLDR_JOB_TRANSACTION, UUID.randomUUID().toString().replaceAll("[\\W]", "")));
     setNamespace(METADATA_NAMESPACE);
     setTemplate(template);
     setIdentity(CustomIdGenerator.generateIdentity(getNamespace(), getName(), getTransaction()));
     setExit(exit);
   }
 
-  public abstract MetaDataExecution clone(MetaDataExecution metaData, Map<String, Object> metaDataMap, String string);
-
-  public void update(MetaDataExecution metaData, Map<String, Object> metaDataMap, String string) {
+  public MetaDataExecution clone(MetaDataExecution metaData, Map<String, Object> metaDataMap, String string) {
     setTemplate(metaData.getTemplate());
     setName(metaDataMap.get("originalName").toString());
     setStarted(Instant.parse(metaDataMap.get("started").toString()));
@@ -75,6 +76,17 @@ public abstract class MetaDataExecution extends Entity {
     setTransaction(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("Transaction").toString());
     setExit(Integer.parseInt(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("Exit").toString()));
     setString(string + "/?view=detailsView&id=" + metaDataMap.get("identity").toString());
+    for (Field field : metaData.getClass().getDeclaredFields()) {
+      if (field.isAnnotationPresent(MProperty.class)) {
+        try {
+          String attribute = field.getAnnotation(MProperty.class).attribute();
+          metaData.getClass().getMethod("set" + UPPER_UNDERSCORE.to(UPPER_CAMEL, attribute), String.class)
+            .invoke(metaData, ((Map) metaDataMap.get("properties")).get(attribute).toString());
+        } catch (Exception ignore) {
+        }
+      }
+    }
+    return metaData;
   }
 
   public void setString(String string) {

@@ -8,7 +8,6 @@ import static com.cloudera.framework.common.Driver.METADATA_NAMESPACE;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.UUID;
 
 import com.cloudera.framework.common.Driver.Engine;
@@ -129,14 +128,6 @@ public class TestDriver {
       super(conf, template, exit);
       setStarted(started);
       setEnded(ended);
-    }
-
-    @Override
-    public MetaDataExecution clone(MetaDataExecution metaData, Map<String, Object> metaDataMap, String string) {
-      TestExecution clone = new TestExecution();
-      clone.update(metaData, metaDataMap, string);
-      clone.setFilesIn(((Map) metaDataMap.get("properties")).get("FILES_IN").toString());
-      return clone;
     }
 
     public String getFilesIn() {

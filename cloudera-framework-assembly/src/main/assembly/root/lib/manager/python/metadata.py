@@ -29,7 +29,7 @@ def put(connection_jar, transaction_id, transaction_properties=None,
         transaction_custom_properties=None, transaction_tags=None, flush_all=False):
     properties = parse(connection_jar)
     metadata_bodies = get(connection_jar, transaction_id)
-    if len(metadata_bodies) > 0 and 'identity' in metadata_bodies:
+    if len(metadata_bodies) > 0:
         metadata_body = {}
         if flush_all:
             transaction_properties = {} if transaction_properties is None \
@@ -51,7 +51,7 @@ def put(connection_jar, transaction_id, transaction_properties=None,
             if transaction_tags is not None:
                 transaction_tags.extend(
                     metadata_bodies[0]["tags"]
-                    if "tags" in metadata_bodies[0] else ())
+                    if "tags" in metadata_bodies[0] else [])
         if transaction_properties is not None:
             metadata_body["properties"] = transaction_properties
         if transaction_custom_properties is not None:
