@@ -26,15 +26,36 @@ def uri(properties, path):
 
 
 def put(connection_jar, transaction_id, transaction_properties=None,
-        transaction_custom_properties=None, transaction_tags=None):
+        transaction_custom_properties=None, transaction_tags=None, flush_all=False):
     properties = parse(connection_jar)
     metadata_bodies = get(connection_jar, transaction_id)
     if len(metadata_bodies) > 0 and 'identity' in metadata_bodies:
         metadata_body = {}
+        if flush_all:
+            transaction_properties = {} if transaction_properties is None \
+                else transaction_properties
+            transaction_custom_properties = {} if transaction_custom_properties is None \
+                else transaction_custom_properties
+            transaction_tags = {} if transaction_tags is None \
+                else transaction_tags
+        else:
+            if transaction_properties is not None:
+                transaction_properties.update(
+                    metadata_bodies[0]["properties"]
+                    if "properties" in metadata_bodies[0] else {})
+            if transaction_custom_properties is not None:
+                transaction_custom_properties.update(
+                    metadata_bodies[0]["customProperties"][METADATA_NAMESPACE]
+                    if "customProperties" in metadata_bodies[0] and
+                       METADATA_NAMESPACE in metadata_bodies[0]["customProperties"] else {})
+            if transaction_tags is not None:
+                transaction_tags.extend(
+                    metadata_bodies[0]["tags"]
+                    if "tags" in metadata_bodies[0] else ())
         if transaction_properties is not None:
             metadata_body["properties"] = transaction_properties
         if transaction_custom_properties is not None:
-            metadata_body["customProperties"] = transaction_custom_properties
+            metadata_body["customProperties"] = {METADATA_NAMESPACE: transaction_custom_properties}
         if transaction_tags is not None:
             metadata_body["tags"] = transaction_tags
         response = requests.put(uri(properties, "entities/" +
