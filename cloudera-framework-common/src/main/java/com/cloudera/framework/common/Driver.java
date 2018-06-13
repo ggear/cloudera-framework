@@ -342,7 +342,7 @@ public abstract class Driver extends Configured implements Tool {
     return metaDatas;
   }
 
-  public void addMetaDataCounter(MetaDataExecution metaData, Enum label, Integer counter) {
+  public void addMetaDataCounter(MetaDataExecution metaData, Enum label, Long counter) {
     try {
       incrementCounter(label, counter);
       metaData.getClass().getMethod("set" + UPPER_UNDERSCORE.to(UPPER_CAMEL, label.toString()),

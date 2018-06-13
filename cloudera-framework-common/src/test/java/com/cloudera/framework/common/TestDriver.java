@@ -186,7 +186,7 @@ public class TestDriver {
     @Override
     public int execute() throws IOException {
       FileSystem fileSystem = FileSystem.newInstance(getConf());
-      int filesIn = 0;
+      long filesIn = 0;
       RemoteIterator<LocatedFileStatus> files = fileSystem.listFiles(new Path("."), true);
       while (files.hasNext()) {
         files.next();

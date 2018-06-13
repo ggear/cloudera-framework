@@ -25,15 +25,23 @@ def uri(properties, path):
            str(NAV_API_VERSION) + '/' + path
 
 
-def put(connection_jar, transaction_id, transaction_properties):
+def put(connection_jar, transaction_id, transaction_properties=None,
+        transaction_custom_properties=None, transaction_tags=None):
     properties = parse(connection_jar)
     metadata_bodies = get(connection_jar, transaction_id)
     if len(metadata_bodies) > 0 and 'identity' in metadata_bodies:
+        metadata_body = {}
+        if transaction_properties is not None:
+            metadata_body["properties"] = transaction_properties
+        if transaction_custom_properties is not None:
+            metadata_body["customProperties"] = transaction_custom_properties
+        if transaction_tags is not None:
+            metadata_body["tags"] = transaction_tags
         response = requests.put(uri(properties, "entities/" +
                                     metadata_bodies[0]["identity"]),
                                 auth=(properties['navigator.user'],
                                       properties['navigator.password']),
-                                json={"properties": transaction_properties})
+                                json=metadata_body)
         if response.status_code != 200:
             raise Exception("Put returned non OK status [{}]"
                             .format(response.status_code))
