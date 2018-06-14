@@ -36,21 +36,26 @@ def put(connection_jar, transaction_id, transaction_properties=None,
                 else transaction_properties
             transaction_custom_properties = {} if transaction_custom_properties is None \
                 else transaction_custom_properties
-            transaction_tags = {} if transaction_tags is None \
+            transaction_tags = [] if transaction_tags is None \
                 else transaction_tags
         else:
             if transaction_properties is not None:
                 transaction_properties.update(
                     metadata_bodies[0]["properties"]
-                    if "properties" in metadata_bodies[0] else {})
+                    if "properties" in metadata_bodies[0] and
+                       metadata_bodies[0]["properties"] is not None else {})
             if transaction_custom_properties is not None:
                 transaction_custom_properties.update(
                     metadata_bodies[0]["customProperties"][METADATA_NAMESPACE]
                     if "customProperties" in metadata_bodies[0] and
-                       METADATA_NAMESPACE in metadata_bodies[0]["customProperties"] else {})
+                       METADATA_NAMESPACE in metadata_bodies[0]["customProperties"] and
+                       metadata_bodies[0]["customProperties"][METADATA_NAMESPACE] is not None else {})
             if transaction_tags is not None:
-                if "tags" in metadata_bodies[0]:
-                    transaction_tags.extend(metadata_bodies[0]["tags"])
+                transaction_tags.extend(
+                    metadata_bodies[0]["tags"]
+                    if "tags" in metadata_bodies[0] and
+                       metadata_bodies[0]["tags"] is not None else [])
+
         if transaction_properties is not None:
             metadata_body["properties"] = transaction_properties
         if transaction_custom_properties is not None:
