@@ -49,9 +49,8 @@ def put(connection_jar, transaction_id, transaction_properties=None,
                     if "customProperties" in metadata_bodies[0] and
                        METADATA_NAMESPACE in metadata_bodies[0]["customProperties"] else {})
             if transaction_tags is not None:
-                transaction_tags.extend(
-                    metadata_bodies[0]["tags"]
-                    if "tags" in metadata_bodies[0] else [])
+                if "tags" in metadata_bodies[0]:
+                    transaction_tags.extend(metadata_bodies[0]["tags"])
         if transaction_properties is not None:
             metadata_body["properties"] = transaction_properties
         if transaction_custom_properties is not None:
