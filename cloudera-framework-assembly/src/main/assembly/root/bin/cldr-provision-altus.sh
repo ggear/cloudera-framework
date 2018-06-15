@@ -15,10 +15,13 @@ WORKERS_NUMBER=${6:-"$CLUSTER_WORKERS_NUMBER"}
 INSTANCE_TYPE=${7:-"$CLUSTER_INSTANCE_TYPE"}
 CDH_VERSION=${8:-"$CLUSTER_CDH_VERSION"}
 ALTUS_ENV=${9:-"$CLUSTER_ENVIRONMENT"}
-MANAGER_SERVER_USER=${10:-"cmuser"}
-MANAGER_SERVER_PWORD=${11:-"Q_Dr@7bE"}
+SSH_KEY=${10:-"~/.ssh/director"}
+MANAGER_SERVER_USER=${11:-"cmuser"}
+MANAGER_SERVER_PWORD=${12:-"Q_Dr@7bE"}
 
 BOOTSTRAP_FILE=$ROOT_DIR/bin/cldr-provision-altus-bootstrap.sh
+
+[[ ! -f "$SSH_KEY" ]] && SSH_KEY="$ROOT_DIR/cfg/provision"
 
 if [ "$DELETE_CLUSTER" = "true" ]; then
   if [ $(altus dataeng list-clusters --cluster-names "$CLUSTER_NAME" 2>&1 | grep status | grep CREATED | wc -l) -eq 1 ]; then
@@ -36,7 +39,6 @@ else
           echo "/tmp/pyspark-env/bin/pip install "$(echo "$LIB_PIP" | sed 's/=/==/g') >> $BOOTSTRAP_FILE
       done
     fi
-    SSH_KEY="$ROOT_DIR/cfg/provision"
     [[ ! -f "$SSH_KEY" ]] && ssh-keygen -N '' -f "$SSH_KEY"
     altus dataeng create-aws-cluster \
       --service-type="$SERVICE_TYPE" \
@@ -56,6 +58,6 @@ else
     done
   fi
   if [ "$PROXY_CONNECT" = "true" ]; then
-    altus dataeng socks-proxy --cluster-name "$CLUSTER_NAME" --ssh-private-key=~/.ssh/director --open-cloudera-manager="yes"
+    altus dataeng socks-proxy --cluster-name "$CLUSTER_NAME" --ssh-private-key="$SSH_KEY" --open-cloudera-manager="yes"
   fi
 fi
