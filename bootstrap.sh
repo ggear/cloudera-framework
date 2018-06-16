@@ -101,8 +101,13 @@ function mode_execute {
 
 }
 
+TIME=$(date +%s)
+
 for MODE in "$@"; do
   [[ ! "${MODE}" = "environment" ]] && set -x -e
   mode_execute
 done
 
+set +x
+TIME="$(($(date +%s) - $TIME))"
+echo "" && echo "Pipeline execution took ["$(printf '%02d:%02d:%02d\n' $(($TIME/3600)) $(($TIME%3600/60)) $(($TIME%60)))"] time" && echo ""

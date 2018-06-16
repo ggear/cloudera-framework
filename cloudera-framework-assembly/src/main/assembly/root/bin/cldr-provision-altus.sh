@@ -19,13 +19,26 @@ SSH_KEY=${10:-"/Users/graham/.ssh/director"}
 MANAGER_SERVER_USER=${11:-"cmuser"}
 MANAGER_SERVER_PWORD=${12:-"Q_Dr@7bE"}
 
+CREATE_TIMESTAMP="$ROOT_DIR/cfg/provision.time"
 BOOTSTRAP_FILE=$ROOT_DIR/bin/cldr-provision-altus-bootstrap.sh
 
 [[ ! -f "$SSH_KEY" ]] && SSH_KEY="$ROOT_DIR/cfg/provision"
 
 if [ "$DELETE_CLUSTER" = "true" ]; then
+  TIME=$(date +%s)
   if [ $(altus dataeng list-clusters --cluster-names "$CLUSTER_NAME" 2>&1 | grep status | grep CREATED | wc -l) -eq 1 ]; then
     altus dataeng delete-cluster --cluster-name="$CLUSTER_NAME"
+  fi
+  if [ "$WAIT_TASK" = "true" ]; then
+    while [ $(altus dataeng list-clusters --cluster-names "$CLUSTER_NAME" 2>&1 | grep NOT_FOUND | wc -l) -eq 0 ]; do
+      echo "Waiting for cluster delete to finish ... " && sleep 5
+    done
+    TIME="$(($(date +%s) - $TIME))"
+    echo "Cluster delete took ["$(printf '%02d:%02d:%02d\n' $(($TIME/3600)) $(($TIME%3600/60)) $(($TIME%60)))"] time"
+    if [ -f "$CREATE_TIMESTAMP" ]; then
+      TIME="$(($(date +%s) - $(cat $CREATE_TIMESTAMP)))"
+      echo "Cluster spent up ["$(printf '%02d:%02d:%02d\n' $(($TIME/3600)) $(($TIME%3600/60)) $(($TIME%60)))"] time"
+    fi
   fi
 else
   if [ $(altus dataeng list-clusters --cluster-names "$CLUSTER_NAME" 2>&1 | grep "No cluster found" | wc -l) -ne 0 ]; then
@@ -40,6 +53,7 @@ else
       done
     fi
     [[ ! -f "$SSH_KEY" ]] && ssh-keygen -N '' -f "$SSH_KEY"
+    date +%s > "$CREATE_TIMESTAMP"
     altus dataeng create-aws-cluster \
       --service-type="$SERVICE_TYPE" \
       --workers-group-size="$WORKERS_NUMBER" \
@@ -54,8 +68,10 @@ else
   fi
   if [ "$WAIT_TASK" = "true" ]; then
     while [ $(altus dataeng list-clusters --cluster-names "$CLUSTER_NAME" | grep status | grep CREATED | wc -l) -eq 0 ]; do
-      echo "Waiting for cluster to come up ... " && sleep 5
+      echo "Waiting for cluster create to finish ... " && sleep 5
     done
+    TIME="$(($(date +%s) - $(cat $CREATE_TIMESTAMP)))"
+    echo "Cluster create took ["$(printf '%02d:%02d:%02d\n' $(($TIME/3600)) $(($TIME%3600/60)) $(($TIME%60)))"] time"
   fi
   if [ "$PROXY_CONNECT" = "true" ]; then
     altus dataeng socks-proxy --cluster-name "$CLUSTER_NAME" --ssh-private-key="$SSH_KEY" --open-cloudera-manager="yes"
