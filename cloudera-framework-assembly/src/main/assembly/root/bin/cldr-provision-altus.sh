@@ -70,8 +70,10 @@ else
     while [ $(altus dataeng list-clusters --cluster-names "$CLUSTER_NAME" | grep status | grep CREATED | wc -l) -eq 0 ]; do
       echo "Waiting for cluster create to finish ... " && sleep 5
     done
-    TIME="$(($(date +%s) - $(cat $CREATE_TIMESTAMP)))"
-    echo "Cluster create took ["$(printf '%02d:%02d:%02d\n' $(($TIME/3600)) $(($TIME%3600/60)) $(($TIME%60)))"] time"
+    if [ -f "$CREATE_TIMESTAMP" ]; then
+      TIME="$(($(date +%s) - $(cat $CREATE_TIMESTAMP)))"
+      echo "Cluster create took ["$(printf '%02d:%02d:%02d\n' $(($TIME/3600)) $(($TIME%3600/60)) $(($TIME%60)))"] time"
+    fi
   fi
   if [ "$PROXY_CONNECT" = "true" ]; then
     altus dataeng socks-proxy --cluster-name "$CLUSTER_NAME" --ssh-private-key="$SSH_KEY" --open-cloudera-manager="yes"
