@@ -19,7 +19,7 @@ SSH_KEY=${10:-"/Users/graham/.ssh/director"}
 MANAGER_SERVER_USER=${11:-"cmuser"}
 MANAGER_SERVER_PWORD=${12:-"Q_Dr@7bE"}
 
-CREATE_TIMESTAMP="$ROOT_DIR/cfg/provision.time"
+CREATE_TIMESTAMP="/tmp/.altus_provision_epoch"
 BOOTSTRAP_FILE=$ROOT_DIR/bin/cldr-provision-altus-bootstrap.sh
 
 [[ ! -f "$SSH_KEY" ]] && SSH_KEY="$ROOT_DIR/cfg/provision"
@@ -38,6 +38,7 @@ if [ "$DELETE_CLUSTER" = "true" ]; then
     if [ -f "$CREATE_TIMESTAMP" ]; then
       TIME="$(($(date +%s) - $(cat $CREATE_TIMESTAMP)))"
       echo "Cluster spent up ["$(printf '%02d:%02d:%02d\n' $(($TIME/3600)) $(($TIME%3600/60)) $(($TIME%60)))"] time"
+      rm -rf "$CREATE_TIMESTAMP"
     fi
   fi
 else
