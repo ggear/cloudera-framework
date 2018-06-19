@@ -37,17 +37,17 @@ public abstract class MetaDataExecution extends Entity {
   @MRelation(role = RelationRole.TEMPLATE)
   private MetaDataTemplate template;
 
-  @MProperty(register = true, fieldType = CustomPropertyType.TEXT, attribute = "Version")
+  @MProperty(register = true, fieldType = CustomPropertyType.INTEGER, attribute = "System_Exit")
+  private Integer exit;
+
+  @MProperty(register = true, fieldType = CustomPropertyType.TEXT, attribute = "System_Version")
   private String version;
 
-  @MProperty(register = true, fieldType = CustomPropertyType.TEXT, attribute = "Identity")
-  private String identity;
-
-  @MProperty(register = true, fieldType = CustomPropertyType.TEXT, attribute = "Transaction")
+  @MProperty(register = true, fieldType = CustomPropertyType.TEXT, attribute = "Transaction_ID")
   private String transaction;
 
-  @MProperty(register = true, fieldType = CustomPropertyType.INTEGER, attribute = "Exit")
-  private Integer exit;
+  @MProperty(register = true, fieldType = CustomPropertyType.TEXT, attribute = "Unique_ID")
+  private String identity;
 
   private String string;
 
@@ -71,10 +71,10 @@ public abstract class MetaDataExecution extends Entity {
     setName(metaDataMap.get("originalName").toString());
     setStarted(Instant.parse(metaDataMap.get("started").toString()));
     setEnded(Instant.parse(metaDataMap.get("ended").toString()));
-    setVersion(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("Version").toString());
-    setIdentity(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("Identity").toString());
-    setTransaction(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("Transaction").toString());
-    setExit(Integer.parseInt(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("Exit").toString()));
+    setExit(Integer.parseInt(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("System_Exit").toString()));
+    setVersion(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("System_Version").toString());
+    setTransaction(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("Transaction_ID").toString());
+    setIdentity(((Map) ((Map) metaDataMap.get("customProperties")).get(METADATA_NAMESPACE)).get("Unique_ID").toString());
     setString(string + "/?view=detailsView&id=" + metaDataMap.get("identity").toString());
     for (Field field : metaData.getClass().getDeclaredFields()) {
       if (field.isAnnotationPresent(MProperty.class)) {

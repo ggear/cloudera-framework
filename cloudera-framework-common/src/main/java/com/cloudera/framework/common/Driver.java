@@ -322,7 +322,7 @@ public abstract class Driver extends Configured implements Tool {
     try {
       if (poll || getConf().getBoolean(CONF_CLDR_JOB_METADATA, false)) {
         String query = (metaData.getName() == null ? "" : ("+(\"" + metaData.getName() + "\") ")) +
-          (metaData.getTransaction() == null ? "" : ("+" + METADATA_NAMESPACE + ".Transaction:\"" + metaData.getTransaction() + "\" ")) +
+          (metaData.getTransaction() == null ? "" : ("+" + METADATA_NAMESPACE + ".Transaction_ID:\"" + metaData.getTransaction() + "\" ")) +
           "+type:operation_execution +deleted:(-deleted:true)";
         List<Map<String, Object>> metaDataMaps = !getConf().getBoolean(CONF_CLDR_JOB_METADATA, false) ? Collections.emptyList() :
           getNavigatorPlugin(metaData.getClass()).getClient().getEntityBatch(new MetadataQuery(query, Integer.MAX_VALUE, null))

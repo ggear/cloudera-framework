@@ -75,7 +75,7 @@ def put(connection_jar, transaction_id, transaction_properties=None,
 
 def get(connection_jar, transaction_id):
     properties = parse(connection_jar)
-    query = quote('+' + METADATA_NAMESPACE + '.Transaction:"' + transaction_id +
+    query = quote('+' + METADATA_NAMESPACE + '.Transaction_ID:"' + transaction_id +
                   '" +type:operation_execution +deleted:(-deleted:true)')
     metadata_bodies = requests.get(uri(properties, 'entities/?query=' + query +
                                        '&limit=100&offset=0'),
@@ -86,8 +86,8 @@ def get(connection_jar, transaction_id):
                        metadata_body['customProperties'] is not None and
                        METADATA_NAMESPACE in metadata_body['customProperties'] and
                        metadata_body['customProperties'][METADATA_NAMESPACE] is not None and
-                       'Transaction' in metadata_body['customProperties'][METADATA_NAMESPACE] and
-                       metadata_body['customProperties'][METADATA_NAMESPACE]['Transaction'] is not None]
+                       'Transaction_ID' in metadata_body['customProperties'][METADATA_NAMESPACE] and
+                       metadata_body['customProperties'][METADATA_NAMESPACE]['Transaction_ID'] is not None]
     for metadata_body in metadata_bodies:
         metadata_body['navigatorUrl'] = properties['navigator.url'] + \
                                         '/?view=detailsView&id=' + metadata_body['identity']

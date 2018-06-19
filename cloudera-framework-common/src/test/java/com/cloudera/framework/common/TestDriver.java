@@ -99,7 +99,7 @@ public class TestDriver {
     Driver driver = new CountFilesDriver(dfsServer.getConf(), Engine.SPARK);
     driver.getConf().set(CONF_CLDR_JOB_GROUP, "test-" + METADATA_NAMESPACE.replace("_", "-"));
     driver.getConf().set(CONF_CLDR_JOB_NAME, "test-" + METADATA_NAMESPACE.replace("_", "-") + "-job");
-    driver.getConf().set(CONF_CLDR_JOB_TRANSACTION, UUID.randomUUID().toString());
+    driver.getConf().set(CONF_CLDR_JOB_TRANSACTION, UUID.randomUUID().toString().replaceAll("[\\W]", ""));
     driver.getConf().set(CONF_CLDR_JOB_METADATA, "true");
     MetaDataExecution metaData = new TestExecution(driver.getConf(), new TestTemplate(driver.getConf()), 0, null, null);
     driver.pollMetaData(metaData);
