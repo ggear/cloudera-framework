@@ -75,7 +75,7 @@ function mode_execute {
     mvn versions:commit
     mvn clean install -PPKG
     mvn clean
-    [ $(grep -Fr $VERSION_OLD * | grep -v README.md | grep -v dependency-reduced-pom.xml | tee /dev/tty | wc -l) -ne 0 ] && exit 1
+    [ $(grep -Fr $VERSION_OLD * | grep -v README.md | grep -v dependency-reduced-pom.xml | tee /dev/tty | wc -l) -ne 0 ] && echo "Error, references to old version [$VERSION_OLD] detected" && exit 1
     git diff
     git status
 
