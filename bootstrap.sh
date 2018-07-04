@@ -68,7 +68,7 @@ function mode_execute {
     echo "" && echo "" && echo "" && echo "Build [cloudera-framework]"
     git checkout master
     git pull -a
-    mvn install -PPKG -U
+    mvn install -PPKG
     mvn clean install
     mvn test -pl cloudera-framework-testing -PSCALA_2.11
 
