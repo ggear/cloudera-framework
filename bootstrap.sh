@@ -66,19 +66,19 @@ function mode_execute {
   elif [ "${MODE}" = "versions" ]; then
 
     echo "" && echo "" && echo "" && echo "Versions [cloudera-framework]"
-    VERSION_OLD=$(grep -m 1 "<version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//' | sed 's/-SNAPSHOT*//' | xargs)
+    VERSION_PREVIOUS=$(grep -m 1 "<version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//' | xargs)
     echo "Type the CDH version you want to baseline on followed by [ENTER]:" && read VERSION_CDH
-    VERSION_NEW=$(git describe \-\-tags | cut -c20-34 | cut -f1 -d"-" | xargs)"-cdh"$VERSION_CDH"-SNAPSHOT"
+    VERSION_RELEASE=$(git describe \-\-tags | cut -c20-34 | cut -f1 -d"-" | xargs)"-cdh"$VERSION_CDH"-SNAPSHOT"
     git pull --all
     mvn install -PCMP
-    mvn versions:set -DnewVersion=$VERSION_NEW
+    mvn versions:set -DnewVersion=$VERSION_RELEASE
     mvn versions:commit
+    sed -i -e "s/$VERSION_PREVIOUS/$VERSION_RELEASE/g" ./cloudera-framework-parent/pom.xml
+    rm -rf ./cloudera-framework-parent/pom.xml-e
     mvn clean install -PPKG
     mvn clean
-    [ $(grep -Fr $VERSION_OLD * | grep -v README.md | grep -v dependency-reduced-pom.xml | tee /dev/tty | wc -l) -ne 0 ] && echo "Error, references to old version [$VERSION_OLD] detected" && exit 1
-    git diff
+    [ $(grep -Fr $VERSION_PREVIOUS * | grep -v README.md | grep -v dependency-reduced-pom.xml | tee /dev/tty | wc -l) -ne 0 ] && echo "Error, references to old version [$VERSION_PREVIOUS] detected" && exit 1
     git status
-
 
   elif [ "${MODE}" = "build" ]; then
 
@@ -104,7 +104,7 @@ function mode_execute {
     mvn test -pl cloudera-framework-testing -PSCALA_2.11
     mvn release:prepare -B -DreleaseVersion=$VERSION_RELEASE -DdevelopmentVersion=$VERSION_HEAD -PPKG
     mvn release:perform -PPKG
-    sed -i -e "s/$VERSION_PREVIOUS/$VERSION_RELEASE/g" README.md
+    sed -i -e '' "s/$VERSION_PREVIOUS/$VERSION_RELEASE/g" README.md
     git add -A
     git commit -m "Update README for cloudera-framework-${VERSION_RELEASE}"
     git push --all
