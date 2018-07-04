@@ -66,16 +66,18 @@ function mode_execute {
   elif [ "${MODE}" = "versions" ]; then
 
     echo "" && echo "" && echo "" && echo "Versions [cloudera-framework]"
-    echo "Type the CDH version you want to baseline on followed by [ENTER]:"
-    read VERSION_CDH
     VERSION_OLD=$(grep -m 1 "<version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//' | sed 's/-SNAPSHOT*//' | xargs)
+    echo "Type the CDH version you want to baseline on followed by [ENTER]:" && read VERSION_CDH
     VERSION_NEW=$(git describe \-\-tags | cut -c20-34 | cut -f1 -d"-" | xargs)"-cdh"$VERSION_CDH"-SNAPSHOT"
+    git pull --all
+    mvn install -PCMP
     mvn versions:set -DnewVersion=$VERSION_NEW
     mvn versions:commit
-    mvn install -PCMP
     mvn clean install -PPKG
     mvn clean
-    [ $(grep -Fr $VERSION_OLD * | grep -v README.md | grep -v dependency-reduced-pom.xml | wc -l) -ne 0 ] && exit 1
+    [ $(grep -Fr $VERSION_OLD * | grep -v README.md | grep -v dependency-reduced-pom.xml | tee /dev/tty | wc -l) -ne 0 ] && exit 1
+    git diff
+    git status
 
 
   elif [ "${MODE}" = "build" ]; then
