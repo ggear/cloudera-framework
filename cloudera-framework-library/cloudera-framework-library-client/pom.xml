@@ -5,12 +5,12 @@
     <groupId>com.cloudera.framework.library</groupId>
     <artifactId>cloudera-framework-library-client</artifactId>
     <packaging>pom</packaging>
-    <version>1.9.7-cdh5.14.2</version>
+    <version>1.9.8-cdh5.14.2-SNAPSHOT</version>
 
     <parent>
         <groupId>com.cloudera.framework</groupId>
         <artifactId>cloudera-framework-library</artifactId>
-        <version>1.9.7-cdh5.14.2</version>
+        <version>1.9.8-cdh5.14.2-SNAPSHOT</version>
     </parent>
 
     <modules>
