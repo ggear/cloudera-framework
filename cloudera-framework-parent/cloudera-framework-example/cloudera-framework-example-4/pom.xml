@@ -6,12 +6,12 @@
     <groupId>com.cloudera.framework.parent</groupId>
     <artifactId>cloudera-framework-example-4</artifactId>
     <packaging>jar</packaging>
-    <version>1.9.7-cdh5.14.1</version>
+    <version>1.9.8-cdh5.14.1-SNAPSHOT</version>
 
     <parent>
         <groupId>com.cloudera.framework</groupId>
         <artifactId>cloudera-framework-example</artifactId>
-        <version>1.9.7-cdh5.14.1</version>
+        <version>1.9.8-cdh5.14.1-SNAPSHOT</version>
     </parent>
 
     <properties>
