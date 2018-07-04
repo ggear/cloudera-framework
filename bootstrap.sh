@@ -63,6 +63,21 @@ function mode_execute {
     conda config --set ssl_verify no
     export PATH=$(echo ${PWD}/target/assembly/*/bin):$PATH
 
+  elif [ "${MODE}" = "versions" ]; then
+
+    echo "" && echo "" && echo "" && echo "Versions [cloudera-framework]"
+    echo "Type the CDH version you want to baseline on followed by [ENTER]:"
+    read VERSION_CDH
+    VERSION_OLD=$(grep -m 1 "<version>" pom.xml | sed 's/<version>//' | sed 's/<\/version>//' | sed 's/-SNAPSHOT*//' | xargs)
+    VERSION_NEW=$(git describe \-\-tags | cut -c20-34 | cut -f1 -d"-" | xargs)"-cdh"$VERSION_CDH"-SNAPSHOT"
+    mvn versions:set -DnewVersion=$VERSION_NEW
+    mvn versions:commit
+    mvn install -PCMP
+    mvn clean install -PPKG
+    mvn clean
+    [ $(grep -Fr $VERSION_OLD * | grep -v README.md | grep -v dependency-reduced-pom.xml | wc -l) -ne 0 ] && exit 1
+
+
   elif [ "${MODE}" = "build" ]; then
 
     echo "" && echo "" && echo "" && echo "Build [cloudera-framework]"
@@ -95,7 +110,7 @@ function mode_execute {
 
   else
 
-    echo "Usage: ${0} <environment|build|release>"
+    echo "Usage: ${0} <environment|versions|build|release>"
 
   fi
 
