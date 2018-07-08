@@ -176,7 +176,7 @@ public class ImpalaServer extends CdhServer<ImpalaServer, ImpalaServer.Runtime> 
   @Override
   public synchronized boolean isValid() {
     if (!envOsName.equals("Linux")) {
-      log(LOG, "error", "Linux required, " + envOsName + " detected");
+      log(LOG, "error", "Linux required, [" + envOsName + "] detected");
       return false;
     }
     return true;

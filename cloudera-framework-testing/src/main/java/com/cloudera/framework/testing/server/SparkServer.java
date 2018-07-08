@@ -62,12 +62,12 @@ public class SparkServer extends CdhServer<SparkServer, SparkServer.Runtime> {
   public synchronized boolean isValid() {
     if (package$.MODULE$.SPARK_VERSION().charAt(0) == '1') {
       if (!envScalaVersion.equals("2.10")) {
-        log(LOG, "error", "Scala 2.10 required, " + envScalaVersion + " detected");
+        log(LOG, "error", "Scala 2.10 required, [" + envScalaVersion + "] detected");
         return false;
       }
     } else if (package$.MODULE$.SPARK_VERSION().charAt(0) == '2') {
       if (!envScalaVersion.equals("2.11")) {
-        log(LOG, "error", "Scala 2.11 required, " + envScalaVersion + " detected");
+        log(LOG, "error", "Scala 2.11 required, [" + envScalaVersion + "] detected");
         return false;
       }
     }

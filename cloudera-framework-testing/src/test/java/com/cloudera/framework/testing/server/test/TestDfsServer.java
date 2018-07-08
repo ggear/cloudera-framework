@@ -29,28 +29,34 @@ public abstract class TestDfsServer implements TestConstants {
 
   private static final String DIR_DESTINATION = "/tmp/data";
   private static final String DIR_SOURCE = REL_DIR_CLASSES_TEST + "/data";
+
   public static final String COUNTER_GROUP = TestDfsServer.class.getName();
 
   public static final TestMetaData testMetaData1 = TestMetaData.getInstance() //
     .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)));
+
   public static final TestMetaData testMetaData2 = TestMetaData.getInstance() //
     .parameters(Collections.EMPTY_MAP) //
     .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 0L)));
+
   public static final TestMetaData testMetaData3 = TestMetaData.getInstance() //
     .dataSetSourceDirs(DIR_SOURCE) //
     .dataSetDestinationDirs(DIR_DESTINATION) //
-    .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 4L)));
+    .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 5L)));
+
   public static final TestMetaData testMetaData4 = TestMetaData.getInstance() //
     .dataSetSourceDirs(DIR_SOURCE) //
     .dataSetNames("dataset-1") //
     .dataSetDestinationDirs(DIR_DESTINATION) //
     .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)));
+
   public static final TestMetaData testMetaData5 = TestMetaData.getInstance() //
     .dataSetSourceDirs(DIR_SOURCE) //
     .dataSetNames("dataset-1") //
     .dataSetSubsets(new String[][]{{"dataset-1-sub-1"}}) //
     .dataSetDestinationDirs(DIR_DESTINATION) //
     .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)));
+
   public static final TestMetaData testMetaData6 = TestMetaData.getInstance() //
     .dataSetSourceDirs(DIR_SOURCE) //
     .dataSetNames("dataset-1") //
@@ -58,6 +64,7 @@ public abstract class TestDfsServer implements TestConstants {
     .dataSetLabels(new String[][][]{{{"dataset-1-sub-1-sub-1"},}}) //
     .dataSetDestinationDirs(DIR_DESTINATION) //
     .asserts(ImmutableMap.of(COUNTER_GROUP, ImmutableMap.of(Counter.COUNTER1, 2L)));
+
   public static final TestMetaData testMetaData7 = TestMetaData.getInstance() //
     .dataSetSourceDirs(DIR_SOURCE, DIR_SOURCE) //
     .dataSetNames("dataset-1", "dataset-1") //
@@ -172,8 +179,8 @@ public abstract class TestDfsServer implements TestConstants {
 
   @Test
   public void testCopyFromTestClassesDirAll() throws Exception {
-    assertCopyFromLocalDir(0, 4, DIR_SOURCE, DIR_DESTINATION);
-    assertCopyFromLocalDir(4, 4, DIR_SOURCE, DIR_DESTINATION);
+    assertCopyFromLocalDir(0, 5, DIR_SOURCE, DIR_DESTINATION);
+    assertCopyFromLocalDir(5, 5, DIR_SOURCE, DIR_DESTINATION);
   }
 
   @Test
@@ -208,7 +215,7 @@ public abstract class TestDfsServer implements TestConstants {
   @Test
   public void testMapFilesLocalAndListFilesLocal() throws Exception {
     Map<String, Map<String, Map<String, Set<File>>>> files = DfsServer.mapFilesLocal(DIR_SOURCE);
-    assertEquals(3, files.size());
+    assertEquals(4, files.size());
     for (String dataset : files.keySet()) {
       assertArrayEquals(getDfsServer().copyFromLocalDir(DIR_SOURCE, DIR_DESTINATION, dataset),
         DfsServer.listFilesLocal(DIR_SOURCE, dataset));

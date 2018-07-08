@@ -42,7 +42,7 @@ public class TestImpalaServer implements TestConstants {
   }
 
   /**
-   * Test Hive
+   * Test Impala
    */
   @SuppressWarnings("ResultOfMethodCallIgnored")
   @Test

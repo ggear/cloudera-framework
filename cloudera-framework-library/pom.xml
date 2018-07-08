@@ -15,8 +15,8 @@
 
     <modules>
         <module>cloudera-framework-library-client</module>
-        <module>cloudera-framework-library-runtime</module>
         <module>cloudera-framework-library-thirdparty</module>
+        <module>cloudera-framework-library-runtime</module>
     </modules>
 
 </project>

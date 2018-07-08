@@ -99,6 +99,13 @@
             <artifactId>zohhak</artifactId>
             <version>${zohhak.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.cloudera.framework.library.thirdparty</groupId>
+            <artifactId>cloudera-framework-library-thirdparty-envelope</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

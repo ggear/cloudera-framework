@@ -279,7 +279,7 @@ public class HiveServer extends CdhServer<HiveServer, HiveServer.Runtime> {
   public synchronized boolean isValid() {
     if (getRuntime().equals(Runtime.LOCAL_SPARK)) {
       if (!envScalaVersion.equals("2.10")) {
-        log(LOG, "error", "Scala 2.10 required, " + envScalaVersion + " detected");
+        log(LOG, "error", "Scala 2.10 required,[ " + envScalaVersion + "] detected");
         return false;
       }
     }

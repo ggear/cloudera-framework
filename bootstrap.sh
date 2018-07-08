@@ -73,12 +73,20 @@ function mode_execute {
     mvn install -PCMP
     mvn versions:set -DnewVersion=$VERSION_RELEASE
     mvn versions:commit
-    sed -i -e "s/$VERSION_PREVIOUS/$VERSION_RELEASE/g" ./cloudera-framework-parent/pom.xml
+    sed -i -e "s/$VERSION_PREVIOUS/$VERSION_RELEASE/g" cloudera-framework-parent/pom.xml
     rm -rf ./cloudera-framework-parent/pom.xml-e
     mvn clean install -PPKG
     mvn clean
     [ $(grep -Fr $VERSION_PREVIOUS * | grep -v README.md | grep -v dependency-reduced-pom.xml | tee /dev/tty | wc -l) -ne 0 ] && echo "Error, references to old version [$VERSION_PREVIOUS] detected" && exit 1
     git status
+
+  elif [ "${MODE}" = "thirdparty" ]; then
+
+    echo "" && echo "" && echo "" && echo "Thirdparty [cloudera-framework]"
+    cd ../../cloudera/envelope
+    git pull --all
+    git checkout v0.5.0
+    mvn clean deploy -DaltDeploymentRepository=cloudera-framework-releases::default::http://52.63.86.162:80/artifactory/cloudera-framework-releases
 
   elif [ "${MODE}" = "build" ]; then
 
@@ -104,7 +112,8 @@ function mode_execute {
     mvn test -pl cloudera-framework-testing -PSCALA_2.11
     mvn release:prepare -B -DreleaseVersion=$VERSION_RELEASE -DdevelopmentVersion=$VERSION_HEAD -PPKG
     mvn release:perform -PPKG
-    sed -i -e '' "s/$VERSION_PREVIOUS/$VERSION_RELEASE/g" README.md
+    sed -i -e "s/$VERSION_PREVIOUS/$VERSION_RELEASE/g" README.md
+    rm -rf README.md-e
     git add -A
     git commit -m "Update README for cloudera-framework-${VERSION_RELEASE}"
     git push --all
@@ -112,7 +121,7 @@ function mode_execute {
 
   else
 
-    echo "Usage: ${0} <environment|versions|build|release>"
+    echo "Usage: ${0} <environment | versions | thirdparty | build | release>"
 
   fi
 

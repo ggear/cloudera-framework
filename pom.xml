@@ -118,16 +118,18 @@
         <cdh-kafka-patch.version>2.2.0-1.2.2.0.p0.68</cdh-kafka-patch.version>
         <cdh-kudu-patch.version>1.4.0-1.cdh5.12.1.p0.10</cdh-kudu-patch.version>
 
-        <joda.version>1.2</joda.version>
         <avro.version>1.7.6</avro.version>
         <kudu.version>1.4.0</kudu.version>
         <slf4j.version>1.7.5</slf4j.version>
         <jasper.version>5.5.23</jasper.version>
+
+        <joda.version>1.2</joda.version>
         <jackson.version>1.8.8</jackson.version>
         <snappy.version>1.1.1.7</snappy.version>
 
         <paho.version>1.1.1</paho.version>
         <moquette.version>0.9</moquette.version>
+        <envelope.version>0.5.0</envelope.version>
         <elephantbird.version>4.15</elephantbird.version>
         <opencsv.version>2.3</opencsv.version>
         <commonscsv.version>1.4</commonscsv.version>
@@ -287,7 +289,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -322,12 +324,17 @@
                 <plugin>
                     <groupId>org.scalatest</groupId>
                     <artifactId>scalatest-maven-plugin</artifactId>
-                    <version>1.0</version>
+                    <version>2.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>net.alchim31.maven</groupId>
                     <artifactId>scala-maven-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.3.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.0.0-M2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -357,6 +364,28 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.3,)</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
