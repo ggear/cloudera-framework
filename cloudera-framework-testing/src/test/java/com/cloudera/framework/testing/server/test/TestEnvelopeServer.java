@@ -1,8 +1,5 @@
 package com.cloudera.framework.testing.server.test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.TestRunner;
@@ -10,17 +7,16 @@ import com.cloudera.framework.testing.server.DfsServer;
 import com.cloudera.framework.testing.server.EnvelopeServer;
 import com.cloudera.framework.testing.server.SparkServer;
 import com.cloudera.labs.envelope.run.Runner;
-import com.cloudera.labs.envelope.spark.Contexts;
 import com.cloudera.labs.envelope.utils.ConfigUtils;
 import com.googlecode.zohhak.api.Coercion;
 import com.googlecode.zohhak.api.TestWith;
-import com.typesafe.config.ConfigFactory;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hive.ql.exec.spark.session.SparkSession;
 import org.junit.Assert;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
+@Ignore
 @RunWith(TestRunner.class)
 public class TestEnvelopeServer implements TestConstants {
 
