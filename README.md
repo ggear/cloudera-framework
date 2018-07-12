@@ -115,14 +115,14 @@ for example the core client bill-of-materials and test harness can be pulled int
     <dependency>
       <groupId>com.cloudera.framework.library.client</groupId>
       <artifactId>cloudera-framework-library-client-core</artifactId>
-      <version>1.9.7-cdh5.14.2</version>
+      <version>1.9.7-cdh5.15.0</version>
       <type>pom</type>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.cloudera.framework</groupId>
       <artifactId>cloudera-framework-testing</artifactId>
-      <version>1.9.7-cdh5.14.2</version>
+      <version>1.9.7-cdh5.15.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -149,18 +149,18 @@ In addition,
 [archetypes](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype)
 are available in various profiles, allowing one to bootstrap a new cloudera-framework client module:
 
-* [Workload](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype/cloudera-framework-archetype-workload/src/main/resources/archetype-resources)
-  (Scala, Java, Spark2)
+* [Spark2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype/cloudera-framework-archetype-spark2/src/main/resources/archetype-resources)
 
-For example, a project could be created with the workload profile baseline,
-including a very simple example targeting a Cloudera Altus runtime as below:
+For example, a project could be created with the 
+[Spark2](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-archetype/cloudera-framework-archetype-spark2/src/main/resources/archetype-resources)
+profile baseline, including a very simple example targeting a Cloudera Altus runtime as below:
 
 ```bash
 mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -B \
   -DarchetypeRepository=http://52.63.86.162/artifactory/cloudera-framework-releases \
   -DarchetypeGroupId=com.cloudera.framework.archetype \
-  -DarchetypeArtifactId=cloudera-framework-archetype-workload \
-  -DarchetypeVersion=1.9.7-cdh5.14.2 \
+  -DarchetypeArtifactId=cloudera-framework-archetype-spark2 \
+  -DarchetypeVersion=1.9.7-cdh5.15.0 \
   -DgroupId=com.myorg.mytest \
   -DartifactId=mytest \
   -Dpackage=com.myorg.mytest \
@@ -175,6 +175,6 @@ environment and each Maven archetype parameter with the "altus" prefix has to be
 given an appropriate value. The "altusS3Bucket" parameter should specify a valid
 S3 bucket which the user has read/write access to, within the "altusEnv" region
 and has data stored under the "/data/workload/input" key with schema like the
-[pristine](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-archetype/cloudera-framework-archetype-workload/src/main/resources/archetype-resources/src/test/resources/data/__artifactId__/csv/pristine/pristine.csv) 
+[pristine](https://raw.githubusercontent.com/ggear/cloudera-framework/master/cloudera-framework-archetype/cloudera-framework-archetype-spark2/src/main/resources/archetype-resources/src/test/resources/data/__artifactId__/csv/pristine/pristine.csv) 
 test data set.
 

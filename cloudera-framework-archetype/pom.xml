@@ -14,7 +14,7 @@
     </parent>
 
     <modules>
-        <module>cloudera-framework-archetype-workload</module>
+        <module>cloudera-framework-archetype-spark2</module>
     </modules>
 
     <properties>

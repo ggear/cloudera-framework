@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.cloudera.framework.archetype</groupId>
-    <artifactId>cloudera-framework-archetype-workload</artifactId>
+    <artifactId>cloudera-framework-archetype-spark2</artifactId>
     <packaging>maven-archetype</packaging>
     <version>1.9.8-cdh5.15.0-SNAPSHOT</version>
 
