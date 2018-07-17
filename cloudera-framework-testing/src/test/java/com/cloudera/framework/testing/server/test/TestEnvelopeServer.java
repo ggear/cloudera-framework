@@ -13,10 +13,8 @@ import com.googlecode.zohhak.api.TestWith;
 import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
-@Ignore
 @RunWith(TestRunner.class)
 public class TestEnvelopeServer implements TestConstants {
 
