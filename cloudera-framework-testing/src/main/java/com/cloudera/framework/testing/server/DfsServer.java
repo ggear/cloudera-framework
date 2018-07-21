@@ -154,11 +154,15 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
     return files.toArray(new File[0]);
   }
 
-  private static String stripLeadingSlashes(String string) {
+  private static String stripLeadingSlashes(String path) {
+
+    path = path.replace("file:", "");
+
+
     int indexAfterLeadingSlash = 0;
-    while (indexAfterLeadingSlash < string.length() && string.charAt(indexAfterLeadingSlash) == '/')
+    while (indexAfterLeadingSlash < path.length() && path.charAt(indexAfterLeadingSlash) == '/')
       ++indexAfterLeadingSlash;
-    return indexAfterLeadingSlash == 0 ? string : string.substring(indexAfterLeadingSlash, string.length());
+    return indexAfterLeadingSlash == 0 ? path : path.substring(indexAfterLeadingSlash, path.length());
   }
 
   /**
@@ -180,10 +184,12 @@ public class DfsServer extends CdhServer<DfsServer, DfsServer.Runtime> {
   public Path getPath(String path) {
     switch (getRuntime()) {
       case LOCAL_FS:
-        path = (path = stripLeadingSlashes(path)).equals("") ? ABS_DIR_DFS_LOCAL : ABS_DIR_DFS_LOCAL + "/" + path;
+        path = path.startsWith("file:") ? path.replace("file:", "") :
+          ((path = stripLeadingSlashes(path)).equals("") ? ABS_DIR_DFS_LOCAL : ABS_DIR_DFS_LOCAL + "/" + path);
         break;
       case CLUSTER_DFS:
-        path = "/" + stripLeadingSlashes(path);
+        path = "/" + stripLeadingSlashes(path.replaceFirst(PATH_ROOT.makeQualified(getFileSystem().getUri(),
+          PATH_ROOT).toString(), ""));
         break;
     }
     return new Path(path);

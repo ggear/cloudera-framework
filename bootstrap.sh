@@ -95,7 +95,7 @@ function mode_execute {
     git pull -a
     mvn install -PPKG
     mvn clean install
-    mvn test -pl cloudera-framework-testing -PSCALA_2.11
+    mvn test -pl cloudera-framework-testing,cloudera-framework-parent -PSCALA_2.11
 
   elif [ "${MODE}" = "release" ]; then
 

@@ -141,7 +141,7 @@ The cloudera-framework includes a set of
 * [Example 3](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-3) 
   (Scala, CDSW, Spark2, MLlib, PMML, HDFS)
 * [Example 4](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-4) 
-  (Java, Kafka, Spark2 Streaming, Kudu, HDFS)
+  (Envelope, Kafka, Spark2 Streaming, Kudu, HDFS)
 * [Example 5](https://github.com/ggear/cloudera-framework/tree/master/cloudera-framework-parent/cloudera-framework-example/cloudera-framework-example-5) 
   (Python, NLTK, PySpark, Spark2, HDFS)
 

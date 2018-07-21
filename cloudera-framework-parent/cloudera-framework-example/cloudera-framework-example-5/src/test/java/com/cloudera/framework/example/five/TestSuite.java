@@ -11,15 +11,15 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ //
-  Process.class, //
+@SuiteClasses({
+  Process.class,
 })
 
 public class TestSuite {
 
   @ClassRule
-  public static TestRule cdhServers = RuleChain //
-    .outerRule(DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS)) //
+  public static TestRule cdhServers = RuleChain
+    .outerRule(DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS))
     .around(PythonServer.getInstance());
 
 }

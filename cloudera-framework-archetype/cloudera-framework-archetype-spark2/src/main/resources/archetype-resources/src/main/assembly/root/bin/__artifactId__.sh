@@ -4,8 +4,8 @@
 #
 # This example launches a Spark2 job based on the packaged example
 # "${package}.Driver". Note that the ../cfg/${artifactId}.env
-# defines how to connect, and provision in the case of Cloudera Altus and
-# Cloudera Director) to the cluster.
+# defines how to connect, and provision (in the case of Cloudera Altus and
+# Cloudera Director) the cluster.
 #
 
 export ROOT_DIR=$( cd "$( dirname "$BASH_SOURCE" )" && pwd )/..

@@ -14,15 +14,15 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ //
-  Query.class, //
+@SuiteClasses({
+  Query.class,
 })
 
 public class TestSuite {
 
   @ClassRule
-  public static TestRule cdhServers = RuleChain //
-    .outerRule(DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS)) //
+  public static TestRule cdhServers = RuleChain
+    .outerRule(DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS))
     .around(KafkaServer.getInstance())
     .around(HiveServer.getInstance(Runtime.LOCAL_SPARK))
     .around(SparkServer.getInstance());

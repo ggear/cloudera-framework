@@ -48,8 +48,7 @@ public class TestZooKeeperServer implements TestConstants {
   }
 
   @Test
-  @Ignore // TODO: Remove when ZooKeeperServer.clean() is implemented and all
-  // state is flushed between test methods and this test can pass
+  @Ignore // TODO: Remove when ZooKeeperServer.clean() is implemented and all state is flushed between test methods and this test can pass
   public void testZookeeperAgain() throws IOException, InterruptedException, KeeperException {
     testZookeeper();
   }

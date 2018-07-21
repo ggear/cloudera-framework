@@ -52,8 +52,7 @@ class Driver(configuration: Configuration)
     val spark = SparkSession.builder.config(new SparkConf).appName(Name).getOrCreate()
 
     // Read the input CSV into a DataFrame and set the input record count
-    val input = spark.read.format("com.databricks.spark.csv").option("header", "true")
-      .load(new Path(rootPath, PathInput).toString)
+    val input = spark.read.option("header", true).csv(new Path(rootPath, PathInput).toString)
     incrementCounter(RECORDS_IN, input.count())
 
     // Transform the input DataFrame and set the output record count
@@ -61,8 +60,7 @@ class Driver(configuration: Configuration)
     incrementCounter(RECORDS_OUT, output.count())
 
     // Write the output DataFrame to partitioned CSV files
-    output.write.format("com.databricks.spark.csv").option("header", "true")
-      .partitionBy("opt_in").save(new Path(rootPath, Driver.PathOutput).toString)
+    output.write.option("header", true).partitionBy("opt_in").csv(new Path(rootPath, Driver.PathOutput).toString)
 
     // Close the session and return success
     spark.close()

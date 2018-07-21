@@ -12,7 +12,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
-import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.spark.package$;
 import org.junit.rules.TestRule;
 import org.slf4j.Logger;
@@ -57,8 +56,7 @@ public class EnvelopeServer extends CdhServer<EnvelopeServer, EnvelopeServer.Run
 
   @Override
   public CdhServer<?, ?>[] getDependencies() {
-    return new CdhServer<?, ?>[]{
-      DfsServer.getInstance(DfsServer.Runtime.CLUSTER_DFS), SparkServer.getInstance(SparkServer.Runtime.LOCAL_CONTEXT)};
+    return new CdhServer<?, ?>[]{DfsServer.getInstance(), SparkServer.getInstance(SparkServer.Runtime.LOCAL_CONTEXT)};
   }
 
   @Override
@@ -92,10 +90,16 @@ public class EnvelopeServer extends CdhServer<EnvelopeServer, EnvelopeServer.Run
   }
 
   @Override
+  public synchronized void state() throws IllegalArgumentException, IOException {
+    long time = log(LOG, "state", true);
+    Contexts.closeSparkSession(true);
+    Contexts.closeJavaStreamingContext(true);
+    log(LOG, "state", time, true);
+  }
+
+  @Override
   public synchronized void stop() throws IOException {
     long time = log(LOG, "stop");
-    File metastoreDir = new File("metastore_db");
-    if (metastoreDir.exists()) FileUtils.deleteDirectory(metastoreDir);
     log(LOG, "stop", time);
   }
 
