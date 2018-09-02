@@ -5,7 +5,7 @@
     <groupId>com.cloudera</groupId>
     <artifactId>cloudera-framework</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.0-cdh5.15.0-SNAPSHOT</version>
+    <version>1.9.9-cdh5.15.1-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:git@github.com:ggear/cloudera-framework.git</connection>
@@ -100,20 +100,20 @@
 
     <properties>
 
-        <cdh-hadoop.version>2.6.0-cdh5.15.0</cdh-hadoop.version>
-        <cdh-spark.version>1.6.0-cdh5.15.0</cdh-spark.version>
-        <cdh-hive.version>1.1.0-cdh5.15.0</cdh-hive.version>
-        <cdh-flume.version>1.6.0-cdh5.15.0</cdh-flume.version>
-        <cdh-avro.version>1.7.6-cdh5.15.0</cdh-avro.version>
-        <cdh-parquet.version>1.5.0-cdh5.15.0</cdh-parquet.version>
-        <cdh-zookeeper.version>3.4.5-cdh5.15.0</cdh-zookeeper.version>
+        <cdh-hadoop.version>2.6.0-cdh5.15.1</cdh-hadoop.version>
+        <cdh-spark.version>1.6.0-cdh5.15.1</cdh-spark.version>
+        <cdh-hive.version>1.1.0-cdh5.15.1</cdh-hive.version>
+        <cdh-flume.version>1.6.0-cdh5.15.1</cdh-flume.version>
+        <cdh-avro.version>1.7.6-cdh5.15.1</cdh-avro.version>
+        <cdh-parquet.version>1.5.0-cdh5.15.1</cdh-parquet.version>
+        <cdh-zookeeper.version>3.4.5-cdh5.15.1</cdh-zookeeper.version>
         <cdh-kafka.version>0.10.2-kafka-2.2.0</cdh-kafka.version>
         <cdh-spark2.version>2.3.0.cloudera2</cdh-spark2.version>
 
-        <cloudera-manager>5.15.0</cloudera-manager>
+        <cloudera-manager>5.15.1</cloudera-manager>
         <cloudera-navigator>2.1</cloudera-navigator>
 
-        <cdh-patch.version>5.15.0-1.cdh5.15.0.p0.21</cdh-patch.version>
+        <cdh-patch.version>5.15.1-1.cdh5.15.1.p0.4</cdh-patch.version>
         <cdh-spark2-patch.version>2.3.0.cloudera2-1.cdh5.13.3.p0.316101</cdh-spark2-patch.version>
         <cdh-kafka-patch.version>2.2.0-1.2.2.0.p0.68</cdh-kafka-patch.version>
         <cdh-kudu-patch.version>1.4.0-1.cdh5.12.1.p0.10</cdh-kudu-patch.version>
