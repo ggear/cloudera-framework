@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
 
+import com.cloudera.framework.common.Driver;
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestMetaData;
 import com.cloudera.framework.testing.TestRunner;
@@ -31,7 +32,7 @@ import org.junit.runner.RunWith;
  * Test process
  */
 @RunWith(TestRunner.class)
-public class Process implements TestConstants {
+public class Stream implements TestConstants {
 
   // TODO: Provide an implementation that leverages Kafka, Spark2 Streaming, Kudu and HDFS
 
@@ -63,13 +64,9 @@ public class Process implements TestConstants {
    * Test process
    */
   @TestWith({"testMetaDataAll"})
-  public void testProcess(TestMetaData testMetaData) throws Exception {
-
-    // Push to driver and script
-    System.setProperty("DFS_INPUT", dfsServer.getPathUri(DATASET_DIR_CSV));
-    System.setProperty("DFS_OUTPUT", dfsServer.getPathUri(DATASET_DIR_PARQUET));
-    Runner.run(ConfigUtils.applySubstitutions(ConfigUtils.configFromPath(ABS_DIR_SOURCE + "/resources/envelope/csv_to_parquet.conf")));
-
+  public void testStream(TestMetaData testMetaData) throws Exception {
+    Driver driver = new com.cloudera.framework.example.four.Stream(dfsServer.getConf());
+    assertEquals(Driver.SUCCESS, driver.runner(dfsServer.getPathUri(DATASET_DIR_CSV), dfsServer.getPathUri(DATASET_DIR_PARQUET)));
     SparkSession sparkSession = SparkSession.builder().config(new SparkConf()).getOrCreate();
     Dataset<Row> datasetCsv = sparkSession.read().option("header", true).csv(dfsServer.getPathUri(DATASET_DIR_CSV));
     Dataset<Row> datasetParquet = sparkSession.read().parquet(dfsServer.getPathUri(DATASET_DIR_PARQUET));

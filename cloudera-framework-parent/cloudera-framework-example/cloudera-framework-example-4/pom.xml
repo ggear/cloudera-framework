@@ -47,6 +47,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.cloudera.framework.library.thirdparty</groupId>
+            <artifactId>cloudera-framework-library-thirdparty-envelope</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
             <groupId>com.cloudera.framework.library.runtime</groupId>
             <artifactId>cloudera-framework-library-runtime-scala_2.11</artifactId>
             <version>${project.version}</version>

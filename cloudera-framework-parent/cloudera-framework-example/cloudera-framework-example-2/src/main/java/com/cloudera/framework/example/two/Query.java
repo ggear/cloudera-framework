@@ -23,7 +23,9 @@ import org.slf4j.LoggerFactory;
 public class Query extends DriverSpark {
 
   private static final Logger LOG = LoggerFactory.getLogger(Query.class);
+
   protected Path inputPath;
+
   private JavaSparkContext sparkContext;
 
   public Query(Configuration configuration) {
