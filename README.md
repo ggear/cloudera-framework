@@ -52,22 +52,21 @@ configures and installs (where possible) the required toolchain and should be so
 
 To run the unit and integrations tests, binaries and meta-data are provided for all CDH components:
 
-* MacOS 10.12.x
 * CentOS/RHEL 6.x
 * CentOS/RHEL 7.x
 * Ubuntu LTS 14.04.x
-
-Some CDH components have additional coverage on other platforms and versions.
+* MacOS 10.13.x (Impala unit tests are no-op'd)
 
 Note that in addition to Maven dependencies, Cloudera 
 [parcels](http://www.cloudera.com/documentation/enterprise/latest/topics/cm_ig_parcels.html) 
 are used to manage platform dependent binaries by way of the 
 [cloudera-parcel-plugin](https://github.com/ggear/cloudera-parcel/tree/master/cloudera-parcel-plugin).
+Impala parcels are not available for non-Linux containers.
 
 ## Limitations
 
 As above, this code is known to not work out of the box on Windows hosts, only Linux and MacOS
-are supported. If developing on Windows it is recommended to run a Linux VM and develop from within it.  
+are supported. If developing on Windows it is recommended to run a Linux container and develop from within it.  
 
 ## Install
 
