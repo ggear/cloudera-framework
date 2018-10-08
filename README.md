@@ -114,14 +114,14 @@ for example the core client bill-of-materials and test harness can be pulled int
     <dependency>
       <groupId>com.cloudera.framework.library.client</groupId>
       <artifactId>cloudera-framework-library-client-core</artifactId>
-      <version>1.9.9-cdh5.15.1</version>
+      <version>2.0.0-cdh5.15.1</version>
       <type>pom</type>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.cloudera.framework</groupId>
       <artifactId>cloudera-framework-testing</artifactId>
-      <version>1.9.9-cdh5.15.1</version>
+      <version>2.0.0-cdh5.15.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -159,7 +159,7 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -B \
   -DarchetypeRepository=http://52.63.86.162/artifactory/cloudera-framework-releases \
   -DarchetypeGroupId=com.cloudera.framework.archetype \
   -DarchetypeArtifactId=cloudera-framework-archetype-spark2 \
-  -DarchetypeVersion=1.9.9-cdh5.15.1 \
+  -DarchetypeVersion=2.0.0-cdh5.15.1 \
   -DgroupId=com.myorg.mytest \
   -DartifactId=mytest \
   -Dpackage=com.myorg.mytest \
