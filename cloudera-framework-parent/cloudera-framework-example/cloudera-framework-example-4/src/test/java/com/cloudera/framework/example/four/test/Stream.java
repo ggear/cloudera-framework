@@ -26,11 +26,13 @@ import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 /**
  * Test process
  */
+@Ignore
 @RunWith(TestRunner.class)
 public class Stream implements TestConstants {
 
