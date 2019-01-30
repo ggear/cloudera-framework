@@ -38,14 +38,14 @@
     <repositories>
         <repository>
             <id>cloudera-framework-releases</id>
-            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+            <url>http://macmini-sheryl:8071/artifactory/libs-release-local</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
         </repository>
         <repository>
             <id>cloudera-framework-snapshots</id>
-            <url>http://52.63.86.162:80/artifactory/cloudera-framework-snapshots</url>
+            <url>http://macmini-sheryl:8071/artifactory/libs-snapshot-local</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

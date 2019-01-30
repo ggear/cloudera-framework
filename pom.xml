@@ -17,11 +17,11 @@
     <distributionManagement>
         <repository>
             <id>cloudera-framework-releases</id>
-            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+            <url>http://macmini-sheryl:8071/artifactory/libs-release-local</url>
         </repository>
         <snapshotRepository>
             <id>cloudera-framework-snapshots</id>
-            <url>http://52.63.86.162:80/artifactory/cloudera-framework-snapshots</url>
+            <url>http://macmini-sheryl:8071/artifactory/libs-snapshot-local</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -57,7 +57,7 @@
         </repository>
         <repository>
             <id>cloudera-framework-releases</id>
-            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+            <url>http://macmini-sheryl:8071/artifactory/libs-release-local</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -88,7 +88,7 @@
         </pluginRepository>
         <pluginRepository>
             <id>cloudera-framework-releases</id>
-            <url>http://52.63.86.162:80/artifactory/cloudera-framework-releases</url>
+            <url>http://macmini-sheryl:8071/artifactory/libs-release-local</url>
             <releases>
                 <updatePolicy>never</updatePolicy>
             </releases>
@@ -158,10 +158,10 @@
         <scalatest.version>3.0.1</scalatest.version>
         <templater.version>1.2.9</templater.version>
 
-        <parcel-plugin.version>0.8.4</parcel-plugin.version>
+        <parcel-plugin.version>0.8.6</parcel-plugin.version>
 
-        <cloudera-framework-parcel.repo>http://52.63.86.162/tmph3l7m2vv103/sbin</cloudera-framework-parcel.repo>
-        <cloudera-framework-module.repo>http://52.63.86.162:80/artifactory/cloudera-framework-releases</cloudera-framework-module.repo>
+        <cloudera-framework-parcel.repo>http://macmini-sheryl/tmph3l7m2vv103/sbin</cloudera-framework-parcel.repo>
+        <cloudera-framework-module.repo>http://macmini-sheryl:8071/artifactory/libs-release-local</cloudera-framework-module.repo>
 
         <scala_2.10-base.version>2.10</scala_2.10-base.version>
         <scala_2.10.version>2.10.5</scala_2.10.version>

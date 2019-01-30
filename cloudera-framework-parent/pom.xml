@@ -29,7 +29,7 @@
         <tar.build.skip>true</tar.build.skip>
 
         <parcel.build.target>el7</parcel.build.target>
-        <parcel.build.repo>scp://graham:.ssh/id_rsa.pem@52.63.86.162:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</parcel.build.repo>
+        <parcel.build.repo>scp://graham:.ssh/id_rsa.pem@macmini-sheryl:22/var/www/html/tmph3l7m2vv103/apps/${project.artifactId}/parcels</parcel.build.repo>
 
     </properties>
 

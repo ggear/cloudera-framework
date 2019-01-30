@@ -75,6 +75,8 @@
 
     <build>
         <plugins>
+            <!-- Disable parcel downloads until fixed for MacOS 10.14 -->
+            <!--
             <plugin>
                 <groupId>com.cloudera.parcel</groupId>
                 <artifactId>cloudera-parcel-plugin</artifactId>
@@ -100,6 +102,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
         </plugins>
     </build>
 
