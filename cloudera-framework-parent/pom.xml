@@ -8,18 +8,18 @@
     <groupId>com.cloudera.framework</groupId>
     <artifactId>cloudera-framework-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.4-cdh5.15.1-SNAPSHOT</version>
+    <version>2.0.4-cdh5.15.1</version>
 
     <parent>
         <groupId>com.cloudera</groupId>
         <artifactId>cloudera-framework</artifactId>
-        <version>2.0.4-cdh5.15.1-SNAPSHOT</version>
+        <version>2.0.4-cdh5.15.1</version>
     </parent>
 
     <properties>
 
         <!-- Child projects should ensure this version targets the appropriate cloudera-framework and CDH version -->
-        <cloudera-framework.version>2.0.4-cdh5.15.1-SNAPSHOT</cloudera-framework.version>
+        <cloudera-framework.version>2.0.4-cdh5.15.1</cloudera-framework.version>
 
         <!-- Child projects can enable/disable various build facets via these flags -->
         <templater-scala.build.skip>true</templater-scala.build.skip>
