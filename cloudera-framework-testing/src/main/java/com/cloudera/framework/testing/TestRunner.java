@@ -13,6 +13,7 @@ import com.cloudera.framework.testing.server.CdhServer;
 import com.cloudera.framework.testing.server.DfsServer;
 import com.googlecode.zohhak.api.runners.ZohhakRunner;
 import com.googlecode.zohhak.internal.junit.ParametrizedFrameworkMethod;
+
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.internal.runners.model.ReflectiveCallable;
@@ -27,8 +28,11 @@ import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
+
 import parquet.Log;
 import parquet.hadoop.ParquetOutputFormat;
+import scala.annotation.meta.field;
+import scala.reflect.internal.Trees.Throw;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 /**
@@ -45,21 +49,26 @@ public class TestRunner extends ZohhakRunner implements TestConstants {
   private static final Logger LOG = LoggerFactory.getLogger(TestRunner.class);
 
   static {
-    Log.getLog(ParquetOutputFormat.class);
-    SLF4JBridgeHandler.removeHandlersForRootLogger();
-    SLF4JBridgeHandler.install();
-    SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-    System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
-    System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
-    System.setProperty("java.security.krb5.conf", "/dev/null");
-    System.setProperty("dir.working", ABS_DIR_WORKING);
-    System.setProperty("dir.working.target", ABS_DIR_TARGET);
-    System.setProperty("dir.working.target.hdfs", ABS_DIR_DFS_LOCAL);
-    System.setProperty("test.build.data", ABS_DIR_DFS);
-    System.setProperty("hadoop.tmp.dir", ABS_DIR_DFS_TMP);
-    System.setProperty("dir.working.target.derby", ABS_DIR_DERBY);
-    System.setProperty("dir.working.target.derby.db", ABS_DIR_DERBY_DB);
-    System.setProperty("derby.stream.error.file", ABS_DIR_DERBY_LOG);
+    try {
+      Log.getLog(ParquetOutputFormat.class);
+      SLF4JBridgeHandler.removeHandlersForRootLogger();
+      SLF4JBridgeHandler.install();
+      SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
+      System.setProperty("java.security.krb5.realm", "CDHCLUSTER.com");
+      System.setProperty("java.security.krb5.kdc", "kdc.cdhcluster.com");
+      System.setProperty("java.security.krb5.conf", "/dev/null");
+      System.setProperty("dir.working", ABS_DIR_WORKING);
+      System.setProperty("dir.working.target", ABS_DIR_TARGET);
+      System.setProperty("dir.working.target.hdfs", ABS_DIR_DFS_LOCAL);
+      System.setProperty("test.build.data", ABS_DIR_DFS);
+      System.setProperty("hadoop.tmp.dir", ABS_DIR_DFS_TMP);
+      System.setProperty("dir.working.target.derby", ABS_DIR_DERBY);
+      System.setProperty("dir.working.target.derby.db", ABS_DIR_DERBY_DB);
+      System.setProperty("derby.stream.error.file", ABS_DIR_DERBY_LOG);
+    } catch (Exception e) {
+      System.err.println("Error setting up static initialisation, including logging, stacktrace to follow");
+      e.printStackTrace();
+    }
   }
 
   public TestRunner(Class<?> clazz) throws InitializationError {

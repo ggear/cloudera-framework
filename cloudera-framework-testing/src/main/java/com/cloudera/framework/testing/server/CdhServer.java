@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 import com.cloudera.framework.testing.TestConstants;
 import com.cloudera.framework.testing.TestRunner;
 import com.cloudera.parcel.library.ParcelUtil;
+
+import org.apache.avro.test.specialtypes.value;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapred.JobConf;
 import org.junit.ClassRule;
@@ -24,6 +26,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.junit.runners.model.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scala.util.Properties;
 
 /**
