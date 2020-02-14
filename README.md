@@ -126,7 +126,7 @@ mvn org.apache.maven.plugins:maven-archetype-plugin:2.4:generate -B \
   -DarchetypeRepository=http://52.63.86.162/artifactory/cloudera-framework-releases \
   -DarchetypeGroupId=com.cloudera.framework.archetype \
   -DarchetypeArtifactId=cloudera-framework-archetype-spark2 \
-  -DarchetypeVersion=2.0.4-cdh5.15.1 \
+  -DarchetypeVersion=2.0.5-cdh5.15.1 \
   -DgroupId=com.myorg.mytest \
   -DartifactId=mytest \
   -Dpackage=com.myorg.mytest \
